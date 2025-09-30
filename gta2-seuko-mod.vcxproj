@@ -163,6 +163,7 @@ exit /b 0
     <ClInclude Include="src\core\event-base.h" />
     <ClInclude Include="src\core\hook-manager.h" />
     <ClInclude Include="src\game\gta2_wrapper.h" />
+    <ClInclude Include="src\game\utils.h" />
     <ClInclude Include="src\hook-types\function-call-hook.h" />
     <ClInclude Include="src\core\hook-base.h" />
     <ClInclude Include="src\core\module-manager.h" />

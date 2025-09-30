@@ -21,11 +21,11 @@ namespace UiModule {
 	// Converts various types to their string representation.
 	template <typename T>
     inline std::wstring ToString(T value) {
-        std::fesetround(FE_TONEAREST);
         if constexpr (std::is_same_v<T, Game::SCR_f>) {
-			return ToString(static_cast<float>(value) / 16384.0f);
+			return ToString(Game::Utils::ToFloat(value));
         }
 
+        std::fesetround(FE_TONEAREST);
 		return std::to_wstring(value);
 	}
 
@@ -49,8 +49,8 @@ namespace UiModule {
     // Explicit specialization for SCR_f
     template <>
     inline Game::SCR_f FromString<Game::SCR_f>(const std::wstring& str) {
-        float f = std::stof(str);
-        return static_cast<Game::SCR_f>(f * 16384.0f);
+        float value = std::stof(str);
+		return Game::Utils::FromFloat(value);
     }
 
 	// Checks if a character is valid for the specified type.
