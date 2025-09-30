@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{e36be4a1-bf14-45d3-94fb-73c0bc74a114}</ProjectGuid>
+    <RootNamespace>gta2seukomod</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>gta2-seuko-mod</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="GTA2.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="GTA2.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;GTA2SEUKOMOD_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile />
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)third_party\spdlog\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+    <PostBuildEvent>
+      <Command>if "$(GTA2_DIR)"=="" (
+  echo ERROR: GTA2_DIR is not set. Make sure to set in in GTA2.props file.
+  exit /b 1
+)
+
+if "$(GTA2_EXE)"=="" (
+  echo ERROR: GTA2_EXE is not set. Make sure to set in in GTA2.props file.
+  exit /b 1
+)
+
+if not exist "$(GTA2_DIR)\" (
+  echo ERROR: GTA2_DIR "$(GTA2_DIR)" specified in GTA2.props does not exist.
+  exit /b 1
+)
+
+if not exist "$(GTA2_DIR)\$(GTA2_EXE)" (
+  echo ERROR: "$(GTA2_EXE)" not found in "$(GTA2_DIR)". Check GTA2.props file.
+  exit /b 1
+)
+
+copy /Y "$(TargetPath)" "$(GTA2_DIR)\"
+if exist "$(TargetDir)$(TargetName).pdb" copy /Y "$(TargetDir)$(TargetName).pdb" "$(GTA2_DIR)\"
+
+exit /b 0
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;GTA2SEUKOMOD_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile />
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)third_party\spdlog\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+    <PostBuildEvent>
+      <Command>if "$(GTA2_DIR)"=="" (
+  echo ERROR: GTA2_DIR is not set. Make sure to set in in GTA2.props file.
+  exit /b 1
+)
+
+if "$(GTA2_EXE)"=="" (
+  echo ERROR: GTA2_EXE is not set. Make sure to set in in GTA2.props file.
+  exit /b 1
+)
+
+if not exist "$(GTA2_DIR)\" (
+  echo ERROR: GTA2_DIR "$(GTA2_DIR)" specified in GTA2.props does not exist.
+  exit /b 1
+)
+
+if not exist "$(GTA2_DIR)\$(GTA2_EXE)" (
+  echo ERROR: "$(GTA2_EXE)" not found in "$(GTA2_DIR)". Check GTA2.props file.
+  exit /b 1
+)
+
+copy /Y "$(TargetPath)" "$(GTA2_DIR)\"
+if exist "$(TargetDir)$(TargetName).pdb" copy /Y "$(TargetDir)$(TargetName).pdb" "$(GTA2_DIR)\"
+
+exit /b 0
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\core\core.h" />
+    <ClInclude Include="src\core\listener-base.h" />
+    <ClInclude Include="src\core\make-resolver.h" />
+    <ClInclude Include="src\core\types.h" />
+    <ClInclude Include="src\core\watch-manager.h" />
+    <ClInclude Include="src\core\watched-base.h" />
+    <ClInclude Include="src\events\game-tick.h" />
+    <ClInclude Include="src\events\keyboard.h" />
+    <ClInclude Include="src\game\common.h" />
+    <ClInclude Include="src\game\keycode.h" />
+    <ClInclude Include="src\game\functions.h">
+      <DeploymentContent>false</DeploymentContent>
+    </ClInclude>
+    <ClInclude Include="src\game\game.h" />
+    <ClInclude Include="src\game\gta2.h" />
+    <ClInclude Include="src\core\event-manager.h" />
+    <ClInclude Include="src\core\event-base.h" />
+    <ClInclude Include="src\core\hook-manager.h" />
+    <ClInclude Include="src\game\gta2_wrapper.h" />
+    <ClInclude Include="src\hook-types\function-call-hook.h" />
+    <ClInclude Include="src\core\hook-base.h" />
+    <ClInclude Include="src\core\module-manager.h" />
+    <ClInclude Include="src\core\module-base.h" />
+    <ClInclude Include="src\game\memory.h" />
+    <ClInclude Include="src\core\common.h" />
+    <ClInclude Include="src\events\draw.h" />
+    <ClInclude Include="src\hook-types\function-multi-call-hook.h" />
+    <ClInclude Include="src\modules\modmenu\common.h" />
+    <ClInclude Include="src\modules\modmenu\menu-base.h" />
+    <ClInclude Include="src\modules\modmenu\menus\main-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\menus.h" />
+    <ClInclude Include="src\modules\modmenu\menus\player-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\player-pos-menu.h" />
+    <ClInclude Include="src\modules\modmenu\modmenu.h" />
+    <ClInclude Include="src\modules\modmenu\root.h" />
+    <ClInclude Include="src\modules\ui\common.h" />
+    <ClInclude Include="src\modules\ui\component.h" />
+    <ClInclude Include="src\modules\ui\components\components.h" />
+    <ClInclude Include="src\modules\ui\components\horcont.h" />
+    <ClInclude Include="src\modules\ui\components\margin.h" />
+    <ClInclude Include="src\modules\ui\components\selectable.h" />
+    <ClInclude Include="src\modules\ui\components\spacer.h" />
+    <ClInclude Include="src\modules\ui\components\text.h" />
+    <ClInclude Include="src\modules\ui\components\vertcont.h" />
+    <ClInclude Include="src\modules\ui\controller.h" />
+    <ClInclude Include="src\modules\ui\controllers\controllers.h" />
+    <ClInclude Include="src\modules\ui\controllers\var-text-editable.h" />
+    <ClInclude Include="src\modules\ui\controllers\menu.h" />
+    <ClInclude Include="src\modules\ui\controllers\var-text.h" />
+    <ClInclude Include="src\modules\ui\rect.h" />
+    <ClInclude Include="src\modules\ui\root.h" />
+    <ClInclude Include="src\modules\ui\ui.h" />
+    <ClInclude Include="src\modules\ui\utils\string-utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\console.cpp" />
+    <ClCompile Include="src\core\core.cpp" />
+    <ClCompile Include="src\core\event-listener-support.h" />
+    <ClCompile Include="src\core\event-manager.cpp" />
+    <ClCompile Include="src\core\hook-manager.cpp" />
+    <ClCompile Include="src\core\module-manager.cpp" />
+    <ClCompile Include="src\core\watch-manager.cpp" />
+    <ClCompile Include="src\dllmain.cpp" />
+    <ClCompile Include="src\events\draw.cpp" />
+    <ClCompile Include="src\events\game-tick.cpp" />
+    <ClCompile Include="src\events\keyboard.cpp" />
+    <ClCompile Include="src\game\keycode.cpp" />
+    <ClCompile Include="src\modules\modmenu\menu-base.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\main-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\player-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\player-pos-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\root.cpp" />
+    <ClCompile Include="src\modules\ui\component.cpp" />
+    <ClCompile Include="src\modules\ui\components\selectable.cpp" />
+    <ClCompile Include="src\modules\ui\components\text.cpp" />
+    <ClCompile Include="src\modules\ui\controllers\menu.cpp" />
+    <ClCompile Include="src\modules\ui\root.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GTA2.props" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,23 @@
+<Project>
+  <PropertyGroup>
+    <VcpkgTriplet>x86-windows</VcpkgTriplet>
+    <VcpkgRoot>C:\src\vcpkg\</VcpkgRoot>
+    <VcpkgInstalledDir>$(VcpkgRoot)installed\$(VcpkgTriplet)\</VcpkgInstalledDir>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(VcpkgInstalledDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ObjectFileName>$(IntDir)%(RelativeDir)%(Filename).obj</ObjectFileName>
+    </ClCompile>
+
+    <Link>
+      <AdditionalLibraryDirectories>$(VcpkgInstalledDir)lib;$(VcpkgInstalledDir)debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <PostBuildEvent>
+        if exist "$(VcpkgInstalledDir)bin\" (
+          xcopy /Y /I "$(VcpkgInstalledDir)bin\*.*" "$(OutDir)"
+        )
+      </PostBuildEvent>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

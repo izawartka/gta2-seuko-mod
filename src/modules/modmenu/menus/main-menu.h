@@ -1,0 +1,16 @@
+#pragma once
+#include "../common.h"
+#include "../menu-base.h"
+
+namespace ModMenuModule {
+	class MainMenu : public MenuBase {
+	public:
+		MainMenu();
+		virtual ~MainMenu();
+
+		virtual bool Attach() override;
+
+	private:
+		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
+	};
+}

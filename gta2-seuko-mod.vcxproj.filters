@@ -1,0 +1,246 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\core\common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\gta2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\memory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\event-manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\event-base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\core.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\hook-manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\events\draw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\hook-base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\module-manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\module-base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\hook-types\function-call-hook.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\modmenu\modmenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\gta2_wrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\watch-manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\watched-base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\make-resolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\events\game-tick.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\hook-types\function-multi-call-hook.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\events\keyboard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\ui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\keycode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\root.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\components\text.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\rect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\components\components.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\components\vertcont.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\components\horcont.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\components\spacer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\components\margin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\components\selectable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\controllers\menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\controllers\controllers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\controller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\listener-base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\modmenu\common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\modmenu\menu-base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\modmenu\menus\menus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\modmenu\menus\main-menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\modmenu\root.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\modmenu\menus\player-menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\modmenu\menus\player-pos-menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\controllers\var-text.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\controllers\var-text-editable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\utils\string-utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\hook-manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\event-manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\module-manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\events\draw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\core.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\watch-manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\events\game-tick.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\console.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\events\keyboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\ui\root.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\ui\component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\ui\components\text.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\ui\components\selectable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\ui\controllers\menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\event-listener-support.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\root.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\menus\main-menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\menus\player-menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\menu-base.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\menus\player-pos-menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\keycode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GTA2.props" />
+  </ItemGroup>
+</Project>

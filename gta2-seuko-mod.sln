@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36301.6
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gta2-seuko-mod", "gta2-seuko-mod.vcxproj", "{E36BE4A1-BF14-45D3-94FB-73C0BC74A114}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E36BE4A1-BF14-45D3-94FB-73C0BC74A114}.Debug|x86.ActiveCfg = Debug|Win32
+		{E36BE4A1-BF14-45D3-94FB-73C0BC74A114}.Debug|x86.Build.0 = Debug|Win32
+		{E36BE4A1-BF14-45D3-94FB-73C0BC74A114}.Release|x86.ActiveCfg = Release|Win32
+		{E36BE4A1-BF14-45D3-94FB-73C0BC74A114}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2EB2C408-09DD-4DDB-82A3-1507A8F0B787}
+	EndGlobalSection
+EndGlobal
