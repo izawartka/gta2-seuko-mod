@@ -1,4 +1,4 @@
-#pragma once  
+#pragma once
 #include "gta2_wrapper.h"
 #include "keycode.h"
 
@@ -20,5 +20,8 @@ namespace Game {
 
 		typedef void(__stdcall DrawGTATextType)(WCHAR* str, SCR_f x, SCR_f y, int param_4, SCR_f scale, S4_ENUM1* param_6, int param_7, SPRITE_INVISIBILITY spriteInvisibility, SCR_f param_9);
 		static constexpr DrawGTATextType* DrawGTAText = (DrawGTATextType*)0x004cc100;
+
+		typedef bool* (__fastcall SetSpritePositionType)(Sprite* sprite, DWORD edx, SCR_f x, SCR_f y, SCR_f z);
+		static constexpr SetSpritePositionType* SetSpritePosition = (SetSpritePositionType*)0x00420600;
 	};  
 }
