@@ -38,7 +38,16 @@ bool ModMenuModule::PlayerPosMenu::Attach()
 		Core::MakeResolver(spriteResolver, mem(&Game::Sprite::x)),
 		UiModule::VarTextEditableControllerOptions{ L"X: #", L"#" }
 	);
-	m_xController->SetOnEditStopCallback(onEditStop);
+	m_xController->SetEditStopCallback(onEditStop);
+	auto onXSave = [this, spriteResolver](Game::SCR_f newX) {
+		if (newX <= 0) return;
+		if (newX >= Game::Utils::FromFloat(256.0f)) return;
+		Game::Sprite* sprite = spriteResolver();
+		if (sprite) {
+			Game::Functions::SetSpritePosition(sprite, 0, newX, sprite->y, sprite->z);
+		}
+	};
+	m_xController->SetCustomSaveCallback(onXSave);
 
 	UiModule::Text* yText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	m_yController = uiRoot->AddController<UiModule::VarTextEditableController<Game::SCR_f>>(
@@ -46,7 +55,16 @@ bool ModMenuModule::PlayerPosMenu::Attach()
 		Core::MakeResolver(spriteResolver, mem(&Game::Sprite::y)),
 		UiModule::VarTextEditableControllerOptions{ L"Y: #", L"#" }
 	);
-	m_yController->SetOnEditStopCallback(onEditStop);
+	m_yController->SetEditStopCallback(onEditStop);
+	auto onYSave = [this, spriteResolver](Game::SCR_f newY) {
+		if (newY <= 0) return;
+		if (newY >= Game::Utils::FromFloat(256.0f)) return;
+		Game::Sprite* sprite = spriteResolver();
+		if (sprite) {
+			Game::Functions::SetSpritePosition(sprite, 0, sprite->x, newY, sprite->z);
+		}
+	};
+	m_yController->SetCustomSaveCallback(onYSave);
 
 	UiModule::Text* zText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	m_zController = uiRoot->AddController<UiModule::VarTextEditableController<Game::SCR_f>>(
@@ -54,7 +72,17 @@ bool ModMenuModule::PlayerPosMenu::Attach()
 		Core::MakeResolver(spriteResolver, mem(&Game::Sprite::z)),
 		UiModule::VarTextEditableControllerOptions{ L"Z: #", L"#" }
 	);
-	m_zController->SetOnEditStopCallback(onEditStop);
+	m_zController->SetEditStopCallback(onEditStop);
+	auto onZSave = [this, spriteResolver](Game::SCR_f newZ) {
+		if (newZ <= 0) return;
+		if (newZ >= Game::Utils::FromFloat(8.0f)) return;
+		spdlog::debug("{} {}", newZ, Game::Utils::FromFloat(8.0f));
+		Game::Sprite* sprite = spriteResolver();
+		if (sprite) {
+			Game::Functions::SetSpritePosition(sprite, 0, sprite->x, sprite->y, newZ);
+		}
+	};
+	m_zController->SetCustomSaveCallback(onZSave);
 
 	return true;
 }
