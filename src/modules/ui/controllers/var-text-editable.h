@@ -9,6 +9,9 @@
 namespace UiModule {
 	using VarTextEditableEditStopCallback = std::function<void()>;
 
+	template <typename T>
+	using VarTextEditableCustomSaveCallback = std::function<void(T newValue)>;
+
 	struct VarTextEditableControllerOptions {
 		std::wstring prefix = L"";
 		std::wstring suffix = L"";
@@ -116,8 +119,12 @@ namespace UiModule {
 			}
 		}
 
-		void SetOnEditStopCallback(VarTextEditableEditStopCallback callback) {
+		void SetEditStopCallback(VarTextEditableEditStopCallback callback) {
 			m_onEditStop = callback;
+		}
+
+		void SetCustomSaveCallback(VarTextEditableCustomSaveCallback<T> callback) {
+			 m_customSaveCallback = callback;
 		}
 
 		bool IsEditing() const { return m_editing; }
@@ -146,19 +153,27 @@ namespace UiModule {
 
 		void Save() {
 			if (!m_editing) return;
+			T newValue;
 
 			try {
-				T newValue = FromString<T>(m_editBuffer);
-				T* resolved = m_resolver();
-				if (resolved) {
-					*resolved = newValue;
-				}
-				else {
-					spdlog::warn("Failed to resolve variable for setting new value");
-				}
+				newValue = FromString<T>(m_editBuffer);
 			}
 			catch (const std::exception& e) {
 				spdlog::warn("Failed to parse input '{}': {}", std::string(m_editBuffer.begin(), m_editBuffer.end()), e.what());
+				return;
+			}
+
+			if (m_customSaveCallback) {
+				m_customSaveCallback(newValue);
+				return;
+			}
+
+			T* resolved = m_resolver();
+			if (resolved) {
+				*resolved = newValue;
+			}
+			else {
+				spdlog::warn("Failed to resolve variable for setting new value");
 			}
 		}
 
@@ -238,6 +253,7 @@ namespace UiModule {
 		bool m_hasPreDrawListener = false;
 		std::wstring m_editBuffer = L"";
 		VarTextEditableEditStopCallback m_onEditStop = nullptr;
+		VarTextEditableCustomSaveCallback<T> m_customSaveCallback = nullptr;
 		int m_blinkCounter = 0;
 	};
 }
