@@ -21,7 +21,9 @@ namespace UiModule {
 	// Converts various types to their string representation.
 	template <typename T>
     inline std::wstring ToString(T value) {
-        if constexpr (std::is_same_v<T, Game::SCR_f>) {
+        using BaseT = std::remove_cv_t<T>;
+
+        if constexpr (std::is_same_v<BaseT, Game::SCR_f>) {
 			return ToString(Game::Utils::ToFloat(value));
         }
 
@@ -33,24 +35,24 @@ namespace UiModule {
     template <typename T>
     inline T FromString(const std::wstring& str) {
         using BaseT = std::remove_cv_t<T>;
+
         if constexpr (std::is_same_v<BaseT, std::wstring>) {
             return str;
         }
-        if constexpr (std::is_floating_point_v<BaseT>) {
+        else if constexpr (std::is_floating_point_v<BaseT>) {
             return static_cast<BaseT>(std::stof(str));
         }
-        if constexpr (std::is_integral_v<BaseT>) {
+        else if constexpr (std::is_same_v<BaseT, Game::SCR_f>) {
+            float value = std::stof(str);
+            return Game::Utils::FromFloat(value);
+        } 
+        else if constexpr (std::is_integral_v<BaseT>) {
             return static_cast<BaseT>(std::stoll(str));
+        } 
+        else {
+            static_assert(always_false<T>, "FromString is not implemented for this type");
+            return T{};
         }
-        static_assert(always_false<T>, "FromString is not implemented for this type");
-        return T{};
-    }
-
-    // Explicit specialization for SCR_f
-    template <>
-    inline Game::SCR_f FromString<Game::SCR_f>(const std::wstring& str) {
-        float value = std::stof(str);
-		return Game::Utils::FromFloat(value);
     }
 
 	// Checks if a character is valid for the specified type.
@@ -65,20 +67,16 @@ namespace UiModule {
                 return c == '\t' || c == '\n' || c == '\r';
             }
             return false;
-        }
-        if constexpr (std::is_floating_point_v<BaseT>) {
+        } 
+        else if constexpr (std::is_floating_point_v<BaseT> || std::is_same_v<BaseT, Game::SCR_f>) {
             return std::isdigit(c) || (c == '-') || (c == '.');
-        }
-        if constexpr (std::is_integral_v<BaseT>) {
+        } 
+        else if constexpr (std::is_integral_v<BaseT>) {
             return std::isdigit(c) || (c == '-');
+        } 
+        else {
+            static_assert(always_false<T>, "IsValidCharForType is not implemented for this type. Type name: " __FUNCSIG__);
+            return false;
         }
-        static_assert(always_false<T>, "IsValidCharForType is not implemented for this type. Type name: " __FUNCSIG__);
-        return false;
 	}
-
-    // Explicit specialization for SCR_f
-    template <>
-    inline bool IsValidCharForType<Game::SCR_f>(char c, bool /*allowControlChars*/) {
-        return std::isdigit(c) || (c == '-') || (c == '.');
-    }
 }
