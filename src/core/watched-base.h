@@ -42,15 +42,19 @@ namespace Core
             std::optional<T> value = std::nullopt;
             if (present) value = *p;
 
-            if (m_first || value != m_lastValue) {
+            if (m_needsUpdate || value != m_lastValue) {
                 m_listener(m_lastValue, value);
-                m_first = false;
+                m_needsUpdate = false;
                 m_lastValue = value;
             }
         }
 
         WatchedId GetId() const {
             return m_id;
+		}
+
+        void RequestUpdate() {
+            m_needsUpdate = true;
 		}
 
     private:
@@ -68,6 +72,6 @@ namespace Core
         std::function<T* ()> m_resolver;
         std::function<void(std::optional<T>, std::optional<T>)> m_listener;
         std::optional<T> m_lastValue;
-        bool m_first = true;
+        bool m_needsUpdate = true;
     };
 }
