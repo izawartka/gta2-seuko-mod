@@ -144,6 +144,8 @@ exit /b 0
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\converters\default.h" />
+    <ClInclude Include="src\modules\ui\converter-support.h" />
     <ClInclude Include="src\core\core.h" />
     <ClInclude Include="src\core\listener-base.h" />
     <ClInclude Include="src\core\make-resolver.h" />
@@ -197,10 +199,10 @@ exit /b 0
     <ClInclude Include="src\modules\ui\rect.h" />
     <ClInclude Include="src\modules\ui\root.h" />
     <ClInclude Include="src\modules\ui\ui.h" />
-    <ClInclude Include="src\modules\ui\utils\string-utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\console.cpp" />
+    <ClCompile Include="src\converters\scrf.h" />
     <ClCompile Include="src\core\core.cpp" />
     <ClCompile Include="src\core\event-listener-support.h" />
     <ClCompile Include="src\core\event-manager.cpp" />

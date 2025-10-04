@@ -1,8 +1,8 @@
 #pragma once
 #include "../common.h"
 #include "../controller.h"
+#include "../converter-support.h"
 #include "../components/text.h"
-#include "../utils/string-utils.h"
 #include "../../../events/draw.h"
 
 namespace UiModule {
@@ -10,11 +10,10 @@ namespace UiModule {
 		std::wstring prefix = L"";
 		std::wstring suffix = L"";
 		std::wstring nullText = L"N/A";
-		bool removeTrailingZeros = true; // for floating point types
 	};
 
 	template <typename T>
-	class VarTextController : public Controller, public Core::EventListenerSupport {
+	class VarTextController : public Controller, public Core::EventListenerSupport, public ConverterSupport<T> {
 	public:
 		VarTextController(Text* text, Core::Resolver<T> resolver, VarTextControllerOptions options = {}) {
 			static_assert(std::is_copy_constructible<T>::value, "T must be copy-constructible");
@@ -62,10 +61,7 @@ namespace UiModule {
 
 		void OnValueUpdate(std::optional<T> oldValue, std::optional<T> newValue) {
 			if (newValue.has_value()) {
-				std::wstring text = ToString<T>(newValue.value());
-				if ((std::is_same_v<T, Game::SCR_f> || std::is_floating_point_v<T>) && m_options.removeTrailingZeros) {
-					UiModule::RemoveTrailingZeros(text);
-				}
+				std::wstring text = this->ConvertToString(newValue.value());
 				SetValueText(text);
 			}
 			else {

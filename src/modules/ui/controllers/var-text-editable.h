@@ -1,8 +1,8 @@
 #pragma once
 #include "../common.h"
 #include "../controller.h"
+#include "../converter-support.h"
 #include "../components/text.h"
-#include "../utils/string-utils.h"
 #include "../../../events/draw.h"
 #include "../../../events/keyboard.h"
 
@@ -18,13 +18,11 @@ namespace UiModule {
 		std::wstring nullText = L"N/A";
 		std::wstring marker = L"-";
 		Game::KeyCode keyAction = Game::KeyCode::DIK_BACKSLASH;
-		bool allowControlChars = false; // whether to allow \t, \n, \r
 		int blinkInterval = 15; // frames
-		bool removeTrailingZeros = true; // for floating point types
 	};
 
 	template <typename T>
-	class VarTextEditableController : public Controller, public Core::EventListenerSupport {
+	class VarTextEditableController : public Controller, public Core::EventListenerSupport, public ConverterSupport<T> {
 	public:
 		VarTextEditableController(Text* text, Core::Resolver<T> resolver, VarTextEditableControllerOptions options = {}) {
 			static_assert(std::is_copy_constructible<T>::value, "T must be copy-constructible");
@@ -144,10 +142,7 @@ namespace UiModule {
 				return false;
 			}
 
-			m_editBuffer = ToString<T>(*resolved);
-			if ((std::is_same_v<T, Game::SCR_f> || std::is_floating_point_v<T>) && m_options.removeTrailingZeros) {
-				RemoveTrailingZeros(m_editBuffer);
-			}
+			m_editBuffer = this->ConvertToString(*resolved);
 			return true;
 		}
 
@@ -156,7 +151,7 @@ namespace UiModule {
 			T newValue;
 
 			try {
-				newValue = FromString<T>(m_editBuffer);
+				newValue = this->ConvertFromString(m_editBuffer);
 			}
 			catch (const std::exception& e) {
 				spdlog::warn("Failed to parse input '{}': {}", std::string(m_editBuffer.begin(), m_editBuffer.end()), e.what());
@@ -189,10 +184,7 @@ namespace UiModule {
 			}
 
 			if (newValue.has_value()) {
-				std::wstring text = ToString<T>(newValue.value());
-				if ((std::is_same_v<T, Game::SCR_f> || std::is_floating_point_v<T>) && m_options.removeTrailingZeros) {
-					UiModule::RemoveTrailingZeros(text);
-				}
+				std::wstring text = this->ConvertToString(newValue.value());
 				SetValueText(text);
 			}
 			else {
@@ -226,7 +218,7 @@ namespace UiModule {
 				char c = Game::GetCharFromKeyCode(key, isShiftPressed, false); /// TODO handle caps lock
 				if (c == '\0') return;
 
-				if (!IsValidCharForType<T>(c, m_options.allowControlChars)) return;
+				if (!this->IsValidChar(m_editBuffer, static_cast<wchar_t>(c))) return;
 
 				m_editBuffer += c;
 				SetValueText(m_editBuffer);

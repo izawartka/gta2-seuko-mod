@@ -168,7 +168,13 @@
     <ClInclude Include="src\modules\ui\controllers\var-text-editable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\modules\ui\utils\string-utils.h">
+    <ClInclude Include="src\game\utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\ui\converter-support.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\converters\default.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -237,6 +243,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\game\keycode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\converters\scrf.h">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

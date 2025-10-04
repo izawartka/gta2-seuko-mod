@@ -1,5 +1,6 @@
 #include "player-pos-menu.h"
 #include "../root.h"
+#include "../../../converters/scrf.h"
 
 ModMenuModule::PlayerPosMenu::PlayerPosMenu()
 {
@@ -48,6 +49,7 @@ bool ModMenuModule::PlayerPosMenu::Attach()
 		}
 	};
 	m_xController->SetCustomSaveCallback(onXSave);
+	m_xController->SetConverter<ScrfConverter>();
 
 	UiModule::Text* yText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	m_yController = uiRoot->AddController<UiModule::VarTextEditableController<Game::SCR_f>>(
@@ -65,6 +67,7 @@ bool ModMenuModule::PlayerPosMenu::Attach()
 		}
 	};
 	m_yController->SetCustomSaveCallback(onYSave);
+	m_yController->SetConverter<ScrfConverter>();
 
 	UiModule::Text* zText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	m_zController = uiRoot->AddController<UiModule::VarTextEditableController<Game::SCR_f>>(
@@ -83,6 +86,7 @@ bool ModMenuModule::PlayerPosMenu::Attach()
 		}
 	};
 	m_zController->SetCustomSaveCallback(onZSave);
+	m_zController->SetConverter<ScrfConverter>();
 
 	return true;
 }
