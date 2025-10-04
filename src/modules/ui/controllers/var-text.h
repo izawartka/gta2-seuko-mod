@@ -21,7 +21,8 @@ namespace UiModule {
 			m_options = options;
 			m_resolver = resolver;
 
-			Update();
+			m_textBuffer = m_options.nullText;
+			UpdateText();
 		}
 
 		virtual ~VarTextController() {
@@ -42,30 +43,21 @@ namespace UiModule {
 				Core::WatchManager::GetInstance()->Unwatch(m_watched);
 				m_watched = nullptr;
 			}
-
-			Update();
 		}
 
 		bool IsWatching() const { return m_watching; }
 
-		void Update() {
-			T* resolved = m_resolver();
-			std::optional<T> value = resolved ? std::optional<T>(*resolved) : std::nullopt;
-			OnValueUpdate(std::nullopt, value);
-		}
-
 	protected:
-		void SetValueText(std::wstring text) {
-			m_textComponent->SetText(m_options.prefix + text + m_options.suffix);
+		void UpdateText() {
+			m_textComponent->SetText(m_options.prefix + m_textBuffer + m_options.suffix);
 		}
 
 		void OnValueUpdate(std::optional<T> oldValue, std::optional<T> newValue) {
 			if (newValue.has_value()) {
-				std::wstring text = this->ConvertToString(newValue.value());
-				SetValueText(text);
+				m_textBuffer = this->ConvertToString(newValue.value());
 			}
 			else {
-				SetValueText(m_options.nullText);
+				m_textBuffer = m_options.nullText;
 			}
 		}
 
@@ -74,5 +66,6 @@ namespace UiModule {
 		Core::Resolver<T> m_resolver = nullptr;
 		Core::Watched<T>* m_watched = nullptr;
 		bool m_watching = false;
+		std::wstring m_textBuffer = L"";
 	};
 }

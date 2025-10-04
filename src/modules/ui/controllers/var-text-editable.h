@@ -30,11 +30,16 @@ namespace UiModule {
 			m_options = options;
 			m_resolver = resolver;
 
-			Update();
+			m_textBuffer = m_options.nullText;
+			UpdateText();
 		}
 
 		virtual ~VarTextEditableController() {
+			SetEditStopCallback(nullptr);
+			SetCustomSaveCallback(nullptr);
 			SetWatching(false);
+			SetActive(false);
+			SetEditing(false);
 		}
 
 		void SetWatching(bool watching) {
@@ -53,8 +58,6 @@ namespace UiModule {
 				Core::WatchManager::GetInstance()->Unwatch(m_watched);
 				m_watched = nullptr;
 			}
-
-			if(!m_editing) Update();
 		}
 
 		bool IsWatching() const { return m_watching; }
@@ -90,7 +93,14 @@ namespace UiModule {
 			if (m_editing == editing) return;
 			m_editing = editing;
 			if (editing) {
-				if (!Load()) {
+				if (!m_allowEdit) {
+					spdlog::warn("Invalid value, cannot edit");
+					m_editing = false;
+					if (m_onEditStop) m_onEditStop();
+					return;
+				}
+				if (m_pendingSaveValue.has_value()) {
+					spdlog::warn("Save pending, cannot edit");
 					m_editing = false;
 					if (m_onEditStop) m_onEditStop();
 					return;
@@ -101,6 +111,7 @@ namespace UiModule {
 				SetActive(true);
 				m_watchingBeforeEdit = watching;
 				m_activeBeforeEdit = active;
+				UpdateText();
 			}
 			else {
 				if (m_watchingBeforeEdit) {
@@ -110,9 +121,8 @@ namespace UiModule {
 					SetActive(false);
 				}
 				SetPreDrawUIListener(false);
-				m_editBuffer = L"";
-				Update();
-				
+				m_textBuffer = L"";
+				UpdateText();
 				if (m_onEditStop) m_onEditStop();
 			}
 		}
@@ -127,54 +137,39 @@ namespace UiModule {
 
 		bool IsEditing() const { return m_editing; }
 
-		void Update() {
-			T* resolved = m_resolver();
-			std::optional<T> value = resolved ? std::optional<T>(*resolved) : std::nullopt;
-			OnValueUpdate(std::nullopt, value);
-		}
-
 	protected:
-		bool Load() {
-			if (!m_editing) return false;
-			T* resolved = m_resolver();
-			if (resolved == nullptr) {
-				spdlog::warn("Failed to resolve variable for editing");
-				return false;
-			}
-
-			m_editBuffer = this->ConvertToString(*resolved);
-			return true;
-		}
-
 		void Save() {
 			if (!m_editing) return;
+			if (!m_watchingBeforeEdit) return;
 			T newValue;
 
 			try {
-				newValue = this->ConvertFromString(m_editBuffer);
+				newValue = this->ConvertFromString(m_textBuffer);
 			}
 			catch (const std::exception& e) {
-				spdlog::warn("Failed to parse input '{}': {}", std::string(m_editBuffer.begin(), m_editBuffer.end()), e.what());
+				spdlog::warn("Failed to parse input '{}': {}", std::string(m_textBuffer.begin(), m_textBuffer.end()), e.what());
 				return;
 			}
+
+			m_pendingSaveValue = newValue;
+		}
+
+		void ApplyPendingSave() {
+			T newValue = m_pendingSaveValue.value();
+			m_pendingSaveValue = std::nullopt;
 
 			if (m_customSaveCallback) {
 				m_customSaveCallback(newValue);
-				return;
 			}
 
-			T* resolved = m_resolver();
-			if (resolved) {
-				*resolved = newValue;
-			}
-			else {
+			if (!m_watched->SetValue(newValue)) {
 				spdlog::warn("Failed to resolve variable for setting new value");
 			}
 		}
 
-		void SetValueText(std::wstring text) {
+		void UpdateText() {
 			std::wstring marker = m_editing && (m_blinkCounter < m_options.blinkInterval) ? m_options.marker : L"";
-			m_textComponent->SetText(m_options.prefix + text + marker + m_options.suffix);
+			m_textComponent->SetText(m_options.prefix + m_textBuffer + marker + m_options.suffix);
 		}
 
 		void OnValueUpdate(std::optional<T> oldValue, std::optional<T> newValue) {
@@ -183,12 +178,14 @@ namespace UiModule {
 				return;
 			}
 
-			if (newValue.has_value()) {
-				std::wstring text = this->ConvertToString(newValue.value());
-				SetValueText(text);
-			}
-			else {
-				SetValueText(m_options.nullText);
+			bool hasValue = newValue.has_value();
+			m_textBuffer = hasValue ? this->ConvertToString(newValue.value()) : m_options.nullText;
+			m_allowEdit = hasValue;
+
+			UpdateText();
+
+			if (m_pendingSaveValue.has_value()) {
+				ApplyPendingSave();
 			}
 		}
 
@@ -210,25 +207,25 @@ namespace UiModule {
 				SetEditing(!m_editing);
 				return;
 			} else if (key == Game::KeyCode::DIK_BACK) {
-				if (!m_editBuffer.empty()) {
-					m_editBuffer.pop_back();
+				if (!m_textBuffer.empty()) {
+					m_textBuffer.pop_back();
 				}
-				SetValueText(m_editBuffer);
+				UpdateText();
 			} else {
 				char c = Game::GetCharFromKeyCode(key, isShiftPressed, false); /// TODO handle caps lock
 				if (c == '\0') return;
 
-				if (!this->IsValidChar(m_editBuffer, static_cast<wchar_t>(c))) return;
+				if (!this->IsValidChar(m_textBuffer, static_cast<wchar_t>(c))) return;
 
-				m_editBuffer += c;
-				SetValueText(m_editBuffer);
+				m_textBuffer += c;
+				UpdateText();
 			}
 		}
 
 		void OnPreDrawUI(const PreDrawUIEvent& event) {
 			if (!m_editing) return;
 			if (m_blinkCounter == 0 || m_blinkCounter == m_options.blinkInterval) {
-				SetValueText(m_editBuffer);
+				UpdateText();
 			}
 			m_blinkCounter = (m_blinkCounter + 1) % (m_options.blinkInterval * 2);
 		}
@@ -243,7 +240,9 @@ namespace UiModule {
 		bool m_watchingBeforeEdit = false;
 		bool m_activeBeforeEdit = false;
 		bool m_hasPreDrawListener = false;
-		std::wstring m_editBuffer = L"";
+		std::wstring m_textBuffer = L"";
+		bool m_allowEdit = false;
+		std::optional<T> m_pendingSaveValue = std::nullopt;
 		VarTextEditableEditStopCallback m_onEditStop = nullptr;
 		VarTextEditableCustomSaveCallback<T> m_customSaveCallback = nullptr;
 		int m_blinkCounter = 0;
