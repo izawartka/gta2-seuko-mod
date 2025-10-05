@@ -171,6 +171,9 @@
     <ClInclude Include="src\game\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\modules\ui\controllers\var-text-select.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\modules\ui\converter-support.h">
       <Filter>Header Files</Filter>
     </ClInclude>
