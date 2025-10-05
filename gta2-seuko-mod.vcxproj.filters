@@ -174,6 +174,9 @@
     <ClInclude Include="src\modules\ui\controllers\var-text-select.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\converters\cop-value.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\modules\ui\converter-support.h">
       <Filter>Header Files</Filter>
     </ClInclude>
