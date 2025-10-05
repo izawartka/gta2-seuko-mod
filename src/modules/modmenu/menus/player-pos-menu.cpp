@@ -79,7 +79,6 @@ bool ModMenuModule::PlayerPosMenu::Attach()
 	auto onZSave = [this, spriteResolver](Game::SCR_f newZ) {
 		if (newZ <= 0) return;
 		if (newZ >= Game::Utils::FromFloat(8.0f)) return;
-		spdlog::debug("{} {}", newZ, Game::Utils::FromFloat(8.0f));
 		Game::Sprite* sprite = spriteResolver();
 		if (sprite) {
 			Game::Functions::SetSpritePosition(sprite, 0, sprite->x, sprite->y, newZ);
