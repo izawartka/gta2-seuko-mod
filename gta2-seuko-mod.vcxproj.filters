@@ -183,6 +183,9 @@
     <ClInclude Include="src\converters\default.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\modules\ui\wae-base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">

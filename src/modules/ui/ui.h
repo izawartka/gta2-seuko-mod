@@ -6,5 +6,6 @@
 #include "component.h"
 #include "components/components.h"
 #include "converter-support.h"
+#include "wae-base.h"
 #include "controller.h"
 #include "controllers/controllers.h"

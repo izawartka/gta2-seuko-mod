@@ -201,6 +201,7 @@ exit /b 0
     <ClInclude Include="src\modules\ui\rect.h" />
     <ClInclude Include="src\modules\ui\root.h" />
     <ClInclude Include="src\modules\ui\ui.h" />
+    <ClInclude Include="src\modules\ui\wae-base.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\console.cpp" />

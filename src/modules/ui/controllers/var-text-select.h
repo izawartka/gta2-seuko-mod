@@ -2,13 +2,12 @@
 #include "../common.h"
 #include "../controller.h"
 #include "../converter-support.h"
+#include "../wae-base.h"
 #include "../components/text.h"
 #include "../../../events/draw.h"
 #include "../../../events/keyboard.h"
 
 namespace UiModule {
-    using VarTextSelectEditStopCallback = std::function<void()>;
-
     template <typename T>
     using VarTextSelectCustomSaveCallback = std::function<void(T newValue)>;
 
@@ -28,7 +27,7 @@ namespace UiModule {
     };
 
     template <typename T>
-    class VarTextSelectController : public Controller, public Core::EventListenerSupport, public ConverterSupport<T> {
+    class VarTextSelectController : public Controller, public Core::EventListenerSupport, public ConverterSupport<T>, public WaeBase {
     public:
         VarTextSelectController(Text* text, Core::Resolver<T> resolver, VarTextSelectOptionList<T> optionList, VarTextSelectControllerOptions options = {}) {
             static_assert(std::is_copy_constructible<T>::value, "T must be copy-constructible");
@@ -42,14 +41,15 @@ namespace UiModule {
         }
 
         virtual ~VarTextSelectController() {
-            SetEditStopCallback(nullptr);
             SetCustomSaveCallback(nullptr);
+            SetEditStopCallback(nullptr);
+
             SetWatching(false);
             SetActive(false);
             SetEditing(false);
         }
 
-        void SetWatching(bool watching) {
+        virtual void SetWatching(bool watching) override {
             m_watchingBeforeEdit = watching;
             if (!m_options.liveMode && m_editing && watching) return;
             if (m_watching == watching) return;
@@ -67,9 +67,7 @@ namespace UiModule {
             }
         }
 
-        bool IsWatching() const { return m_watching; }
-
-        void SetActive(bool active) {
+        virtual void SetActive(bool active) override {
             m_activeBeforeEdit = active;
             if (active == m_active) return;
             m_active = active;
@@ -82,7 +80,7 @@ namespace UiModule {
             }
         }
 
-        void SetEditing(bool editing) {
+        virtual void SetEditing(bool editing) override {
             if (m_editing == editing) return;
             m_editing = editing;
             if (editing) {
@@ -113,15 +111,9 @@ namespace UiModule {
             }
         }
 
-        void SetEditStopCallback(VarTextSelectEditStopCallback callback) {
-            m_onEditStop = callback;
-        }
-
         void SetCustomSaveCallback(VarTextSelectCustomSaveCallback<T> callback) {
-            m_customSaveCallback = callback;
-        }
-
-        bool IsEditing() const { return m_editing; }
+             m_customSaveCallback = callback;
+		}
 
     protected:
         void Save() {
@@ -258,15 +250,11 @@ namespace UiModule {
         Text* m_textComponent = nullptr;
         Core::Resolver<T> m_resolver = nullptr;
         Core::Watched<T>* m_watched = nullptr;
-        bool m_watching = false;
-        bool m_editing = false;
-        bool m_active = false;
         bool m_activeBeforeEdit = false;
         bool m_watchingBeforeEdit = false;
         std::wstring m_textBuffer = L"";
         bool m_allowEdit = false;
         std::optional<T> m_pendingSaveValue = std::nullopt;
-        VarTextSelectEditStopCallback m_onEditStop = nullptr;
         VarTextSelectCustomSaveCallback<T> m_customSaveCallback = nullptr;
         VarTextSelectOptionList<T> m_optionList;
         std::optional<T> m_currentValue = std::nullopt;

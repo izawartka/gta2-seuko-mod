@@ -2,6 +2,7 @@
 #include "../common.h"
 #include "../controller.h"
 #include "../converter-support.h"
+#include "../wae-base.h"
 #include "../components/text.h"
 #include "../../../events/draw.h"
 
@@ -13,7 +14,7 @@ namespace UiModule {
 	};
 
 	template <typename T>
-	class VarTextController : public Controller, public Core::EventListenerSupport, public ConverterSupport<T> {
+	class VarTextController : public Controller, public Core::EventListenerSupport, public ConverterSupport<T>, public WaeBase {
 	public:
 		VarTextController(Text* text, Core::Resolver<T> resolver, VarTextControllerOptions options = {}) {
 			static_assert(std::is_copy_constructible<T>::value, "T must be copy-constructible");
@@ -29,7 +30,7 @@ namespace UiModule {
 			SetWatching(false);
 		}
 
-		void SetWatching(bool watching) {
+		virtual void SetWatching(bool watching) override {
 			if (m_watching == watching) return;
 			m_watching = watching;
 			if (m_watching) {
@@ -45,8 +46,6 @@ namespace UiModule {
 			}
 		}
 
-		bool IsWatching() const { return m_watching; }
-
 	protected:
 		void UpdateText() {
 			m_textComponent->SetText(m_options.prefix + m_textBuffer + m_options.suffix);
@@ -59,13 +58,13 @@ namespace UiModule {
 			else {
 				m_textBuffer = m_options.nullText;
 			}
+			UpdateText();
 		}
 
 		VarTextControllerOptions m_options;
 		Text* m_textComponent = nullptr;
 		Core::Resolver<T> m_resolver = nullptr;
 		Core::Watched<T>* m_watched = nullptr;
-		bool m_watching = false;
 		std::wstring m_textBuffer = L"";
 	};
 }
