@@ -77,18 +77,6 @@ namespace UiModule {
 			}
 		}
 
-		void SetPreDrawUIListener(bool enable) {
-			if (enable == m_hasPreDrawListener) return;
-			m_hasPreDrawListener = enable;
-			if (enable) {
-				AddEventListener<PreDrawUIEvent>(&VarTextEditableController<T>::OnPreDrawUI);
-				m_blinkCounter = 0;
-			}
-			else {
-				RemoveEventListener<PreDrawUIEvent>();
-			}
-		}
-
 		void SetEditing(bool editing) {
 			if (m_editing == editing) return;
 			m_editing = editing;
@@ -121,7 +109,6 @@ namespace UiModule {
 					SetActive(false);
 				}
 				SetPreDrawUIListener(false);
-				m_textBuffer = L"";
 				UpdateText();
 				if (m_onEditStop) m_onEditStop();
 			}
@@ -138,6 +125,18 @@ namespace UiModule {
 		bool IsEditing() const { return m_editing; }
 
 	protected:
+		void SetPreDrawUIListener(bool enable) {
+			if (enable == m_hasPreDrawListener) return;
+			m_hasPreDrawListener = enable;
+			if (enable) {
+				AddEventListener<PreDrawUIEvent>(&VarTextEditableController<T>::OnPreDrawUI);
+				m_blinkCounter = 0;
+			}
+			else {
+				RemoveEventListener<PreDrawUIEvent>();
+			}
+		}
+
 		void Save() {
 			if (!m_editing) return;
 			if (!m_watchingBeforeEdit) return;
@@ -160,11 +159,11 @@ namespace UiModule {
 
 			if (m_customSaveCallback) {
 				m_customSaveCallback(newValue);
-			}
-
-			if (!m_watched->SetValue(newValue)) {
+			} else if (!m_watched->SetValue(newValue)) {
 				spdlog::warn("Failed to resolve variable for setting new value");
 			}
+
+			m_watched->RequestUpdate();
 		}
 
 		void UpdateText() {
@@ -178,15 +177,16 @@ namespace UiModule {
 				return;
 			}
 
+			if (m_pendingSaveValue.has_value()) {
+				ApplyPendingSave();
+				return;
+			}
+
 			bool hasValue = newValue.has_value();
 			m_textBuffer = hasValue ? this->ConvertToString(newValue.value()) : m_options.nullText;
 			m_allowEdit = hasValue;
 
 			UpdateText();
-
-			if (m_pendingSaveValue.has_value()) {
-				ApplyPendingSave();
-			}
 		}
 
 		void OnKeyDown(const KeyDownEvent& event) {
