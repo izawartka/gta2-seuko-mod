@@ -144,6 +144,7 @@ exit /b 0
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\converters\car-model.h" />
     <ClInclude Include="src\converters\cop-value.h" />
     <ClInclude Include="src\converters\default.h" />
     <ClInclude Include="src\modules\ui\converter-support.h" />
