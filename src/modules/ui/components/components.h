@@ -6,3 +6,4 @@
 #include "./spacer.h"
 #include "./margin.h"
 #include "./selectable.h"
+#include "./sprite.h"

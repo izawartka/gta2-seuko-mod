@@ -147,6 +147,7 @@ exit /b 0
     <ClInclude Include="src\converters\car-model.h" />
     <ClInclude Include="src\converters\cop-value.h" />
     <ClInclude Include="src\converters\default.h" />
+    <ClInclude Include="src\modules\ui\components\sprite.h" />
     <ClInclude Include="src\modules\ui\converter-support.h" />
     <ClInclude Include="src\core\core.h" />
     <ClInclude Include="src\core\listener-base.h" />
@@ -225,6 +226,7 @@ exit /b 0
     <ClCompile Include="src\modules\modmenu\root.cpp" />
     <ClCompile Include="src\modules\ui\component.cpp" />
     <ClCompile Include="src\modules\ui\components\selectable.cpp" />
+    <ClCompile Include="src\modules\ui\components\sprite.cpp" />
     <ClCompile Include="src\modules\ui\components\text.cpp" />
     <ClCompile Include="src\modules\ui\controllers\menu.cpp" />
     <ClCompile Include="src\modules\ui\root.cpp" />
