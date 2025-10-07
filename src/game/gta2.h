@@ -593,7 +593,7 @@ typedef enum EXPLOSION_SIZE {
 typedef enum SPRITE_TYPE {
     SPRITE_TYPE_INVISIBLE = 1,
     SPRITE_TYPE_CAR = 2,
-    SPRITE_TYPE_3 = 3,
+    SPRITE_TYPE_PED = 3,
     SPRITE_TYPE_TURRET = 4,
     SPRITE_TYPE_5 = 5
 } SPRITE_TYPE;
@@ -936,11 +936,11 @@ struct GTAVertex {
     float x;
     float y;
     float z;
-    undefined4 field_0x0c;
+    float z2;
     undefined4 field_0x10;
     undefined4 field_0x14;
-    undefined4 field_0x18;
-    undefined4 field_0x1c;
+    float u;
+    float v;
 };
 
 // END OF ADDED IN FILE //
@@ -6688,6 +6688,27 @@ struct S30 {
     int field_0x320;
 };
 
+typedef struct S4_SUBS1 S4_SUBS1, * PS4_SUBS1;
+
+struct S4_SUBS1 {
+    int field_0x0;
+    undefined field_0x4;
+	undefined field_0x5;
+    short field_0x6;
+	undefined field_0x8;
+	undefined field_0x9;
+	undefined field_0xa;
+	undefined field_0xb;
+	undefined field_0xc;
+	undefined field_0xd;
+	undefined field_0xe;
+	undefined field_0xf;
+	undefined field_0x10;
+	undefined field_0x11;
+	undefined field_0x12;
+    undefined field_0x13;
+};
+
 typedef struct S4 S4, *PS4;
 
 struct S4 { /* Relates to tiles */
@@ -6701,9 +6722,7 @@ struct S4 { /* Relates to tiles */
     int field_0x153c;
     int field_0x1540;
     int field_0x1544;
-    undefined field_0x1548[118];
-    short field_0x15be;
-    short field_0x15c0;
+    S4_SUBS1 subs1arr[7];
 };
 
 typedef struct S4_1 S4_1, *PS4_1;
