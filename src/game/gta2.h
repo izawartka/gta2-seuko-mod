@@ -5163,9 +5163,9 @@ typedef struct SpriteEntry SpriteEntry, *PSpriteEntry;
 typedef unsigned long long    uint16;
 struct SpriteEntry {
     void * ptr;
-    UINT8 w;
-    UINT8 h;
-    uint16 pad;
+    uint8_t width;
+    uint8_t height;
+    uint16_t pad;
 };
 
 typedef struct StyleFileHeader StyleFileHeader, *PStyleFileHeader;
@@ -9019,7 +9019,7 @@ struct Style_S3 {
     struct SpriteBase * spriteBase2;
     struct SpriteBase * spriteBase;
     void * fontBase;
-    void * spriteIndex;
+    struct SpriteEntry * spriteEntries;
     void * map_object_info;
     struct PaletteIndex * palleteIndex;
     struct PhysicalPalette * physical_palettes;
