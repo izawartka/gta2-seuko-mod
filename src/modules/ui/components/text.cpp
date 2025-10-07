@@ -14,14 +14,14 @@ UiModule::Text::Text(Component* parent, const std::wstring& text, Game::SCR_f sc
 
 void UiModule::Text::Draw()
 {
-	Game::S4_ENUM1 s4enum2 = (Game::S4_ENUM1)2;
+	Game::PALETTE_BASE paletteBase = Game::PALETTE_BASE::PALETTE_BASE_SPRITE;
 	Game::Functions::DrawGTAText(
 		(WCHAR*)m_text.c_str(),
 		m_rect.x,
 		m_rect.y,
 		1,
 		m_scale,
-		&s4enum2,
+		&paletteBase,
 		1,
 		Game::SPRITE_INVISIBILITY_VISIBLE,
 		1

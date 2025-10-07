@@ -17,14 +17,14 @@ void UiModule::Selectable::Draw()
 		return;
 	}
 
-	Game::S4_ENUM1 s4enum2 = (Game::S4_ENUM1)2;
+	Game::PALETTE_BASE paletteBase = Game::PALETTE_BASE::PALETTE_BASE_SPRITE;
 	Game::Functions::DrawGTAText(
 		(WCHAR*)m_options.markerText.c_str(),
 		m_rect.x,
 		m_rect.y + m_options.markerAdditionalOffsetY,
 		1,
 		m_options.markerScale,
-		&s4enum2,
+		&paletteBase,
 		0,
 		Game::SPRITE_INVISIBILITY_VISIBLE,
 		0
