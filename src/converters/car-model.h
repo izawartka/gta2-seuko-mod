@@ -1,10 +1,10 @@
 #pragma once
-#include "default.h"
+#include <string>
 #include "../game/game.h"
 
 class CarModelConverter {
 public:
-    static std::wstring ConvertToString(Game::CAR_MODEL4 value) {
+	static std::wstring ConvertToString(Game::CAR_MODEL4 value) {
 		int32_t id = static_cast<int32_t>(value);
 
 		switch (id) {
@@ -93,19 +93,19 @@ public:
 		case 86: return L"KRSNABUS";
 		default: return L"???";
 		}
-    }
+	}
 
-    static Game::CAR_MODEL4 ConvertFromString(std::wstring text) {
+	static Game::CAR_MODEL4 ConvertFromString(std::wstring text) {
 		return static_cast<Game::CAR_MODEL4>(0); // No direct editing allowed
-    }
+	}
 
-    static bool IsValidChar(std::wstring text, wchar_t c) {
+	static bool IsValidChar(std::wstring text, wchar_t c) {
 		return false; // No direct editing allowed
-    }
+	}
 
 protected:
-    CarModelConverter() = delete;
-    ~CarModelConverter() = delete;
-    CarModelConverter(const CarModelConverter&) = delete;
-    CarModelConverter& operator=(const CarModelConverter&) = delete;
+	CarModelConverter() = delete;
+	~CarModelConverter() = delete;
+	CarModelConverter(const CarModelConverter&) = delete;
+	CarModelConverter& operator=(const CarModelConverter&) = delete;
 };
