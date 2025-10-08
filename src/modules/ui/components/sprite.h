@@ -17,32 +17,17 @@ namespace UiModule {
 		Sprite(Component* parent, SpriteOptions options);
 		virtual void Draw() override;
 
-		void SetSprite(Game::SPRITE_TYPE spriteType, uint16_t spriteId);
-		Game::SPRITE_TYPE GetSpriteType() const { return m_spriteType; }
-		uint16_t GetSpriteId() const { return m_spriteId; }
+		void SetOptions(SpriteOptions options);
+		SpriteOptions GetOptions() const { return m_options; }
 
-		void SetPalette(Game::PALETTE_BASE palette);
-		Game::PALETTE_BASE GetPalette() const { return m_palette; }
-
-		void SetRemap(uint16_t remap);
-		uint16_t GetRemap() const { return m_remap; }
-
-		void SetScale(Game::SCR_f scale);
-		Game::SCR_f GetScale() const { return m_scale; }
-
-		void SetRotation(float rotation); // in radians
-		float GetRotation() const { return m_rotation; } // in radians
+		int GetSpriteWidth() const { return m_spriteWidth; }
+		int GetSpriteHeight() const { return m_spriteHeight; }
 
 	protected:
 		void RecalculateSize();
 
-		Game::SPRITE_TYPE m_spriteType;
-		uint16_t m_spriteId;
-		Game::PALETTE_BASE m_palette;
-		uint16_t m_remap;
+		SpriteOptions m_options;
 		Game::GTAVertex m_vertices[4];
-		Game::SCR_f m_scale;
-		float m_rotation;
 
 		int m_spriteWidth = 0;
 		int m_spriteHeight = 0;
