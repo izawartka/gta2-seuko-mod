@@ -6,12 +6,16 @@ namespace Game {
 	class Utils
 	{
 	public:
-		static float ToFloat(SCR_f value) {
+		static constexpr float ToFloat(SCR_f value) {
 			return static_cast<float>(value) / 16384.0f;
 		}
 
-		static SCR_f FromFloat(float value) {
+		static constexpr SCR_f FromFloat(float value) {
 			return static_cast<SCR_f>(value * 16384.0f);
+		}
+
+		static constexpr SCR_f Multiply(SCR_f a, SCR_f b) {
+			return static_cast<SCR_f>((static_cast<int64_t>(a) * static_cast<int64_t>(b)) >> 14);
 		}
 
 		static std::vector<CAR_MODEL4> GetSpawnableCarModels() {
