@@ -767,7 +767,7 @@ struct Sprite {
     undefined field_0x2e;
     undefined field_0x2f;
     enum SPRITE_TYPE spriteType;
-    int lockPalleteMaybe; /* 0x34 2 - uses default pallete for this vehicle // 3 - uses paintjob pallete (carColor variable) */
+    enum PALETTE_BASE paletteBase;
     byte zoomInSprite; /*0x38*/
     byte ZOfTileOn; /*0x39*/
     undefined field_0x3a;
@@ -1302,14 +1302,8 @@ struct Ped {
     undefined field_0x81;
     undefined field_0x82;
     undefined field_0x83;
-    undefined field_0x84;
-    undefined field_0x85;
-    undefined field_0x86;
-    undefined field_0x87;
-    undefined field_0x88;
-    undefined field_0x89;
-    undefined field_0x8a;
-    undefined field_0x8b;
+    Car* carToEnterMaybe;
+    Car* someCar;
     undefined field_0x8c;
     undefined field_0x8d;
     undefined field_0x8e;
