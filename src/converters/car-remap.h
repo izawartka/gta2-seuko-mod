@@ -44,7 +44,6 @@ public:
 		case 34: return L"Whiter";
 		case 35: return L"Yellow";
 		case 36: return L"Unknown 36"; // zzzbank
-		case 97: return L"Unknown 97"; // no description
 		default: return L"???";
 		}
 	}
