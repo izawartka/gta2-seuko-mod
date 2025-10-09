@@ -38,5 +38,8 @@ namespace Game {
 			static DrawQuadType* DrawQuadFunc = *(DrawQuadType**)0x005952c4;
 			DrawQuadFunc(flags, sprite, verticies, flags2);
 		}
+
+		typedef Car*(__stdcall SpawnCarType)(int x, int y, int z, short rot, CAR_MODEL4 model);
+		static constexpr SpawnCarType* SpawnCar = (SpawnCarType*)0x00426e10;
 	};  
 }
