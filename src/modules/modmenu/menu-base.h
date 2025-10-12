@@ -13,6 +13,7 @@ namespace ModMenuModule {
 		virtual void Detach();
 
 		virtual void CreateMenu(std::wstring title, UiModule::Component*& vertCont) final;
+		virtual void ApplyIndexPersistence(std::string key) final;
 		virtual void DestroyMenu() final;
 
 		virtual void OnShow() {}
@@ -26,5 +27,6 @@ namespace ModMenuModule {
 		UiModule::Component* m_mainComponent = nullptr;
 		UiModule::MenuController* m_menuController = nullptr;
 		bool m_visible = false;
+		std::string m_selectedItemPersistenceKey = "";
 	};
 }
