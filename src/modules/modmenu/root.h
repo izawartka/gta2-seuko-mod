@@ -1,6 +1,7 @@
 #pragma once
 #include "common.h"
 #include "menu-base.h"
+#include "persistence-manager.h"
 #include "../../events/keyboard.h"
 
 namespace ModMenuModule {
@@ -54,6 +55,7 @@ namespace ModMenuModule {
 		void OnKeyDown(const KeyDownEvent& event);
 		static RootModule* m_instance;
 
+		PersistenceManager m_persistenceManager;
 		ModMenuOptions m_options;
 		std::vector<std::unique_ptr<MenuBase>> m_menus;
 		bool m_visible = false;
