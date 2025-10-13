@@ -3,10 +3,10 @@
 #include "../menu-base.h"
 
 namespace ModMenuModule {
-	class MainMenu : public MenuBase {
+	class VehiclesMenu : public MenuBase {
 	public:
-		MainMenu();
-		virtual ~MainMenu();
+		VehiclesMenu();
+		virtual ~VehiclesMenu();
 
 		virtual bool Attach() override;
 

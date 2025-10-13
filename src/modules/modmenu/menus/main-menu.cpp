@@ -1,6 +1,7 @@
 #include "main-menu.h"
 #include "../root.h"
 #include "player-menu.h"
+#include "vehicles-menu.h"
 
 ModMenuModule::MainMenu::MainMenu()
 {
@@ -33,6 +34,9 @@ void ModMenuModule::MainMenu::OnMenuAction(UiModule::Selectable* item, UiModule:
 	switch (id) {
 	case 0: // Player
 		ModMenuModule::RootModule::GetInstance()->AddMenu<ModMenuModule::PlayerMenu>();
+		break;
+	case 1: // Vehicles
+		ModMenuModule::RootModule::GetInstance()->AddMenu<ModMenuModule::VehiclesMenu>();
 		break;
 	default:
 		break;
