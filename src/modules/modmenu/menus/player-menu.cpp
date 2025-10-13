@@ -45,6 +45,8 @@ bool ModMenuModule::PlayerMenu::Attach()
 	m_wantedLevelController->SetEditStopCallback(onEditStop);
 	m_wantedLevelController->SetConverter<CopValueConverter>();
 
+	ApplyIndexPersistence("ModMenu_PlayerMenu_SelectedIndex");
+
 	return true;
 }
 

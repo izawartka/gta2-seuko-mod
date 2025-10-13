@@ -20,12 +20,14 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 	CreateMenu(L"#Spawn vehicle#", vertCont);
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
+	ModMenuModule::PersistenceManager* persistence = ModMenuModule::PersistenceManager::GetInstance();
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 
 	// model
 	UiModule::Text* modelText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	UiModule::VarTextSelectOptionList<Game::CAR_MODEL4> modelOptionList = Game::Utils::GetSpawnableCarModels();
+	m_selectedModel = persistence->Load("ModMenu_SpawnVehicleMenu_SelectedModel", modelOptionList[0]);
 	m_modelController = uiRoot->AddController<UiModule::VarTextSelectController<Game::CAR_MODEL4>>(
 		modelText,
 		[this]() { return &m_selectedModel; },
@@ -45,6 +47,7 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 	// remap
 	UiModule::Text* remapText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	UiModule::VarTextSelectOptionList<short> remapOptionList = Game::Utils::GetAvailableCarRemaps();
+	m_selectedRemap = persistence->Load("ModMenu_SpawnVehicleMenu_SelectedRemap", remapOptionList[0]);
 	m_remapController = uiRoot->AddController<UiModule::VarTextSelectController<short>>(
 		remapText,
 		[this]() { return &m_selectedRemap; },
@@ -68,15 +71,21 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 
 	// spawn button
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Spawn", options.textSize);
+	ApplyIndexPersistence("ModMenu_SpawnVehicleMenu_SelectedIndex");
 
 	return true;
 }
 
 void ModMenuModule::SpawnVehicleMenu::Detach()
 {
+	ModMenuModule::PersistenceManager* persistence = ModMenuModule::PersistenceManager::GetInstance();
+	persistence->Save("ModMenu_SpawnVehicleMenu_SelectedModel", m_selectedModel);
+	persistence->Save("ModMenu_SpawnVehicleMenu_SelectedRemap", m_selectedRemap);
+
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	uiRoot->RemoveController(m_modelController);
 	uiRoot->RemoveController(m_remapController);
+
 	DestroyMenu();
 }
 

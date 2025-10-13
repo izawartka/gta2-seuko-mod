@@ -22,6 +22,9 @@ bool ModMenuModule::VehiclesMenu::Attach()
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Spawn vehicle", options.textSize);
 
+
+	ApplyIndexPersistence("ModMenu_VehiclesMenu_SelectedIndex");
+
 	return true;
 }
 
