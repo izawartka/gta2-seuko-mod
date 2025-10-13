@@ -22,6 +22,7 @@ namespace UiModule {
         Game::KeyCode keyNext = Game::KeyCode::DIK_RBRACKET;
         Game::KeyCode keyPrev = Game::KeyCode::DIK_LBRACKET;
         Game::KeyCode keyAction = Game::KeyCode::DIK_BACKSLASH;
+        bool quickJump = true; // Allow jumping to the first / last value using shift + prev / next
         bool loop = false;
         bool liveMode = true; // immediately apply changes when selecting options and change selected option when variable changes
     };
@@ -211,6 +212,7 @@ namespace UiModule {
             }
             else if (key == m_options.keyNext) {
                 newIndex++;
+                if (isShiftPressed) newIndex = optionCount - 1;
                 if (newIndex >= optionCount) {
                     if (m_options.loop) {
                         newIndex = 0;
@@ -222,6 +224,7 @@ namespace UiModule {
             }
             else if (key == m_options.keyPrev) {
                 newIndex--;
+                if (isShiftPressed) newIndex = 0;
                 if (newIndex < 0) {
                     if (m_options.loop) {
                         newIndex = optionCount - 1;
