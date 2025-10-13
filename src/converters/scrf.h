@@ -18,6 +18,10 @@ public:
 		return DefaultConverter<float>::IsValidChar(text, c);
 	}
 
+	static bool AreEqual(Game::SCR_f a, Game::SCR_f b) {
+		return a == b;
+	}
+
 protected:
 	ScrfConverter() = delete;
 	~ScrfConverter() = delete;

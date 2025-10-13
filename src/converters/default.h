@@ -57,6 +57,10 @@ public:
 		}
 	}
 
+	static bool AreEqual(T a, T b) {
+		return a == b;
+	}
+
 protected:
 	DefaultConverter() = delete;
 	~DefaultConverter() = delete;

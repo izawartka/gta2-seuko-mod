@@ -95,12 +95,8 @@ public:
 		}
 	}
 
-	static Game::CAR_MODEL4 ConvertFromString(std::wstring text) {
-		return static_cast<Game::CAR_MODEL4>(0); // No direct editing allowed
-	}
-
-	static bool IsValidChar(std::wstring text, wchar_t c) {
-		return false; // No direct editing allowed
+	static bool AreEqual(Game::CAR_MODEL4 a, Game::CAR_MODEL4 b) {
+		return a == b;
 	}
 
 protected:

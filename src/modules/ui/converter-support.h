@@ -10,45 +10,89 @@ namespace UiModule {
 
         template<typename ConverterT>
         void SetConverter() {
-            static_assert(std::is_same<decltype(ConverterT::ConvertToString(std::declval<T>())), std::wstring>::value,
-                "ConverterT must have a static method: std::wstring ConvertToString(T)");
-            static_assert(std::is_same<decltype(ConverterT::ConvertFromString(std::declval<std::wstring>())), T>::value,
-                "ConverterT must have a static method: T ConvertFromString(std::wstring)");
-            static_assert(std::is_same<decltype(ConverterT::IsValidChar(std::declval<std::wstring>(), std::declval<wchar_t>())), bool>::value,
-                "ConverterT must have a static method: bool IsValidChar(std::wstring, wchar_t)");
+            if constexpr (has_convert_to_string<ConverterT, T>::value) {
+                m_toStringFunc = ConverterT::ConvertToString;
+            } 
+            else {
+                m_toStringFunc = nullptr;
+			}
 
-            m_toStringFunc = ConverterT::ConvertToString;
-            m_fromStringFunc = ConverterT::ConvertFromString;
-            m_isValidCharFunc = ConverterT::IsValidChar;
+            if constexpr (has_convert_from_string<ConverterT, T>::value) {
+                m_fromStringFunc = ConverterT::ConvertFromString;
+            } 
+            else {
+				m_fromStringFunc = nullptr;
+            }
+
+            if constexpr (has_is_valid_char<ConverterT, T>::value) {
+                m_isValidCharFunc = ConverterT::IsValidChar;
+			}
+            else {
+                m_isValidCharFunc = nullptr;
+            }
+
+            if constexpr (has_are_equal<ConverterT, T>::value) {
+                m_areEqual = ConverterT::AreEqual;
+            }
+            else {
+                m_areEqual = nullptr;
+			}
         }
 
         void ClearConverter() {
             m_toStringFunc = DefaultConverter<T>::ConvertToString;
             m_fromStringFunc = DefaultConverter<T>::ConvertFromString;
             m_isValidCharFunc = DefaultConverter<T>::IsValidChar;
+			m_areEqual = DefaultConverter<T>::AreEqual;
         }
 
     protected:
         std::wstring ConvertToString(T value) const {
-			assert(m_toStringFunc && "Converter not set");
+			assert(m_toStringFunc && "Converter not set or does not support to-string conversion");
             return m_toStringFunc(value);
         }
 
         T ConvertFromString(std::wstring value) const {
-			assert(m_fromStringFunc && "Converter not set");
+			assert(m_fromStringFunc && "Converter not set or does not support from-string conversion");
             return m_fromStringFunc(value);
         }
 
         bool IsValidChar(std::wstring text, wchar_t c) const {
-			assert(m_isValidCharFunc && "Converter not set");
+			assert(m_isValidCharFunc && "Converter not set or does not support char validation");
             return m_isValidCharFunc(text, c);
         }
+
+		bool AreEqual(T a, T b) const {
+			assert(m_areEqual && "Converter not set or does not support equality comparison");
+			return m_areEqual(a, b);
+		}
 
         ConverterSupport() = default;
 
     private:
+		template<typename ConverterT, typename U, typename = void>
+		struct has_convert_to_string : std::false_type {};
+		template<typename ConverterT, typename U>
+		struct has_convert_to_string<ConverterT, U, std::void_t<decltype(ConverterT::ConvertToString(std::declval<U>()))>> : std::true_type {};
+
+		template<typename ConverterT, typename U, typename = void>
+		struct has_convert_from_string : std::false_type {};
+		template<typename ConverterT, typename U>
+		struct has_convert_from_string<ConverterT, U, std::void_t<decltype(ConverterT::ConvertFromString(std::declval<std::wstring>()))>> : std::true_type {};
+
+		template<typename ConverterT, typename U, typename = void>
+		struct has_is_valid_char : std::false_type {};
+		template<typename ConverterT, typename U>
+		struct has_is_valid_char<ConverterT, U, std::void_t<decltype(ConverterT::IsValidChar(std::declval<std::wstring>(), std::declval<wchar_t>()))>> : std::true_type {};
+
+		template<typename ConverterT, typename U, typename = void>
+		struct has_are_equal : std::false_type {};
+		template<typename ConverterT, typename U>
+		struct has_are_equal<ConverterT, U, std::void_t<decltype(ConverterT::AreEqual(std::declval<U>(), std::declval<U>()))>> : std::true_type {};
+
         std::function<std::wstring(T)> m_toStringFunc = DefaultConverter<T>::ConvertToString;
         std::function<T(std::wstring)> m_fromStringFunc = DefaultConverter<T>::ConvertFromString;
         std::function<bool(std::wstring, wchar_t)> m_isValidCharFunc = DefaultConverter<T>::IsValidChar;
+        std::function<bool(T, T)> m_areEqual = DefaultConverter<T>::AreEqual;
     };
 }

@@ -48,12 +48,8 @@ public:
 		}
 	}
 
-	static short ConvertFromString(std::wstring text) {
-		return 0; // No direct editing allowed
-	}
-
-	static bool IsValidChar(std::wstring text, wchar_t c) {
-		return false; // No direct editing allowed
+	static bool AreEqual(short a, short b) {
+		return a == b;
 	}
 
 protected:

@@ -151,7 +151,9 @@ namespace UiModule {
             if (!m_currentValue.has_value()) {
                 return;
             }
-            auto it = std::find(m_optionList.begin(), m_optionList.end(), m_currentValue.value());
+            auto it = std::find_if(m_optionList.begin(), m_optionList.end(), [this](const T& val) {
+				return this->AreEqual(val, m_currentValue.value());
+			});
             if (it == m_optionList.end()) {
                 return;
             }

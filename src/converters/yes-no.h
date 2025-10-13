@@ -7,12 +7,8 @@ public:
 		return value ? L"Yes" : L"No";
 	}
 
-	static bool ConvertFromString(std::wstring text) {
-		return false; // No direct editing allowed
-	}
-
-	static bool IsValidChar(std::wstring text, wchar_t c) {
-		return false; // No direct editing allowed
+	static bool AreEqual(bool a, bool b) {
+		return a == b;
 	}
 
 protected:
