@@ -28,9 +28,7 @@ bool ModMenuModule::PlayerMenu::Attach()
 	};
 
 	Core::Resolver<short> wantedLevelResolver = Core::MakeResolver(
-		[]() { return Game::Memory::GetGame(); },
-		mem(&Game::Game::players), idx(0),
-		mem(&Game::Player::ped),
+		Game::Memory::GetPlayerPed,
 		mem(&Game::Ped::copValue)
 	);
 
@@ -38,7 +36,10 @@ bool ModMenuModule::PlayerMenu::Attach()
 	UiModule::Text* wantedLevelText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	m_wantedLevelController = uiRoot->AddController<UiModule::VarTextSelectController<short>>(
 		wantedLevelText,
-		wantedLevelResolver,
+		Core::MakeResolver(
+			Game::Memory::GetPlayerPed,
+			mem(&Game::Ped::copValue)
+		),
 		wantedLevelOptionList,
 		UiModule::VarTextSelectControllerOptions{ L"Wanted level: #", L"#" }
 	);
@@ -80,6 +81,7 @@ void ModMenuModule::PlayerMenu::OnMenuAction(UiModule::Selectable* item, UiModul
 	case 2: // Wanted level
 		m_menuController->SetActive(false);
 		m_wantedLevelController->SetEditing(true);
+		break;
 	default:
 		break;
 	}

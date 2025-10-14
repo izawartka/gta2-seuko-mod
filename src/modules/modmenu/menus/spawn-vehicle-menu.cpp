@@ -185,13 +185,7 @@ void ModMenuModule::SpawnVehicleMenu::UpdateSpritePreviewMargin()
 
 void ModMenuModule::SpawnVehicleMenu::Spawn()
 {
-	auto pedResolver = Core::MakeResolver<>(
-		[]() { return Game::Memory::GetGame(); },
-		mem(&Game::Game::CurrentPlayer),
-		mem(&Game::Player::ped)
-	);
-
-	Game::Ped* ped = pedResolver();
+	Game::Ped* ped = Game::Memory::GetPlayerPed();
 	if (!ped || !ped->gameObject || !ped->gameObject->sprite) {
 		spdlog::warn("Could not find player ped position to spawn vehicle.");
 		return;

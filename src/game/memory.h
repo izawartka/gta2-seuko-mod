@@ -7,6 +7,13 @@ namespace Game {
 	{
 	public:
 		static constexpr Game* GetGame() { return (Game*)*(DWORD*)0x005eb4fc; }
+		static constexpr Ped* GetPlayerPed() {
+			Game* game = GetGame();
+			if (!game) return nullptr;
+			Player* player = game->CurrentPlayer;
+			if (!player) return nullptr;
+			return player->ped;
+		}
 		static constexpr KeyCode* GetKeyPressCode() { return (KeyCode*)0x005e8f8c; }
 		static constexpr uint* GetKeyPressState() { return (uint*)0x005e8f90; }
 		static constexpr S4* GetS4() { return (S4*)*(DWORD*)0x00671978; }

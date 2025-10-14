@@ -22,9 +22,7 @@ bool ModMenuModule::PlayerPosMenu::Attach()
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 
 	Core::Resolver<Game::Sprite> spriteResolver = Core::MakeResolver(
-		[]() { return Game::Memory::GetGame(); },
-		mem(&Game::Game::players), idx(0),
-		mem(&Game::Player::ped),
+		Game::Memory::GetPlayerPed,
 		mem(&Game::Ped::gameObject),
 		mem(&Game::GameObject::sprite)
 	);
