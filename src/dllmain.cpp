@@ -10,39 +10,40 @@ Core::Core* coreInstance = nullptr;
 
 static void Init()
 {
-    InitConsole();
-    coreInstance = new Core::Core();
-    Core::ModuleManager* moduleManager = Core::ModuleManager::GetInstance();
-    UiModule::RootModule* rootModule = moduleManager->AddModule<UiModule::RootModule>();
+	InitConsole();
+	coreInstance = new Core::Core();
+	Core::ModuleManager* moduleManager = Core::ModuleManager::GetInstance();
+	UiModule::RootModule* rootModule = moduleManager->AddModule<UiModule::RootModule>();
 	ModMenuModule::RootModule* modMenu = moduleManager->AddModule<ModMenuModule::RootModule>();
-    modMenu->AddMenu<ModMenuModule::MainMenu>();
+	modMenu->AddMenu<ModMenuModule::MainMenu>();
 }
 
 static void Deinit()
 {
-    Core::ModuleManager* moduleManager = Core::ModuleManager::GetInstance();
-    moduleManager->RemoveModule<UiModule::RootModule>();
-    delete coreInstance;
-    coreInstance = nullptr;
+	Core::ModuleManager* moduleManager = Core::ModuleManager::GetInstance();
+	moduleManager->RemoveModule<ModMenuModule::RootModule>();
+	moduleManager->RemoveModule<UiModule::RootModule>();
+	delete coreInstance;
+	coreInstance = nullptr;
 }
 
 BOOL APIENTRY DllMain( HMODULE hModule,
-                       DWORD  ul_reason_for_call,
-                       LPVOID lpReserved
-                     )
+					   DWORD  ul_reason_for_call,
+					   LPVOID lpReserved
+					 )
 {
-    switch (ul_reason_for_call)
-    {
-    case DLL_PROCESS_ATTACH:
-        Init();
+	switch (ul_reason_for_call)
+	{
+	case DLL_PROCESS_ATTACH:
+		Init();
 		break;
-    case DLL_THREAD_ATTACH:
-    case DLL_THREAD_DETACH:
-        break;
-    case DLL_PROCESS_DETACH:
-        Deinit();
-        break;
-    }
-    return TRUE;
+	case DLL_THREAD_ATTACH:
+	case DLL_THREAD_DETACH:
+		break;
+	case DLL_PROCESS_DETACH:
+		Deinit();
+		break;
+	}
+	return TRUE;
 }
 

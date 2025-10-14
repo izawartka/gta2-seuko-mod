@@ -34,6 +34,7 @@ bool ModMenuModule::RootModule::Attach()
 void ModMenuModule::RootModule::Detach()
 {
 	RemoveAllEventListeners();
+	ClearMenus();
 	spdlog::info("ModMenu::RootModule module detached.");
 }
 
