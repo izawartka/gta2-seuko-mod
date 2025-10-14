@@ -1,6 +1,8 @@
 #pragma once
 #include "common.h"
 
+constexpr const char* PERSISTENCE_FILE = "modmenu.pst";
+
 namespace ModMenuModule {
 	class PersistenceManager {
 	public:
@@ -9,7 +11,9 @@ namespace ModMenuModule {
 		template <typename T>
 		void Save(std::string key, T value) {
 			spdlog::debug("Saving value with key: {}", key);
-			m_savedValues[key] = std::make_unique<SavedValue<T>>(key, value);
+			std::vector<uint8_t> data(sizeof(T));
+			std::memcpy(data.data(), &value, sizeof(T));
+			m_savedValues[key] = std::make_unique<SavedValue>(key, sizeof(T), data.data());
 		}
 
 		template <typename T>
@@ -20,14 +24,22 @@ namespace ModMenuModule {
 				spdlog::debug("Key not found, returning default value");
 				return defaultValue;
 			}
-			auto savedValueBase = it->second.get();
-			if (savedValueBase->type != typeid(T)) {
-				spdlog::warn("Type mismatch for key: {}, returning default value", key);
+
+			auto savedValue = it->second.get();
+
+			if (savedValue->data.size() != sizeof(T)) {
+				spdlog::warn("Size mismatch: {} vs {}, returning default value", savedValue->data.size(), sizeof(T));
 				return defaultValue;
 			}
-			auto savedValue = static_cast<SavedValue<T>*>(savedValueBase);
-			return savedValue->value;
+
+			T value;
+			std::memcpy(&value, savedValue->data.data(), sizeof(T));
+			return value;
 		}
+
+		void SaveToFile();
+		void LoadFromFile();
+
 	private:
 		friend class RootModule;
 		PersistenceManager();
@@ -37,24 +49,15 @@ namespace ModMenuModule {
 
 		static PersistenceManager* m_instance;
 
-		struct SavedValueBase {
-			SavedValueBase() = default;
-			virtual ~SavedValueBase() = default;
+		struct SavedValue {
+			SavedValue(std::string k, size_t s, const uint8_t* d) : key(k), size(s), data(d, d + s) {}
+			virtual ~SavedValue() = default;
 
 			std::string key;
-			std::type_index type = typeid(void);
+			size_t size;
+			std::vector<uint8_t> data;
 		};
 
-		template <typename T>
-		struct SavedValue : SavedValueBase {
-			SavedValue(std::string k, T v) : value(v) {
-				key = k;
-				type = typeid(T);
-			}
-
-			T value;
-		};
-
-		std::unordered_map<std::string, std::unique_ptr<SavedValueBase>> m_savedValues;
+		std::unordered_map<std::string, std::unique_ptr<SavedValue>> m_savedValues;
 	};
 }
