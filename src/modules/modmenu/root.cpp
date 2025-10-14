@@ -1,4 +1,5 @@
 #include "root.h"
+#include "cheat-registry.h"
 
 ModMenuModule::RootModule* ModMenuModule::RootModule::m_instance = nullptr;
 
@@ -25,6 +26,8 @@ bool ModMenuModule::RootModule::Attach()
 {
 	AddEventListener<KeyDownEvent>(&RootModule::OnKeyDown);
 	spdlog::info("ModMenu::RootModule module attached.");
+
+	InstantiateCheats();
 	return true;
 }
 
@@ -72,6 +75,19 @@ void ModMenuModule::RootModule::SetVisible(bool visible)
 	}
 
 	m_menus.back()->SetVisible(visible);
+}
+
+void ModMenuModule::RootModule::InstantiateCheats()
+{
+	auto& factories = ModMenuModule::CheatRegistry::Factories();
+	spdlog::debug("Instantiating {} cheats", factories.size());
+	for (auto& factory : factories) {
+		ModMenuModule::CheatBase* cheat = factory();
+		if (cheat) {
+			cheat->Attach();
+			m_cheats.emplace_back(cheat);
+		}
+	}
 }
 
 void ModMenuModule::RootModule::OnKeyDown(const KeyDownEvent& event)

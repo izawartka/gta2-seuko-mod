@@ -1,5 +1,6 @@
 #pragma once
 #include "common.h"
+#include "cheat-base.h"
 #include "menu-base.h"
 #include "persistence-manager.h"
 #include "../../events/keyboard.h"
@@ -52,11 +53,13 @@ namespace ModMenuModule {
 		ModMenuOptions GetOptions() const { return m_options; }
 
 	private:
+		void InstantiateCheats();
 		void OnKeyDown(const KeyDownEvent& event);
 		static RootModule* m_instance;
 
 		PersistenceManager m_persistenceManager;
 		ModMenuOptions m_options;
+		std::vector<std::unique_ptr<CheatBase>> m_cheats;
 		std::vector<std::unique_ptr<MenuBase>> m_menus;
 		bool m_visible = false;
 	};
