@@ -1,6 +1,8 @@
 #include "player-menu.h"
 #include "player-pos-menu.h"
 #include "../../../converters/cop-value.h"
+#include "../../../converters/yes-no.h"
+#include "../cheats/freeze-cop-value.h"
 #include "../root.h"
 
 ModMenuModule::PlayerMenu::PlayerMenu()
@@ -45,6 +47,30 @@ bool ModMenuModule::PlayerMenu::Attach()
 	);
 	m_wantedLevelController->SetEditStopCallback(onEditStop);
 	m_wantedLevelController->SetConverter<CopValueConverter>();
+	m_wantedLevelController->SetCustomSaveCallback([wantedLevelResolver, this](short newWantedLevel) {
+		ModMenuModule::FreezeCopValue* cheat = GetCheat<ModMenuModule::FreezeCopValue>();
+		if (cheat) {
+			cheat->SetCopValue(newWantedLevel);
+		}
+
+		short* copValue = wantedLevelResolver();
+		if (copValue) {
+			*copValue = newWantedLevel;
+		}
+	});
+
+	UiModule::Text* freezeCopValueText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
+	m_freezeCopValueController = uiRoot->AddController<UiModule::VarTextSelectController<bool>>(
+		freezeCopValueText,
+		[this]() { return &m_freezeCopValueEnabled; },
+		UiModule::VarTextSelectOptionList<bool>{ false, true },
+		UiModule::VarTextSelectControllerOptions{ L"Freeze wanted level: #", L"#" }
+	);
+	m_freezeCopValueController->SetEditStopCallback(onEditStop);
+	m_freezeCopValueController->SetConverter<YesNoConverter>();
+	m_freezeCopValueController->SetCustomSaveCallback([this](bool newValue) {
+		SetCheatEnabled<ModMenuModule::FreezeCopValue>(newValue);
+	});
 
 	ApplyIndexPersistence("ModMenu_PlayerMenu_SelectedIndex");
 
@@ -55,18 +81,27 @@ void ModMenuModule::PlayerMenu::Detach()
 {
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	uiRoot->RemoveController(m_wantedLevelController);
+	uiRoot->RemoveController(m_freezeCopValueController);
 	DestroyMenu();
 }
 
 void ModMenuModule::PlayerMenu::OnShow()
 {
 	m_wantedLevelController->SetWatching(true);
+	m_freezeCopValueController->SetWatching(true);
+
+	AddEventListener<ModMenuModule::CheatStateEvent>(&PlayerMenu::OnCheatStateChange);
+	UpdateCheatStates();
 }
 
 void ModMenuModule::PlayerMenu::OnHide()
 {
+	RemoveEventListener<ModMenuModule::CheatStateEvent>();
+
 	m_wantedLevelController->SetWatching(false);
 	m_wantedLevelController->SetEditing(false);
+	m_freezeCopValueController->SetWatching(false);
+	m_freezeCopValueController->SetEditing(false);
 }
 
 void ModMenuModule::PlayerMenu::OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
@@ -82,7 +117,26 @@ void ModMenuModule::PlayerMenu::OnMenuAction(UiModule::Selectable* item, UiModul
 		m_menuController->SetActive(false);
 		m_wantedLevelController->SetEditing(true);
 		break;
+	case 3: // Freeze wanted level
+		m_menuController->SetActive(false);
+		m_freezeCopValueController->SetEditing(true);
+		break;
 	default:
 		break;
+	}
+}
+
+void ModMenuModule::PlayerMenu::OnCheatStateChange(const CheatStateEvent& event)
+{
+	if (event.GetCheatType() == typeid(ModMenuModule::FreezeCopValue)) {
+		m_freezeCopValueEnabled = event.IsEnabled();
+	}
+}
+
+void ModMenuModule::PlayerMenu::UpdateCheatStates()
+{
+	ModMenuModule::FreezeCopValue* cheat = GetCheat<ModMenuModule::FreezeCopValue>();
+	if (cheat) {
+		m_freezeCopValueEnabled = cheat->IsEnabled();
 	}
 }
