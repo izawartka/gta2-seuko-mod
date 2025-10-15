@@ -18,7 +18,7 @@ namespace Game {
 		typedef void(__fastcall DrawUIType)(S10* s10, DWORD edx);
 		static constexpr DrawUIType* DrawUI = (DrawUIType*)0x004ca440;
 
-		typedef void(__stdcall DrawGTATextType)(WCHAR* str, SCR_f x, SCR_f y, int param_4, SCR_f scale, PALETTE_BASE* paletteBasePtr, int param_7, SPRITE_INVISIBILITY spriteInvisibility, SCR_f param_9);
+		typedef void(__stdcall DrawGTATextType)(WCHAR* str, SCR_f x, SCR_f y, int param_4, SCR_f scale, PALETTE_BASE* paletteBasePtr, int remap, SPRITE_INVISIBILITY spriteInvisibility, SCR_f param_9);
 		static constexpr DrawGTATextType* DrawGTAText = (DrawGTATextType*)0x004cc100;
 
 		typedef bool* (__fastcall SetSpritePositionType)(Sprite* sprite, DWORD edx, SCR_f x, SCR_f y, SCR_f z);
