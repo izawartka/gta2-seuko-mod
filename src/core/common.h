@@ -17,5 +17,6 @@
 #include <tuple>
 #include <type_traits>
 #include <utility>
+#include <queue>
 #include "spdlog/spdlog.h"
 

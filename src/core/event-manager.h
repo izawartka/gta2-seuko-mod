@@ -2,7 +2,6 @@
 #include "common.h"
 #include "types.h"
 #include "event-base.h"
-#include <queue>
 
 namespace Core
 {
@@ -21,7 +20,7 @@ namespace Core
             m_dispatching = true;
             auto& listeners = it->second;
             for (auto& wrapper : listeners) {
-                wrapper.func(event);
+                wrapper.listener(event);
             }
             m_dispatching = false;
             ProcessPendingChanges();
@@ -34,10 +33,10 @@ namespace Core
 
             auto it = m_listeners.find(eventTypeIdx);
             if (it == m_listeners.end()) {
-				callInit<EventT>();
+                callInit<EventT>();
             }
 
-			EventListenerId id = m_nextListenerId++;
+            EventListenerId id = m_nextListenerId++;
             PendingChange change = { ChangeType::Add, eventTypeIdx, id, [listener](const EventBase& e) {
                 listener(static_cast<const EventT&>(e));
             } };
@@ -58,12 +57,12 @@ namespace Core
         }
 
         void RemoveListener(std::type_index eventType, EventListenerId id) {
-			PendingChange change = { ChangeType::Remove, eventType, id, nullptr };
+            PendingChange change = { ChangeType::Remove, eventType, id, nullptr };
             if (m_dispatching) {
                 m_pendingChanges.push(change);
                 return;
             }
-			RemoveListenerEntry(change);
+            RemoveListenerEntry(change);
         }
 
         template<typename EventT>
@@ -83,22 +82,22 @@ namespace Core
 
         struct ListenerWrapper {
             EventListenerId id;
-            std::function<void(const EventBase&)> func;
+            EventListener<EventBase> listener;
         };
 
         enum class ChangeType { Add, Remove };
         struct PendingChange {
             ChangeType type;
             std::type_index eventType;
-			EventListenerId id;
-            std::function<void(const EventBase&)> func; // Only used for Add
+            EventListenerId id;
+            EventListener<EventBase> listener; // Only used for Add
         };
 
         void AddListenerEntry(PendingChange change) {
             spdlog::debug("Adding listener id {} for event type: {}", change.id, change.eventType.name());
             auto& listeners = m_listeners[change.eventType];
-            listeners.push_back({ change.id, change.func });
-		}
+            listeners.push_back({ change.id, change.listener });
+        }
 
         void RemoveListenerEntry(PendingChange change) {
             spdlog::debug("Removing listener id {} for event type: {}", change.id, change.eventType.name());
@@ -116,8 +115,8 @@ namespace Core
                 return;
             }
             listeners.erase(lit);
-			// Note: m_listeners entry is not being removed 
-		}
+            // Note: m_listeners entry is not being removed 
+        }
 
         void ProcessPendingChanges() {
             while (!m_pendingChanges.empty()) {
@@ -125,7 +124,7 @@ namespace Core
                 m_pendingChanges.pop();
 
                 if (change.type == ChangeType::Add) {
-					AddListenerEntry(change);
+                    AddListenerEntry(change);
                 }
                 
                 if (change.type == ChangeType::Remove) {
