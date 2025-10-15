@@ -1,21 +1,12 @@
 #pragma once
 #include "common.h"
 #include "persistence-manager.h"
-#include <vector>
-#include <functional>
+#include "events/cheat-state.h"
 
 namespace ModMenuModule {
 	class CheatBase {
 	public:
 		virtual ~CheatBase() = default;
-	protected:
-		CheatBase(std::string persistenceKey) {
-			m_persistenceKey = persistenceKey;
-		}
-
-		virtual void OnFirstEnable() {}
-		virtual void OnEnable() {}
-		virtual void OnDisable() {}
 
 		virtual void SetEnabled(bool enabled) final {
 			if (m_enabled == enabled) return;
@@ -31,8 +22,21 @@ namespace ModMenuModule {
 			else {
 				OnDisable();
 			}
+
+			Core::EventManager* eventManager = Core::EventManager::GetInstance();
+			ModMenuModule::CheatStateEvent event(typeid(*this), enabled);
+			eventManager->Dispatch(event);
 		}
 		virtual bool IsEnabled() const final { return m_enabled; }
+
+	protected:
+		CheatBase(std::string persistenceKey) {
+			m_persistenceKey = persistenceKey;
+		}
+
+		virtual void OnFirstEnable() {}
+		virtual void OnEnable() {}
+		virtual void OnDisable() {}
 
 	private:
 		friend class RootModule;

@@ -81,13 +81,29 @@ void ModMenuModule::RootModule::SetVisible(bool visible)
 void ModMenuModule::RootModule::InstantiateCheats()
 {
 	auto& factories = ModMenuModule::CheatRegistry::Factories();
-	spdlog::debug("Instantiating {} cheats", factories.size());
+	spdlog::info("Instantiating {} cheats", factories.size());
 	for (auto& factory : factories) {
 		ModMenuModule::CheatBase* cheat = factory();
-		if (cheat) {
-			cheat->Attach();
-			m_cheats.emplace_back(cheat);
+		if (!cheat) {
+			spdlog::error("Cheat factory returned null pointer");
+			continue;
 		}
+
+		if (!cheat->Attach()) {
+			spdlog::error("Failed to attach cheat {}", typeid(*cheat).name());
+			delete cheat;
+			continue;
+		}
+
+		std::type_index typeIdx(typeid(*cheat));
+		if (m_cheats.find(typeIdx) != m_cheats.end()) {
+			spdlog::error("Cheat {} is already registered", typeid(*cheat).name());
+			cheat->Detach();
+			delete cheat;
+			continue;
+		}
+
+		m_cheats[typeIdx] = std::unique_ptr<ModMenuModule::CheatBase>(cheat);
 	}
 }
 

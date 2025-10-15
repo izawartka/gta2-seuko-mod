@@ -47,6 +47,17 @@ namespace ModMenuModule {
 			return newMenu;
 		}
 
+		template<typename CheatT>
+		CheatT* GetCheat() {
+			static_assert(std::is_base_of_v<CheatBase, CheatT>, "CheatT must be derived from CheatBase");
+			auto it = m_cheats.find(std::type_index(typeid(CheatT)));
+			if (it == m_cheats.end()) {
+				spdlog::error("Requested cheat {} is not registered", typeid(CheatT).name());
+				return nullptr;
+			}
+			return static_cast<CheatT*>(it->second.get());
+		}
+
 		void RemoveLastMenu();
 		void ClearMenus();
 		void SetVisible(bool visible);
@@ -59,7 +70,7 @@ namespace ModMenuModule {
 
 		PersistenceManager m_persistenceManager;
 		ModMenuOptions m_options;
-		std::vector<std::unique_ptr<CheatBase>> m_cheats;
+		std::unordered_map<std::type_index, std::unique_ptr<CheatBase>> m_cheats;
 		std::vector<std::unique_ptr<MenuBase>> m_menus;
 		bool m_visible = false;
 	};
