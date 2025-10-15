@@ -207,6 +207,9 @@
     <ClInclude Include="src\modules\modmenu\persistence-manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\modules\modmenu\cheats\freeze-cop-value.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\modules\modmenu\cheat-base.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -303,6 +306,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\modmenu\persistence-manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\cheats\freeze-cop-value.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
