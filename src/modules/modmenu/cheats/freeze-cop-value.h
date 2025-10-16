@@ -3,10 +3,10 @@
 #include "../cheat-base.h"
 
 namespace ModMenuModule {
-	class FreezeCopValue : public CheatBase {
+	class FreezeCopValueCheat : public CheatBase {
 	public:
-		FreezeCopValue();
-		virtual ~FreezeCopValue();
+		FreezeCopValueCheat();
+		virtual ~FreezeCopValueCheat();
 
 		void SetCopValue(short copValue);
 

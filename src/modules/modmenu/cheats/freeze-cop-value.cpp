@@ -2,16 +2,16 @@
 #include "../../../events/game-tick.h"
 #include "../cheat-registry.h"
 
-ModMenuModule::FreezeCopValue::FreezeCopValue()
+ModMenuModule::FreezeCopValueCheat::FreezeCopValueCheat()
 	: ModMenuModule::CheatBase("Cheat_FreezeCopValue_IsEnabled") {
 }
 
-ModMenuModule::FreezeCopValue::~FreezeCopValue()
+ModMenuModule::FreezeCopValueCheat::~FreezeCopValueCheat()
 {
 
 }
 
-void ModMenuModule::FreezeCopValue::SetCopValue(short copValue)
+void ModMenuModule::FreezeCopValueCheat::SetCopValue(short copValue)
 {
 	m_copValue = copValue;
 	if(m_watchedCopValue) {
@@ -19,7 +19,7 @@ void ModMenuModule::FreezeCopValue::SetCopValue(short copValue)
 	}
 }
 
-void ModMenuModule::FreezeCopValue::OnFirstEnable()
+void ModMenuModule::FreezeCopValueCheat::OnFirstEnable()
 {
 	m_copValueResolver = Core::MakeResolver(
 		Game::Memory::GetPlayerPed,
@@ -27,21 +27,21 @@ void ModMenuModule::FreezeCopValue::OnFirstEnable()
 	);
 }
 
-void ModMenuModule::FreezeCopValue::OnEnable()
+void ModMenuModule::FreezeCopValueCheat::OnEnable()
 {
 	Core::WatchManager* watchManager = Core::WatchManager::GetInstance();
-	m_watchedCopValue = watchManager->Watch<GameTickEvent, short>(m_copValueResolver, this, &ModMenuModule::FreezeCopValue::OnValueUpdate);
+	m_watchedCopValue = watchManager->Watch<GameTickEvent, short>(m_copValueResolver, this, &ModMenuModule::FreezeCopValueCheat::OnValueUpdate);
 	m_justEnabled = true;
 }
 
-void ModMenuModule::FreezeCopValue::OnDisable()
+void ModMenuModule::FreezeCopValueCheat::OnDisable()
 {
 	Core::WatchManager* watchManager = Core::WatchManager::GetInstance();
 	watchManager->Unwatch<short>(m_watchedCopValue);
 	m_watchedCopValue = nullptr;
 }
 
-void ModMenuModule::FreezeCopValue::OnValueUpdate(std::optional<short> oldValue, std::optional<short> newValue)
+void ModMenuModule::FreezeCopValueCheat::OnValueUpdate(std::optional<short> oldValue, std::optional<short> newValue)
 {
 	if (!newValue.has_value() || newValue.value() == m_copValue) return;
 
@@ -54,4 +54,4 @@ void ModMenuModule::FreezeCopValue::OnValueUpdate(std::optional<short> oldValue,
 	m_watchedCopValue->SetValue(m_copValue);
 }
 
-REGISTER_CHEAT(FreezeCopValue)
+REGISTER_CHEAT(FreezeCopValueCheat)

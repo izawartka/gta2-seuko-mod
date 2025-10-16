@@ -48,7 +48,7 @@ bool ModMenuModule::PlayerMenu::Attach()
 	m_wantedLevelController->SetEditStopCallback(onEditStop);
 	m_wantedLevelController->SetConverter<CopValueConverter>();
 	m_wantedLevelController->SetCustomSaveCallback([wantedLevelResolver, this](short newWantedLevel) {
-		ModMenuModule::FreezeCopValue* cheat = GetCheat<ModMenuModule::FreezeCopValue>();
+		ModMenuModule::FreezeCopValueCheat* cheat = GetCheat<ModMenuModule::FreezeCopValueCheat>();
 		if (cheat) {
 			cheat->SetCopValue(newWantedLevel);
 		}
@@ -69,7 +69,7 @@ bool ModMenuModule::PlayerMenu::Attach()
 	m_freezeCopValueController->SetEditStopCallback(onEditStop);
 	m_freezeCopValueController->SetConverter<YesNoConverter>();
 	m_freezeCopValueController->SetCustomSaveCallback([this](bool newValue) {
-		SetCheatEnabled<ModMenuModule::FreezeCopValue>(newValue);
+		SetCheatEnabled<ModMenuModule::FreezeCopValueCheat>(newValue);
 	});
 
 	UiModule::Text* healthText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
@@ -148,14 +148,15 @@ void ModMenuModule::PlayerMenu::OnMenuAction(UiModule::Selectable* item, UiModul
 void ModMenuModule::PlayerMenu::OnCheatStateChange(const CheatStateEvent& event)
 {
 	if (event.GetCheatType() == typeid(ModMenuModule::FreezeCopValue)) {
+	if (event.GetCheatType() == typeid(ModMenuModule::FreezeCopValueCheat)) {
 		m_freezeCopValueEnabled = event.IsEnabled();
 	}
 }
 
 void ModMenuModule::PlayerMenu::UpdateCheatStates()
 {
-	ModMenuModule::FreezeCopValue* cheat = GetCheat<ModMenuModule::FreezeCopValue>();
-	if (cheat) {
-		m_freezeCopValueEnabled = cheat->IsEnabled();
+	ModMenuModule::FreezeCopValueCheat* freezeCopValueCheat = GetCheat<ModMenuModule::FreezeCopValueCheat>();
+	if (freezeCopValueCheat) {
+		m_freezeCopValueEnabled = freezeCopValueCheat->IsEnabled();
 	}
 }
