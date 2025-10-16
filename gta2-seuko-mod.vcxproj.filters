@@ -225,6 +225,9 @@
     <ClInclude Include="src\modules\modmenu\events\cheat-state.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\modules\modmenu\cheats\invulnerability.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
@@ -309,6 +312,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\modmenu\cheats\freeze-cop-value.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\cheats\invulnerability.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

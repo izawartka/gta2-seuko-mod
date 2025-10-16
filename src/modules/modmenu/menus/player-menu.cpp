@@ -3,6 +3,7 @@
 #include "../../../converters/cop-value.h"
 #include "../../../converters/yes-no.h"
 #include "../cheats/freeze-cop-value.h"
+#include "../cheats/invulnerability.h"
 #include "../root.h"
 
 ModMenuModule::PlayerMenu::PlayerMenu()
@@ -83,6 +84,19 @@ bool ModMenuModule::PlayerMenu::Attach()
 	);
 	m_healthController->SetEditStopCallback(onEditStop);
 
+	UiModule::Text* invulnerabilityText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
+	m_invulnerabilityController = uiRoot->AddController<UiModule::VarTextSelectController<bool>>(
+		invulnerabilityText,
+		[this]() { return &m_invulnerabilityEnabled; },
+		UiModule::VarTextSelectOptionList<bool>{ false, true },
+		UiModule::VarTextSelectControllerOptions{ L"Invulnerability: #", L"#" }
+	);
+	m_invulnerabilityController->SetEditStopCallback(onEditStop);
+	m_invulnerabilityController->SetConverter<YesNoConverter>();
+	m_invulnerabilityController->SetCustomSaveCallback([this](bool newValue) {
+		SetCheatEnabled<ModMenuModule::InvulnerabilityCheat>(newValue);
+	});
+
 	ApplyIndexPersistence("ModMenu_PlayerMenu_SelectedIndex");
 
 	return true;
@@ -94,6 +108,7 @@ void ModMenuModule::PlayerMenu::Detach()
 	uiRoot->RemoveController(m_wantedLevelController);
 	uiRoot->RemoveController(m_freezeCopValueController);
 	uiRoot->RemoveController(m_healthController);
+	uiRoot->RemoveController(m_invulnerabilityController);
 	DestroyMenu();
 }
 
@@ -102,6 +117,7 @@ void ModMenuModule::PlayerMenu::OnShow()
 	m_wantedLevelController->SetWatching(true);
 	m_freezeCopValueController->SetWatching(true);
 	m_healthController->SetWatching(true);
+	m_invulnerabilityController->SetWatching(true);
 
 	AddEventListener<ModMenuModule::CheatStateEvent>(&PlayerMenu::OnCheatStateChange);
 	UpdateCheatStates();
@@ -140,6 +156,10 @@ void ModMenuModule::PlayerMenu::OnMenuAction(UiModule::Selectable* item, UiModul
 		m_menuController->SetActive(false);
 		m_healthController->SetEditing(true);
 		break;
+	case 5: // Invulnerability
+		m_menuController->SetActive(false);
+		m_invulnerabilityController->SetEditing(true);
+		break;
 	default:
 		break;
 	}
@@ -147,9 +167,11 @@ void ModMenuModule::PlayerMenu::OnMenuAction(UiModule::Selectable* item, UiModul
 
 void ModMenuModule::PlayerMenu::OnCheatStateChange(const CheatStateEvent& event)
 {
-	if (event.GetCheatType() == typeid(ModMenuModule::FreezeCopValue)) {
 	if (event.GetCheatType() == typeid(ModMenuModule::FreezeCopValueCheat)) {
 		m_freezeCopValueEnabled = event.IsEnabled();
+	}
+	else if (event.GetCheatType() == typeid(ModMenuModule::InvulnerabilityCheat)) {
+		m_invulnerabilityEnabled = event.IsEnabled();
 	}
 }
 
@@ -158,5 +180,10 @@ void ModMenuModule::PlayerMenu::UpdateCheatStates()
 	ModMenuModule::FreezeCopValueCheat* freezeCopValueCheat = GetCheat<ModMenuModule::FreezeCopValueCheat>();
 	if (freezeCopValueCheat) {
 		m_freezeCopValueEnabled = freezeCopValueCheat->IsEnabled();
+	}
+
+	ModMenuModule::InvulnerabilityCheat* invulnerabilityCheat = GetCheat<ModMenuModule::InvulnerabilityCheat>();
+	if (invulnerabilityCheat) {
+		m_invulnerabilityEnabled = invulnerabilityCheat->IsEnabled();
 	}
 }
