@@ -128,7 +128,7 @@ void ModMenuModule::SpawnVehicleMenu::OnMenuAction(UiModule::Selectable* item, U
 void ModMenuModule::SpawnVehicleMenu::UpdateSpritePreview() 
 {
 	UiModule::SpriteOptions options = {};
-	options.rotation = M_PI / 2.0f;
+	options.rotation = (float)M_PI / 2.0f;
 	options.scale = SPRITE_PREVIEW_SCALE;
 	options.spriteType = Game::SPRITE_TYPE::SPRITE_TYPE_CAR;
 

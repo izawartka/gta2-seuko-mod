@@ -53,7 +53,7 @@ void ModMenuModule::PersistenceManager::LoadFromFile() {
 	}
 
 	ifs.seekg(0, std::ios::end);
-	size_t fileSize = ifs.tellg();
+	size_t fileSize = static_cast<size_t>(ifs.tellg());
 	ifs.seekg(0, std::ios::beg);
 
 	if (fileSize < sizeof(size_t)) {
