@@ -581,8 +581,6 @@ struct WEAPON_PLAYER_LIST {
     short count; /* Created by retype action */
 };
 
-// ADDED IN FILE //
-
 typedef enum EXPLOSION_SIZE {
     EXPLOSION_SIZE_NONE = 0x11,
     EXPLOSION_SIZE_SMALL = 0x12,
@@ -943,7 +941,109 @@ struct GTAVertex {
     float v;
 };
 
-// END OF ADDED IN FILE //
+typedef struct Cheats Cheats, * PCheats;
+
+struct Cheats {
+    bool doBlood;                     // (0x00)
+    bool showObjectsIds;              // (0x01)
+    bool skipTrafficLights;           // (0x02)
+    bool skipBuses;                   // (0x03)
+    bool showCounters;                // (0x04)
+    bool skipParticles;               // (0x05)
+    bool skipTrains;                  // (0x06) crashes the game;v
+    bool showInput;                   // (0x07)
+    bool skipRightTiles;              // (0x08)
+    bool showHiddenFaces;             // (0x09)
+    bool noTraffic;                   // (0x0A)
+    bool unlockAllLevels;             // (0x0B)
+    bool explodingOn;                 // (0x0C) doesn't seem to work and is being overwritten
+    bool noPolice;                    // (0x0D)
+    bool skipBottomTiles;             // (0x0E)
+    bool doPolice1;                   // (0x0F) no effect observed
+    bool infiniteLives;               // (0x10)
+    bool unused_0x62;                 // (0x11) unused
+    bool logRandom;                   // (0x12)
+    bool noHUD;                       // (0x13)
+    bool doubleDamage;                // (0x14)
+    bool logMissions;                 // (0x15)
+    bool skipLeftTiles;               // (0x16)
+    bool doCornerWindow;              // (0x17) no effect ovserved
+    bool noPedestrians;               // (0x18)
+    bool unknown0x6A;                 // (0x19) probably unused
+    bool noAmbulances;                // (0x1A)
+    bool skipWindowCheck;             // (0x1B) probably unused
+    bool miniCars;                    // (0x1C)
+    bool giveBasicWeapons;            // (0x1D) no effect observed
+    bool showImaginaryThings;         // (0x1E)
+    bool giveElectricGun;             // (0x1F)
+    bool invulnerability;             // (0x20)
+    bool noAudio;                     // (0x21)
+    bool unknown0x73;                 // (0x22) GXT relacted, unused
+    bool getAllWeapons;               // (0x23)
+    bool noAnnoyingChars;             // (0x24)
+    bool showPlayerNames;             // (0x25) test needed
+    bool logDirectInput;              // (0x26)
+    bool noSlopesTiles;               // (0x27)
+    bool showFPS;                     // (0x28)
+    bool logRandomExtra;              // (0x29)
+    bool multiplierX10;               // (0x2A)
+    bool skipFrontend;                // (0x2B)
+    bool doBrianTest;                 // (0x2C)
+    bool doLoadSavegame;              // (0x2D) unstable
+    bool showCarHorn;                 // (0x2E)
+    bool doTest;                      // (0x2F)
+    bool showDrawingInfo;             // (0x30)
+    bool showCameraInfo;              // (0x31)
+    bool getOuttaJailFreeCard;        // (0x32)
+    bool freeShopping;                // (0x33)
+    bool showVehicleInfo;             // (0x34)
+    bool ignoreReplayHeader;          // (0x35) unstable
+    bool debugKeys;                   // (0x36)
+    bool insaneSpeed;                 // (0x37)
+    bool showJunctionsIds;            // (0x38)
+    bool maxRespect;                  // (0x39)
+    bool skipFireEngines;             // (0x3A)
+    bool skipTopTiles;                // (0x3B)
+    bool showPedInfo;                 // (0x3C)
+    bool invisibility;                // (0x3D)
+    bool health99;                    // (0x3E)
+    bool skipTiles;                   // (0x3F)
+    bool logInput;                    // (0x40)
+    bool unknown0x92;                 // (0x41) replay related
+    bool aggresivePeds;               // (0x42)
+    bool dontGetCarBack;              // (0x43) test needed
+    bool showTrafficInfo;             // (0x44)
+    bool showTrafficLightsInfo;       // (0x45)
+    bool give200000;                  // (0x46)
+    bool unknown0x98;                 // (0x47) probably unused
+    bool logRoutefinder;              // (0x48)
+    bool doTextIDTest;                // (0x49)
+    bool giveFlamethrower;            // (0x4A)
+    bool skipLid;                     // (0x4B)
+    bool doPolice2;                   // (0x4C) no effect ovserved
+    bool keepWeaponsAfterDeath;       // (0x4D)
+    bool onlyElvisPeds;               // (0x4E)
+    bool nekkidPeds;                  // (0x4F)
+    bool showPedsIds;                 // (0x50)
+    bool unknown0xA2;                 // (0x51)
+    bool unknown0xA3;                 // (0x52) replay related
+    bool skipReplaySyncCheck;         // (0x53) replay related
+    bool showBriefNumber;             // (0x54)
+    bool give9000000;                 // (0x55)
+    bool showCycle;                   // (0x56)
+    bool doSyncCheck;                 // (0x57)
+    bool doPolice3;                   // (0x58) no effect observed
+    bool playReplay;                  // (0x59) replay related
+    bool skipQuitConfirm;             // (0x5A)
+    bool limitRecycling;              // (0x5B) test needed
+    bool exitAfterReplay;             // (0x5C) replay related
+    bool skipMissions;                // (0x5D) crashes the game
+    bool skipSkidmarks;               // (0x5E)
+    bool logCollisions;               // (0x5F)
+    bool showCollisionBox;            // (0x60) ?
+    bool showAllArrows;               // (0x61)
+    bool killPhonesOnAnswer;          // (0x62) ?
+};
 
 struct GameObject {
     undefined4 field_0x0;

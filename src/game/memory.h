@@ -18,5 +18,6 @@ namespace Game {
 		static constexpr uint* GetKeyPressState() { return (uint*)0x005e8f90; }
 		static constexpr S4* GetS4() { return (S4*)*(DWORD*)0x00671978; }
 		static constexpr Style_S3* GetStyleS3() { return (Style_S3*)*(DWORD*)0x00670684; }
+		static constexpr Cheats* GetCheats() { return (Cheats*)0x005ead51; }
 	};
 }
