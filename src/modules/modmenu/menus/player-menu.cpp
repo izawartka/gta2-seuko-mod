@@ -72,6 +72,17 @@ bool ModMenuModule::PlayerMenu::Attach()
 		SetCheatEnabled<ModMenuModule::FreezeCopValue>(newValue);
 	});
 
+	UiModule::Text* healthText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
+	m_healthController = uiRoot->AddController<UiModule::VarTextEditableController<Game::ushort>>(
+		healthText,
+		Core::MakeResolver(
+			Game::Memory::GetPlayerPed,
+			mem(&Game::Ped::health)
+		),
+		UiModule::VarTextEditableControllerOptions{ L"Health: #", L"#" }
+	);
+	m_healthController->SetEditStopCallback(onEditStop);
+
 	ApplyIndexPersistence("ModMenu_PlayerMenu_SelectedIndex");
 
 	return true;
@@ -82,6 +93,7 @@ void ModMenuModule::PlayerMenu::Detach()
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	uiRoot->RemoveController(m_wantedLevelController);
 	uiRoot->RemoveController(m_freezeCopValueController);
+	uiRoot->RemoveController(m_healthController);
 	DestroyMenu();
 }
 
@@ -89,6 +101,7 @@ void ModMenuModule::PlayerMenu::OnShow()
 {
 	m_wantedLevelController->SetWatching(true);
 	m_freezeCopValueController->SetWatching(true);
+	m_healthController->SetWatching(true);
 
 	AddEventListener<ModMenuModule::CheatStateEvent>(&PlayerMenu::OnCheatStateChange);
 	UpdateCheatStates();
@@ -102,6 +115,8 @@ void ModMenuModule::PlayerMenu::OnHide()
 	m_wantedLevelController->SetEditing(false);
 	m_freezeCopValueController->SetWatching(false);
 	m_freezeCopValueController->SetEditing(false);
+	m_healthController->SetWatching(false);
+	m_healthController->SetEditing(false);
 }
 
 void ModMenuModule::PlayerMenu::OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
@@ -120,6 +135,10 @@ void ModMenuModule::PlayerMenu::OnMenuAction(UiModule::Selectable* item, UiModul
 	case 3: // Freeze wanted level
 		m_menuController->SetActive(false);
 		m_freezeCopValueController->SetEditing(true);
+		break;
+	case 4: // Health
+		m_menuController->SetActive(false);
+		m_healthController->SetEditing(true);
 		break;
 	default:
 		break;

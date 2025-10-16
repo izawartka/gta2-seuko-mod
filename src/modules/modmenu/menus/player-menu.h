@@ -23,5 +23,6 @@ namespace ModMenuModule {
 		UiModule::VarTextSelectController<short>* m_wantedLevelController = nullptr;
 		UiModule::VarTextSelectController<bool>* m_freezeCopValueController = nullptr;
 		bool m_freezeCopValueEnabled = false;
+		UiModule::VarTextEditableController<Game::ushort>* m_healthController = nullptr;
 	};
 }
