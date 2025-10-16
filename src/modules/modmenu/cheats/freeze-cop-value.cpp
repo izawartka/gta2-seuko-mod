@@ -43,10 +43,11 @@ void ModMenuModule::FreezeCopValueCheat::OnDisable()
 
 void ModMenuModule::FreezeCopValueCheat::OnValueUpdate(std::optional<short> oldValue, std::optional<short> newValue)
 {
+	bool wasJustEnabled = m_justEnabled;
+	m_justEnabled = false;
 	if (!newValue.has_value() || newValue.value() == m_copValue) return;
 
-	if (m_justEnabled) {
-		m_justEnabled = false;
+	if (wasJustEnabled) {
 		m_copValue = newValue.value();
 		return;
 	}

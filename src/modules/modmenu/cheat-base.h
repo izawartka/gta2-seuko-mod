@@ -6,7 +6,9 @@
 namespace ModMenuModule {
 	class CheatBase {
 	public:
-		virtual ~CheatBase() = default;
+		virtual ~CheatBase() {
+			Detach();
+		}
 
 		virtual void SetEnabled(bool enabled) final {
 			if (m_enabled == enabled) return;
