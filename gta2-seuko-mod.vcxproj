@@ -149,6 +149,7 @@ exit /b 0
     <ClInclude Include="src\converters\cop-value.h" />
     <ClInclude Include="src\converters\default.h" />
     <ClInclude Include="src\converters\yes-no.h" />
+    <ClInclude Include="src\events\after-debug-flags.h" />
     <ClInclude Include="src\hook-types\jump-hook.h" />
     <ClInclude Include="src\modules\modmenu\cheat-base.h" />
     <ClInclude Include="src\modules\modmenu\cheat-registry.h" />
@@ -228,6 +229,7 @@ exit /b 0
     <ClCompile Include="src\core\module-manager.cpp" />
     <ClCompile Include="src\core\watch-manager.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
+    <ClCompile Include="src\events\after-debug-flags.cpp" />
     <ClCompile Include="src\events\draw.cpp" />
     <ClCompile Include="src\events\game-tick.cpp" />
     <ClCompile Include="src\events\keyboard.cpp" />
