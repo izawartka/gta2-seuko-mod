@@ -1624,7 +1624,7 @@ struct Ped {
     int field_0x1fc;
     int id;
     int somePedId;
-    ushort Invulnerability; /* 9999 = infinity */
+    ushort invulnerability; /* 9999 = infinity */
     short copValue; /* 600 = 1 star, 1600 = 2 */
     short field_0x20c;
     short field_0x20e;
