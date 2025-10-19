@@ -1,4 +1,5 @@
 #include "weapons-menu.h"
+#include "../../../converters/weapon.h"
 #include "../../../converters/ammo.h"
 #include "../root.h"
 
@@ -27,6 +28,23 @@ bool ModMenuModule::WeaponsMenu::Attach()
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Get weapon", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Get all weapons", options.textSize);
 
+	// current weapon
+	Core::Resolver<Game::WEAPON_INDEX> selectedWeaponResolver = Core::MakeResolver(
+		Game::Memory::GetPlayerPed,
+		mem(&Game::Ped::selectedWeapon),
+		mem(&Game::WEAPON_STRUCT::id)
+	);
+
+	UiModule::Spacer* weaponSpacer = uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, CURRENT_WEAPON_OFFSET_Y);
+	UiModule::Margin* weaponTextMargin = uiRoot->AddComponent<UiModule::Margin>(vertCont, options.menuControllerOptions.createdSelectableOptions.markerOffsetX, 0);
+	UiModule::Text* weaponText = uiRoot->AddComponent<UiModule::Text>(weaponTextMargin, L"", options.textSize);
+	m_weaponController = uiRoot->AddController<UiModule::VarTextController<Game::WEAPON_INDEX>>(
+		weaponText,
+		selectedWeaponResolver,
+		UiModule::VarTextControllerOptions{ L"Weapon: #", L"#", L"None" }
+	);
+	m_weaponController->SetConverter<WeaponConverter>();
+
 	// ammo
 	Core::Resolver<short> ammoResolver = Core::MakeResolver(
 		Game::Memory::GetPlayerPed,
@@ -51,17 +69,20 @@ bool ModMenuModule::WeaponsMenu::Attach()
 void ModMenuModule::WeaponsMenu::Detach()
 {
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
+	uiRoot->RemoveController(m_weaponController);
 	uiRoot->RemoveController(m_ammoController);
 	DestroyMenu();
 }
 
 void ModMenuModule::WeaponsMenu::OnShow()
 {
+	m_weaponController->SetWatching(true);
 	m_ammoController->SetWatching(true);
 }
 
 void ModMenuModule::WeaponsMenu::OnHide()
 {
+	m_weaponController->SetWatching(false);
 	m_ammoController->SetWatching(false);
 	m_ammoController->SetEditing(false);
 }
