@@ -234,6 +234,9 @@
     <ClInclude Include="src\hook-types\jump-hook.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\converters\ammo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
