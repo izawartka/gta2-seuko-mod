@@ -149,6 +149,7 @@ exit /b 0
     <ClInclude Include="src\converters\car-remap.h" />
     <ClInclude Include="src\converters\cop-value.h" />
     <ClInclude Include="src\converters\default.h" />
+    <ClInclude Include="src\converters\weapon.h" />
     <ClInclude Include="src\converters\yes-no.h" />
     <ClInclude Include="src\events\after-debug-flags.h" />
     <ClInclude Include="src\hook-types\jump-hook.h" />
