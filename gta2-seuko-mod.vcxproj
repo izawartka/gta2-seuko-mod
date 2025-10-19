@@ -161,6 +161,7 @@ exit /b 0
     <ClInclude Include="src\modules\modmenu\events\cheat-state.h" />
     <ClInclude Include="src\modules\modmenu\menus\spawn-vehicle-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\vehicles-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\weapons-menu.h" />
     <ClInclude Include="src\modules\modmenu\persistence-manager.h" />
     <ClInclude Include="src\modules\ui\components\sprite.h" />
     <ClInclude Include="src\modules\ui\converter-support.h" />
@@ -243,6 +244,7 @@ exit /b 0
     <ClCompile Include="src\modules\modmenu\menus\player-pos-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\spawn-vehicle-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\vehicles-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\weapons-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\persistence-manager.cpp" />
     <ClCompile Include="src\modules\modmenu\root.cpp" />
     <ClCompile Include="src\modules\ui\component.cpp" />

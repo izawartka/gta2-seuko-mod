@@ -1,0 +1,88 @@
+#include "weapons-menu.h"
+#include "../../../converters/ammo.h"
+#include "../root.h"
+
+ModMenuModule::WeaponsMenu::WeaponsMenu()
+{
+
+}
+
+ModMenuModule::WeaponsMenu::~WeaponsMenu()
+{
+
+}
+
+bool ModMenuModule::WeaponsMenu::Attach()
+{
+	UiModule::Component* vertCont;
+	CreateMenu(L"#Weapons#", vertCont);
+	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
+	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
+
+	auto onEditStop = [this]() {
+		if (m_visible) m_menuController->SetActive(true);
+	};
+
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Get weapon", options.textSize);
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Get all weapons", options.textSize);
+
+	// ammo
+	Core::Resolver<short> ammoResolver = Core::MakeResolver(
+		Game::Memory::GetPlayerPed,
+		mem(&Game::Ped::selectedWeapon),
+		mem(&Game::WEAPON_STRUCT::ammo)
+	);
+
+	UiModule::Text* ammoValueText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
+	m_ammoController = uiRoot->AddController<UiModule::VarTextEditableController<short>>(
+		ammoValueText,
+		ammoResolver,
+		UiModule::VarTextEditableControllerOptions{ L"Ammo: #", L"#" }
+	);
+	m_ammoController->SetEditStopCallback(onEditStop);
+	m_ammoController->SetConverter<AmmoConverter>();
+
+	ApplyIndexPersistence("ModMenu_WeaponsMenu_SelectedIndex");
+
+	return true;
+}
+
+void ModMenuModule::WeaponsMenu::Detach()
+{
+	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
+	uiRoot->RemoveController(m_ammoController);
+	DestroyMenu();
+}
+
+void ModMenuModule::WeaponsMenu::OnShow()
+{
+	m_ammoController->SetWatching(true);
+}
+
+void ModMenuModule::WeaponsMenu::OnHide()
+{
+	m_ammoController->SetWatching(false);
+	m_ammoController->SetEditing(false);
+}
+
+void ModMenuModule::WeaponsMenu::OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
+{
+	switch (id) {
+	case 0: // Go back
+		ModMenuModule::RootModule::GetInstance()->RemoveLastMenu();
+		break;
+	case 1: // Get weapon
+		/// ModMenuModule::RootModule::GetInstance()->AddMenu<ModMenuModule::GetWeaponMenu>();
+		break;
+	case 2: // Get all weapons
+		///
+		break;
+	case 3: // Ammo
+		m_menuController->SetActive(false);
+		m_ammoController->SetEditing(true);
+		break;
+	default:
+		break;
+	}
+}
