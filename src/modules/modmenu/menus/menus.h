@@ -6,3 +6,4 @@
 #include "vehicles-menu.h"
 #include "spawn-vehicle-menu.h"
 #include "weapons-menu.h"
+#include "get-weapon-menu.h"

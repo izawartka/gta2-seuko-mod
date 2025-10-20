@@ -1,4 +1,5 @@
 #include "weapons-menu.h"
+#include "get-weapon-menu.h"
 #include "../../../converters/weapon.h"
 #include "../../../converters/ammo.h"
 #include "../root.h"
@@ -94,10 +95,11 @@ void ModMenuModule::WeaponsMenu::OnMenuAction(UiModule::Selectable* item, UiModu
 		ModMenuModule::RootModule::GetInstance()->RemoveLastMenu();
 		break;
 	case 1: // Get weapon
-		/// ModMenuModule::RootModule::GetInstance()->AddMenu<ModMenuModule::GetWeaponMenu>();
+		ModMenuModule::RootModule::GetInstance()->AddMenu<ModMenuModule::GetWeaponMenu>();
 		break;
 	case 2: // Get all weapons
 		///
+		GetAllWeapons();
 		break;
 	case 3: // Ammo
 		m_menuController->SetActive(false);
@@ -106,4 +108,24 @@ void ModMenuModule::WeaponsMenu::OnMenuAction(UiModule::Selectable* item, UiModu
 	default:
 		break;
 	}
+}
+
+void ModMenuModule::WeaponsMenu::GetAllWeapons()
+{
+	Game::Ped* playerPed = Game::Memory::GetPlayerPed();
+	if (!playerPed) {
+		spdlog::error("Could not give all weapons: player ped is null.");
+		return;
+	}
+
+	for(int i = 0; i < 15; i++) {
+		Game::Functions::AddWeapon(
+			playerPed,
+			0,
+			static_cast<Game::WEAPON_INDEX>(i),
+			99
+		);
+	}
+
+	spdlog::info("All weapons given.");
 }

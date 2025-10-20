@@ -162,6 +162,7 @@ exit /b 0
     <ClInclude Include="src\modules\modmenu\cheats\infinite-ammo.h" />
     <ClInclude Include="src\modules\modmenu\cheats\invulnerability.h" />
     <ClInclude Include="src\modules\modmenu\events\cheat-state.h" />
+    <ClInclude Include="src\modules\modmenu\menus\get-weapon-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\spawn-vehicle-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\vehicles-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\weapons-menu.h" />
@@ -244,6 +245,7 @@ exit /b 0
     <ClCompile Include="src\modules\modmenu\cheats\infinite-ammo.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\invulnerability.cpp" />
     <ClCompile Include="src\modules\modmenu\menu-base.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\get-weapon-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\main-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\player-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\player-pos-menu.cpp" />

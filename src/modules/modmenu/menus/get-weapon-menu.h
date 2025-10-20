@@ -2,13 +2,11 @@
 #include "../common.h"
 #include "../menu-base.h"
 
-static constexpr Game::SCR_f CURRENT_WEAPON_OFFSET_Y = Game::Utils::FromFloat(12.0f);
-
 namespace ModMenuModule {
-	class WeaponsMenu : public MenuBase {
+	class GetWeaponMenu : public MenuBase {
 	public:
-		WeaponsMenu();
-		virtual ~WeaponsMenu();
+		GetWeaponMenu();
+		virtual ~GetWeaponMenu();
 
 		virtual bool Attach() override;
 		virtual void Detach() override;
@@ -18,9 +16,11 @@ namespace ModMenuModule {
 
 	private:
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
-		void GetAllWeapons();
+		void GetWeapon();
 
-		UiModule::VarTextController<Game::WEAPON_INDEX>* m_weaponController = nullptr;
+		UiModule::VarTextSelectController<Game::WEAPON_INDEX>* m_weaponController = nullptr;
+		Game::WEAPON_INDEX m_selectedWeapon = Game::WEAPON_INDEX::WEAPON_PISTOL;
 		UiModule::VarTextEditableController<short>* m_ammoController = nullptr;
+		short m_selectedAmmo = 99;
 	};
 }
