@@ -1,11 +1,12 @@
 #pragma once
 #include "../common.h"
 #include "../menu-base.h"
+#include "../cheat-support.h"
 
 static constexpr Game::SCR_f CURRENT_WEAPON_OFFSET_Y = Game::Utils::FromFloat(12.0f);
 
 namespace ModMenuModule {
-	class WeaponsMenu : public MenuBase {
+	class WeaponsMenu : public MenuBase, public CheatSupport, public Core::EventListenerSupport {
 	public:
 		WeaponsMenu();
 		virtual ~WeaponsMenu();
@@ -18,8 +19,12 @@ namespace ModMenuModule {
 
 	private:
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
+		void OnCheatStateChange(CheatStateEvent& event);
+		void UpdateCheatStates();
 		void GetAllWeapons();
 
+		UiModule::VarTextSelectController<bool>* m_infiniteAmmoController = nullptr;
+		bool m_infiniteAmmoEnabled = false;
 		UiModule::VarTextController<Game::WEAPON_INDEX>* m_weaponController = nullptr;
 		UiModule::VarTextEditableController<short>* m_ammoController = nullptr;
 	};
