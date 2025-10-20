@@ -187,7 +187,7 @@ namespace UiModule {
             UpdateText();
         }
 
-        void OnKeyDown(const KeyDownEvent& event) {
+        void OnKeyDown(KeyDownEvent& event) {
             if (!m_active) return;
 
             Game::KeyCode key = event.GetKeyCode();

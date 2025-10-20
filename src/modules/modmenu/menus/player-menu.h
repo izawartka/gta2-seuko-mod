@@ -17,7 +17,7 @@ namespace ModMenuModule {
 
 	private:
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
-		void OnCheatStateChange(const CheatStateEvent& event);
+		void OnCheatStateChange(CheatStateEvent& event);
 		void UpdateCheatStates();
 
 		UiModule::VarTextSelectController<short>* m_wantedLevelController = nullptr;

@@ -165,7 +165,7 @@ void ModMenuModule::PlayerMenu::OnMenuAction(UiModule::Selectable* item, UiModul
 	}
 }
 
-void ModMenuModule::PlayerMenu::OnCheatStateChange(const CheatStateEvent& event)
+void ModMenuModule::PlayerMenu::OnCheatStateChange(CheatStateEvent& event)
 {
 	if (event.GetCheatType() == typeid(ModMenuModule::FreezeCopValueCheat)) {
 		m_freezeCopValueEnabled = event.IsEnabled();

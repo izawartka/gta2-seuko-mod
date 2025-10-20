@@ -65,7 +65,7 @@ namespace ModMenuModule {
 
 	private:
 		void InstantiateCheats();
-		void OnKeyDown(const KeyDownEvent& event);
+		void OnKeyDown(KeyDownEvent& event);
 		static RootModule* m_instance;
 
 		PersistenceManager m_persistenceManager;

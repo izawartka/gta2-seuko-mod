@@ -88,7 +88,7 @@ namespace UiModule {
 		}
 
 	private:
-		void OnDraw(const DrawUIEvent& event);
+		void OnDraw(DrawUIEvent& event);
 
 		std::vector<std::unique_ptr<Component>> m_components = {};
 		std::vector<std::unique_ptr<Controller>> m_controllers = {};

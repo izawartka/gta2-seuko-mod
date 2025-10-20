@@ -181,7 +181,7 @@ namespace UiModule {
 			UpdateText();
 		}
 
-		void OnKeyDown(const KeyDownEvent& event) {
+		void OnKeyDown(KeyDownEvent& event) {
 			if (!m_active) return;
 
 			Game::KeyCode key = event.GetKeyCode();
@@ -214,7 +214,7 @@ namespace UiModule {
 			}
 		}
 
-		void OnPreDrawUI(const PreDrawUIEvent& event) {
+		void OnPreDrawUI(PreDrawUIEvent& event) {
 			if (!m_editing) return;
 			if (m_blinkCounter == 0 || m_blinkCounter == m_options.blinkInterval) {
 				UpdateText();

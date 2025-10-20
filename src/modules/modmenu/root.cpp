@@ -107,7 +107,7 @@ void ModMenuModule::RootModule::InstantiateCheats()
 	}
 }
 
-void ModMenuModule::RootModule::OnKeyDown(const KeyDownEvent& event)
+void ModMenuModule::RootModule::OnKeyDown(KeyDownEvent& event)
 {
 	if (event.GetKeyCode() == m_options.toggleKey) {
 		SetVisible(!m_visible);

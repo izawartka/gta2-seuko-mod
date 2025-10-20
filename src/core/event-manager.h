@@ -11,7 +11,7 @@ namespace Core
         static EventManager* GetInstance();
 
         template<typename EventT>
-        void Dispatch(const EventT& event) {
+        void Dispatch(EventT& event) {
             static_assert(std::is_base_of<EventBase, EventT>::value, "EventT must derive from Core::EventBase");
 
             auto it = m_listeners.find(typeid(EventT));
@@ -37,8 +37,8 @@ namespace Core
             }
 
             EventListenerId id = m_nextListenerId++;
-            PendingChange change = { ChangeType::Add, eventTypeIdx, id, [listener](const EventBase& e) {
-                listener(static_cast<const EventT&>(e));
+            PendingChange change = { ChangeType::Add, eventTypeIdx, id, [listener](EventBase& e) {
+                listener(static_cast<EventT&>(e));
             } };
             if (m_dispatching) {
                 m_pendingChanges.push(change);
@@ -51,7 +51,7 @@ namespace Core
         template<typename EventT, typename U>
         EventListenerId AddListener(U* instance, EventMethodListener<EventT, U> method) {
             static_assert(std::is_base_of<EventBase, EventT>::value, "EventT must derive from Core::EventBase");
-            return AddListener<EventT>([instance, method](const EventT& e) {
+            return AddListener<EventT>([instance, method](EventT& e) {
                 (instance->*method)(e);
             });
         }

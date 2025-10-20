@@ -49,7 +49,7 @@ namespace UiModule {
 		void SetOnActionCallback(MenuActionCallback callback) { m_onAction = callback; }
 
 	protected:
-		void OnKeyDown(const KeyDownEvent& event);
+		void OnKeyDown(KeyDownEvent& event);
 
 		MenuControllerOptions m_options;
 		std::vector<Selectable*> m_items = {};

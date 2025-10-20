@@ -5,10 +5,10 @@ namespace Core
 {
 	/* EventManager */
 	template<typename EventT>
-	using EventListener = std::function<void(const EventT&)>;
+	using EventListener = std::function<void(EventT&)>;
 
 	template<typename EventT, typename U>
-	using EventMethodListener = void (U::*)(const EventT&);
+	using EventMethodListener = void (U::*)(EventT&);
 
 	using EventListenerId = size_t;
 

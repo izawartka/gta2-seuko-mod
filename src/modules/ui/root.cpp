@@ -34,7 +34,7 @@ void UiModule::RootModule::Detach()
 	spdlog::info("UiModule::RootModule detached");
 }
 
-void UiModule::RootModule::OnDraw(const DrawUIEvent& event)
+void UiModule::RootModule::OnDraw(DrawUIEvent& event)
 {
 	for (const auto& component : m_components) {
 		component->DrawIfVisible();

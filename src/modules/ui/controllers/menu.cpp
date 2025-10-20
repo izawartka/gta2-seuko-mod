@@ -113,7 +113,7 @@ void UiModule::MenuController::Action()
 	}
 }
 
-void UiModule::MenuController::OnKeyDown(const KeyDownEvent& event)
+void UiModule::MenuController::OnKeyDown(KeyDownEvent& event)
 {
 	if (!m_active) {
 		return;
