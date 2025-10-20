@@ -47,5 +47,17 @@ namespace Game {
 
 		typedef uint(__stdcall CarAddWeaponType)(CAR_WEAPON type, uint ammo, Car* car);
 		static constexpr CarAddWeaponType* CarAddWeapon = (CarAddWeaponType*)0x004cd820;
+
+		typedef void(__fastcall CarAddRoofGunType)(Car* car);
+		static constexpr CarAddRoofGunType* CarAddRoofGun = (CarAddRoofGunType*)0x0041fdf0;
+
+		typedef void(__fastcall CarAddRoofTankTurretType)(Car* car);
+		static constexpr CarAddRoofTankTurretType* CarAddRoofTankTurret = (CarAddRoofTankTurretType*)0x0041fda0;
+
+		typedef void(__fastcall CarAddRoofWaterGunType)(Car* car);
+		static constexpr CarAddRoofWaterGunType* CarAddRoofWaterGun = (CarAddRoofWaterGunType*)0x0041fd50;
+
+		typedef void(__fastcall CarAddRoofAntennaType)(Car* car);
+		static constexpr CarAddRoofAntennaType* CarAddRoofAntenna = (CarAddRoofAntennaType*)0x00425fd0;
 	};  
 }
