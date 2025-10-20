@@ -1,0 +1,35 @@
+#include "../core/core.h"
+#include "../hook-types/function-multi-call-hook.h"
+#include "is-ammo-kf-call.h"
+
+static bool __fastcall DispatchIsAmmoKfCallEvent(bool value)
+{
+	IsAmmoKfCallEvent event(value);
+	Core::EventManager::GetInstance()->Dispatch(event);
+	return event.GetModifiedValue();
+}
+
+static __declspec(naked) void IsAmmoKfCallHookFunction(void)
+{
+	__asm {
+		xor eax, eax
+		cmp WORD PTR [ecx], 0xffff
+		sete al
+		mov ecx, eax
+		call DispatchIsAmmoKfCallEvent
+		ret
+	}
+}
+
+const FunctionMultiCallHook isAmmoKfCallHook = {
+	{
+		0x004cca3c,
+		0x004cca63,
+	},
+	(DWORD)&IsAmmoKfCallHookFunction
+};
+
+bool IsAmmoKfCallEvent::Init()
+{
+	return Core::HookManager::GetInstance()->AddHook(isAmmoKfCallHook);
+}
