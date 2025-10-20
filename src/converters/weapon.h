@@ -9,15 +9,15 @@ public:
 
 		switch (id) {
 		case 0: return L"Pistol";
-		case 1: return L"S Uzi";
+		case 1: return L"S-Uzi";
 		case 2: return L"Rocket Launcher";
-		case 3: return L"Electro Gun";
-		case 4: return L"Molotov Cocktail";
-		case 5: return L"Grenade";
+		case 3: return L"ElectroGun";
+		case 4: return L"Molotov Cocktails";
+		case 5: return L"Grenades";
 		case 6: return L"Shotgun";
-		case 7: return L"Electro Baton";
+		case 7: return L"ElectroBaton";
 		case 8: return L"Flamethrower";
-		case 9: return L"Silenced S Uzi";
+		case 9: return L"Silenced S-Uzi";
 		case 10: return L"Dual Pistol";
 		case 11: return L"Weapon 11";
 		case 12: return L"Weapon 12";
@@ -26,12 +26,12 @@ public:
 		case 15: return L"Vehicle Bomb";
 		case 16: return L"Vehicle Oil Slick";
 		case 17: return L"Vehicle Mine";
-		case 18: return L"Vehicle Machine Gun";
-		case 19: return L"Vehicle Tank Cannon";
-		case 20: return L"Vehicle Water Cannon";
+		case 18: return L"Vehicle Machine Guns";
+		case 19: return L"Tank Gun";
+		case 20: return L"Water Cannon";
 		case 21: return L"Vehicle Flamethrower";
-		case 22: return L"Vehicle Jeep Turret";
-		case 23: return L"Vehicle Instant Bomb";
+		case 22: return L"Jeep Gun";
+		case 23: return L"Instant Vehicle Bomb";
 		case 24: return L"Vehicle Weapon 24";
 		case 25: return L"Vehicle Weapon 25";
 		case 26: return L"Vehicle Weapon 26";
@@ -40,7 +40,7 @@ public:
 		}
 	}
 
-	static bool AreEqual(Game::CAR_MODEL4 a, Game::CAR_MODEL4 b) {
+	static bool AreEqual(Game::WEAPON_INDEX a, Game::WEAPON_INDEX b) {
 		return a == b;
 	}
 
