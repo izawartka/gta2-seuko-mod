@@ -41,5 +41,11 @@ namespace Game {
 
 		typedef Car*(__stdcall SpawnCarType)(int x, int y, int z, short rot, CAR_MODEL4 model);
 		static constexpr SpawnCarType* SpawnCar = (SpawnCarType*)0x00426e10;
+
+		typedef uint(__fastcall AddWeaponType)(Ped* ped, DWORD edx, WEAPON_INDEX weapon, uint ammo);
+		static constexpr AddWeaponType* AddWeapon = (AddWeaponType*)0x0043e4b0;
+
+		typedef uint(__stdcall CarAddWeaponType)(CAR_WEAPON type, uint ammo, Car* car);
+		static constexpr CarAddWeaponType* CarAddWeapon = (CarAddWeaponType*)0x004cd820;
 	};  
 }

@@ -593,7 +593,7 @@ struct WEAPON_PLAYER_LIST {
     uint bitMask;
     undefined field_0x54[1732];
     struct WEAPON_STRUCT * weapons[28]; /* Created by retype action */
-    short count; /* Created by retype action */
+    short selectedWeapon; /* Created by retype action */
 };
 
 typedef enum EXPLOSION_SIZE {

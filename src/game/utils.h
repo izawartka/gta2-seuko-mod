@@ -6,6 +6,9 @@ namespace Game {
 	class Utils
 	{
 	public:
+		Utils() = delete;
+		~Utils() = delete;
+
 		static constexpr float ToFloat(SCR_f value) {
 			return static_cast<float>(value) / 16384.0f;
 		}
@@ -45,6 +48,25 @@ namespace Game {
 				30,31,32,33,34,35,36
 			};
 			return std::vector<short>(std::begin(ids), std::end(ids));
+		}
+
+		static std::vector<WEAPON_INDEX> GetAvailableWeapons() {
+			static constexpr int32_t ids[] = {
+				0,1,2,3,4,5,7,8,9,10,
+				11,12,13,14,15,16,17,18,19,20,
+				21,22,23,24,25,26,27
+			};
+
+			std::vector<WEAPON_INDEX> weapons;
+			weapons.reserve(std::size(ids));
+			for (int32_t id : ids) {
+				weapons.push_back(static_cast<WEAPON_INDEX>(id));
+			}
+			return weapons;
+		}
+
+		static bool IsWeaponVehicleWeapon(WEAPON_INDEX weapon) {
+			return static_cast<int>(weapon) >= 15;
 		}
 	};
 }
