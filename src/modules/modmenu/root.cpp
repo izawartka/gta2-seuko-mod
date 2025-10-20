@@ -44,7 +44,9 @@ void ModMenuModule::RootModule::RemoveLastMenu()
 		spdlog::warn("Attempted to remove menu from empty stack");
 		return;
 	}
-	m_menus.back()->Detach();
+	MenuBase* backMenu = m_menus.back().get();
+	backMenu->SetVisible(false);
+	backMenu->Detach();
 	m_menus.pop_back();
 
 	if (m_menus.empty()) {
@@ -59,7 +61,9 @@ void ModMenuModule::RootModule::RemoveLastMenu()
 void ModMenuModule::RootModule::ClearMenus()
 {
 	while (!m_menus.empty()) {
-		m_menus.back()->Detach();
+		MenuBase* backMenu = m_menus.back().get();
+		backMenu->SetVisible(false);
+		backMenu->Detach();
 		m_menus.pop_back();
 	}
 }

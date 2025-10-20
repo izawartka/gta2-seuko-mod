@@ -40,6 +40,7 @@ namespace ModMenuModule {
 			}
 
 			if (!m_menus.empty()) {
+				m_menus.back()->SetVisible(false);
 				m_menus.back()->Detach();
 			}
 
