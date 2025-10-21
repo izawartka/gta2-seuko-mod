@@ -1,5 +1,6 @@
 #include "player-menu.h"
 #include "player-pos-menu.h"
+#include "player-stats-menu.h"
 #include "../../../converters/cop-value.h"
 #include "../../../converters/yes-no.h"
 #include "../cheats/freeze-cop-value.h"
@@ -25,6 +26,7 @@ bool ModMenuModule::PlayerMenu::Attach()
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Position", options.textSize);
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Stats", options.textSize);
 
 	auto onEditStop = [this]() {
 		if (m_visible) m_menuController->SetActive(true);
@@ -74,7 +76,6 @@ bool ModMenuModule::PlayerMenu::Attach()
 	m_freezeCopValueController->SetSaveCallback([this](bool newValue) {
 		SetCheatEnabled<ModMenuModule::FreezeCopValueCheat>(newValue);
 	});
-
 
 	// health
 	UiModule::Text* healthText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
@@ -147,19 +148,22 @@ void ModMenuModule::PlayerMenu::OnMenuAction(UiModule::Selectable* item, UiModul
 	case 1: // Position
 		ModMenuModule::RootModule::GetInstance()->AddMenu<ModMenuModule::PlayerPosMenu>();
 		break;
-	case 2: // Wanted level
+	case 2: // Stats
+		ModMenuModule::RootModule::GetInstance()->AddMenu<ModMenuModule::PlayerStatsMenu>();
+		break;
+	case 3: // Wanted level
 		m_menuController->SetActive(false);
 		m_wantedLevelController->SetEditing(true);
 		break;
-	case 3: // Freeze wanted level
+	case 4: // Freeze wanted level
 		m_menuController->SetActive(false);
 		m_freezeCopValueController->SetEditing(true);
 		break;
-	case 4: // Health
+	case 5: // Health
 		m_menuController->SetActive(false);
 		m_healthController->SetEditing(true);
 		break;
-	case 5: // Invulnerability
+	case 6: // Invulnerability
 		m_menuController->SetActive(false);
 		m_invulnerabilityController->SetEditing(true);
 		break;

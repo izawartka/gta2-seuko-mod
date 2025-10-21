@@ -249,6 +249,9 @@
     <ClInclude Include="src\modules\modmenu\menus\get-weapon-menu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\game\car-roof-utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\events\is-ammo-kf-call.h">
       <Filter>Header Files</Filter>
     </ClInclude>
