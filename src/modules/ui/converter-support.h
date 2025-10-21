@@ -37,6 +37,8 @@ namespace UiModule {
             else {
                 m_areEqual = nullptr;
 			}
+
+			OnConverterChanged();
         }
 
         void ClearConverter() {
@@ -44,6 +46,8 @@ namespace UiModule {
             m_fromStringFunc = DefaultConverter<T>::ConvertFromString;
             m_isValidCharFunc = DefaultConverter<T>::IsValidChar;
 			m_areEqual = DefaultConverter<T>::AreEqual;
+
+			OnConverterChanged();
         }
 
     protected:
@@ -66,6 +70,8 @@ namespace UiModule {
 			assert(m_areEqual && "Converter not set or does not support equality comparison");
 			return m_areEqual(a, b);
 		}
+
+        virtual void OnConverterChanged() {}
 
         ConverterSupport() = default;
 

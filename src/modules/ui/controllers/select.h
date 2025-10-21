@@ -115,6 +115,11 @@ namespace UiModule {
 		}
 
     protected:
+        virtual void OnConverterChanged() override {
+            UpdateTextBuffer();
+            UpdateText();
+        }
+
         void Save() {
             if (!m_editing) return;
             if (m_currentIndex < 0 || m_currentIndex >= static_cast<int>(m_optionList.size())) {

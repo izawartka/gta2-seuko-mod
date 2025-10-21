@@ -79,7 +79,7 @@ namespace UiModule {
 			if (m_editing == editing) return;
 			m_editing = editing;
 			if (editing) {
-				if (!m_allowEdit) {
+				if (!m_value.has_value()) {
 					spdlog::warn("Invalid value, cannot edit");
 					m_editing = false;
 					if (m_onEditStop) m_onEditStop();
@@ -117,6 +117,13 @@ namespace UiModule {
 		}
 
 	protected:
+		virtual void OnConverterChanged() override {
+			if (m_editing) return;
+
+			UpdateTextBuffer();
+			UpdateText();
+		}
+
 		void SetPreDrawUIListener(bool enable) {
 			if (enable == m_hasPreDrawListener) return;
 			m_hasPreDrawListener = enable;
@@ -158,6 +165,15 @@ namespace UiModule {
 			m_watched->RequestUpdate();
 		}
 
+		void UpdateTextBuffer() {
+			if (m_value.has_value()) {
+				m_textBuffer = this->ConvertToString(m_value.value());
+			}
+			else {
+				m_textBuffer = m_options.nullText;
+			}
+		}
+
 		void UpdateText() {
 			std::wstring marker = m_editing && (m_blinkCounter < m_options.blinkInterval) ? m_options.marker : L"";
 			m_textComponent->SetText(m_options.prefix + m_textBuffer + marker + m_options.suffix);
@@ -174,10 +190,9 @@ namespace UiModule {
 				return;
 			}
 
-			bool hasValue = newValue.has_value();
-			m_textBuffer = hasValue ? this->ConvertToString(newValue.value()) : m_options.nullText;
-			m_allowEdit = hasValue;
+			m_value = newValue;
 
+			UpdateTextBuffer();
 			UpdateText();
 		}
 
@@ -226,11 +241,11 @@ namespace UiModule {
 		Text* m_textComponent = nullptr;
 		Core::Resolver<T> m_resolver = nullptr;
 		Core::Watched<T>* m_watched = nullptr;
+		std::optional<T> m_value = std::nullopt;
 		bool m_watchingBeforeEdit = false;
 		bool m_activeBeforeEdit = false;
 		bool m_hasPreDrawListener = false;
 		std::wstring m_textBuffer = L"";
-		bool m_allowEdit = false;
 		std::optional<T> m_pendingSaveValue = std::nullopt;
 		VarTextEditableCustomSaveCallback<T> m_customSaveCallback = nullptr;
 		int m_blinkCounter = 0;

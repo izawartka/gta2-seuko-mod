@@ -47,17 +47,27 @@ namespace UiModule {
 		}
 
 	protected:
+		virtual void OnConverterChanged() override {
+			UpdateTextBuffer();
+			UpdateText();
+		}
+
+		void UpdateTextBuffer() {
+			if (m_value.has_value()) {
+				m_textBuffer = this->ConvertToString(m_value.value());
+			}
+			else {
+				m_textBuffer = m_options.nullText;
+			}
+		}
+
 		void UpdateText() {
 			m_textComponent->SetText(m_options.prefix + m_textBuffer + m_options.suffix);
 		}
 
 		void OnValueUpdate(std::optional<T> oldValue, std::optional<T> newValue) {
-			if (newValue.has_value()) {
-				m_textBuffer = this->ConvertToString(newValue.value());
-			}
-			else {
-				m_textBuffer = m_options.nullText;
-			}
+			m_value = newValue;
+			UpdateTextBuffer();
 			UpdateText();
 		}
 
@@ -65,6 +75,7 @@ namespace UiModule {
 		Text* m_textComponent = nullptr;
 		Core::Resolver<T> m_resolver = nullptr;
 		Core::Watched<T>* m_watched = nullptr;
+		std::optional<T> m_value = std::nullopt;
 		std::wstring m_textBuffer = L"";
 	};
 }

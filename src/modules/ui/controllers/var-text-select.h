@@ -85,7 +85,7 @@ namespace UiModule {
             if (m_editing == editing) return;
             m_editing = editing;
             if (editing) {
-                if (!m_allowEdit) {
+                if (!m_value.has_value()) {
                     spdlog::warn("Invalid value, cannot edit");
                     m_editing = false;
                     if (m_onEditStop) m_onEditStop();
@@ -114,9 +114,14 @@ namespace UiModule {
 
         void SetCustomSaveCallback(VarTextSelectCustomSaveCallback<T> callback) {
              m_customSaveCallback = callback;
-		}
+        }
 
     protected:
+        virtual void OnConverterChanged() override {
+            UpdateTextBuffer();
+            UpdateText();
+        }
+
         void Save() {
             if (!m_editing) return;
             if (!m_watchingBeforeEdit) return;
@@ -148,16 +153,25 @@ namespace UiModule {
 
         void UpdateIndexFromValue() {
             m_currentIndex = -1;
-            if (!m_currentValue.has_value()) {
+            if (!m_displayValue.has_value()) {
                 return;
             }
             auto it = std::find_if(m_optionList.begin(), m_optionList.end(), [this](const T& val) {
-				return this->AreEqual(val, m_currentValue.value());
-			});
+                return this->AreEqual(val, m_displayValue.value());
+            });
             if (it == m_optionList.end()) {
                 return;
             }
             m_currentIndex = std::distance(m_optionList.begin(), it);
+        }
+
+        void UpdateTextBuffer() {
+            if (m_displayValue.has_value()) {
+                m_textBuffer = this->ConvertToString(m_displayValue.value());
+            }
+            else {
+                m_textBuffer = m_options.nullText;
+            }
         }
 
         void UpdateText() {
@@ -176,10 +190,10 @@ namespace UiModule {
                 return;
             }
 
-            bool hasValue = newValue.has_value();
-            m_currentValue = newValue;
-            m_textBuffer = hasValue ? this->ConvertToString(newValue.value()) : m_options.nullText;
-            m_allowEdit = hasValue;
+            m_value = newValue;
+            m_displayValue = newValue;
+
+            UpdateTextBuffer();
 
             if (m_editing) {
                 UpdateIndexFromValue();
@@ -243,8 +257,8 @@ namespace UiModule {
             if (newIndex == m_currentIndex) return;
 
             m_currentIndex = newIndex;
-            m_currentValue = m_optionList[m_currentIndex];
-            m_textBuffer = this->ConvertToString(m_optionList[m_currentIndex]);
+            m_displayValue = m_optionList[m_currentIndex];
+            UpdateTextBuffer();
             if (m_options.liveMode) {
                 Save();
             }
@@ -255,14 +269,14 @@ namespace UiModule {
         Text* m_textComponent = nullptr;
         Core::Resolver<T> m_resolver = nullptr;
         Core::Watched<T>* m_watched = nullptr;
+        std::optional<T> m_value = std::nullopt;
         bool m_activeBeforeEdit = false;
         bool m_watchingBeforeEdit = false;
         std::wstring m_textBuffer = L"";
-        bool m_allowEdit = false;
         std::optional<T> m_pendingSaveValue = std::nullopt;
         VarTextSelectCustomSaveCallback<T> m_customSaveCallback = nullptr;
         VarTextSelectOptionList<T> m_optionList;
-        std::optional<T> m_currentValue = std::nullopt;
+        std::optional<T> m_displayValue = std::nullopt;
         int m_currentIndex = 0;
     };
 }
