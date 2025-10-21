@@ -71,6 +71,7 @@ void ModMenuModule::MenuBase::DestroyMenu()
 
 void ModMenuModule::MenuBase::SetVisible(bool visible)
 {
+	if (m_visible == visible) return;
 	m_visible = visible;
 
 	if (visible) {
