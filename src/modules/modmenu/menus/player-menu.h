@@ -21,10 +21,8 @@ namespace ModMenuModule {
 		void UpdateCheatStates();
 
 		UiModule::VarTextSelectController<short>* m_wantedLevelController = nullptr;
-		UiModule::VarTextSelectController<bool>* m_freezeCopValueController = nullptr;
-		bool m_freezeCopValueEnabled = false;
+		UiModule::SelectController<bool>* m_freezeCopValueController = nullptr;
 		UiModule::VarTextEditableController<Game::ushort>* m_healthController = nullptr;
-		UiModule::VarTextSelectController<bool>* m_invulnerabilityController = nullptr;
-		bool m_invulnerabilityEnabled = false;
+		UiModule::SelectController<bool>* m_invulnerabilityController = nullptr;
 	};
 }

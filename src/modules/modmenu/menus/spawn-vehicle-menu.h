@@ -15,7 +15,6 @@ namespace ModMenuModule {
 		virtual bool Attach() override;
 		virtual void Detach() override;
 
-		virtual void OnShow() override;
 		virtual void OnHide() override;
 
 	private:
@@ -24,12 +23,8 @@ namespace ModMenuModule {
 		void UpdateSpritePreviewMargin();
 		void Spawn();
 
-		UiModule::VarTextSelectController<Game::CAR_MODEL4>* m_modelController = nullptr;
-		Game::CAR_MODEL4 m_selectedModel = Game::CAR_MODEL4::CAR_MODEL4_ALFA;
-		UiModule::VarTextSelectController<bool>* m_unsupportedRemapsController = nullptr;
-		bool m_unsupportedRemaps = false;
-		UiModule::VarTextSelectController<short>* m_remapController = nullptr;
-		short m_selectedRemap = -1;
+		UiModule::SelectController<Game::CAR_MODEL4>* m_modelController = nullptr;
+		UiModule::SelectController<short>* m_remapController = nullptr;
 
 		UiModule::Margin* m_spritePreviewMargin = nullptr;
 		UiModule::Sprite* m_spritePreview = nullptr;

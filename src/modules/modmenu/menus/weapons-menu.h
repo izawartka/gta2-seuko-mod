@@ -23,8 +23,7 @@ namespace ModMenuModule {
 		void UpdateCheatStates();
 		void GetAllWeapons();
 
-		UiModule::VarTextSelectController<bool>* m_infiniteAmmoController = nullptr;
-		bool m_infiniteAmmoEnabled = false;
+		UiModule::SelectController<bool>* m_infiniteAmmoController = nullptr;
 		UiModule::VarTextController<Game::WEAPON_INDEX>* m_weaponController = nullptr;
 		UiModule::VarTextEditableController<short>* m_ammoController = nullptr;
 	};

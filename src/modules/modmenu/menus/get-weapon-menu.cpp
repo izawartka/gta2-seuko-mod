@@ -30,12 +30,12 @@ bool ModMenuModule::GetWeaponMenu::Attach()
 	// weapon
 	UiModule::Text* weaponText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	UiModule::VarTextSelectOptionList<Game::WEAPON_INDEX> weaponOptionList = Game::Utils::GetAvailableWeapons();
-	m_selectedWeapon = persistence->Load("ModMenu_GetWeaponMenu_SelectedWeapon", weaponOptionList[0]);
-	m_weaponController = uiRoot->AddController<UiModule::VarTextSelectController<Game::WEAPON_INDEX>>(
+	Game::WEAPON_INDEX selectedWeapon = persistence->Load("ModMenu_GetWeaponMenu_SelectedWeapon", weaponOptionList[0]);
+	m_weaponController = uiRoot->AddController<UiModule::SelectController<Game::WEAPON_INDEX>>(
 		weaponText,
-		[this]() { return &m_selectedWeapon; },
 		weaponOptionList,
-		UiModule::VarTextSelectControllerOptions{ L"Weapon: #", L"#" }
+		selectedWeapon,
+		UiModule::SelectControllerOptions{ L"Weapon: #", L"#" }
 	);
 	m_weaponController->SetConverter<WeaponConverter>();
 	m_weaponController->SetEditStopCallback(onEditStop);
@@ -61,7 +61,7 @@ bool ModMenuModule::GetWeaponMenu::Attach()
 void ModMenuModule::GetWeaponMenu::Detach()
 {
 	ModMenuModule::PersistenceManager* persistence = ModMenuModule::PersistenceManager::GetInstance();
-	persistence->Save("ModMenu_GetWeaponMenu_SelectedWeapon", m_selectedWeapon);
+	persistence->Save("ModMenu_GetWeaponMenu_SelectedWeapon", m_weaponController->GetValue());
 	persistence->Save("ModMenu_GetWeaponMenu_SelectedAmmo", m_selectedAmmo);
 
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
@@ -72,13 +72,11 @@ void ModMenuModule::GetWeaponMenu::Detach()
 
 void ModMenuModule::GetWeaponMenu::OnShow()
 {
-	m_weaponController->SetWatching(true);
 	m_ammoController->SetWatching(true);
 }
 
 void ModMenuModule::GetWeaponMenu::OnHide()
 {
-	m_weaponController->SetWatching(false);
 	m_weaponController->SetEditing(false);
 	m_ammoController->SetWatching(false);
 	m_ammoController->SetEditing(false);
@@ -108,27 +106,29 @@ void ModMenuModule::GetWeaponMenu::OnMenuAction(UiModule::Selectable* item, UiMo
 
 void ModMenuModule::GetWeaponMenu::GetWeapon()
 {
+	Game::WEAPON_INDEX selectedWeapon = m_weaponController->GetValue().value();
+
 	Game::Ped* playerPed = Game::Memory::GetPlayerPed();
 	if (!playerPed) {
 		spdlog::error("Could not give weapon: player ped is null.");
 		return;
 	}
 
-	if(Game::Utils::IsWeaponVehicleWeapon(m_selectedWeapon) && playerPed->currentCar == nullptr) {
+	if(Game::Utils::IsWeaponVehicleWeapon(selectedWeapon) && playerPed->currentCar == nullptr) {
 		spdlog::warn("Could not give weapon: player is not in a vehicle to receive vehicle weapon.");
 		return;
 	}
 
-	spdlog::info("Giving weapon #{} with {} ammo to player.", static_cast<int>(m_selectedWeapon), m_selectedAmmo);
+	spdlog::info("Giving weapon #{} with {} ammo to player.", static_cast<int>(selectedWeapon), m_selectedAmmo);
 
 	Game::Functions::AddWeapon(
 		playerPed,
 		0,
-		m_selectedWeapon,
+		selectedWeapon,
 		m_selectedAmmo
 	);
 
-	Game::CarRoofUtils::AddCarRoofForWeapon(playerPed->currentCar, m_selectedWeapon);
+	Game::CarRoofUtils::AddCarRoofForWeapon(playerPed->currentCar, selectedWeapon);
 
-	playerPed->playerWeapons->selectedWeapon = static_cast<short>(m_selectedWeapon);
+	playerPed->playerWeapons->selectedWeapon = static_cast<short>(selectedWeapon);
 }

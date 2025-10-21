@@ -27,19 +27,18 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 	// model
 	UiModule::Text* modelText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	UiModule::VarTextSelectOptionList<Game::CAR_MODEL4> modelOptionList = Game::Utils::GetSpawnableCarModels();
-	m_selectedModel = persistence->Load("ModMenu_SpawnVehicleMenu_SelectedModel", modelOptionList[0]);
-	m_modelController = uiRoot->AddController<UiModule::VarTextSelectController<Game::CAR_MODEL4>>(
+	Game::CAR_MODEL4 selectedModel = persistence->Load("ModMenu_SpawnVehicleMenu_SelectedModel", modelOptionList[0]);
+	m_modelController = uiRoot->AddController<UiModule::SelectController<Game::CAR_MODEL4>>(
 		modelText,
-		[this]() { return &m_selectedModel; },
 		modelOptionList,
-		UiModule::VarTextSelectControllerOptions{ L"Model: #", L"#" }
+		selectedModel,
+		UiModule::SelectControllerOptions{ L"Model: #", L"#" }
 	);
 	m_modelController->SetEditStopCallback([this]() {
 		if (m_visible) m_menuController->SetActive(true);
 	});
 	m_modelController->SetConverter<CarModelConverter>();
-	m_modelController->SetCustomSaveCallback([this](Game::CAR_MODEL4 newModel) {
-		m_selectedModel = newModel;
+	m_modelController->SetSaveCallback([this](Game::CAR_MODEL4 newModel) {
 		UpdateSpritePreview();
 		UpdateSpritePreviewMargin();
 	});
@@ -47,19 +46,18 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 	// remap
 	UiModule::Text* remapText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	UiModule::VarTextSelectOptionList<short> remapOptionList = Game::Utils::GetAvailableCarRemaps();
-	m_selectedRemap = persistence->Load("ModMenu_SpawnVehicleMenu_SelectedRemap", remapOptionList[0]);
-	m_remapController = uiRoot->AddController<UiModule::VarTextSelectController<short>>(
+	short selectedRemap = persistence->Load("ModMenu_SpawnVehicleMenu_SelectedRemap", remapOptionList[0]);
+	m_remapController = uiRoot->AddController<UiModule::SelectController<short>>(
 		remapText,
-		[this]() { return &m_selectedRemap; },
 		remapOptionList,
-		UiModule::VarTextSelectControllerOptions{ L"Remap: #", L"#" }
+		selectedRemap,
+		UiModule::SelectControllerOptions{ L"Remap: #", L"#" }
 	);
 	m_remapController->SetEditStopCallback([this]() {
 		if (m_visible) m_menuController->SetActive(true);
 	});
 	m_remapController->SetConverter<CarRemapConverter>();
-	m_remapController->SetCustomSaveCallback([this](short newRemap) {
-		m_selectedRemap = newRemap;
+	m_remapController->SetSaveCallback([this](short newRemap) {
 		UpdateSpritePreview();
 	});
 
@@ -79,8 +77,8 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 void ModMenuModule::SpawnVehicleMenu::Detach()
 {
 	ModMenuModule::PersistenceManager* persistence = ModMenuModule::PersistenceManager::GetInstance();
-	persistence->Save("ModMenu_SpawnVehicleMenu_SelectedModel", m_selectedModel);
-	persistence->Save("ModMenu_SpawnVehicleMenu_SelectedRemap", m_selectedRemap);
+	persistence->Save("ModMenu_SpawnVehicleMenu_SelectedModel", m_modelController->GetValue().value());
+	persistence->Save("ModMenu_SpawnVehicleMenu_SelectedRemap", m_remapController->GetValue().value());
 
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	uiRoot->RemoveController(m_modelController);
@@ -89,17 +87,9 @@ void ModMenuModule::SpawnVehicleMenu::Detach()
 	DestroyMenu();
 }
 
-void ModMenuModule::SpawnVehicleMenu::OnShow()
-{
-	m_modelController->SetWatching(true);
-	m_remapController->SetWatching(true);
-}
-
 void ModMenuModule::SpawnVehicleMenu::OnHide()
 {
-	m_modelController->SetWatching(false);
 	m_modelController->SetEditing(false);
-	m_remapController->SetWatching(false);
 	m_remapController->SetEditing(false);
 }
 
@@ -127,24 +117,27 @@ void ModMenuModule::SpawnVehicleMenu::OnMenuAction(UiModule::Selectable* item, U
 
 void ModMenuModule::SpawnVehicleMenu::UpdateSpritePreview() 
 {
+	Game::CAR_MODEL4 selectedModel = m_modelController->GetValue().value();
+	short selectedRemap = m_remapController->GetValue().value();
+
 	UiModule::SpriteOptions options = {};
 	options.rotation = (float)M_PI / 2.0f;
 	options.scale = SPRITE_PREVIEW_SCALE;
 	options.spriteType = Game::SPRITE_TYPE::SPRITE_TYPE_CAR;
 
-	if (m_selectedRemap == -1) {
+	if (selectedRemap == -1) {
 		options.palette = Game::PALETTE_BASE::PALETTE_BASE_SPRITE;
 		options.remap = 0;
 	}
 	else {
 		options.palette = Game::PALETTE_BASE::PALETTE_BASE_CAR_REMAP;
-		options.remap = static_cast<uint16_t>(m_selectedRemap);
+		options.remap = static_cast<uint16_t>(selectedRemap);
 	}
 
 	Game::Style_S3* styleS3 = Game::Memory::GetStyleS3();
-	Game::CarInfo* carInfo = styleS3->allCarsInfo->cars[m_selectedModel];
+	Game::CarInfo* carInfo = styleS3->allCarsInfo->cars[selectedModel];
 	if (!carInfo) {
-		spdlog::error("Could not find vehicle info for the model #{}.", static_cast<uint32_t>(m_selectedModel));
+		spdlog::error("Could not find vehicle info for the model #{}.", static_cast<uint32_t>(selectedModel));
 		return;
 	}
 	uint16_t spriteId = static_cast<uint16_t>(carInfo->sprite);
@@ -159,10 +152,12 @@ void ModMenuModule::SpawnVehicleMenu::UpdateSpritePreview()
 
 void ModMenuModule::SpawnVehicleMenu::UpdateSpritePreviewMargin()
 {
+	Game::CAR_MODEL4 selectedModel = m_modelController->GetValue().value();
+
 	Game::Style_S3* styleS3 = Game::Memory::GetStyleS3();
-	Game::CarInfo* carInfo = styleS3->allCarsInfo->cars[m_selectedModel];
+	Game::CarInfo* carInfo = styleS3->allCarsInfo->cars[selectedModel];
 	if (!carInfo) {
-		spdlog::error("Could not find vehicle info for the model #{}.", static_cast<uint32_t>(m_selectedModel));
+		spdlog::error("Could not find vehicle info for the model #{}.", static_cast<uint32_t>(selectedModel));
 		return;
 	}
 
@@ -185,6 +180,9 @@ void ModMenuModule::SpawnVehicleMenu::UpdateSpritePreviewMargin()
 
 void ModMenuModule::SpawnVehicleMenu::Spawn()
 {
+	Game::CAR_MODEL4 selectedModel = m_modelController->GetValue().value();
+	short selectedRemap = m_remapController->GetValue().value();
+
 	Game::Ped* ped = Game::Memory::GetPlayerPed();
 	if (!ped || !ped->gameObject || !ped->gameObject->sprite) {
 		spdlog::warn("Could not find player ped position to spawn vehicle.");
@@ -201,24 +199,24 @@ void ModMenuModule::SpawnVehicleMenu::Spawn()
 		ped->gameObject->sprite->y,
 		ped->gameObject->sprite->z,
 		ped->gameObject->spriteRotation,
-		m_selectedModel
+		selectedModel
 	);
 
 	if(!car) {
-		spdlog::error("Failed to spawn vehicle model #{}.", static_cast<uint32_t>(m_selectedModel));
+		spdlog::error("Failed to spawn vehicle model #{}.", static_cast<uint32_t>(selectedModel));
 		return;
 	}
 
-	if (m_selectedRemap == -1) {
+	if (selectedRemap == -1) {
 		car->sprite->carColor = 0;
 		car->sprite->paletteBase = Game::PALETTE_BASE::PALETTE_BASE_SPRITE;
 	}
 	else {
-		car->sprite->carColor = m_selectedRemap;
+		car->sprite->carColor = selectedRemap;
 		car->sprite->paletteBase = Game::PALETTE_BASE::PALETTE_BASE_CAR_REMAP;
 	}
 
-	spdlog::debug("Spawned vehicle model #{} with remap #{}.", static_cast<uint32_t>(m_selectedModel), m_selectedRemap);
+	spdlog::debug("Spawned vehicle model #{} with remap #{}.", static_cast<uint32_t>(selectedModel), selectedRemap);
 
 	/// TODO: Move player into the car
 }

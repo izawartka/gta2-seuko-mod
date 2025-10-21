@@ -33,15 +33,15 @@ bool ModMenuModule::WeaponsMenu::Attach()
 
 	// infinite ammo
 	UiModule::Text* infiniteAmmoText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	m_infiniteAmmoController = uiRoot->AddController<UiModule::VarTextSelectController<bool>>(
+	m_infiniteAmmoController = uiRoot->AddController<UiModule::SelectController<bool>>(
 		infiniteAmmoText,
-		[this]() { return &m_infiniteAmmoEnabled; },
-		UiModule::VarTextSelectOptionList<bool>{ false, true },
-		UiModule::VarTextSelectControllerOptions{ L"Infinite ammo: #", L"#" }
+		UiModule::SelectOptionList<bool>{ false, true },
+		std::nullopt,
+		UiModule::SelectControllerOptions{ L"Infinite ammo: #", L"#" }
 	);
 	m_infiniteAmmoController->SetEditStopCallback(onEditStop);
 	m_infiniteAmmoController->SetConverter<YesNoConverter>();
-	m_infiniteAmmoController->SetCustomSaveCallback([this](bool newValue) {
+	m_infiniteAmmoController->SetSaveCallback([this](bool newValue) {
 		SetCheatEnabled<ModMenuModule::InfiniteAmmoCheat>(newValue);
 	});
 
@@ -94,7 +94,6 @@ void ModMenuModule::WeaponsMenu::Detach()
 
 void ModMenuModule::WeaponsMenu::OnShow()
 {
-	m_infiniteAmmoController->SetWatching(true);
 	m_weaponController->SetWatching(true);
 	m_ammoController->SetWatching(true);
 
@@ -106,7 +105,6 @@ void ModMenuModule::WeaponsMenu::OnHide()
 {
 	RemoveEventListener<ModMenuModule::CheatStateEvent>();
 
-	m_infiniteAmmoController->SetWatching(false);
 	m_infiniteAmmoController->SetEditing(false);
 	m_weaponController->SetWatching(false);
 	m_ammoController->SetWatching(false);
@@ -141,13 +139,13 @@ void ModMenuModule::WeaponsMenu::OnMenuAction(UiModule::Selectable* item, UiModu
 void ModMenuModule::WeaponsMenu::OnCheatStateChange(CheatStateEvent& event)
 {
 	if (event.GetCheatType() == typeid(ModMenuModule::InfiniteAmmoCheat)) {
-		m_infiniteAmmoEnabled = event.IsEnabled();
+		m_infiniteAmmoController->SetValue(event.IsEnabled());
 	}
 }
 
 void ModMenuModule::WeaponsMenu::UpdateCheatStates()
 {
-	m_infiniteAmmoEnabled = IsCheatEnabled<ModMenuModule::InfiniteAmmoCheat>();
+	m_infiniteAmmoController->SetValue(IsCheatEnabled<ModMenuModule::InfiniteAmmoCheat>());
 }
 
 void ModMenuModule::WeaponsMenu::GetAllWeapons()

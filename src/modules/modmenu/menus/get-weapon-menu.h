@@ -18,8 +18,7 @@ namespace ModMenuModule {
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 		void GetWeapon();
 
-		UiModule::VarTextSelectController<Game::WEAPON_INDEX>* m_weaponController = nullptr;
-		Game::WEAPON_INDEX m_selectedWeapon = Game::WEAPON_INDEX::WEAPON_PISTOL;
+		UiModule::SelectController<Game::WEAPON_INDEX>* m_weaponController = nullptr;
 		UiModule::VarTextEditableController<short>* m_ammoController = nullptr;
 		short m_selectedAmmo = 99;
 	};
