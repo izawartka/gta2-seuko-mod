@@ -44,6 +44,15 @@ namespace Core {
             m_eventListenerIds.erase(it);
         }
 
+        template<typename EventT>
+        bool HasEventListener() {
+            static_assert(std::is_base_of<EventBase, EventT>::value, "EventT must derive from Core::EventBase");
+            const std::type_index eventTypeIdx = typeid(EventT);
+
+            auto it = m_eventListenerIds.find(eventTypeIdx);
+            return (it != m_eventListenerIds.end());
+        }
+
         void RemoveAllEventListeners() {
             auto* eventManager = EventManager::GetInstance();
             for (const auto& pair : m_eventListenerIds) {
