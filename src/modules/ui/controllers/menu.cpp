@@ -8,7 +8,16 @@ UiModule::MenuController::MenuController(MenuControllerOptions options)
 
 UiModule::MenuController::~MenuController()
 {
+	SetActive(false);
 
+	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
+	while (!m_items.empty()) {
+		MenuItem& menuItem = m_items.back();
+		if (menuItem.controller) {
+			uiRoot->RemoveController(static_cast<Controller*>(menuItem.controller));
+		}
+		m_items.pop_back();
+	}
 }
 
 UiModule::MenuItemId UiModule::MenuController::AddItem(Selectable* item)
@@ -17,11 +26,18 @@ UiModule::MenuItemId UiModule::MenuController::AddItem(Selectable* item)
 		spdlog::error("Attempted to add null item to MenuController");
 		return -1;
 	}
-	m_items.push_back(item);
+
+	MenuItem menuItem = {};
+	menuItem.id = m_nextItemId++;
+	menuItem.item = item;
+
+	m_items.push_back(menuItem);
+
 	if (m_items.size() == 1) {
 		SetIndex(0);
 	}
-	return m_items.size() - 1;
+
+	return m_nextItemId - 1;
 }
 
 std::vector<UiModule::MenuItemId> UiModule::MenuController::AddItems(const std::vector<Selectable*>& items)
@@ -35,18 +51,89 @@ std::vector<UiModule::MenuItemId> UiModule::MenuController::AddItems(const std::
 
 void UiModule::MenuController::RemoveItem(MenuItemId id)
 {
-	if (id < 0 || id >= m_items.size()) {
-		spdlog::error("Attempted to remove invalid item from MenuController");
+	MenuItem* item = GetItemById(id);
+	if (!item) return;
+
+	if(item->controller) {
+		spdlog::error("MenuController::RemoveItem: Item with id {} has a controller managed by this menu. Remove the controller first.", id);
 		return;
 	}
-	m_items.erase(m_items.begin() + id);
 
-	MenuItemId index = m_currentIndex;
-	if (m_currentIndex >= id && m_currentIndex > 0) {
-		index = m_currentIndex - 1;
+	size_t itemIndex = std::distance(m_items.data(), item);
+
+	item->item->SetSelected(false);
+	m_items.erase(m_items.begin() + itemIndex);
+
+	if(m_items.empty()) {
+		m_currentIndex = -1;
+		return;
 	}
 
-	SetIndex(index);
+	if (itemIndex <= m_currentIndex && m_currentIndex > 0) {
+		SetIndex(m_currentIndex - 1);
+	}
+	else {
+		UpdateIndex();
+	}
+}
+
+void UiModule::MenuController::AddItemController(MenuItemId id, MenuItemController* controller)
+{
+	MenuItem* menuItem = GetItemById(id);
+	if (!menuItem) return;
+	if (menuItem->controller != nullptr) {
+		spdlog::error("MenuController::AddItemController: Item with id {} already has a controller", id);
+		return;
+	}
+	menuItem->controller = controller;
+	controller->SetEditStopCallback(std::bind(&MenuController::OnItemEditStop, this));
+}
+
+void UiModule::MenuController::AddLatestItemController(MenuItemController* controller)
+{
+	if (m_nextItemId == 0) {
+		spdlog::error("MenuController::AddLatestItemController: No items have been added yet");
+		return;
+	}
+	AddItemController(m_nextItemId - 1, controller);
+}
+
+UiModule::MenuItemController* UiModule::MenuController::RemoveItemController(MenuItemId id)
+{
+	MenuItem* menuItem = GetItemById(id);
+	if (!menuItem) return nullptr;
+
+	MenuItemController* controller = menuItem->controller;
+	if (!controller) {
+		spdlog::error("MenuController::RemoveItemController: Item with id {} has no controller", id);
+		return nullptr;
+	}
+
+	if (m_activeController == controller) SetActiveController(nullptr);
+
+	menuItem->controller = nullptr;
+	return controller;
+}
+
+void UiModule::MenuController::DeleteItemController(MenuItemId id)
+{
+	MenuItemController* controller = RemoveItemController(id);
+	if (controller == nullptr) return;
+
+	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
+	uiRoot->RemoveController((Controller*)controller);
+}
+
+void UiModule::MenuController::SetItemsWatching(bool watching)
+{
+	if (m_itemsWatching == watching) return;
+	m_itemsWatching = watching;
+
+	for (auto& menuItem : m_items) {
+		if (menuItem.controller) {
+			menuItem.controller->SetWatching(watching);
+		}
+	}
 }
 
 void UiModule::MenuController::SetActive(bool active)
@@ -56,28 +143,20 @@ void UiModule::MenuController::SetActive(bool active)
 	}
 
 	m_active = active;
-	if (active) {
-		AddEventListener<KeyDownEvent>(&MenuController::OnKeyDown);
-	} else {
-		RemoveEventListener<KeyDownEvent>();
-	}
-
-	if (m_options.hideMarkerNonActive) {
-		SetIndex(m_currentIndex);
-	}
+	SetActiveMenuControl(active);
+	SetActiveController(nullptr);
 }
 
-void UiModule::MenuController::SetIndex(MenuItemId index)
+void UiModule::MenuController::SetIndex(size_t index)
 {
+	if (m_currentIndex == index) return;
 	if (index < 0 || index >= m_items.size()) {
-		spdlog::error("Attempted to set invalid index in MenuController");
+		spdlog::warn("Attempted to set invalid index in MenuController");
 		return;
 	}
+	SetActiveController(nullptr);
 	m_currentIndex = index;
-	bool hideIndex = !m_active && m_options.hideMarkerNonActive;
-	for (size_t i = 0; i < m_items.size(); ++i) {
-		m_items[i]->SetSelected(i == m_currentIndex && !hideIndex);
-	}
+	UpdateIndex();
 }
 
 void UiModule::MenuController::Next()
@@ -108,14 +187,23 @@ void UiModule::MenuController::Previous()
 
 void UiModule::MenuController::Action()
 {
-	if (m_onAction && m_currentIndex >= 0 && m_currentIndex < m_items.size()) {
-		m_onAction(m_items[m_currentIndex], m_currentIndex);
-	}
+	if (!m_activeMenuControl) return;
+	if (m_currentIndex < 0 && m_currentIndex >= m_items.size()) return;
+
+	MenuItem& menuItem = m_items[m_currentIndex];
+	if (menuItem.controller) SetActiveController(menuItem.controller);
+	if (m_onAction) m_onAction(menuItem.item, menuItem.id);
+}
+
+void UiModule::MenuController::OnItemEditStop()
+{
+	m_activeController = nullptr;
+	if (m_active) SetActiveMenuControl(true);
 }
 
 void UiModule::MenuController::OnKeyDown(KeyDownEvent& event)
 {
-	if (!m_active) {
+	if (!m_activeMenuControl) {
 		return;
 	}
 
@@ -127,5 +215,58 @@ void UiModule::MenuController::OnKeyDown(KeyDownEvent& event)
 		Next();
 	} else if( key == m_options.keyAction ) {
 		Action();
+	}
+}
+
+UiModule::MenuController::MenuItem* UiModule::MenuController::GetItemById(MenuItemId id)
+{
+	auto it = std::find_if(
+		m_items.begin(),
+		m_items.end(),
+		[id](const MenuItem& menuItem) {
+			return menuItem.id == id;
+		}
+	);
+
+	if (it == m_items.end()) {
+		spdlog::error("MenuController::GetItemById: No item with id {}", id);
+		return nullptr;
+
+	}
+
+	return &(*it);
+}
+
+void UiModule::MenuController::SetActiveMenuControl(bool active)
+{
+	if (m_activeMenuControl == active) return;
+	m_activeMenuControl = active;
+
+	if(active) AddEventListener<KeyDownEvent>(&MenuController::OnKeyDown);
+	else RemoveEventListener<KeyDownEvent>();
+
+	if (m_options.hideMarkerNonActive) {
+		UpdateIndex();
+	}
+}
+
+void UiModule::MenuController::SetActiveController(MenuItemController* controller)
+{
+	if (m_activeController == controller) return;
+	if (m_activeController != nullptr) {
+		m_activeController->SetEditing(false);
+	}
+	m_activeController = controller;
+	if (controller != nullptr) {
+		SetActiveMenuControl(false);
+		controller->SetEditing(true);
+	}
+}
+
+void UiModule::MenuController::UpdateIndex()
+{
+	bool hideIndex = !m_activeMenuControl && m_options.hideMarkerNonActive;
+	for (size_t i = 0; i < m_items.size(); ++i) {
+		m_items[i].item->SetSelected(i == m_currentIndex && !hideIndex);
 	}
 }

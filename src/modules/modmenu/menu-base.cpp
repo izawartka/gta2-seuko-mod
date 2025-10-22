@@ -80,6 +80,7 @@ void ModMenuModule::MenuBase::SetVisible(bool visible)
 
 	if (m_menuController) {
 		m_menuController->SetActive(visible);
+		m_menuController->SetItemsWatching(visible);
 	}
 
 	if (m_mainComponent) {
