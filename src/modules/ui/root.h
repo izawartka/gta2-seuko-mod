@@ -67,25 +67,9 @@ namespace UiModule {
 			return controller;
 		}
 
-		template<typename ControllerT>
-		void RemoveController(ControllerT* controller) {
-			static_assert(std::is_base_of_v<Controller, ControllerT>, "ControllerT must be derived from Controller");
-			auto it = std::find_if(m_controllers.begin(), m_controllers.end(), [controller](const std::unique_ptr<Controller>& ptr) {
-				return ptr.get() == controller;
-			});
-			if (it != m_controllers.end()) {
-				m_controllers.erase(it);
-			}
-			else {
-				spdlog::error("Attempted to remove a controller that is not managed by RootModule");
-			}
-		}
+		void RemoveController(Controller* controller);
 
-		void ClearControllers() {
-			while (!m_controllers.empty()) {
-				m_controllers.erase(m_controllers.begin());
-			}
-		}
+		void ClearControllers();
 
 	private:
 		void OnDraw(DrawUIEvent& event);
