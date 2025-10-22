@@ -28,15 +28,12 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 	UiModule::Text* modelText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	UiModule::VarTextSelectOptionList<Game::CAR_MODEL4> modelOptionList = Game::Utils::GetSpawnableCarModels();
 	Game::CAR_MODEL4 selectedModel = persistence->Load("ModMenu_SpawnVehicleMenu_SelectedModel", modelOptionList[0]);
-	m_modelController = uiRoot->AddController<UiModule::SelectController<Game::CAR_MODEL4>>(
+	m_modelController = m_menuController->CreateLatestItemController<UiModule::SelectController<Game::CAR_MODEL4>>(
 		modelText,
 		modelOptionList,
 		selectedModel,
 		UiModule::SelectControllerOptions{ L"Model: #", L"#" }
 	);
-	m_modelController->SetEditStopCallback([this]() {
-		if (m_visible) m_menuController->SetActive(true);
-	});
 	m_modelController->SetConverter<CarModelConverter>();
 	m_modelController->SetSaveCallback([this](Game::CAR_MODEL4 newModel) {
 		UpdateSpritePreview();
@@ -47,15 +44,12 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 	UiModule::Text* remapText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	UiModule::VarTextSelectOptionList<short> remapOptionList = Game::Utils::GetAvailableCarRemaps();
 	short selectedRemap = persistence->Load("ModMenu_SpawnVehicleMenu_SelectedRemap", remapOptionList[0]);
-	m_remapController = uiRoot->AddController<UiModule::SelectController<short>>(
+	m_remapController = m_menuController->CreateLatestItemController<UiModule::SelectController<short>>(
 		remapText,
 		remapOptionList,
 		selectedRemap,
 		UiModule::SelectControllerOptions{ L"Remap: #", L"#" }
 	);
-	m_remapController->SetEditStopCallback([this]() {
-		if (m_visible) m_menuController->SetActive(true);
-	});
 	m_remapController->SetConverter<CarRemapConverter>();
 	m_remapController->SetSaveCallback([this](short newRemap) {
 		UpdateSpritePreview();
@@ -80,17 +74,7 @@ void ModMenuModule::SpawnVehicleMenu::Detach()
 	persistence->Save("ModMenu_SpawnVehicleMenu_SelectedModel", m_modelController->GetValue().value());
 	persistence->Save("ModMenu_SpawnVehicleMenu_SelectedRemap", m_remapController->GetValue().value());
 
-	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
-	uiRoot->RemoveController(m_modelController);
-	uiRoot->RemoveController(m_remapController);
-
 	DestroyMenu();
-}
-
-void ModMenuModule::SpawnVehicleMenu::OnHide()
-{
-	m_modelController->SetEditing(false);
-	m_remapController->SetEditing(false);
 }
 
 void ModMenuModule::SpawnVehicleMenu::OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
@@ -98,14 +82,6 @@ void ModMenuModule::SpawnVehicleMenu::OnMenuAction(UiModule::Selectable* item, U
 	switch (id) {
 	case 0: // Go back
 		ModMenuModule::RootModule::GetInstance()->RemoveLastMenu();
-		break;
-	case 1: // Model
-		m_menuController->SetActive(false);
-		m_modelController->SetEditing(true);
-		break;
-	case 2: // Remap
-		m_menuController->SetActive(false);
-		m_remapController->SetEditing(true);
 		break;
 	case 3: // Spawn
 		Spawn();

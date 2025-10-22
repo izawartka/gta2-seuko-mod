@@ -15,8 +15,6 @@ namespace ModMenuModule {
 		virtual bool Attach() override;
 		virtual void Detach() override;
 
-		virtual void OnHide() override;
-
 	private:
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 		void UpdateSpritePreview();

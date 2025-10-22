@@ -10,7 +10,6 @@ namespace ModMenuModule {
 		virtual ~PlayerMenu();
 
 		virtual bool Attach() override;
-		virtual void Detach() override;
 
 		virtual void OnShow() override;
 		virtual void OnHide() override;
@@ -20,9 +19,7 @@ namespace ModMenuModule {
 		void OnCheatStateChange(CheatStateEvent& event);
 		void UpdateCheatStates();
 
-		UiModule::VarTextSelectController<short>* m_wantedLevelController = nullptr;
 		UiModule::SelectController<bool>* m_freezeCopValueController = nullptr;
-		UiModule::VarTextEditableController<Game::ushort>* m_healthController = nullptr;
 		UiModule::SelectController<bool>* m_invulnerabilityController = nullptr;
 	};
 }

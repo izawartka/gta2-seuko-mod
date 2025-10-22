@@ -25,6 +25,5 @@ namespace ModMenuModule {
 
 		UiModule::SelectController<bool>* m_infiniteAmmoController = nullptr;
 		UiModule::VarTextController<Game::WEAPON_INDEX>* m_weaponController = nullptr;
-		UiModule::VarTextEditableController<short>* m_ammoController = nullptr;
 	};
 }

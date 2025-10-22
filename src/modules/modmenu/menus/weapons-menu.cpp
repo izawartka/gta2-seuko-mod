@@ -23,23 +23,18 @@ bool ModMenuModule::WeaponsMenu::Attach()
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 
-	auto onEditStop = [this]() {
-		if (m_visible) m_menuController->SetActive(true);
-	};
-
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Get weapon", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Get all weapons", options.textSize);
 
 	// infinite ammo
 	UiModule::Text* infiniteAmmoText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	m_infiniteAmmoController = uiRoot->AddController<UiModule::SelectController<bool>>(
+	m_infiniteAmmoController = m_menuController->CreateLatestItemController<UiModule::SelectController<bool>>(
 		infiniteAmmoText,
 		UiModule::SelectOptionList<bool>{ false, true },
 		std::nullopt,
 		UiModule::SelectControllerOptions{ L"Infinite ammo: #", L"#" }
 	);
-	m_infiniteAmmoController->SetEditStopCallback(onEditStop);
 	m_infiniteAmmoController->SetConverter<YesNoConverter>();
 	m_infiniteAmmoController->SetSaveCallback([this](bool newValue) {
 		SetCheatEnabled<ModMenuModule::InfiniteAmmoCheat>(newValue);
@@ -70,13 +65,12 @@ bool ModMenuModule::WeaponsMenu::Attach()
 	);
 
 	UiModule::Text* ammoValueText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	m_ammoController = uiRoot->AddController<UiModule::VarTextEditableController<short>>(
+	auto ammoController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<short>>(
 		ammoValueText,
 		ammoResolver,
 		UiModule::VarTextEditableControllerOptions{ L"Ammo: #", L"#" }
 	);
-	m_ammoController->SetEditStopCallback(onEditStop);
-	m_ammoController->SetConverter<AmmoConverter>();
+	ammoController->SetConverter<AmmoConverter>();
 
 	ApplyIndexPersistence("ModMenu_WeaponsMenu_SelectedIndex");
 
@@ -86,16 +80,14 @@ bool ModMenuModule::WeaponsMenu::Attach()
 void ModMenuModule::WeaponsMenu::Detach()
 {
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
-	uiRoot->RemoveController(m_infiniteAmmoController);
 	uiRoot->RemoveController(m_weaponController);
-	uiRoot->RemoveController(m_ammoController);
+
 	DestroyMenu();
 }
 
 void ModMenuModule::WeaponsMenu::OnShow()
 {
 	m_weaponController->SetWatching(true);
-	m_ammoController->SetWatching(true);
 
 	AddEventListener<ModMenuModule::CheatStateEvent>(&WeaponsMenu::OnCheatStateChange);
 	UpdateCheatStates();
@@ -105,10 +97,7 @@ void ModMenuModule::WeaponsMenu::OnHide()
 {
 	RemoveEventListener<ModMenuModule::CheatStateEvent>();
 
-	m_infiniteAmmoController->SetEditing(false);
 	m_weaponController->SetWatching(false);
-	m_ammoController->SetWatching(false);
-	m_ammoController->SetEditing(false);
 }
 
 void ModMenuModule::WeaponsMenu::OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
@@ -122,14 +111,6 @@ void ModMenuModule::WeaponsMenu::OnMenuAction(UiModule::Selectable* item, UiModu
 		break;
 	case 2: // Get all weapons
 		GetAllWeapons();
-		break;
-	case 3: // Infinite ammo
-		m_menuController->SetActive(false);
-		m_infiniteAmmoController->SetEditing(true);
-		break;
-	case 4: // Ammo
-		m_menuController->SetActive(false);
-		m_ammoController->SetEditing(true);
 		break;
 	default:
 		break;
