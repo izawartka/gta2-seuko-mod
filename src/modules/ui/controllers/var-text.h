@@ -1,8 +1,7 @@
 #pragma once
 #include "../common.h"
-#include "../controller.h"
+#include "menu-item.h"
 #include "../converter-support.h"
-#include "../wae-base.h"
 #include "../components/text.h"
 #include "../../../events/draw.h"
 
@@ -14,7 +13,7 @@ namespace UiModule {
 	};
 
 	template <typename T>
-	class VarTextController : public Controller, public Core::EventListenerSupport, public ConverterSupport<T>, public WaeBase {
+	class VarTextController : public MenuItemController, public Core::EventListenerSupport, public ConverterSupport<T> {
 	public:
 		VarTextController(Text* text, Core::Resolver<T> resolver, VarTextControllerOptions options = {}) {
 			static_assert(std::is_copy_constructible<T>::value, "T must be copy-constructible");

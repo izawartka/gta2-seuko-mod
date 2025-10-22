@@ -1,10 +1,11 @@
 #pragma once
-#include "common.h"
+#include "../common.h"
+#include "../controller.h"
 
 namespace UiModule {
-	class WaeBase {
+	class MenuItemController : public Controller {
 	public:
-		using WaeEditStopCallback = std::function<void()>;
+		using MenuItemEditStopCallback = std::function<void()>;
 
 		virtual void SetWatching(bool watching) {};
 		virtual bool IsWatching() const { return m_watching; }
@@ -15,18 +16,18 @@ namespace UiModule {
 		virtual void SetEditing(bool editing) {};
 		virtual bool IsEditing() const { return m_editing; }
 
-		virtual void SetEditStopCallback(WaeEditStopCallback callback) {
+		virtual void SetEditStopCallback(MenuItemEditStopCallback callback) {
 			m_onEditStop = callback;
 		}
 
 	protected:
-		WaeBase() = default;
-		virtual ~WaeBase() = default;
+		MenuItemController() = default;
+		virtual ~MenuItemController() = default;
 
 		bool m_watching = false;
 		bool m_active = false;
 		bool m_editing = false;
 
-		WaeEditStopCallback m_onEditStop = nullptr;
+		MenuItemEditStopCallback m_onEditStop = nullptr;
 	};
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "menu-item.h"
 #include "menu.h"
 #include "select.h"
 #include "var-text.h"
