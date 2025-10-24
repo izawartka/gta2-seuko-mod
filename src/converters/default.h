@@ -9,8 +9,22 @@ template <typename T>
 class DefaultConverter {
 public:
 	static std::wstring ConvertToString(T value) {
+		using BaseT = std::remove_cv_t<T>;
 		std::fesetround(FE_TONEAREST);
-		return std::to_wstring(value);
+
+		if constexpr (std::is_same_v<BaseT, std::wstring>) {
+			return value;
+		}
+		else if constexpr (std::is_floating_point_v<BaseT>) {
+			return std::to_wstring(value);
+		}
+		else if constexpr (std::is_integral_v<BaseT>) {
+			return std::to_wstring(value);
+		}
+		else {
+			assert(false, "Unsupported type for DefaultConverter");
+			return L"";
+		}
 	}
 
 	static T ConvertFromString(std::wstring text) {
