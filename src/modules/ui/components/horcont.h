@@ -18,7 +18,7 @@ namespace UiModule {
 				child->SetPosition(currentX, m_rect.y);
 				Rect childRect = child->GetRect();
 				currentX += childRect.width;
-				maxHeight = max(maxHeight, childRect.height);
+				maxHeight = std::max(maxHeight, childRect.height);
 			}
 
 			Game::SCR_f newWidth = currentX - m_rect.x;

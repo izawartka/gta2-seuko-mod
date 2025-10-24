@@ -38,8 +38,8 @@ void UiModule::Selectable::UpdateChildrenPos()
 	for (auto child : m_children) {
 		child->SetPosition(m_rect.x + m_options.markerOffsetX, m_rect.y);
 		Rect childRect = child->GetRect();
-		maxWidth = max(maxWidth, m_options.markerOffsetX + childRect.width);
-		maxHeight = max(maxHeight, childRect.height);
+		maxWidth = std::max(maxWidth, m_options.markerOffsetX + childRect.width);
+		maxHeight = std::max(maxHeight, childRect.height);
 
 	}
 
