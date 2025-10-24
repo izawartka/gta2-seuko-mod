@@ -267,6 +267,9 @@
     <ClInclude Include="src\modules\modmenu\events\last-car-state.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\converters\float.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">

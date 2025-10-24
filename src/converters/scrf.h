@@ -1,21 +1,23 @@
 #pragma once
-#include "default.h"
+#include "float.h"
 #include "../game/game.h"
+
+static constexpr size_t PRECISION = 3;
 
 class ScrfConverter {
 public:
 	static std::wstring ConvertToString(Game::SCR_f value) {
 		float floatValue = Game::Utils::ToFloat(value);
-		return DefaultConverter<float>::ConvertToString(floatValue);
+		return FloatConverter<float, PRECISION>::ConvertToString(floatValue);
 	}
 
 	static Game::SCR_f ConvertFromString(std::wstring text) {
-		float floatValue = DefaultConverter<float>::ConvertFromString(text);
+		float floatValue = FloatConverter<float, PRECISION>::ConvertFromString(text);
 		return Game::Utils::FromFloat(floatValue);
 	}
 
 	static bool IsValidChar(std::wstring text, wchar_t c) {
-		return DefaultConverter<float>::IsValidChar(text, c);
+		return FloatConverter<float, PRECISION>::IsValidChar(text, c);
 	}
 
 	static bool AreEqual(Game::SCR_f a, Game::SCR_f b) {
