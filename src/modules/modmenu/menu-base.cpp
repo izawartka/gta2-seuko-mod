@@ -27,7 +27,7 @@ void ModMenuModule::MenuBase::CreateMenu(std::wstring title, UiModule::Component
 
 	vertCont = uiRoot->AddComponent<UiModule::VertCont>(mainCont);
 	UiModule::Margin* titleMargin = uiRoot->AddComponent<UiModule::Margin>(vertCont, options.menuHeaderMarginX, options.menuHeaderMarginY);
-	UiModule::Text* titleText = uiRoot->AddComponent<UiModule::Text>(titleMargin, title, options.menuHeaderTextSize);
+	m_titleText = uiRoot->AddComponent<UiModule::Text>(titleMargin, title, options.menuHeaderTextSize);
 
 	m_menuController = uiRoot->AddController<UiModule::MenuController>(options.menuControllerOptions);
 
@@ -66,6 +66,13 @@ void ModMenuModule::MenuBase::DestroyMenu()
 	if (m_mainComponent) {
 		uiRoot->RemoveComponent(m_mainComponent, true);
 		m_mainComponent = nullptr;
+	}
+}
+
+void ModMenuModule::MenuBase::SetTitle(std::wstring title)
+{
+	if (m_titleText) {
+		m_titleText->SetText(title);
 	}
 }
 

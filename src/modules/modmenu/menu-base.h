@@ -15,6 +15,7 @@ namespace ModMenuModule {
 		virtual void CreateMenu(std::wstring title, UiModule::Component*& vertCont) final;
 		virtual void ApplyIndexPersistence(std::string key) final;
 		virtual void DestroyMenu() final;
+		void SetTitle(std::wstring title);
 
 		virtual void OnShow() {}
 		virtual void OnHide() {}
@@ -24,6 +25,7 @@ namespace ModMenuModule {
 
 		virtual void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) = 0;
 
+		UiModule::Text* m_titleText = nullptr;
 		UiModule::Component* m_mainComponent = nullptr;
 		UiModule::MenuController* m_menuController = nullptr;
 		bool m_visible = false;
