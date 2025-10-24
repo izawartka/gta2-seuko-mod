@@ -22,13 +22,17 @@ public:
 			return std::to_wstring(value);
 		}
 		else {
-			assert(false, "Unsupported type for DefaultConverter");
+#ifdef DEBUG
+			return L"<Unsupported value>";
+#else
 			return L"";
+#endif // DEBUG
 		}
 	}
 
 	static T ConvertFromString(std::wstring text) {
 		using BaseT = std::remove_cv_t<T>;
+		std::fesetround(FE_TONEAREST);
 
 		if constexpr (std::is_same_v<BaseT, std::wstring>) {
 			return text;
