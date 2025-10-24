@@ -30,6 +30,7 @@ namespace ModMenuModule {
 			eventManager->Dispatch(event);
 		}
 		virtual bool IsEnabled() const final { return m_enabled; }
+		virtual bool AutoEnableOnAttach() const { return false; }
 
 	protected:
 		CheatBase(std::string persistenceKey) {
@@ -43,7 +44,11 @@ namespace ModMenuModule {
 	private:
 		friend class RootModule;
 		virtual bool Attach() final {
-			if (m_persistenceKey.empty()) return true;
+			if (AutoEnableOnAttach()) {
+				SetEnabled(true);
+				return true;
+			}
+
 			PersistenceManager* persistence = PersistenceManager::GetInstance();
 			bool enabled = persistence->Load(m_persistenceKey, false);
 			SetEnabled(enabled);
