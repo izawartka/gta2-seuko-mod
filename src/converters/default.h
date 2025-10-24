@@ -3,6 +3,7 @@
 #include <cfenv>
 #include <type_traits>
 #include <cassert>
+#include <limits>
 
 template <typename T>
 class DefaultConverter {
@@ -19,10 +20,21 @@ public:
 			return text;
 		}
 		else if constexpr (std::is_floating_point_v<BaseT>) {
-			return static_cast<BaseT>(std::stof(text));
+			return static_cast<BaseT>(std::stod(text));
 		}
 		else if constexpr (std::is_integral_v<BaseT>) {
-			return static_cast<BaseT>(std::stoll(text));
+			using longT = std::conditional_t<std::is_signed_v<BaseT>, long long, unsigned long long>;
+			longT value = 0;
+			if constexpr (std::is_signed_v<BaseT>) {
+				value = std::stoll(text);
+			}
+			else {
+				value = std::stoull(text);
+			}
+
+			value = std::min(value, static_cast<longT>(std::numeric_limits<BaseT>::max()));
+			value = std::max(value, static_cast<longT>(std::numeric_limits<BaseT>::min()));
+			return static_cast<BaseT>(value);
 		}
 		else {
 			assert(false, "Unsupported type for DefaultConverter");
@@ -41,13 +53,15 @@ public:
 			if (c == L'.') return !hasDecimal;
 
 			bool hasLength = text.length() > 0;
-			if (c == L'-' || c == L'+') return !hasLength;
+			if (c == L'-') return !hasLength;
 
 			return (c >= L'0' && c <= L'9');
 		}
 		else if constexpr (std::is_integral_v<BaseT>) {
-			bool hasLength = text.length() > 0;
-			if (c == L'-' || c == L'+') return !hasLength;
+			if constexpr (std::is_signed_v<BaseT>) {
+				bool hasLength = text.length() > 0;
+				if (c == L'-') return !hasLength;
+			}
 
 			return (c >= L'0' && c <= L'9');
 		}
