@@ -82,6 +82,18 @@ bool ModMenuModule::PlayerMenu::Attach()
 		UiModule::VarTextEditableControllerOptions{ L"Health: #", L"#" }
 	);
 
+	// armor
+	UiModule::Text* armorText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
+	auto armorController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<Game::ushort>>(
+		armorText,
+		Core::MakeResolver(
+			Game::Memory::GetGame,
+			mem(&Game::Game::CurrentPlayer),
+			mem(&Game::Player::armor)
+		),
+		UiModule::VarTextEditableControllerOptions{ L"Armor: #", L"#" }
+	);
+
 	// invulnerability
 	UiModule::Text* invulnerabilityText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	m_invulnerabilityController = m_menuController->CreateLatestItemController<UiModule::SelectController<bool>>(
