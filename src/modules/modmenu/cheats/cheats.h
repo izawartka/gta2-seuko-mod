@@ -2,3 +2,4 @@
 #include "freeze-cop-value.h"
 #include "invulnerability.h"
 #include "infinite-ammo.h"
+#include "last-car.h"
