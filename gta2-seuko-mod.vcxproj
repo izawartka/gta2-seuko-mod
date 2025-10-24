@@ -145,6 +145,7 @@ exit /b 0
   <ItemGroup>
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\converters\ammo.h" />
+    <ClInclude Include="src\converters\car-damage.h" />
     <ClInclude Include="src\converters\car-model.h" />
     <ClInclude Include="src\converters\car-remap.h" />
     <ClInclude Include="src\converters\cop-value.h" />
