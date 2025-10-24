@@ -34,6 +34,8 @@ namespace ModMenuModule {
             if (cheat) {
                 return cheat->IsEnabled();
             }
+            
+            return false;
         }
     };
 }
