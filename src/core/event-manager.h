@@ -21,13 +21,16 @@ namespace Core
             auto& listeners = it->second;
             for (auto& wrapper : listeners) {
                 wrapper.listener(event);
+                if (wrapper.isOneTime) {
+                    RemoveListenerEntry({ ChangeType::Remove, typeid(EventT), wrapper.id });
+                }
             }
             m_dispatching = false;
             ProcessPendingChanges();
         }
 
         template<typename EventT>
-        EventListenerId AddListener(EventListener<EventT> listener) {
+        EventListenerId AddListener(EventListener<EventT> listener, bool oneTime = false) {
             static_assert(std::is_base_of<EventBase, EventT>::value, "EventT must derive from Core::EventBase");
             std::type_index eventTypeIdx = typeid(EventT);
 
@@ -39,7 +42,7 @@ namespace Core
             EventListenerId id = m_nextListenerId++;
             PendingChange change = { ChangeType::Add, eventTypeIdx, id, [listener](EventBase& e) {
                 listener(static_cast<EventT&>(e));
-            } };
+			}, oneTime };
             if (m_dispatching) {
                 m_pendingChanges.push(change);
                 return id;
@@ -49,15 +52,15 @@ namespace Core
         }
 
         template<typename EventT, typename U>
-        EventListenerId AddListener(U* instance, EventMethodListener<EventT, U> method) {
+        EventListenerId AddListener(U* instance, EventMethodListener<EventT, U> method, bool oneTime = false) {
             static_assert(std::is_base_of<EventBase, EventT>::value, "EventT must derive from Core::EventBase");
             return AddListener<EventT>([instance, method](EventT& e) {
                 (instance->*method)(e);
-            });
+            }, oneTime);
         }
 
         void RemoveListener(std::type_index eventType, EventListenerId id) {
-            PendingChange change = { ChangeType::Remove, eventType, id, nullptr };
+            PendingChange change = { ChangeType::Remove, eventType, id };
             if (m_dispatching) {
                 m_pendingChanges.push(change);
                 return;
@@ -83,6 +86,7 @@ namespace Core
         struct ListenerWrapper {
             EventListenerId id;
             EventListener<EventBase> listener;
+			bool isOneTime = false;
         };
 
         enum class ChangeType { Add, Remove };
@@ -90,13 +94,14 @@ namespace Core
             ChangeType type;
             std::type_index eventType;
             EventListenerId id;
-            EventListener<EventBase> listener; // Only used for Add
+            EventListener<EventBase> listener = nullptr; // Only used for Add
+			bool isOneTime = false; // Only used for Add
         };
 
         void AddListenerEntry(PendingChange change) {
             spdlog::debug("Adding listener id {} for event type: {}", change.id, change.eventType.name());
             auto& listeners = m_listeners[change.eventType];
-            listeners.push_back({ change.id, change.listener });
+            listeners.push_back({ change.id, change.listener, change.isOneTime });
         }
 
         void RemoveListenerEntry(PendingChange change) {
