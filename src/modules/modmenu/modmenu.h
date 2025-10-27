@@ -8,4 +8,5 @@
 #include "cheats/cheats.h"
 #include "menu-base.h"
 #include "menus/menus.h"
+#include "menu-manager.h"
 #include "root.h"

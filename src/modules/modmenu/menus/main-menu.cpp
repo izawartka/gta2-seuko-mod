@@ -36,13 +36,13 @@ void ModMenuModule::MainMenu::OnMenuAction(UiModule::Selectable* item, UiModule:
 {
 	switch (id) {
 	case 0: // Player
-		ModMenuModule::RootModule::GetInstance()->AddMenu<ModMenuModule::PlayerMenu>();
+		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::PlayerMenu>();
 		break;
 	case 1: // Vehicles
-		ModMenuModule::RootModule::GetInstance()->AddMenu<ModMenuModule::VehiclesMenu>();
+		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::VehiclesMenu>();
 		break;
 	case 2: // Weapons
-		ModMenuModule::RootModule::GetInstance()->AddMenu<ModMenuModule::WeaponsMenu>();
+		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::WeaponsMenu>();
 		break;
 	default:
 		break;

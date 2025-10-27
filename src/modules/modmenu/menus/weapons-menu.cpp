@@ -104,10 +104,10 @@ void ModMenuModule::WeaponsMenu::OnMenuAction(UiModule::Selectable* item, UiModu
 {
 	switch (id) {
 	case 0: // Go back
-		ModMenuModule::RootModule::GetInstance()->RemoveLastMenu();
+		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
 		break;
 	case 1: // Get weapon
-		ModMenuModule::RootModule::GetInstance()->AddMenu<ModMenuModule::GetWeaponMenu>();
+		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::GetWeaponMenu>();
 		break;
 	case 2: // Get all weapons
 		GetAllWeapons();

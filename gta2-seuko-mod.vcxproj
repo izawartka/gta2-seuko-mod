@@ -167,6 +167,7 @@ exit /b 0
     <ClInclude Include="src\modules\modmenu\cheats\last-car.h" />
     <ClInclude Include="src\modules\modmenu\events\cheat-state.h" />
     <ClInclude Include="src\modules\modmenu\events\last-car-state.h" />
+    <ClInclude Include="src\modules\modmenu\menu-manager.h" />
     <ClInclude Include="src\modules\modmenu\menus\get-weapon-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\player-stats-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\spawn-vehicle-menu.h" />
@@ -253,6 +254,7 @@ exit /b 0
     <ClCompile Include="src\modules\modmenu\cheats\invulnerability.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\last-car.cpp" />
     <ClCompile Include="src\modules\modmenu\menu-base.cpp" />
+    <ClCompile Include="src\modules\modmenu\menu-manager.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\get-weapon-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\main-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\player-menu.cpp" />

@@ -81,7 +81,7 @@ void ModMenuModule::SpawnVehicleMenu::OnMenuAction(UiModule::Selectable* item, U
 {
 	switch (id) {
 	case 0: // Go back
-		ModMenuModule::RootModule::GetInstance()->RemoveLastMenu();
+		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
 		break;
 	case 3: // Spawn
 		Spawn();

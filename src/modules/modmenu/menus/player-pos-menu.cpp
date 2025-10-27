@@ -90,7 +90,7 @@ void ModMenuModule::PlayerPosMenu::OnMenuAction(UiModule::Selectable* item, UiMo
 {
 	switch (id) {
 	case 0: // Go back
-		ModMenuModule::RootModule::GetInstance()->RemoveLastMenu();
+		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
 		break;
 	default:
 		break;

@@ -1,9 +1,8 @@
 #pragma once
 #include "common.h"
 #include "cheat-base.h"
-#include "menu-base.h"
 #include "persistence-manager.h"
-#include "../../events/keyboard.h"
+#include "menu-manager.h"
 
 namespace ModMenuModule {
 	struct ModMenuOptions {
@@ -25,29 +24,6 @@ namespace ModMenuModule {
 		bool Attach();
 		void Detach();
 
-		template<typename MenuT, typename... Args>
-		MenuT* AddMenu(Args&&... args) {
-			static_assert(std::is_base_of_v<MenuBase, MenuT>, "MenuT must be derived from MenuBase");
-
-			MenuT* newMenu = new MenuT(std::forward<Args>(args)...);
-			if (!newMenu->Attach()) {
-				spdlog::error("Failed to attach mod menu {}", typeid(MenuT).name());
-				delete newMenu;
-				return nullptr;
-			}
-			if (m_visible) {
-				newMenu->SetVisible(true);
-			}
-
-			if (!m_menus.empty()) {
-				m_menus.back()->SetVisible(false);
-				m_menus.back()->Detach();
-			}
-
-			m_menus.emplace_back(std::unique_ptr<MenuBase>(newMenu));
-			return newMenu;
-		}
-
 		template<typename CheatT>
 		CheatT* GetCheat() {
 			static_assert(std::is_base_of_v<CheatBase, CheatT>, "CheatT must be derived from CheatBase");
@@ -59,20 +35,15 @@ namespace ModMenuModule {
 			return static_cast<CheatT*>(it->second.get());
 		}
 
-		void RemoveLastMenu();
-		void ClearMenus();
-		void SetVisible(bool visible);
 		ModMenuOptions GetOptions() const { return m_options; }
 
 	private:
 		void InstantiateCheats();
-		void OnKeyDown(KeyDownEvent& event);
 		static RootModule* m_instance;
 
-		PersistenceManager m_persistenceManager;
 		ModMenuOptions m_options;
+		PersistenceManager m_persistenceManager;
+		MenuManager m_menuManager;
 		std::unordered_map<std::type_index, std::unique_ptr<CheatBase>> m_cheats;
-		std::vector<std::unique_ptr<MenuBase>> m_menus;
-		bool m_visible = false;
 	};
 }

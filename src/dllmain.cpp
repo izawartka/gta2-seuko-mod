@@ -15,7 +15,8 @@ static void Init()
 	Core::ModuleManager* moduleManager = Core::ModuleManager::GetInstance();
 	UiModule::RootModule* rootModule = moduleManager->AddModule<UiModule::RootModule>();
 	ModMenuModule::RootModule* modMenu = moduleManager->AddModule<ModMenuModule::RootModule>();
-	modMenu->AddMenu<ModMenuModule::MainMenu>();
+	ModMenuModule::MenuManager* menuManager = ModMenuModule::MenuManager::GetInstance();
+	if (menuManager) menuManager->AddMenu<ModMenuModule::MainMenu>();
 }
 
 static void Deinit()

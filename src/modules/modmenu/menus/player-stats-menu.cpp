@@ -104,7 +104,7 @@ void ModMenuModule::PlayerStatsMenu::OnMenuAction(UiModule::Selectable* item, Ui
 {
 	switch (id) {
 	case 0: // Go back
-		ModMenuModule::RootModule::GetInstance()->RemoveLastMenu();
+		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
 		break;
 	default:
 		break;

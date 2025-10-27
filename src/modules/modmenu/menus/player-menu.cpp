@@ -127,13 +127,13 @@ void ModMenuModule::PlayerMenu::OnMenuAction(UiModule::Selectable* item, UiModul
 {
 	switch (id) {
 	case 0: // Go back
-		ModMenuModule::RootModule::GetInstance()->RemoveLastMenu();
+		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
 		break;
 	case 1: // Position
-		ModMenuModule::RootModule::GetInstance()->AddMenu<ModMenuModule::PlayerPosMenu>();
+		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::PlayerPosMenu>();
 		break;
 	case 2: // Stats
-		ModMenuModule::RootModule::GetInstance()->AddMenu<ModMenuModule::PlayerStatsMenu>();
+		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::PlayerStatsMenu>();
 		break;
 	default:
 		break;

@@ -33,9 +33,11 @@ void ModMenuModule::VehiclesMenu::OnMenuAction(UiModule::Selectable* item, UiMod
 	switch (id) {
 	case 0: // Go back
 		ModMenuModule::RootModule::GetInstance()->RemoveLastMenu();
+		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
 		break;
 	case 1: // Spawn vehicle
 		ModMenuModule::RootModule::GetInstance()->AddMenu<ModMenuModule::SpawnVehicleMenu>();
+		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::SpawnVehicleMenu>();
 		break;
 	default:
 		break;

@@ -6,7 +6,7 @@ namespace ModMenuModule {
 	public:
 		virtual ~MenuBase() = default;
 	protected:
-		friend class RootModule;
+		friend class MenuManager;
 		MenuBase() = default;
 
 		virtual bool Attach();
