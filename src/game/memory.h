@@ -20,5 +20,6 @@ namespace Game {
 		static constexpr Style_S3* GetStyleS3() { return (Style_S3*)*(DWORD*)0x00670684; }
 		static constexpr Cheats* GetCheats() { return (Cheats*)0x005ead51; }
 		static constexpr GangRespectContainer* GetGangRespectContainer() { return (GangRespectContainer*)*(DWORD*)0x005eb898; }
+		static short GetDefaultFontId() { return *(short*)0x00672f24; }
 	};
 }
