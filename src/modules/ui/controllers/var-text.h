@@ -1,6 +1,7 @@
 #pragma once
 #include "../common.h"
 #include "menu-item.h"
+#include "../default-resolver-return.h"
 #include "../converter-support.h"
 #include "../components/text.h"
 #include "../../../events/draw.h"
@@ -12,10 +13,13 @@ namespace UiModule {
 		std::wstring nullText = L"N/A";
 	};
 
-	template <typename T>
+	template <typename T, typename ResRet = typename DefaultResolverReturn<T>::type>
 	class VarTextController : public MenuItemController, public Core::EventListenerSupport, public ConverterSupport<T> {
 	public:
-		VarTextController(Text* text, Core::Resolver<T> resolver, VarTextControllerOptions options = {}) {
+		using ValueT = T;
+		using Resolver = std::function<ResRet()>;
+
+		VarTextController(Text* text, Resolver resolver, VarTextControllerOptions options = {}) {
 			static_assert(std::is_copy_constructible<T>::value, "T must be copy-constructible");
 			m_textComponent = text;
 			m_options = options;
@@ -33,10 +37,10 @@ namespace UiModule {
 			if (m_watching == watching) return;
 			m_watching = watching;
 			if (m_watching) {
-				m_watched = Core::WatchManager::GetInstance()->Watch<PreDrawUIEvent, T>(
+				m_watched = Core::WatchManager::GetInstance()->Watch<PreDrawUIEvent>(
 					m_resolver,
 					this,
-					&VarTextController<T>::OnValueUpdate
+					&VarTextController<T, ResRet>::OnValueUpdate
 				);
 			}
 			else {
@@ -72,7 +76,7 @@ namespace UiModule {
 
 		VarTextControllerOptions m_options;
 		Text* m_textComponent = nullptr;
-		Core::Resolver<T> m_resolver = nullptr;
+		Resolver m_resolver = nullptr;
 		Core::Watched<T>* m_watched = nullptr;
 		std::optional<T> m_value = std::nullopt;
 		std::wstring m_textBuffer = L"";
