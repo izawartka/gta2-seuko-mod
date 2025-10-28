@@ -16,6 +16,8 @@ namespace UiModule {
 		short GetRemap() const { return m_remap; }
 
 	protected:
+		Game::SCR_f GetTextWidth() const;
+
 		std::wstring m_text;
 		Game::SCR_f m_scale;
 		short m_remap;

@@ -4,7 +4,7 @@ UiModule::Text::Text(Component* parent, const std::wstring& text, Game::SCR_f sc
 {
 	m_text = text;
 	m_scale = scale;
-	m_rect.width = 0; /// TODO
+	m_rect.width = GetTextWidth();
 	m_rect.height = scale * 20;
 	m_remap = remap;
 
@@ -15,6 +15,12 @@ UiModule::Text::Text(Component* parent, const std::wstring& text, Game::SCR_f sc
 
 void UiModule::Text::Draw()
 {
+	short fontId = Game::Memory::GetDefaultFontId();
+	if (fontId == 0) {
+		spdlog::warn("UiModule::Text::Draw: Default font ID is 0, cannot draw text");
+		return;
+	}
+
 	Game::PALETTE_BASE paletteBase = m_remap < 0
 		? Game::PALETTE_BASE::PALETTE_BASE_SPRITE
 		: Game::PALETTE_BASE::PALETTE_BASE_FONT_REMAP;
@@ -22,10 +28,10 @@ void UiModule::Text::Draw()
 	short remap = m_remap < 0 ? 0 : m_remap;
 
 	Game::Functions::DrawGTAText(
-		(WCHAR*)m_text.c_str(),
+		m_text.c_str(),
 		m_rect.x,
 		m_rect.y,
-		1,
+		fontId,
 		m_scale,
 		&paletteBase,
 		remap,
@@ -37,18 +43,26 @@ void UiModule::Text::Draw()
 void UiModule::Text::SetText(const std::wstring& text)
 {
 	m_text = text;
-	/// TODO: update width
+	Game::SCR_f newWidth = GetTextWidth();
+	UpdateSize(&newWidth, nullptr);
 }
 
 void UiModule::Text::SetScale(Game::SCR_f scale)
 {
 	m_scale = scale;
+	Game::SCR_f newWidth = GetTextWidth();
 	Game::SCR_f newHeight = scale * 20;
-	UpdateSize(nullptr, &newHeight);
+	UpdateSize(&newWidth, &newHeight);
 }
 
 void UiModule::Text::SetRemap(short remap)
 {
 	m_remap = remap;
+}
+
+Game::SCR_f UiModule::Text::GetTextWidth() const
+{
+	short fontId = Game::Memory::GetDefaultFontId();
+	return Game::Functions::GetGTATextWidth(m_text.c_str(), fontId) * m_scale;
 }
 
