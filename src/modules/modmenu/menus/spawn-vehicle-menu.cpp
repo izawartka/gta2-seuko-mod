@@ -26,7 +26,7 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 
 	// model
 	UiModule::Text* modelText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	UiModule::VarTextSelectOptionList<Game::CAR_MODEL4> modelOptionList = Game::Utils::GetSpawnableCarModels();
+	UiModule::SelectOptionList<Game::CAR_MODEL4> modelOptionList = Game::Utils::GetSpawnableCarModels();
 	Game::CAR_MODEL4 selectedModel = persistence->Load("ModMenu_SpawnVehicleMenu_SelectedModel", modelOptionList[0]);
 	m_modelController = m_menuController->CreateLatestItemController<UiModule::SelectController<Game::CAR_MODEL4>>(
 		modelText,
@@ -42,16 +42,16 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 
 	// remap
 	UiModule::Text* remapText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	UiModule::VarTextSelectOptionList<short> remapOptionList = Game::Utils::GetAvailableCarRemaps();
-	short selectedRemap = persistence->Load("ModMenu_SpawnVehicleMenu_SelectedRemap", remapOptionList[0]);
-	m_remapController = m_menuController->CreateLatestItemController<UiModule::SelectController<short>>(
+	auto remapOptionList = Game::Utils::GetAvailableCarRemapsWithPalette();
+	auto selectedRemap = persistence->Load("ModMenu_SpawnVehicleMenu_SelectedRemap", remapOptionList[0]);
+	m_remapController = m_menuController->CreateLatestItemController<UiModule::SelectController<std::tuple<short, Game::PALETTE_BASE>>>(
 		remapText,
 		remapOptionList,
 		selectedRemap,
 		UiModule::SelectControllerOptions{ L"Remap: #", L"#" }
 	);
 	m_remapController->SetConverter<CarRemapConverter>();
-	m_remapController->SetSaveCallback([this](short newRemap) {
+	m_remapController->SetSaveCallback([this](auto) {
 		UpdateSpritePreview();
 	});
 
@@ -94,21 +94,14 @@ void ModMenuModule::SpawnVehicleMenu::OnMenuAction(UiModule::Selectable* item, U
 void ModMenuModule::SpawnVehicleMenu::UpdateSpritePreview() 
 {
 	Game::CAR_MODEL4 selectedModel = m_modelController->GetValue().value();
-	short selectedRemap = m_remapController->GetValue().value();
+	auto selectedRemapTuple = m_remapController->GetValue().value();
 
 	UiModule::SpriteOptions options = {};
 	options.rotation = (float)M_PI / 2.0f;
 	options.scale = SPRITE_PREVIEW_SCALE;
 	options.spriteType = Game::SPRITE_TYPE::SPRITE_TYPE_CAR;
-
-	if (selectedRemap == -1) {
-		options.palette = Game::PALETTE_BASE::PALETTE_BASE_SPRITE;
-		options.remap = 0;
-	}
-	else {
-		options.palette = Game::PALETTE_BASE::PALETTE_BASE_CAR_REMAP;
-		options.remap = static_cast<uint16_t>(selectedRemap);
-	}
+	options.remap = std::get<0>(selectedRemapTuple);
+	options.palette = std::get<1>(selectedRemapTuple);
 
 	Game::Style_S3* styleS3 = Game::Memory::GetStyleS3();
 	Game::CarInfo* carInfo = styleS3->allCarsInfo->cars[selectedModel];
@@ -157,7 +150,7 @@ void ModMenuModule::SpawnVehicleMenu::UpdateSpritePreviewMargin()
 void ModMenuModule::SpawnVehicleMenu::Spawn()
 {
 	Game::CAR_MODEL4 selectedModel = m_modelController->GetValue().value();
-	short selectedRemap = m_remapController->GetValue().value();
+	auto selectedRemapTuple = m_remapController->GetValue().value();
 
 	Game::Ped* ped = Game::Memory::GetPlayerPed();
 	if (!ped || !ped->gameObject || !ped->gameObject->sprite) {
@@ -178,21 +171,15 @@ void ModMenuModule::SpawnVehicleMenu::Spawn()
 		selectedModel
 	);
 
-	if(!car) {
+	if(!car || !car->sprite) {
 		spdlog::error("Failed to spawn vehicle model #{}.", static_cast<uint32_t>(selectedModel));
 		return;
 	}
 
-	if (selectedRemap == -1) {
-		car->sprite->carColor = 0;
-		car->sprite->paletteBase = Game::PALETTE_BASE::PALETTE_BASE_SPRITE;
-	}
-	else {
-		car->sprite->carColor = selectedRemap;
-		car->sprite->paletteBase = Game::PALETTE_BASE::PALETTE_BASE_CAR_REMAP;
-	}
+	car->sprite->carColor = std::get<0>(selectedRemapTuple);
+	car->sprite->paletteBase = std::get<1>(selectedRemapTuple);
 
-	spdlog::debug("Spawned vehicle model #{} with remap #{}.", static_cast<uint32_t>(selectedModel), selectedRemap);
+	spdlog::info("Spawned vehicle model #{}.", static_cast<uint32_t>(selectedModel));
 
 	/// TODO: Move player into the car
 }

@@ -22,7 +22,7 @@ namespace ModMenuModule {
 		void Spawn();
 
 		UiModule::SelectController<Game::CAR_MODEL4>* m_modelController = nullptr;
-		UiModule::SelectController<short>* m_remapController = nullptr;
+		UiModule::SelectController<std::tuple<short, Game::PALETTE_BASE>>* m_remapController = nullptr;
 
 		UiModule::Margin* m_spritePreviewMargin = nullptr;
 		UiModule::Sprite* m_spritePreview = nullptr;

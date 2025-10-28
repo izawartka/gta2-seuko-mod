@@ -1,12 +1,22 @@
 #pragma once
+#include "../game/game.h"
 #include <string>
 
 class CarRemapConverter {
 public:
-	static std::wstring ConvertToString(short value) {
+	static std::wstring ConvertToString(std::tuple<short, Game::PALETTE_BASE> value) {
+		Game::PALETTE_BASE palette = std::get<1>(value);
+		switch (palette) {
+		case Game::PALETTE_BASE::PALETTE_BASE_SPRITE:
+			return L"Default";
+		case Game::PALETTE_BASE::PALETTE_BASE_CAR_REMAP:
+			break;
+		default:
+			return L"???";
+		}
 
-		switch (value) {
-		case -1: return L"Default";
+		short remap = std::get<0>(value);
+		switch (remap) {
 		case 0: return L"Alpine blue";
 		case 1: return L"Black";
 		case 2: return L"Black 2";
@@ -48,8 +58,8 @@ public:
 		}
 	}
 
-	static bool AreEqual(short a, short b) {
-		return a == b;
+	static bool AreEqual(std::tuple<short, Game::PALETTE_BASE> a, std::tuple<short, Game::PALETTE_BASE> b) {
+		return std::get<0>(a) == std::get<0>(b) && std::get<1>(a) == std::get<1>(b);
 	}
 
 protected:

@@ -50,6 +50,15 @@ namespace Game {
 			return std::vector<short>(std::begin(ids), std::end(ids));
 		}
 
+		static std::vector<std::tuple<short, PALETTE_BASE>> GetAvailableCarRemapsWithPalette() {
+			std::vector<std::tuple<short, PALETTE_BASE>> remaps;
+			remaps.emplace_back(0, PALETTE_BASE::PALETTE_BASE_SPRITE);
+			for (short i = 0; i <= 36; ++i) {
+				remaps.emplace_back(i, PALETTE_BASE::PALETTE_BASE_CAR_REMAP);
+			}
+			return remaps;
+		}
+
 		static std::vector<WEAPON_INDEX> GetAvailableWeapons() {
 			static constexpr int32_t ids[] = {
 				0,1,2,3,4,5,7,8,9,10,
