@@ -71,6 +71,23 @@ namespace {
     };
     inline constexpr IdxStep idx(std::size_t i) { return IdxStep(i); }
 
+    // TupleStep: applies multiple steps to the same base and returns a tuple of results
+    template<typename... InnerSteps>
+    struct TupleStep {
+        std::tuple<InnerSteps...> steps;
+        constexpr TupleStep(InnerSteps... s) : steps(s...) {}
+
+        template<typename Ptr>
+        auto operator()(Ptr base) const {
+            return std::apply([&](auto const&... s) {
+                return std::make_tuple(s(base)...);
+            }, steps);
+        }
+    };
+
+    template<typename... InnerSteps>
+    constexpr auto tupl(InnerSteps... steps) { return TupleStep<InnerSteps...>(steps...); }
+
     template<std::size_t I, typename Cur, typename Tuple>
     auto ChainStep(Cur cur, const Tuple& t)
     {
