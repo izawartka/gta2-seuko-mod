@@ -62,5 +62,16 @@ namespace Game {
 
 		typedef void(__fastcall CarAddRoofAntennaType)(Car* car);
 		static constexpr CarAddRoofAntennaType* CarAddRoofAntenna = (CarAddRoofAntennaType*)0x00425fd0;
+
+		// also set car->fireState to 0 to fully extinguish
+		typedef void(__fastcall ExtinguishCarType)(Car* car, DWORD edx);
+		static constexpr ExtinguishCarType* ExtinguishCar = (ExtinguishCarType*)0x004bf070;
+
+		// allows to run the engine even after the car exploded
+		typedef void(__fastcall FixCarBrokenEngineType)(Car* car, DWORD edx);
+		static constexpr FixCarBrokenEngineType* FixCarBrokenEngine = (FixCarBrokenEngineType*)0x00421570;
+
+		typedef void(__fastcall ExplodeCarType)(Car* car, DWORD edx, EXPLOSION_SIZE explosionSize);
+		static constexpr ExplodeCarType* ExplodeCar = (ExplodeCarType*)0x00426fa0;
 	};  
 }
