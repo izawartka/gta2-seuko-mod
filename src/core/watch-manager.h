@@ -11,33 +11,53 @@ namespace Core
     public:
         static WatchManager* GetInstance();
 
+        template<typename R>
+        struct ResolverValue;
+
+        template<typename V>
+        struct ResolverValue<V*> { using type = V; };
+
+        template<typename... Vs>
+        struct ResolverValue<std::tuple<Vs*...>> { using type = std::tuple<Vs...>; };
+
         template<typename EventT, typename T>
-        Watched<T>* Watch(Resolver<T> resolver, WatchedListener<T> listener)
-        {
-            static_assert(std::is_copy_constructible<T>::value, "ComponentT must be copy-constructible");
-			static_assert(std::is_base_of_v<EventBase, EventT> || std::is_same<EventT, void>::value, "EventT must derive from Core::Event or be void");
-			spdlog::debug("Adding watched: {} (Event: {})", typeid(T).name(), typeid(EventT).name());
-
-			auto entry = new Watched<T>(m_nextEntryId++, std::move(resolver), std::move(listener));
-            WatchedId id = entry->m_id;
-
-			EnsureEventType<EventT>();
-
-			auto eventTypeIdx = std::type_index(typeid(EventT));
-			m_entries[eventTypeIdx].push_back(std::unique_ptr<WatchedBase>(entry));
-            m_idToEventType.push_back({ id, eventTypeIdx });
-
-			return entry;
+        Watched<T>* Watch(Resolver<T> resolver, WatchedListener<T> listener) {
+            return Watch<EventT, T*>(std::function<T*()>(resolver), std::move(listener));
         }
 
-		template<typename EventT, typename T, typename U>
+        template<typename EventT, typename T, typename U>
         Watched<T>* Watch(Resolver<T> resolver, U* instance, WatchedMethodListener<T, U> method) {
-            static_assert(std::is_copy_constructible<T>::value, "ComponentT must be copy-constructible");
+            auto listener = [instance, method](std::optional<T> oldVal, std::optional<T> newVal) {
+                (instance->*method)(oldVal, newVal);
+            };
+            return Watch<EventT, T*>(std::function<T*()>(std::move(resolver)), std::move(listener));
+        }
+
+        template<typename EventT, typename ResRet>
+        auto Watch(std::function<ResRet()> resolver, WatchedListener<typename ResolverValue<std::decay_t<ResRet>>::type> listener)
+            -> Watched<typename ResolverValue<std::decay_t<ResRet>>::type>*
+        {
+            using ValueT = typename ResolverValue<std::decay_t<ResRet>>::type;
+            static_assert(std::is_copy_constructible<ValueT>::value, "ValueT must be copy-constructible");
             static_assert(std::is_base_of_v<EventBase, EventT> || std::is_same<EventT, void>::value, "EventT must derive from Core::Event or be void");
 
-            return Watch<EventT, T>(std::move(resolver), [instance, method](std::optional<T> oldValue, std::optional<T> newValue) {
-                (instance->*method)(oldValue, newValue);
-			});
+            auto entry = new Watched<ValueT>(m_nextEntryId++, std::move(resolver), std::move(listener));
+            RegisterEntry<EventT>(entry);
+            return entry;
+        }
+
+        template<typename EventT, typename ResRet, typename U>
+        auto Watch(std::function<ResRet()> resolver, U* instance, WatchedMethodListener<typename ResolverValue<std::decay_t<ResRet>>::type, U> method)
+            -> Watched<typename ResolverValue<std::decay_t<ResRet>>::type>*
+        {
+            using ValueT = typename ResolverValue<std::decay_t<ResRet>>::type;
+            static_assert(std::is_copy_constructible<ValueT>::value, "ValueT must be copy-constructible");
+            static_assert(std::is_base_of_v<EventBase, EventT> || std::is_same<EventT, void>::value, "EventT must derive from Core::Event or be void");
+
+            auto listener = [instance, method](std::optional<ValueT> oldVal, std::optional<ValueT> newVal) {
+                (instance->*method)(oldVal, newVal);
+            };
+            return Watch<EventT, ResRet>(std::move(resolver), std::move(listener));
         }
 
         void Unwatch(WatchedId id) {
@@ -48,7 +68,7 @@ namespace Core
 
             if (it == m_idToEventType.end()) {
 				spdlog::warn("No watched found with id: {}", id);
-                /// TODO
+                return;
             }
 
 			auto eventTypeIdx = it->second;
@@ -70,6 +90,18 @@ namespace Core
         ~WatchManager();
         WatchManager(const WatchManager&) = delete;
         WatchManager& operator=(const WatchManager&) = delete;
+
+        template<typename EventT>
+        void RegisterEntry(WatchedBase* entry) {
+            WatchedId id = entry->m_id;
+            spdlog::debug("Adding watched: {} with id: {} (Event: {})", typeid(*entry).name(), id, typeid(EventT).name());
+
+            EnsureEventType<EventT>();
+
+            auto eventTypeIdx = std::type_index(typeid(EventT));
+            m_entries[eventTypeIdx].push_back(std::unique_ptr<WatchedBase>(entry));
+            m_idToEventType.push_back({ id, eventTypeIdx });
+        }
 
 		template<typename EventT>
         void EnsureEventType() {
