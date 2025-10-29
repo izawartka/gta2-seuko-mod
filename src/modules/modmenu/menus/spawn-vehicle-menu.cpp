@@ -62,7 +62,10 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 	UpdateSpritePreviewMargin();
 
 	// spawn button
-	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Spawn", options.textSize);
+	auto spawnText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"Spawn", options.textSize);
+	auto spawnBtn = m_menuController->CreateLatestItemController<UiModule::ButtonController>(spawnText);
+	spawnBtn->SetCallback(this, &SpawnVehicleMenu::Spawn);
+
 	ApplyIndexPersistence("ModMenu_SpawnVehicleMenu_SelectedIndex");
 
 	return true;
@@ -82,9 +85,6 @@ void ModMenuModule::SpawnVehicleMenu::OnMenuAction(UiModule::Selectable* item, U
 	switch (id) {
 	case 0: // Go back
 		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
-		break;
-	case 3: // Spawn
-		Spawn();
 		break;
 	default:
 		break;

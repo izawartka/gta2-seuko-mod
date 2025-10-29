@@ -25,7 +25,7 @@ bool ModMenuModule::GetWeaponMenu::Attach()
 
 	// weapon
 	UiModule::Text* weaponText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	UiModule::VarTextSelectOptionList<Game::WEAPON_INDEX> weaponOptionList = Game::Utils::GetAvailableWeapons();
+	UiModule::SelectOptionList<Game::WEAPON_INDEX> weaponOptionList = Game::Utils::GetAvailableWeapons();
 	Game::WEAPON_INDEX selectedWeapon = persistence->Load("ModMenu_GetWeaponMenu_SelectedWeapon", weaponOptionList[0]);
 	m_weaponController = m_menuController->CreateLatestItemController<UiModule::SelectController<Game::WEAPON_INDEX>>(
 		weaponText,
@@ -45,7 +45,9 @@ bool ModMenuModule::GetWeaponMenu::Attach()
 	);
 
 	// get weapon button
-	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Get weapon", options.textSize);
+	auto getWeaponText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"Get weapon", options.textSize);
+	auto getWeaponBtn = m_menuController->CreateLatestItemController<UiModule::ButtonController>(getWeaponText);
+	getWeaponBtn->SetCallback(this, &GetWeaponMenu::GetWeapon);
 
 	ApplyIndexPersistence("ModMenu_GetWeaponMenu_SelectedIndex");
 
@@ -66,9 +68,6 @@ void ModMenuModule::GetWeaponMenu::OnMenuAction(UiModule::Selectable* item, UiMo
 	switch (id) {
 	case 0: // Go back
 		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
-		break;
-	case 3: // Get weapon
-		GetWeapon();
 		break;
 	default:
 		break;
