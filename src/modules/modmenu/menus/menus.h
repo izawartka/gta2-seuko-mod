@@ -6,5 +6,6 @@
 #include "player-stats-menu.h"
 #include "vehicles-menu.h"
 #include "spawn-vehicle-menu.h"
+#include "last-vehicle-menu.h"
 #include "weapons-menu.h"
 #include "get-weapon-menu.h"

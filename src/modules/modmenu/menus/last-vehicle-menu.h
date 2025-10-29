@@ -5,12 +5,13 @@
 #include "../events/last-car-state.h"
 
 namespace ModMenuModule {
-	class VehiclesMenu : public MenuBase, public Core::EventListenerSupport, public CheatSupport {
+	class LastVehicleMenu : public MenuBase, public Core::EventListenerSupport, public CheatSupport {
 	public:
-		VehiclesMenu();
-		virtual ~VehiclesMenu();
+		LastVehicleMenu();
+		virtual ~LastVehicleMenu();
 
 		virtual bool Attach() override;
+		virtual void Detach() override;
 
 		virtual void OnShow() override;
 		virtual void OnHide() override;
@@ -19,7 +20,11 @@ namespace ModMenuModule {
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 		void OnLastCarStateChange(ModMenuModule::LastCarStateEvent& event);
 		void UpdateLastCarState();
+		Game::Car* GetLastCar();
+		void FixCarDamage();
+		void TurnEngineOff();
+		void ExplodeCar();
 
-		UiModule::Text* m_lastCarText = nullptr;
+		UiModule::VarTextController<Game::CAR_MODEL4>* m_modelController = nullptr;
 	};
 }
