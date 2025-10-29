@@ -175,6 +175,7 @@ exit /b 0
     <ClInclude Include="src\modules\modmenu\menus\weapons-menu.h" />
     <ClInclude Include="src\modules\modmenu\persistence-manager.h" />
     <ClInclude Include="src\modules\ui\components\sprite.h" />
+    <ClInclude Include="src\modules\ui\controllers\button.h" />
     <ClInclude Include="src\modules\ui\controllers\select.h" />
     <ClInclude Include="src\modules\ui\converter-support.h" />
     <ClInclude Include="src\core\core.h" />
