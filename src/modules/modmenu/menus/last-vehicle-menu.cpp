@@ -4,6 +4,7 @@
 #include "../../../converters/car-model.h"
 #include "../../../converters/car-remap.h"
 #include "../../../converters/car-damage.h"
+#include "last-vehicle-physics-menu.h"
 
 ModMenuModule::LastVehicleMenu::LastVehicleMenu()
 {
@@ -28,6 +29,7 @@ bool ModMenuModule::LastVehicleMenu::Attach()
 
 	// go back
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Physics", options.textSize);
 
 	// model
 	UiModule::Margin* modelMargin = uiRoot->AddComponent<UiModule::Margin>(vertCont, options.menuControllerOptions.createdSelectableOptions.markerOffsetX, 0);
@@ -117,6 +119,8 @@ void ModMenuModule::LastVehicleMenu::OnMenuAction(UiModule::Selectable* item, Ui
 	case 0: // Go back
 		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
 		break;
+	case 1: // Invulnerability
+		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::LastVehiclePhysicsMenu>();
 	default:
 		break;
 	}
