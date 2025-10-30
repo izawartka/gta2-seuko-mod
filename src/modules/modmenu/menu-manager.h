@@ -2,6 +2,8 @@
 #include "common.h"
 #include "menu-base.h"
 #include "../../events/keyboard.h"
+#include "../../events/game-start.h"
+#include "../../events/game-end.h"
 
 namespace ModMenuModule {
 	using MenuId = size_t;
@@ -36,10 +38,12 @@ namespace ModMenuModule {
 		static MenuManager* m_instance;
 
 		void OnKeyDown(KeyDownEvent& event);
+		void OnGameStart(GameStartEvent& event);
+		void OnGameEnd(PreGameEndEvent& event);
 		void Attach();
 		void Detach();
 
-		enum class ChangeType { Add, Remove, UpdateVisible };
+		enum class ChangeType { Add, Remove, UpdateVisible, DetachTop };
 		struct PendingChange {
 			ChangeType type;
 			MenuId id = 0;
@@ -65,6 +69,8 @@ namespace ModMenuModule {
 		bool m_processingChanges = false;
 		bool m_topMenuAttached = false;
 		bool m_topMenuVisible = false;
+		bool m_aboutToEndGame = false;
+		bool m_inGame = false;
 		MenuId m_nextMenuId = 1;
 	};
 }

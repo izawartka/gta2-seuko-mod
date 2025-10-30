@@ -59,7 +59,7 @@ void ModMenuModule::MenuManager::SetVisible(bool visible)
 
 	m_visible = visible;
 
-	if (m_menus.empty()) {
+	if (m_menuIds.empty()) {
 		return;
 	}
 
@@ -75,11 +75,34 @@ void ModMenuModule::MenuManager::OnKeyDown(KeyDownEvent& event)
 	}
 }
 
+void ModMenuModule::MenuManager::OnGameStart(GameStartEvent& event)
+{
+	if (m_inGame) return;
+	m_inGame = true;
+	if (!m_processingChanges) {
+		ProcessPendingChanges();
+	}
+}
+
+void ModMenuModule::MenuManager::OnGameEnd(PreGameEndEvent& event)
+{
+	if (!m_inGame) return;
+	m_aboutToEndGame = true;
+	SetVisible(false);
+	AddPendingChange({ ChangeType::DetachTop, 0, nullptr });
+	m_aboutToEndGame = false;
+	m_inGame = false;
+}
+
 void ModMenuModule::MenuManager::Attach() {
 	AddEventListener<KeyDownEvent>(&MenuManager::OnKeyDown);
+	AddEventListener<GameStartEvent>(&MenuManager::OnGameStart);
+	AddEventListener<PreGameEndEvent>(&MenuManager::OnGameEnd);
 }
 
 void ModMenuModule::MenuManager::Detach() {
+	RemoveEventListener<PreGameEndEvent>();
+	RemoveEventListener<GameStartEvent>();
 	RemoveEventListener<KeyDownEvent>();
 	if (m_pendingChanges.size()) {
 		spdlog::warn("MenuManager is being detached with {} pending changes", m_pendingChanges.size());
@@ -161,6 +184,9 @@ void ModMenuModule::MenuManager::ProcessPendingChanges()
 		case ChangeType::Remove:
 			ApplyMenuRemove(change);
 			break;
+		case ChangeType::DetachTop:
+			DetachTopMenu();
+			break;
 		case ChangeType::UpdateVisible:
 			break;
 		default:
@@ -171,13 +197,13 @@ void ModMenuModule::MenuManager::ProcessPendingChanges()
 
 	MenuStackEntry* newTopMenu = m_menus.empty() ? nullptr : &m_menus.back();
 
-	if(!m_topMenuAttached && newTopMenu) {
+	if(!m_topMenuAttached && newTopMenu && !m_aboutToEndGame) {
 		spdlog::debug("MenuManager::ProcessPendingChanges: Attaching top menu with id {}", newTopMenu->id);
 		newTopMenu->menu->Attach();
 		m_topMenuAttached = true;
 	}
 
-	if(!m_topMenuVisible && newTopMenu && m_visible) {
+	if(!m_topMenuVisible && newTopMenu && m_visible && !m_aboutToEndGame) {
 		spdlog::debug("MenuManager::ProcessPendingChanges: Setting top menu with id {} visible", newTopMenu->id);
 		newTopMenu->menu->SetVisible(true);
 		m_topMenuVisible = true;
@@ -193,7 +219,7 @@ void ModMenuModule::MenuManager::ProcessPendingChanges()
 void ModMenuModule::MenuManager::AddPendingChange(const PendingChange& change)
 {
 	m_pendingChanges.push(change);
-	if (!m_processingChanges) {
+	if (!m_processingChanges && m_inGame) {
 		ProcessPendingChanges();
 	}
 }
