@@ -291,6 +291,9 @@
     <ClInclude Include="src\converters\bit-yes-no.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\hook-types\multi-jump-hook.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">

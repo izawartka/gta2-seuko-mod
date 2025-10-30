@@ -158,6 +158,7 @@ exit /b 0
     <ClInclude Include="src\events\is-ammo-kf-call.h" />
     <ClInclude Include="src\game\car-roof-utils.h" />
     <ClInclude Include="src\hook-types\jump-hook.h" />
+    <ClInclude Include="src\hook-types\multi-jump-hook.h" />
     <ClInclude Include="src\modules\modmenu\cheat-base.h" />
     <ClInclude Include="src\modules\modmenu\cheat-registry.h" />
     <ClInclude Include="src\modules\modmenu\cheat-support.h" />
