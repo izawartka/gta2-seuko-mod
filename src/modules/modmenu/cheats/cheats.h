@@ -2,4 +2,5 @@
 #include "freeze-cop-value.h"
 #include "invulnerability.h"
 #include "infinite-ammo.h"
+#include "instant-reload.h"
 #include "last-car.h"

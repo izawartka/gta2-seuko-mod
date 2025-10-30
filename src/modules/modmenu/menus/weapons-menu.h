@@ -24,6 +24,7 @@ namespace ModMenuModule {
 		void GetAllWeapons();
 
 		UiModule::SelectController<bool>* m_infiniteAmmoController = nullptr;
+		UiModule::SelectController<bool>* m_instantReloadController = nullptr;
 		UiModule::VarTextController<Game::WEAPON_INDEX>* m_weaponController = nullptr;
 	};
 }

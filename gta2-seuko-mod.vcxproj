@@ -166,6 +166,7 @@ exit /b 0
     <ClInclude Include="src\modules\modmenu\cheats\cheats.h" />
     <ClInclude Include="src\modules\modmenu\cheats\freeze-cop-value.h" />
     <ClInclude Include="src\modules\modmenu\cheats\infinite-ammo.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\instant-reload.h" />
     <ClInclude Include="src\modules\modmenu\cheats\invulnerability.h" />
     <ClInclude Include="src\modules\modmenu\cheats\last-car.h" />
     <ClInclude Include="src\modules\modmenu\events\cheat-state.h" />
@@ -259,6 +260,7 @@ exit /b 0
     <ClCompile Include="src\game\keycode.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\freeze-cop-value.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\infinite-ammo.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\instant-reload.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\invulnerability.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\last-car.cpp" />
     <ClCompile Include="src\modules\modmenu\menu-base.cpp" />
