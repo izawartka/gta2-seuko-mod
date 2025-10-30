@@ -73,5 +73,8 @@ namespace Game {
 
 		typedef void(__fastcall ExplodeCarType)(Car* car, DWORD edx, EXPLOSION_SIZE explosionSize);
 		static constexpr ExplodeCarType* ExplodeCar = (ExplodeCarType*)0x00426fa0;
+
+		typedef void(__fastcall ShootFromWeaponType)(WEAPON_STRUCT* weapon, DWORD edx);
+		static constexpr ShootFromWeaponType* ShootFromWeapon = (ShootFromWeaponType*)0x004d0530;
 	};  
 }
