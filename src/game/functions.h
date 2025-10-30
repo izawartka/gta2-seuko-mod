@@ -6,6 +6,12 @@ namespace Game {
 	class Functions  
 	{  
 	public:  
+		typedef void InitGameType();
+		static constexpr InitGameType* InitGame = (InitGameType*)0x00461de0;
+
+		typedef void DeinitGameType();
+		static constexpr DeinitGameType* DeinitGame = (DeinitGameType*)0x00462060;
+
 		typedef void(__fastcall EachFrameDrawType)(Game* game, DWORD edx);  
 		static constexpr EachFrameDrawType* EachFrameDraw = (EachFrameDrawType*)0x0045a5a0; 
 

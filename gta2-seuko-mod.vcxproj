@@ -155,6 +155,8 @@ exit /b 0
     <ClInclude Include="src\converters\weapon.h" />
     <ClInclude Include="src\converters\yes-no.h" />
     <ClInclude Include="src\events\after-debug-flags.h" />
+    <ClInclude Include="src\events\game-end.h" />
+    <ClInclude Include="src\events\game-start.h" />
     <ClInclude Include="src\events\is-ammo-kf-call.h" />
     <ClInclude Include="src\events\try-shoot-weapon.h" />
     <ClInclude Include="src\game\car-roof-utils.h" />
@@ -253,6 +255,8 @@ exit /b 0
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\events\after-debug-flags.cpp" />
     <ClCompile Include="src\events\draw.cpp" />
+    <ClCompile Include="src\events\game-end.cpp" />
+    <ClCompile Include="src\events\game-start.cpp" />
     <ClCompile Include="src\events\game-tick.cpp" />
     <ClCompile Include="src\events\is-ammo-kf-call.cpp" />
     <ClCompile Include="src\events\try-shoot-weapon.cpp" />
