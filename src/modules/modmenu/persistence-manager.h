@@ -1,7 +1,7 @@
 #pragma once
 #include "common.h"
 
-constexpr const char* PERSISTENCE_FILE = "modmenu.pst";
+constexpr const char* PERSISTENCE_FILE = "modmenu.dat";
 
 namespace ModMenuModule {
 	class PersistenceManager {
