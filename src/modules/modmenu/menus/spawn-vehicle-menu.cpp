@@ -78,6 +78,7 @@ void ModMenuModule::SpawnVehicleMenu::Detach()
 	persistence->Save("ModMenu_SpawnVehicleMenu_SelectedRemap", m_remapController->GetValue().value());
 
 	DestroyMenu();
+	m_spritePreview = nullptr; // has to be cleared because is used in UpdateSpritePreview to check if it exists
 }
 
 void ModMenuModule::SpawnVehicleMenu::OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
