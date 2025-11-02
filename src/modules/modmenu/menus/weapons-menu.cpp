@@ -86,7 +86,7 @@ bool ModMenuModule::WeaponsMenu::Attach()
 	);
 	ammoController->SetConverter<AmmoConverter>();
 
-	ApplyIndexPersistence("ModMenu_WeaponsMenu_SelectedIndex");
+	SetPreviousSelectedIndex();
 
 	return true;
 }

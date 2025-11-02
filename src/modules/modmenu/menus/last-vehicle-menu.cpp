@@ -86,7 +86,7 @@ bool ModMenuModule::LastVehicleMenu::Attach()
 	auto explodeBtn = m_menuController->CreateLatestItemController<UiModule::ButtonController>(explodeText);
 	explodeBtn->SetCallback(this, &LastVehicleMenu::ExplodeCar);
 
-	ApplyIndexPersistence("ModMenu_LastVehicleMenu_SelectedIndex");
+	SetPreviousSelectedIndex();
 
 	return true;
 }

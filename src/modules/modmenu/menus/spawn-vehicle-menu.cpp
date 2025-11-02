@@ -66,7 +66,7 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 	auto spawnBtn = m_menuController->CreateLatestItemController<UiModule::ButtonController>(spawnText);
 	spawnBtn->SetCallback(this, &SpawnVehicleMenu::Spawn);
 
-	ApplyIndexPersistence("ModMenu_SpawnVehicleMenu_SelectedIndex");
+	SetPreviousSelectedIndex();
 
 	return true;
 }

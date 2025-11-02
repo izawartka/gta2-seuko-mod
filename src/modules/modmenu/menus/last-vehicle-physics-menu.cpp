@@ -113,7 +113,7 @@ bool ModMenuModule::LastVehiclePhysicsMenu::Attach()
 	fireInvulnController->SetConverter<BitYesNoConverter<short, Game::CAR_PHYSICS_BITMASK_FLAMEPROOF>>();
 	fireInvulnController->SetCustomSaveCallback(lastCarPhysicsOnSaveGenerator(Game::CAR_PHYSICS_BITMASK_FLAMEPROOF));
 
-	ApplyIndexPersistence("ModMenu_LastVehiclePhysicsMenu_SelectedIndex");
+	SetPreviousSelectedIndex();
 
 	return true;
 }

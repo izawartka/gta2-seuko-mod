@@ -25,7 +25,7 @@ bool ModMenuModule::VehiclesMenu::Attach()
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Spawn vehicle", options.textSize);
 	m_lastCarText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"No last vehicle", options.textSize);
 
-	ApplyIndexPersistence("ModMenu_VehiclesMenu_SelectedIndex");
+	SetPreviousSelectedIndex();
 
 	return true;
 }

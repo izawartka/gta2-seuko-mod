@@ -95,7 +95,7 @@ bool ModMenuModule::PlayerStatsMenu::Attach()
 		UiModule::VarTextEditableControllerOptions{ L"Respect 3: #", L"#" }
 	);
 
-	ApplyIndexPersistence("ModMenu_PlayerStatsMenu_SelectedIndex");
+	SetPreviousSelectedIndex();
 
 	return true;
 }

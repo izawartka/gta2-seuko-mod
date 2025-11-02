@@ -36,30 +36,18 @@ void ModMenuModule::MenuBase::CreateMenu(std::wstring title, UiModule::Component
 	});
 }
 
-void ModMenuModule::MenuBase::ApplyIndexPersistence(std::string key)
+void ModMenuModule::MenuBase::SetPreviousSelectedIndex()
 {
-	m_selectedItemPersistenceKey = key;
-	if(!m_menuController || key.empty()) {
-		return;
+	if (m_menuController && m_selectedIndex != -1) {
+		m_menuController->SetIndex(m_selectedIndex);
 	}
-	ModMenuModule::PersistenceManager* persistence = ModMenuModule::PersistenceManager::GetInstance();
-	int savedIndex = persistence->Load<int>(key, -1);
-	if (savedIndex == -1) {
-		return;
-	}
-	m_menuController->SetIndex(savedIndex);
 }
 
 void ModMenuModule::MenuBase::DestroyMenu()
 {
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	if (m_menuController) {
-		if(!m_selectedItemPersistenceKey.empty()) {
-			ModMenuModule::PersistenceManager* persistence = ModMenuModule::PersistenceManager::GetInstance();
-			int currentIndex = m_menuController->GetIndex();
-			persistence->Save<int>(m_selectedItemPersistenceKey, currentIndex);
-		}
-
+		m_selectedIndex = m_menuController->GetIndex();
 		uiRoot->RemoveController(m_menuController);
 		m_menuController = nullptr;
 	}

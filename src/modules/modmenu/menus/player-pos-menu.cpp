@@ -81,7 +81,7 @@ bool ModMenuModule::PlayerPosMenu::Attach()
 	zController->SetCustomSaveCallback(onZSave);
 	zController->SetConverter<ScrfConverter>();
 
-	ApplyIndexPersistence("ModMenu_PlayerPosMenu_SelectedIndex");
+	SetPreviousSelectedIndex();
 
 	return true;
 }

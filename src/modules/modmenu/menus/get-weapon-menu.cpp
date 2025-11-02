@@ -49,7 +49,7 @@ bool ModMenuModule::GetWeaponMenu::Attach()
 	auto getWeaponBtn = m_menuController->CreateLatestItemController<UiModule::ButtonController>(getWeaponText);
 	getWeaponBtn->SetCallback(this, &GetWeaponMenu::GetWeapon);
 
-	ApplyIndexPersistence("ModMenu_GetWeaponMenu_SelectedIndex");
+	SetPreviousSelectedIndex();
 
 	return true;
 }

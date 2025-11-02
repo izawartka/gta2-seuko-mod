@@ -107,7 +107,7 @@ bool ModMenuModule::PlayerMenu::Attach()
 		SetCheatEnabled<ModMenuModule::InvulnerabilityCheat>(newValue);
 	});
 
-	ApplyIndexPersistence("ModMenu_PlayerMenu_SelectedIndex");
+	SetPreviousSelectedIndex();
 
 	return true;
 }

@@ -27,7 +27,7 @@ bool ModMenuModule::MainMenu::Attach()
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"World", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Misc", options.textSize);
 
-	ApplyIndexPersistence("ModMenu_MainMenu_SelectedIndex");
+	SetPreviousSelectedIndex();
 
 	return true;
 }
