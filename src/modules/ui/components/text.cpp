@@ -62,7 +62,13 @@ void UiModule::Text::SetRemap(short remap)
 
 Game::SCR_f UiModule::Text::GetTextWidth() const
 {
+	Game::Style_S3* styleS3 = Game::Memory::GetStyleS3();
+	if(!styleS3) {
+		spdlog::warn("UiModule::Text::GetTextWidth: Style_S3 is null, cannot get text width");
+		return 0;
+	}
+
 	short fontId = Game::Memory::GetDefaultFontId();
-	return Game::Functions::GetGTATextWidth(m_text.c_str(), fontId) * m_scale;
+	return Game::Functions::GetGTATextWidth(m_text.c_str(), fontId) * m_scale; // TODO: fix access violation
 }
 
