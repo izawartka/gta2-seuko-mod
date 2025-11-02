@@ -1,6 +1,5 @@
 #include "menu-base.h"
 #include "root.h"
-#include "persistence-manager.h"
 
 bool ModMenuModule::MenuBase::Attach()
 {

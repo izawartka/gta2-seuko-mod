@@ -1,6 +1,5 @@
 #pragma once
 #include "common.h"
-#include "persistence-manager.h"
 #include "events/cheat-state.h"
 
 namespace ModMenuModule {
@@ -49,7 +48,7 @@ namespace ModMenuModule {
 				return true;
 			}
 
-			PersistenceManager* persistence = PersistenceManager::GetInstance();
+			PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 			bool enabled = persistence->Load(m_persistenceKey, false);
 			SetEnabled(enabled);
 			return true;
@@ -59,7 +58,7 @@ namespace ModMenuModule {
 			bool enabled = IsEnabled();
 			SetEnabled(false);
 			if (m_persistenceKey.empty()) return;
-			PersistenceManager* persistence = PersistenceManager::GetInstance();
+			PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 			persistence->Save(m_persistenceKey, enabled);
 		}
 

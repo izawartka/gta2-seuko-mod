@@ -20,7 +20,7 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 	CreateMenu(L"#Spawn vehicle#", vertCont);
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
-	ModMenuModule::PersistenceManager* persistence = ModMenuModule::PersistenceManager::GetInstance();
+	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 
@@ -73,7 +73,7 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 
 void ModMenuModule::SpawnVehicleMenu::Detach()
 {
-	ModMenuModule::PersistenceManager* persistence = ModMenuModule::PersistenceManager::GetInstance();
+	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 	persistence->Save("ModMenu_SpawnVehicleMenu_SelectedModel", m_modelController->GetValue().value());
 	persistence->Save("ModMenu_SpawnVehicleMenu_SelectedRemap", m_remapController->GetValue().value());
 

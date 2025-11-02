@@ -1,7 +1,6 @@
 #pragma once
 #include "common.h"
 #include "cheat-base.h"
-#include "persistence-manager.h"
 #include "menu-manager.h"
 
 namespace ModMenuModule {
@@ -42,7 +41,6 @@ namespace ModMenuModule {
 		static RootModule* m_instance;
 
 		ModMenuOptions m_options;
-		PersistenceManager m_persistenceManager;
 		MenuManager m_menuManager;
 		std::unordered_map<std::type_index, std::unique_ptr<CheatBase>> m_cheats;
 	};

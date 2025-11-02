@@ -4,11 +4,11 @@
 ModMenuModule::RootModule* ModMenuModule::RootModule::m_instance = nullptr;
 
 ModMenuModule::RootModule::RootModule(ModMenuOptions options) : m_options(options) {
-
-	assert(UiModule::RootModule::GetInstance() != nullptr, "ModMenu::RootModule requires Ui::RootModule to be initialized first!");
-	assert(m_instance == nullptr, "ModMenu::RootModule instance already exists!");
+	assert(PersistenceModule::RootModule::GetInstance() != nullptr, "ModMenuModule::RootModule requires PersistenceModule::RootModule to be initialized first!");
+	assert(UiModule::RootModule::GetInstance() != nullptr, "ModMenuModule::RootModule requires Ui::RootModule to be initialized first!");
+	assert(m_instance == nullptr, "ModMenuModule::RootModule instance already exists!");
 	m_instance = this;
-	spdlog::info("ModMenu::RootModule module initialized.");
+	spdlog::info("ModMenuModule::RootModule module initialized.");
 }
 
 ModMenuModule::RootModule::~RootModule()
@@ -23,17 +23,17 @@ ModMenuModule::RootModule* ModMenuModule::RootModule::GetInstance()
 
 bool ModMenuModule::RootModule::Attach()
 {
-	spdlog::info("ModMenu::RootModule module attached.");
-
 	InstantiateCheats();
 	m_menuManager.Attach();
+	spdlog::info("ModMenuModule::RootModule module attached.");
+
 	return true;
 }
 
 void ModMenuModule::RootModule::Detach()
 {
 	m_menuManager.Detach();
-	spdlog::info("ModMenu::RootModule module detached.");
+	spdlog::info("ModMenuModule::RootModule module detached.");
 }
 
 void ModMenuModule::RootModule::InstantiateCheats()

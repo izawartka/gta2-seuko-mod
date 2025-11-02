@@ -19,7 +19,7 @@ bool ModMenuModule::GetWeaponMenu::Attach()
 	CreateMenu(L"#Get weapon#", vertCont);
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
-	ModMenuModule::PersistenceManager* persistence = ModMenuModule::PersistenceManager::GetInstance();
+	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 
@@ -56,7 +56,7 @@ bool ModMenuModule::GetWeaponMenu::Attach()
 
 void ModMenuModule::GetWeaponMenu::Detach()
 {
-	ModMenuModule::PersistenceManager* persistence = ModMenuModule::PersistenceManager::GetInstance();
+	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 	persistence->Save("ModMenu_GetWeaponMenu_SelectedWeapon", m_weaponController->GetValue().value());
 	persistence->Save("ModMenu_GetWeaponMenu_SelectedAmmo", m_selectedAmmo);
 

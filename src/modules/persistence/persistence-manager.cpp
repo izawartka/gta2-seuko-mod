@@ -1,26 +1,22 @@
 #include "persistence-manager.h"
-#include <fstream>
-#include <vector>
 
-ModMenuModule::PersistenceManager* ModMenuModule::PersistenceManager::m_instance = nullptr;
+PersistenceModule::PersistenceManager* PersistenceModule::PersistenceManager::m_instance = nullptr;
 
-ModMenuModule::PersistenceManager::PersistenceManager() {
+PersistenceModule::PersistenceManager::PersistenceManager() {
 	assert(!m_instance, "PersistenceManager instance already exists");
 	m_instance = this;
-	LoadFromFile();
 }
 
-ModMenuModule::PersistenceManager::~PersistenceManager() {
-	SaveToFile();
+PersistenceModule::PersistenceManager::~PersistenceManager() {
 	m_instance = nullptr;
 }
 
-ModMenuModule::PersistenceManager* ModMenuModule::PersistenceManager::GetInstance() {
+PersistenceModule::PersistenceManager* PersistenceModule::PersistenceManager::GetInstance() {
 	assert(m_instance != nullptr, "PersistenceManager not initialized!");
 	return m_instance;
 }
 
-void ModMenuModule::PersistenceManager::SaveToFile() {
+void PersistenceModule::PersistenceManager::SaveToFile() {
 	std::ofstream ofs(PERSISTENCE_FILE, std::ios::binary | std::ios::trunc);
 	if (!ofs) {
 		spdlog::error("Failed to open persistence file for saving: {}", PERSISTENCE_FILE);
@@ -45,7 +41,7 @@ void ModMenuModule::PersistenceManager::SaveToFile() {
 	}
 }
 
-void ModMenuModule::PersistenceManager::LoadFromFile() {
+void PersistenceModule::PersistenceManager::LoadFromFile() {
 	std::ifstream ifs(PERSISTENCE_FILE, std::ios::binary);
 	if (!ifs) {
 		spdlog::warn("Persistence file not found: {}", PERSISTENCE_FILE);

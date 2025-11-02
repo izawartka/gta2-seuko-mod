@@ -1,13 +1,14 @@
 #pragma once
 #include "common.h"
 
-constexpr const char* PERSISTENCE_FILE = "modmenu.dat";
+constexpr const char* PERSISTENCE_FILE = "seukomod.dat";
 
-namespace ModMenuModule {
+namespace PersistenceModule {
 	class PersistenceManager {
 	public:
 		static PersistenceManager* GetInstance();
 
+		// Suggested key format: "ModuleName_ClassName_VariableName"
 		template <typename T>
 		void Save(std::string key, T value) {
 			spdlog::debug("Saving value with key: {}", key);
