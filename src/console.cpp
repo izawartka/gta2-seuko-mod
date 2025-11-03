@@ -21,6 +21,7 @@ static void InitConsole()
 
 	auto logger = spdlog::stdout_color_mt("console");
     spdlog::set_default_logger(logger);
+    spdlog::set_pattern("%H:%M:%S.%e [%^%l%$] %v");
     spdlog::set_level(spdlog::level::debug);
     spdlog::flush_on(spdlog::level::debug);
 
