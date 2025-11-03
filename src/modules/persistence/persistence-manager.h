@@ -17,6 +17,11 @@ namespace PersistenceModule {
 			m_savedValues[key] = std::make_unique<SavedValue>(key, sizeof(T), data.data());
 		}
 
+		void SaveRaw(std::string key, const uint8_t* data, size_t size) {
+			spdlog::debug("Saving raw data with key: {}", key);
+			m_savedValues[key] = std::make_unique<SavedValue>(key, size, data);
+		}
+
 		template <typename T>
 		T Load(std::string key, T defaultValue) {
 			spdlog::debug("Loading value with key: {}", key);
@@ -36,6 +41,20 @@ namespace PersistenceModule {
 			T value;
 			std::memcpy(&value, savedValue->data.data(), sizeof(T));
 			return value;
+		}
+
+		bool LoadRaw(std::string key, uint8_t*& data, size_t& size) {
+			spdlog::debug("Loading raw data with key: {}", key);
+			auto it = m_savedValues.find(key);
+			if (it == m_savedValues.end()) {
+				spdlog::debug("Key not found");
+				return false;
+			}
+			auto savedValue = it->second.get();
+			size = savedValue->size;
+			data = new uint8_t[size];
+			std::memcpy(data, savedValue->data.data(), size);
+			return true;
 		}
 
 		void SaveToFile();
