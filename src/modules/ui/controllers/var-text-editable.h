@@ -2,6 +2,7 @@
 #include "../common.h"
 #include "menu-item.h"
 #include "../converter-support.h"
+#include "../standard-binds-support.h"
 #include "../components/text.h"
 #include "../../../events/draw.h"
 #include "../../../events/keyboard.h"
@@ -15,14 +16,16 @@ namespace UiModule {
 		std::wstring suffix = L"";
 		std::wstring nullText = L"N/A";
 		std::wstring marker = L"-";
-		Game::KeyCode keyAction = Game::KeyCode::DIK_BACKSLASH;
+		StandardBindsSupportOptions keyBindOptions = {};
 		int blinkInterval = 15; // frames
 	};
 
 	template <typename T>
-	class VarTextEditableController : public MenuItemController, public Core::EventListenerSupport, public ConverterSupport<T> {
+	class VarTextEditableController : public MenuItemController, public Core::EventListenerSupport, public ConverterSupport<T>, public StandardBindsSupport {
 	public:
-		VarTextEditableController(Text* text, Core::Resolver<T> resolver, VarTextEditableControllerOptions options = {}) {
+		VarTextEditableController(Text* text, Core::Resolver<T> resolver, VarTextEditableControllerOptions options = {})
+			: StandardBindsSupport::StandardBindsSupport(options.keyBindOptions) 
+		{
 			static_assert(std::is_copy_constructible<T>::value, "T must be copy-constructible");
 			m_textComponent = text;
 			m_options = options;
@@ -198,27 +201,28 @@ namespace UiModule {
 		void OnKeyDown(KeyDownEvent& event) {
 			if (!m_active) return;
 
-			Game::KeyCode key = event.GetKeyCode();
+			Game::KeyCode keyCode = event.GetKeyCode();
 			bool isShiftPressed = event.IsShiftPressed();
+			KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyDownEvent(event);
 
 			if (!m_editing) {
-				if (key == m_options.keyAction) {
+				if (IsActionKey(key)) {
 					SetEditing(true);
 				}
 				return;
 			}
 
-			if (key == m_options.keyAction) {
+			if (IsActionKey(key)) {
 				Save();
 				SetEditing(!m_editing);
 				return;
-			} else if (key == Game::KeyCode::DIK_BACK) {
+			} else if (keyCode == Game::KeyCode::DIK_BACK) {
 				if (!m_textBuffer.empty()) {
 					m_textBuffer.pop_back();
 				}
 				UpdateText();
 			} else {
-				char c = Game::GetCharFromKeyCode(key, isShiftPressed, false); /// TODO handle caps lock
+				char c = Game::GetCharFromKeyCode(keyCode, isShiftPressed, false); /// TODO handle caps lock
 				if (c == '\0') return;
 
 				if (!this->IsValidChar(m_textBuffer, static_cast<wchar_t>(c))) return;

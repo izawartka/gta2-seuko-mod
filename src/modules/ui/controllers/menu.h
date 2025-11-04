@@ -1,5 +1,6 @@
 #pragma once
 #include "../common.h"
+#include "../standard-binds-support.h"
 #include "../controller.h"
 #include "../components/selectable.h"
 #include "../root.h"
@@ -13,13 +14,11 @@ namespace UiModule {
 	struct MenuControllerOptions {
 		bool loop = true;
 		bool hideMarkerNonActive = false;
-		Game::KeyCode keyPrev = Game::KeyCode::DIK_LBRACKET;
-		Game::KeyCode keyNext = Game::KeyCode::DIK_RBRACKET;
-		Game::KeyCode keyAction = Game::KeyCode::DIK_BACKSLASH;
+		StandardBindsSupportOptions keyBindOptions = {};
 		SelectableOptions createdSelectableOptions = {};
 	};
 
-	class MenuController : public Controller, public Core::EventListenerSupport {
+	class MenuController : public Controller, public Core::EventListenerSupport, public StandardBindsSupport {
 	public:
 		MenuController(MenuControllerOptions options = {});
 		virtual ~MenuController();

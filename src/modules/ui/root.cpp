@@ -4,6 +4,7 @@ UiModule::RootModule* UiModule::RootModule::m_instance = nullptr;
 
 UiModule::RootModule::RootModule()
 {
+	assert(KeyBindingModule::RootModule::GetInstance() != nullptr, "ModMenuModule::RootModule requires KeyBindingModule::RootModule to be initialized first!");
 	assert(m_instance == nullptr, "UiModule::RootModule instance already exists!");
 	m_instance = this;
 	spdlog::info("UiModule::RootModule instance created");
@@ -25,6 +26,7 @@ bool UiModule::RootModule::Attach()
 {
 	AddEventListener<DrawUIEvent>(&UiModule::RootModule::OnDraw);
 	spdlog::info("UiModule::RootModule attached");
+
 	return true;
 }
 

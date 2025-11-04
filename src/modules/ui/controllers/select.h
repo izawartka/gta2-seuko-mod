@@ -2,6 +2,7 @@
 #include "../common.h"
 #include "menu-item.h"
 #include "../converter-support.h"
+#include "../standard-binds-support.h"
 #include "../components/text.h"
 #include "../../../events/draw.h"
 #include "../../../events/keyboard.h"
@@ -18,24 +19,24 @@ namespace UiModule {
         std::wstring suffix = L"";
         std::wstring nullText = L"N/A";
         std::wstring marker = L" *";
-        Game::KeyCode keyNext = Game::KeyCode::DIK_RBRACKET;
-        Game::KeyCode keyPrev = Game::KeyCode::DIK_LBRACKET;
-        Game::KeyCode keyAction = Game::KeyCode::DIK_BACKSLASH;
+        StandardBindsSupportOptions keyBindOptions = {};
         bool quickJump = true; // Allow jumping to the first / last value using shift + prev / next
         bool loop = false;
         bool liveMode = true; // immediately apply changes when selecting options and change selected option when value changes
     };
 
     template <typename T>
-    class SelectController : public MenuItemController, public Core::EventListenerSupport, public ConverterSupport<T> {
+    class SelectController : public MenuItemController, public Core::EventListenerSupport, public ConverterSupport<T>, public StandardBindsSupport {
     public:
-        SelectController(Text* text, SelectOptionList<T> optionList, std::optional<T> value, SelectControllerOptions options = {}) {
+        SelectController(Text* text, SelectOptionList<T> optionList, std::optional<T> value, SelectControllerOptions options = {})
+            : StandardBindsSupport::StandardBindsSupport(options.keyBindOptions) 
+        {
             static_assert(std::is_copy_constructible<T>::value, "T must be copy-constructible");
             m_textComponent = text;
             m_options = options;
             m_optionList = optionList;
 
-			SetValue(value);
+            SetValue(value);
         }
 
         virtual ~SelectController() {
@@ -80,7 +81,7 @@ namespace UiModule {
                 if (!m_activeBeforeEdit) {
                     SetActive(false);
                 }
-				m_displayValue = m_value;
+                m_displayValue = m_value;
                 UpdateTextBuffer();
                 UpdateText();
                 if (m_onEditStop) m_onEditStop();
@@ -93,14 +94,14 @@ namespace UiModule {
 
         void SetValue(std::optional<T> value) {
             bool hasValue = value.has_value();
-			m_value = value;
+            m_value = value;
 
             if(m_editing && !m_options.liveMode) {
                 return;
-			}
+            }
 
             m_displayValue = value;
-			UpdateTextBuffer();
+            UpdateTextBuffer();
 
             if (m_editing) {
                 UpdateIndexFromValue();
@@ -111,7 +112,7 @@ namespace UiModule {
 
         std::optional<T> GetValue() const {
             return m_value;
-		}
+        }
 
     protected:
         virtual void OnConverterChanged() override {
@@ -154,7 +155,7 @@ namespace UiModule {
             else {
                 m_textBuffer = m_options.nullText;
             }
-		}
+        }
 
         void UpdateText() {
             std::wstring marker = m_editing ? m_options.marker : L"";
@@ -164,11 +165,11 @@ namespace UiModule {
         void OnKeyDown(KeyDownEvent& event) {
             if (!m_active) return;
 
-            Game::KeyCode key = event.GetKeyCode();
             bool isShiftPressed = event.IsShiftPressed();
+            KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyDownEvent(event);
 
             if (!m_editing) {
-                if (key == m_options.keyAction) {
+                if (IsActionKey(key)) {
                     SetEditing(true);
                 }
                 return;
@@ -181,12 +182,12 @@ namespace UiModule {
                 return;
             }
 
-            if (key == m_options.keyAction) {
+            if (IsActionKey(key)) {
                 Save();
                 SetEditing(false);
                 return;
             }
-            else if (key == m_options.keyNext) {
+            else if (IsNextKey(key)) {
                 newIndex++;
                 if (isShiftPressed) newIndex = optionCount - 1;
                 if (newIndex >= optionCount) {
@@ -198,7 +199,7 @@ namespace UiModule {
                     }
                 }
             }
-            else if (key == m_options.keyPrev) {
+            else if (IsPrevKey(key)) {
                 newIndex--;
                 if (isShiftPressed) newIndex = 0;
                 if (newIndex < 0) {
@@ -232,7 +233,7 @@ namespace UiModule {
         SelectSaveCallback<T> m_saveCallback = nullptr;
         SelectOptionList<T> m_optionList;
         std::optional<T> m_displayValue = std::nullopt;
-		std::optional<T> m_value = std::nullopt;
+        std::optional<T> m_value = std::nullopt;
         int m_currentIndex = 0;
     };
 }

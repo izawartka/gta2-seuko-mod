@@ -1,6 +1,7 @@
 #pragma once
 #include "../common.h"
 #include "menu-item.h"
+#include "../standard-binds-support.h"
 #include "../components/text.h"
 #include "../../../events/keyboard.h"
 
@@ -8,12 +9,14 @@ namespace UiModule {
     using ButtonCallback = std::function<void()>;
 
     struct ButtonControllerOptions {
-        Game::KeyCode keyAction = Game::KeyCode::DIK_BACKSLASH;
+        StandardBindsSupportOptions keyBindOptions = {};
     };
 
-    class ButtonController : public MenuItemController, public Core::EventListenerSupport {
+    class ButtonController : public MenuItemController, public Core::EventListenerSupport, public StandardBindsSupport {
     public:
-        ButtonController(Text* text, ButtonControllerOptions options = {}) {
+        ButtonController(Text* text, ButtonControllerOptions options = {})
+            : StandardBindsSupport::StandardBindsSupport(options.keyBindOptions)
+        {
             m_textComponent = text;
             m_options = options;
         }
@@ -43,7 +46,7 @@ namespace UiModule {
             if (!editing) return;
             if (m_onEditStop) {
                 m_onEditStop();
-			}
+            }
             Action();
         }
 
@@ -51,25 +54,25 @@ namespace UiModule {
             m_callback = callback;
         }
 
-		template <typename T, typename U>
+        template <typename T, typename U>
         void SetCallback(U* instance, void (T::*method)()) {
             m_callback = [instance, method]() {
                 (instance->*method)();
             };
-		}
+        }
 
         void Action() {
             if (m_callback) {
                 m_callback();
             }
-		}
+        }
 
     protected:
         void OnKeyDown(KeyDownEvent& event) {
             if (!m_active) return;
 
-            Game::KeyCode key = event.GetKeyCode();
-            if (key == m_options.keyAction) {
+            KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyDownEvent(event);
+            if (IsActionKey(key)) {
                 Action();
                 return;
             }

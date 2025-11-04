@@ -330,6 +330,9 @@
     <ClInclude Include="src\modules\keybinding\bind-manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\modules\ui\standard-binds-support.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">

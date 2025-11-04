@@ -2,6 +2,7 @@
 #include "var-text.h"
 
 UiModule::MenuController::MenuController(MenuControllerOptions options)
+	: StandardBindsSupport::StandardBindsSupport(options.keyBindOptions)
 {
 	m_options = options;
 }
@@ -207,13 +208,15 @@ void UiModule::MenuController::OnKeyDown(KeyDownEvent& event)
 		return;
 	}
 
-	Game::KeyCode key = event.GetKeyCode();
+	KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyDownEvent(event);
 
-	if( key == m_options.keyPrev ) {
+	if (IsPrevKey(key)) {
 		Previous();
-	} else if( key == m_options.keyNext ) {
+	}
+	else if (IsNextKey(key)) {
 		Next();
-	} else if( key == m_options.keyAction ) {
+	}
+	else if (IsActionKey(key)) {
 		Action();
 	}
 }

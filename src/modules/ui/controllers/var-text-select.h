@@ -3,6 +3,7 @@
 #include "menu-item.h"
 #include "../default-resolver-return.h"
 #include "../converter-support.h"
+#include "../standard-binds-support.h"
 #include "../components/text.h"
 #include "../../../events/draw.h"
 #include "../../../events/keyboard.h"
@@ -19,21 +20,21 @@ namespace UiModule {
         std::wstring suffix = L"";
         std::wstring nullText = L"N/A";
         std::wstring marker = L" *";
-        Game::KeyCode keyNext = Game::KeyCode::DIK_RBRACKET;
-        Game::KeyCode keyPrev = Game::KeyCode::DIK_LBRACKET;
-        Game::KeyCode keyAction = Game::KeyCode::DIK_BACKSLASH;
+        StandardBindsSupportOptions keyBindOptions = {};
         bool quickJump = true; // Allow jumping to the first / last value using shift + prev / next
         bool loop = false;
         bool liveMode = true; // immediately apply changes when selecting options and change selected option when variable changes
     };
 
     template <typename T, typename ResRet = typename DefaultResolverReturn<T>::type>
-    class VarTextSelectController : public MenuItemController, public Core::EventListenerSupport, public ConverterSupport<T> {
+    class VarTextSelectController : public MenuItemController, public Core::EventListenerSupport, public ConverterSupport<T>, public StandardBindsSupport {
     public:
         using ValueT = T;
         using Resolver = std::function<ResRet()>;
 
-        VarTextSelectController(Text* text, Resolver resolver, VarTextSelectOptionList<T> optionList, VarTextSelectControllerOptions options = {}) {
+        VarTextSelectController(Text* text, Resolver resolver, VarTextSelectOptionList<T> optionList, VarTextSelectControllerOptions options = {})
+		    : StandardBindsSupport::StandardBindsSupport(options.keyBindOptions) 
+        {
             static_assert(std::is_copy_constructible<T>::value, "T must be copy-constructible");
             m_textComponent = text;
             m_options = options;
@@ -207,11 +208,11 @@ namespace UiModule {
         void OnKeyDown(KeyDownEvent& event) {
             if (!m_active) return;
 
-            Game::KeyCode key = event.GetKeyCode();
             bool isShiftPressed = event.IsShiftPressed();
+            KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyDownEvent(event);
 
             if (!m_editing) {
-                if (key == m_options.keyAction) {
+                if (IsActionKey(key)) {
                     SetEditing(true);
                 }
                 return;
@@ -224,12 +225,12 @@ namespace UiModule {
                 return;
             }
 
-            if (key == m_options.keyAction) {
+            if (IsActionKey(key)) {
                 Save();
                 SetEditing(false);
                 return;
             }
-            else if (key == m_options.keyNext) {
+            else if (IsNextKey(key)) {
                 newIndex++;
                 if (isShiftPressed) newIndex = optionCount - 1;
                 if (newIndex >= optionCount) {
@@ -241,7 +242,7 @@ namespace UiModule {
                     }
                 }
             }
-            else if (key == m_options.keyPrev) {
+            else if (IsPrevKey(key)) {
                 newIndex--;
                 if (isShiftPressed) newIndex = 0;
                 if (newIndex < 0) {
