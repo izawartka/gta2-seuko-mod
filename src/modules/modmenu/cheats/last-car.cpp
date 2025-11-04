@@ -84,6 +84,7 @@ void ModMenuModule::LastCarCheat::OnValueUpdate(std::optional<Game::Car*> oldVal
 		if (m_lastCar != nullptr) {
 			SetState(LastCarState::OutOfCar);
 		}
+
 		else {
 			SetState(LastCarState::NoCar);
 		}
@@ -92,14 +93,10 @@ void ModMenuModule::LastCarCheat::OnValueUpdate(std::optional<Game::Car*> oldVal
 
 void ModMenuModule::LastCarCheat::OnValueUpdate(std::optional<Game::uint> oldValue, std::optional<Game::uint> newValue)
 {
-	if (m_state == LastCarState::InCar) return;
-	if (!newValue.has_value()) return;
-	if (m_lastCarId == newValue.value()) return;
+	if (m_state != LastCarState::OutOfCar) return;
+	if (newValue.has_value() && m_lastCarId == newValue.value()) return;
 
-	spdlog::debug("LastCarCheat: Car destroyed or changed, resetting last car (old id: {}, new id: {})", 
-		oldValue.has_value() ? std::to_string(oldValue.value()) : "none",
-		newValue.has_value() ? std::to_string(newValue.value()) : "none"
-	);
+	spdlog::debug("LastCarCheat: Car destroyed or changed, resetting last car");
 	m_lastCar = nullptr;
 	m_lastCarId = 0;
 	SetState(LastCarState::NoCar);
