@@ -1,9 +1,6 @@
 #include "menu-manager.h"
 #include "root.h"
 
-static constexpr const char* MENU_TOGGLE_KEYBIND_NAME = "ModMenu_ToggleMenu";
-static constexpr KeyBindingModule::Key MENU_TOGGLE_KEYBIND_DEFAULT = KeyBindingModule::Key(Game::KeyCode::DIK_F11);
-
 ModMenuModule::MenuManager* ModMenuModule::MenuManager::m_instance = nullptr;
 
 ModMenuModule::MenuManager* ModMenuModule::MenuManager::GetInstance() {
@@ -99,10 +96,11 @@ void ModMenuModule::MenuManager::OnGameEnd(PreGameEndEvent& event)
 }
 
 void ModMenuModule::MenuManager::Attach() {
+	auto options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	auto bindManager = KeyBindingModule::BindManager::GetInstance();
 	m_keyBindToggle = bindManager->GetOrCreateBind(
-		MENU_TOGGLE_KEYBIND_NAME,
-		MENU_TOGGLE_KEYBIND_DEFAULT
+		options.keyBindToggleMenuName,
+		options.keyBindToggleMenuDefault
 	);
 
 	AddEventListener<KeyDownEvent>(&MenuManager::OnKeyDown);
