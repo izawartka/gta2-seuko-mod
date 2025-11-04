@@ -5,7 +5,6 @@
 
 namespace ModMenuModule {
 	struct ModMenuOptions {
-		Game::KeyCode toggleKey = Game::KeyCode::DIK_F11;
 		Game::SCR_f menuX = 0x40000;
 		Game::SCR_f menuY = 0x200000;
 		Game::SCR_f menuHeaderMarginX = 0x60000;

@@ -72,5 +72,6 @@ namespace ModMenuModule {
 		bool m_aboutToEndGame = false;
 		bool m_inGame = false;
 		MenuId m_nextMenuId = 1;
+		const KeyBindingModule::Key* m_keyBindToggle = nullptr;
 	};
 }

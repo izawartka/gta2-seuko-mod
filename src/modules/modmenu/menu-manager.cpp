@@ -1,6 +1,9 @@
 #include "menu-manager.h"
 #include "root.h"
 
+static constexpr const char* MENU_TOGGLE_KEYBIND_NAME = "ModMenu_ToggleMenu";
+static constexpr KeyBindingModule::Key MENU_TOGGLE_KEYBIND_DEFAULT = KeyBindingModule::Key(Game::KeyCode::DIK_F11);
+
 ModMenuModule::MenuManager* ModMenuModule::MenuManager::m_instance = nullptr;
 
 ModMenuModule::MenuManager* ModMenuModule::MenuManager::GetInstance() {
@@ -69,10 +72,11 @@ void ModMenuModule::MenuManager::SetVisible(bool visible)
 
 void ModMenuModule::MenuManager::OnKeyDown(KeyDownEvent& event)
 {
-	ModMenuModule::ModMenuOptions m_options = ModMenuModule::RootModule::GetInstance()->GetOptions();
-	if (event.GetKeyCode() == m_options.toggleKey) {
-		SetVisible(!m_visible);
+	if (!m_keyBindToggle || *m_keyBindToggle != KeyBindingModule::Key::FromKeyDownEvent(event)) {
+		return;
 	}
+
+	SetVisible(!m_visible);
 }
 
 void ModMenuModule::MenuManager::OnGameStart(GameStartEvent& event)
@@ -95,6 +99,12 @@ void ModMenuModule::MenuManager::OnGameEnd(PreGameEndEvent& event)
 }
 
 void ModMenuModule::MenuManager::Attach() {
+	auto bindManager = KeyBindingModule::BindManager::GetInstance();
+	m_keyBindToggle = bindManager->GetOrCreateBind(
+		MENU_TOGGLE_KEYBIND_NAME,
+		MENU_TOGGLE_KEYBIND_DEFAULT
+	);
+
 	AddEventListener<KeyDownEvent>(&MenuManager::OnKeyDown);
 	AddEventListener<GameStartEvent>(&MenuManager::OnGameStart);
 	AddEventListener<PreGameEndEvent>(&MenuManager::OnGameEnd);
@@ -109,6 +119,8 @@ void ModMenuModule::MenuManager::Detach() {
 	}
 	SetVisible(false);
 	ClearMenus();
+
+	m_keyBindToggle = nullptr;
 }
 
 void ModMenuModule::MenuManager::ApplyMenuAdd(PendingChange& change)
