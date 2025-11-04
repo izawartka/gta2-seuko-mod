@@ -303,6 +303,15 @@
     <ClInclude Include="src\events\game-end.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\modules\keybinding\keybinding.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\keybinding\root.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\keybinding\common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\modules\persistence\persistence.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -313,6 +322,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\modules\persistence\persistence-manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\keybinding\key.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\keybinding\bind-manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -443,7 +458,16 @@
     <ClCompile Include="src\events\game-end.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\modules\keybinding\root.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\persistence\root.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\modules\persistence\persistence-manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\keybinding\bind-manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

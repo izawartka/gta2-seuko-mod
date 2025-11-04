@@ -5,6 +5,7 @@
 
 namespace Game {
     enum class KeyCode : uint32_t {
+        DIK_NONE = 0x00,
         DIK_ESCAPE = 0x01,
         DIK_1 = 0x02,
         DIK_2 = 0x03,
