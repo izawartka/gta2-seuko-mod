@@ -2,20 +2,22 @@
 #include "../modules/keybinding/keybinding.h"
 #include "key-code.h"
 
+template <bool gtaFontSafe = false>
 class KeyConverter {
 public:
 	static std::wstring ConvertToString(KeyBindingModule::Key value) {
 		std::wstring result = L"";
+		std::wstring delimiter = gtaFontSafe ? L"  " : L" + ";
 		if (value.ctrl) {
-			result += L"Ctrl + ";
+			result += L"Ctrl" + delimiter;
 		}
 		if (value.alt) {
-			result += L"Alt + ";
+			result += L"Alt" + delimiter;
 		}
 		if (value.shift) {
-			result += L"Shift + ";
+			result += L"Shift" + delimiter;
 		}
-		result += KeyCodeConverter::ConvertToString(value.keyCode);
+		result += KeyCodeConverter<gtaFontSafe>::ConvertToString(value.keyCode);
 		return result;
 	}
 

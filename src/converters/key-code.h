@@ -2,6 +2,7 @@
 #include "../game/game.h"
 #include <string>
 
+template <bool descriptiveNames = false>
 class KeyCodeConverter {
 public:
 	static std::wstring ConvertToString(Game::KeyCode value) {
@@ -19,8 +20,8 @@ public:
 		case Game::KeyCode::DIK_8: return L"8";
 		case Game::KeyCode::DIK_9: return L"9";
 		case Game::KeyCode::DIK_0: return L"0";
-		case Game::KeyCode::DIK_MINUS: return L"-";
-		case Game::KeyCode::DIK_EQUALS: return L"=";
+		case Game::KeyCode::DIK_MINUS: return descriptiveNames ? L"Minus" : L"-";
+		case Game::KeyCode::DIK_EQUALS: return descriptiveNames ? L"Equals" : L"=";
 		case Game::KeyCode::DIK_BACK: return L"Backspace";
 		case Game::KeyCode::DIK_TAB: return L"Tab";
 		case Game::KeyCode::DIK_Q: return L"Q";
@@ -33,8 +34,8 @@ public:
 		case Game::KeyCode::DIK_I: return L"I";
 		case Game::KeyCode::DIK_O: return L"O";
 		case Game::KeyCode::DIK_P: return L"P";
-		case Game::KeyCode::DIK_LBRACKET: return L"[";
-		case Game::KeyCode::DIK_RBRACKET: return L"]";
+		case Game::KeyCode::DIK_LBRACKET: return descriptiveNames ? L"Left Bracket" : L"[";
+		case Game::KeyCode::DIK_RBRACKET: return descriptiveNames ? L"Right Bracket" : L"]";
 		case Game::KeyCode::DIK_RETURN: return L"Enter";
 		case Game::KeyCode::DIK_LCONTROL: return L"Left Ctrl";
 		case Game::KeyCode::DIK_A: return L"A";
@@ -46,11 +47,11 @@ public:
 		case Game::KeyCode::DIK_J: return L"J";
 		case Game::KeyCode::DIK_K: return L"K";
 		case Game::KeyCode::DIK_L: return L"L";
-		case Game::KeyCode::DIK_SEMICOLON: return L";";
-		case Game::KeyCode::DIK_APOSTROPHE: return L"'";
-		case Game::KeyCode::DIK_GRAVE: return L"`";
+		case Game::KeyCode::DIK_SEMICOLON: return descriptiveNames ? L"Semicolon" : L";";
+		case Game::KeyCode::DIK_APOSTROPHE: return descriptiveNames ? L"Apostrophe" : L"'";
+		case Game::KeyCode::DIK_GRAVE: return descriptiveNames ? L"Grave" : L"`";
 		case Game::KeyCode::DIK_LSHIFT: return L"Left Shift";
-		case Game::KeyCode::DIK_BACKSLASH: return L"\\";
+		case Game::KeyCode::DIK_BACKSLASH: return descriptiveNames ? L"Backslash" : L"\\";
 		case Game::KeyCode::DIK_Z: return L"Z";
 		case Game::KeyCode::DIK_X: return L"X";
 		case Game::KeyCode::DIK_C: return L"C";
@@ -58,11 +59,11 @@ public:
 		case Game::KeyCode::DIK_B: return L"B";
 		case Game::KeyCode::DIK_N: return L"N";
 		case Game::KeyCode::DIK_M: return L"M";
-		case Game::KeyCode::DIK_COMMA: return L",";
-		case Game::KeyCode::DIK_PERIOD: return L".";
-		case Game::KeyCode::DIK_SLASH: return L"/";
+		case Game::KeyCode::DIK_COMMA: return descriptiveNames ? L"Comma" : L",";
+		case Game::KeyCode::DIK_PERIOD: return descriptiveNames ? L"Period" : L".";
+		case Game::KeyCode::DIK_SLASH: return descriptiveNames ? L"Slash" : L"/";
 		case Game::KeyCode::DIK_RSHIFT: return L"Right Shift";
-		case Game::KeyCode::DIK_MULTIPLY: return L"Num *";
+		case Game::KeyCode::DIK_MULTIPLY: return descriptiveNames ? L"Num Multiply" : L"Num *";
 		case Game::KeyCode::DIK_LMENU: return L"Left Alt";
 		case Game::KeyCode::DIK_SPACE: return L"Space";
 		case Game::KeyCode::DIK_CAPITAL: return L"Caps Lock";
@@ -81,33 +82,33 @@ public:
 		case Game::KeyCode::DIK_NUMPAD7: return L"Num 7";
 		case Game::KeyCode::DIK_NUMPAD8: return L"Num 8";
 		case Game::KeyCode::DIK_NUMPAD9: return L"Num 9";
-		case Game::KeyCode::DIK_SUBTRACT: return L"Num -";
+		case Game::KeyCode::DIK_SUBTRACT: return descriptiveNames ? L"Num Subtract" : L"Num -";
 		case Game::KeyCode::DIK_NUMPAD4: return L"Num 4";
 		case Game::KeyCode::DIK_NUMPAD5: return L"Num 5";
 		case Game::KeyCode::DIK_NUMPAD6: return L"Num 6";
-		case Game::KeyCode::DIK_ADD: return L"Num +";
+		case Game::KeyCode::DIK_ADD: return descriptiveNames ? L"Num Add" : L"Num +";
 		case Game::KeyCode::DIK_NUMPAD1: return L"Num 1";
 		case Game::KeyCode::DIK_NUMPAD2: return L"Num 2";
 		case Game::KeyCode::DIK_NUMPAD3: return L"Num 3";
 		case Game::KeyCode::DIK_NUMPAD0: return L"Num 0";
-		case Game::KeyCode::DIK_DECIMAL: return L"Num .";
-		case Game::KeyCode::DIK_OEM_102: return L"OEM_102";
+		case Game::KeyCode::DIK_DECIMAL: return descriptiveNames ? L"Num Decimal" : L"Num .";
+		case Game::KeyCode::DIK_OEM_102: return L"OEM 102";
 		case Game::KeyCode::DIK_F11: return L"F11";
 		case Game::KeyCode::DIK_F12: return L"F12";
 		case Game::KeyCode::DIK_F13: return L"F13";
 		case Game::KeyCode::DIK_F14: return L"F14";
 		case Game::KeyCode::DIK_F15: return L"F15";
 		case Game::KeyCode::DIK_KANA: return L"Kana";
-		case Game::KeyCode::DIK_ABNT_C1: return L"ABNT_C1";
+		case Game::KeyCode::DIK_ABNT_C1: return L"ABNT C1";
 		case Game::KeyCode::DIK_CONVERT: return L"Convert";
 		case Game::KeyCode::DIK_NOCONVERT: return L"NoConvert";
 		case Game::KeyCode::DIK_YEN: return L"Yen";
-		case Game::KeyCode::DIK_ABNT_C2: return L"ABNT_C2";
-		case Game::KeyCode::DIK_NUMPADEQUALS: return L"Num =";
+		case Game::KeyCode::DIK_ABNT_C2: return L"ABNT C2";
+		case Game::KeyCode::DIK_NUMPADEQUALS: return descriptiveNames ? L"Num Equals" : L"Num =";
 		case Game::KeyCode::DIK_PREVTRACK: return L"Prev Track";
-		case Game::KeyCode::DIK_AT: return L"@";
-		case Game::KeyCode::DIK_COLON: return L":";
-		case Game::KeyCode::DIK_UNDERLINE: return L"_";
+		case Game::KeyCode::DIK_AT: return descriptiveNames ? L"At" : L"@";
+		case Game::KeyCode::DIK_COLON: return descriptiveNames ? L"Colon" : L":";
+		case Game::KeyCode::DIK_UNDERLINE: return descriptiveNames ? L"Underline" : L"_";
 		case Game::KeyCode::DIK_KANJI: return L"Kanji";
 		case Game::KeyCode::DIK_STOP: return L"Stop";
 		case Game::KeyCode::DIK_AX: return L"AX";
@@ -119,11 +120,11 @@ public:
 		case Game::KeyCode::DIK_CALCULATOR: return L"Calculator";
 		case Game::KeyCode::DIK_PLAYPAUSE: return L"Play/Pause";
 		case Game::KeyCode::DIK_MEDIASTOP: return L"Media Stop";
-		case Game::KeyCode::DIK_VOLUMEDOWN: return L"Volume -";
-		case Game::KeyCode::DIK_VOLUMEUP: return L"Volume +";
+		case Game::KeyCode::DIK_VOLUMEDOWN: return descriptiveNames ? L"Volume Down" : L"Volume -";
+		case Game::KeyCode::DIK_VOLUMEUP: return descriptiveNames ? L"Volume Up" : L"Volume +";
 		case Game::KeyCode::DIK_WEBHOME: return L"Web Home";
-		case Game::KeyCode::DIK_NUMPADCOMMA: return L"Num ,";
-		case Game::KeyCode::DIK_DIVIDE: return L"Num /";
+		case Game::KeyCode::DIK_NUMPADCOMMA: return descriptiveNames ? L"Num Comma" : L"Num ,";
+		case Game::KeyCode::DIK_DIVIDE: return descriptiveNames ? L"Num Divide" : L"Num /";
 		case Game::KeyCode::DIK_SYSRQ: return L"SysReq";
 		case Game::KeyCode::DIK_RMENU: return L"Right Alt";
 		case Game::KeyCode::DIK_PAUSE: return L"Pause";
