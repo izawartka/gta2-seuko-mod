@@ -9,3 +9,5 @@
 #include "last-vehicle-menu.h"
 #include "weapons-menu.h"
 #include "get-weapon-menu.h"
+#include "misc-menu.h"
+#include "menu-controls-menu.h"

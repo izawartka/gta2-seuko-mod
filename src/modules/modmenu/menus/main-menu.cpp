@@ -3,6 +3,7 @@
 #include "player-menu.h"
 #include "vehicles-menu.h"
 #include "weapons-menu.h"
+#include "misc-menu.h"
 
 ModMenuModule::MainMenu::MainMenu()
 {
@@ -43,6 +44,13 @@ void ModMenuModule::MainMenu::OnMenuAction(UiModule::Selectable* item, UiModule:
 		break;
 	case 2: // Weapons
 		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::WeaponsMenu>();
+		break;
+	case 3: // Camera
+		break;
+	case 4: // World
+		break;
+	case 5: // Misc
+		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::MiscMenu>();
 		break;
 	default:
 		break;
