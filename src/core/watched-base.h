@@ -77,6 +77,60 @@ namespace Core
         bool m_needsUpdate = true;
     };
 
+    // Specialization for const value types: read-only watched.
+    template<typename T>
+    class Watched<const T> : public WatchedBase {
+    public:
+        const T* GetPointer() {
+            return m_resolver();
+        }
+
+        std::optional<const T> GetValue() {
+            const T* p = m_resolver();
+            if (p) return *p;
+            return std::nullopt;
+        }
+
+        // No SetValue for const types (read-only)
+
+        void Update() override {
+            const T* p = m_resolver();
+            bool present = (p != nullptr);
+            std::optional<std::remove_const_t<T>> value = std::nullopt;
+            if (present) value = *p;
+
+            if (m_needsUpdate || value != m_lastValue) {
+                std::optional<std::remove_const_t<T>> lastValue = m_lastValue;
+                m_needsUpdate = false;
+                m_lastValue = value;
+                m_listener(lastValue, value);
+            }
+        }
+
+        WatchedId GetId() const {
+            return m_id;
+        }
+
+        void RequestUpdate() { m_needsUpdate = true; }
+
+    private:
+        friend class WatchManager;
+
+        Watched(WatchedId id_, std::function<const T* ()> r, std::function<void(std::optional<const T>, std::optional<const T>)> l)
+            : m_resolver(std::move(r)), m_listener(std::move(l))
+        {
+            m_id = id_;
+        }
+
+        Watched(const Watched&) = delete;
+        Watched& operator=(const Watched&) = delete;
+
+        std::function<const T* ()> m_resolver;
+        std::function<void(std::optional<const T>, std::optional<const T>)> m_listener;
+        std::optional<std::remove_const_t<T>> m_lastValue;
+        bool m_needsUpdate = true;
+    };
+
     // Partial specialization for tuple types where resolver returns a tuple of pointers
     template<typename... Values>
     class Watched<std::tuple<Values...>> : public WatchedBase {
