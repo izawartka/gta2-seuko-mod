@@ -26,6 +26,7 @@ bool ModMenuModule::RootModule::Attach()
 {
 	InstantiateCheats();
 	m_menuManager.Attach();
+	m_resetBindsManager.Attach();
 	spdlog::info("ModMenuModule::RootModule module attached.");
 
 	return true;
@@ -33,6 +34,7 @@ bool ModMenuModule::RootModule::Attach()
 
 void ModMenuModule::RootModule::Detach()
 {
+	m_resetBindsManager.Detach();
 	m_menuManager.Detach();
 	spdlog::info("ModMenuModule::RootModule module detached.");
 }

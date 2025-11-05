@@ -8,4 +8,5 @@
 #include "menu-base.h"
 #include "menus/menus.h"
 #include "menu-manager.h"
+#include "reset-binds-manager.h"
 #include "root.h"

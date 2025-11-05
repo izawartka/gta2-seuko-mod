@@ -2,11 +2,13 @@
 #include "common.h"
 #include "cheat-base.h"
 #include "menu-manager.h"
+#include "reset-binds-manager.h"
 
 namespace ModMenuModule {
 	struct ModMenuOptions {
 		std::string keyBindToggleMenuName = "ModMenu_ToggleMenu";
 		KeyBindingModule::Key keyBindToggleMenuDefault = KeyBindingModule::Key(Game::KeyCode::DIK_F11);
+		unsigned int resetBindsHoldTime = 90; // frames
 		Game::SCR_f menuX = 0x40000;
 		Game::SCR_f menuY = 0x200000;
 		Game::SCR_f menuHeaderMarginX = 0x60000;
@@ -43,6 +45,7 @@ namespace ModMenuModule {
 
 		ModMenuOptions m_options;
 		MenuManager m_menuManager;
+		ResetBindsManager m_resetBindsManager;
 		std::unordered_map<std::type_index, std::unique_ptr<CheatBase>> m_cheats;
 	};
 }

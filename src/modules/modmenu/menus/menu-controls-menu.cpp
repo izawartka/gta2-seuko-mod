@@ -1,5 +1,6 @@
 #include "menu-controls-menu.h"
 #include "../root.h"
+#include "../../../converters/key.h"
 
 ModMenuModule::MenuControlsMenu::MenuControlsMenu()
 {
@@ -57,6 +58,23 @@ bool ModMenuModule::MenuControlsMenu::Attach()
 		options.menuControllerOptions.keyBindOptions.keyBindActionName,
 		options.menuControllerOptions.keyBindOptions.keyBindActionDefault,
 		standardUiBindsOptions
+	);
+
+	auto resetInfoMargin = uiRoot->AddComponent<UiModule::Margin>(
+		vertCont, 
+		options.menuControllerOptions.createdSelectableOptions.markerOffsetX, 
+		RESET_TOOLTIP_OFFSET_Y
+	);
+
+	std::wstring resetInfo = 
+		L"Hold " +
+		KeyConverter<true>::ConvertToString(options.keyBindToggleMenuDefault) +
+		L" to reset all.";
+
+	uiRoot->AddComponent<UiModule::Text>(
+		resetInfoMargin,
+		resetInfo,
+		options.textSize
 	);
 
 	SetPreviousSelectedIndex();
