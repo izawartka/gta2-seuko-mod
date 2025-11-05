@@ -336,6 +336,9 @@
     <ClInclude Include="src\converters\key-code.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\modules\ui\controllers\key-bind-change.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\converters\key.h">
       <Filter>Header Files</Filter>
     </ClInclude>

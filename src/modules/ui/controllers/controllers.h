@@ -7,3 +7,4 @@
 #include "var-text-editable.h"
 #include "var-text-select.h"
 #include "button.h"
+#include "key-bind-change.h"
