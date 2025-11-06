@@ -82,5 +82,8 @@ namespace Game {
 
 		typedef void(__fastcall ShootFromWeaponType)(WEAPON_STRUCT* weapon, DWORD edx);
 		static constexpr ShootFromWeaponType* ShootFromWeapon = (ShootFromWeaponType*)0x004d0530;
+
+		typedef void(__fastcall SaveGameType)(S15_Script* s15, DWORD edx, const char* saveFileName);
+		static constexpr SaveGameType* SaveGame = (SaveGameType*)0x0047ef40;
 	};  
 }

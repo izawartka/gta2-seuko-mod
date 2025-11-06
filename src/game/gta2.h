@@ -6092,7 +6092,7 @@ struct S14 {
     int field_0xa7c;
 };
 
-typedef struct S15_script S15_script, *PS15_script;
+typedef struct S15_Script S15_Script, *PS15_Script;
 
 typedef struct Script4k Script4k, *PScript4k;
 
@@ -6103,7 +6103,7 @@ struct Script4k {
     struct SCR_STRING_HEADER * strings[999];
 };
 
-struct S15_script { /* Map or something related to missions */
+struct S15_Script { /* Map or something related to missions */
     short f0;
     undefined field_0x2;
     undefined field_0x3;
