@@ -26,22 +26,22 @@ bool ModMenuModule::GetWeaponMenu::Attach()
 	// weapon
 	UiModule::Text* weaponText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	UiModule::SelectOptionList<Game::WEAPON_INDEX> weaponOptionList = Game::Utils::GetAvailableWeapons();
-	Game::WEAPON_INDEX selectedWeapon = persistence->Load("ModMenu_GetWeaponMenu_SelectedWeapon", weaponOptionList[0]);
+	Game::WEAPON_INDEX weaponDefault = persistence->Load("ModMenu_GetWeaponMenu_SelectedWeapon", weaponOptionList[0]);
 	m_weaponController = m_menuController->CreateLatestItemController<UiModule::SelectController<Game::WEAPON_INDEX>>(
 		weaponText,
 		weaponOptionList,
-		selectedWeapon,
+		weaponDefault,
 		UiModule::SelectControllerOptions{ L"Weapon: #", L"#" }
 	);
 	m_weaponController->SetConverter<WeaponConverter>();
 
 	// ammo
 	UiModule::Text* ammoText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	m_selectedAmmo = persistence->Load("ModMenu_GetWeaponMenu_SelectedAmmo", (short)99);
-	auto ammoController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<short>>(
+	short ammoDefault = persistence->Load("ModMenu_GetWeaponMenu_SelectedAmmo", (short)99);
+	m_ammoController = m_menuController->CreateLatestItemController<UiModule::EditableController<short>>(
 		ammoText,
-		[this]() { return &m_selectedAmmo; },
-		UiModule::VarTextEditableControllerOptions{ L"Ammo: #", L"#" }
+		ammoDefault,
+		UiModule::EditableControllerOptions{ L"Ammo: #", L"#" }
 	);
 
 	// get weapon button
@@ -58,7 +58,7 @@ void ModMenuModule::GetWeaponMenu::Detach()
 {
 	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 	persistence->Save("ModMenu_GetWeaponMenu_SelectedWeapon", m_weaponController->GetValue().value());
-	persistence->Save("ModMenu_GetWeaponMenu_SelectedAmmo", m_selectedAmmo);
+	persistence->Save("ModMenu_GetWeaponMenu_SelectedAmmo", m_ammoController->GetValue().value());
 
 	DestroyMenu();
 }
@@ -77,6 +77,7 @@ void ModMenuModule::GetWeaponMenu::OnMenuAction(UiModule::Selectable* item, UiMo
 void ModMenuModule::GetWeaponMenu::GetWeapon()
 {
 	Game::WEAPON_INDEX selectedWeapon = m_weaponController->GetValue().value();
+	short selectedAmmo = m_ammoController->GetValue().value();
 
 	Game::Ped* playerPed = Game::Memory::GetPlayerPed();
 	if (!playerPed) {
@@ -89,13 +90,13 @@ void ModMenuModule::GetWeaponMenu::GetWeapon()
 		return;
 	}
 
-	spdlog::info("Giving weapon #{} with {} ammo to player.", static_cast<int>(selectedWeapon), m_selectedAmmo);
+	spdlog::info("Giving weapon #{} with {} ammo to player.", static_cast<int>(selectedWeapon), selectedAmmo);
 
 	Game::Functions::AddWeapon(
 		playerPed,
 		0,
 		selectedWeapon,
-		m_selectedAmmo
+		selectedAmmo
 	);
 
 	Game::CarRoofUtils::AddCarRoofForWeapon(playerPed->currentCar, selectedWeapon);

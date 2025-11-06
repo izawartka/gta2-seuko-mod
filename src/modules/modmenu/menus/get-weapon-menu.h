@@ -16,6 +16,6 @@ namespace ModMenuModule {
 		void GetWeapon();
 
 		UiModule::SelectController<Game::WEAPON_INDEX>* m_weaponController = nullptr;
-		short m_selectedAmmo = 99;
+		UiModule::EditableController<short>* m_ammoController = nullptr;
 	};
 }
