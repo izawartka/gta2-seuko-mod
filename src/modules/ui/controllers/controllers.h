@@ -2,6 +2,7 @@
 
 #include "menu-item.h"
 #include "menu.h"
+#include "editable.h"
 #include "select.h"
 #include "var-text.h"
 #include "var-text-editable.h"
