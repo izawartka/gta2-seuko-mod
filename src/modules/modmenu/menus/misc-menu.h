@@ -12,5 +12,6 @@ namespace ModMenuModule {
 
 	private:
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
+		void QuickSave();
 	};
 }
