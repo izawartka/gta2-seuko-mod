@@ -80,6 +80,7 @@ namespace UiModule {
 		void AddLatestItemController(MenuItemController* controller);
 		MenuItemController* RemoveItemController(MenuItemId id);
 		void DeleteItemController(MenuItemId id);
+		MenuItemId GetLatestMenuItemId() const { return m_nextItemId - 1; }
 
 		void SetItemsWatching(bool watching);
 		bool IsItemsWatching() const { return m_itemsWatching; }
