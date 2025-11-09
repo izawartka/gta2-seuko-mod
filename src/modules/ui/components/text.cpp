@@ -69,6 +69,6 @@ Game::SCR_f UiModule::Text::GetTextWidth() const
 	}
 
 	short fontId = Game::Memory::GetDefaultFontId();
-	return Game::Functions::GetGTATextWidth(m_text.c_str(), fontId) * m_scale; // TODO: fix access violation
+	return Game::Functions::GetGTATextWidth(m_text.c_str(), fontId) * m_scale;
 }
 
