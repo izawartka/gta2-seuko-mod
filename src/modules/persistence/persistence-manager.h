@@ -43,6 +43,24 @@ namespace PersistenceModule {
 			return value;
 		}
 
+		template <typename T>
+		std::optional<T> LoadOptional(std::string key) {
+			spdlog::debug("Loading value with key: {}", key);
+			auto it = m_savedValues.find(key);
+			if (it == m_savedValues.end()) {
+				spdlog::debug("Key not found, returning nullopt");
+				return std::nullopt;
+			}
+			auto savedValue = it->second.get();
+			if (savedValue->data.size() != sizeof(T)) {
+				spdlog::warn("Size mismatch: {} vs {}, returning nullopt", savedValue->data.size(), sizeof(T));
+				return std::nullopt;
+			}
+			T value;
+			std::memcpy(&value, savedValue->data.data(), sizeof(T));
+			return value;
+		}
+
 		bool LoadRaw(std::string key, uint8_t*& data, size_t& size) {
 			spdlog::debug("Loading raw data with key: {}", key);
 			auto it = m_savedValues.find(key);
