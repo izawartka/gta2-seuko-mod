@@ -36,6 +36,7 @@ void ModMenuModule::RootModule::Detach()
 {
 	m_resetBindsManager.Detach();
 	m_menuManager.Detach();
+	DestroyCheats();
 	spdlog::info("ModMenuModule::RootModule module detached.");
 }
 
@@ -65,5 +66,15 @@ void ModMenuModule::RootModule::InstantiateCheats()
 		}
 
 		m_cheats[typeIdx] = std::unique_ptr<ModMenuModule::CheatBase>(cheat);
+	}
+}
+
+void ModMenuModule::RootModule::DestroyCheats()
+{
+	while (!m_cheats.empty()) {
+		auto it = m_cheats.begin();
+		ModMenuModule::CheatBase* cheat = it->second.get();
+		cheat->Detach();
+		m_cheats.erase(it);
 	}
 }

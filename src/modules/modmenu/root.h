@@ -41,6 +41,7 @@ namespace ModMenuModule {
 
 	private:
 		void InstantiateCheats();
+		void DestroyCheats();
 		static RootModule* m_instance;
 
 		ModMenuOptions m_options;
