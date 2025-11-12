@@ -28,7 +28,6 @@ namespace ModMenuModule {
 		void OnValueUpdate(std::optional<Game::Car*> oldValue, std::optional<Game::Car*> newValue);
 		void OnValueUpdate(std::optional<Game::uint> oldValue, std::optional<Game::uint> newValue);
 		void SetState(LastCarState state);
-		void SetWatchingLastCarId(bool watch);
 
 		Core::Resolver<Game::Car*> m_currentCarResolver = nullptr;
 		Core::Watched<Game::Car*, Game::Car*>* m_watchedCurrentCar = nullptr;

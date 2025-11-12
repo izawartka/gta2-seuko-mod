@@ -111,21 +111,4 @@ void ModMenuModule::LastCarCheat::SetState(LastCarState state)
 	Core::EventManager::GetInstance()->Dispatch(event);
 }
 
-void ModMenuModule::LastCarCheat::SetWatchingLastCarId(bool watch)
-{
-	if ((m_watchedLastCarId == nullptr) == watch) return;
-
-	if (watch) {
-		m_watchedLastCarId = Core::WatchManager::GetInstance()->Watch<GameTickEvent, Game::uint>(
-			m_lastCarIdResolver,
-			this,
-			&ModMenuModule::LastCarCheat::OnValueUpdate
-		);
-	}
-	else {
-		Core::WatchManager::GetInstance()->Unwatch<Game::uint>(m_watchedLastCarId);
-		m_watchedLastCarId = nullptr;
-	}
-}
-
 REGISTER_CHEAT(LastCarCheat)
