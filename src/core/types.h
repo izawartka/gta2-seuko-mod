@@ -13,14 +13,20 @@ namespace Core
 	using EventListenerId = size_t;
 
 	/* WatchManager */
-	template<typename T>
-	using Resolver = std::function<T* ()>;
+	template<typename ResRetT>
+	using Resolver = std::function<ResRetT()>;
 
-	template<typename T>
-	using WatchedListener = std::function<void(std::optional<T>, std::optional<T>)>;
+	template<typename ValueT>
+	struct DefaultResRetT { using type = ValueT*; };
 
-	template<typename T, typename U>
-	using WatchedMethodListener = void (U::*)(std::optional<T>, std::optional<T>);
+	template<typename... Values>
+	struct DefaultResRetT<std::tuple<Values...>> { using type = std::tuple<Values*...>; };
+
+	template<typename ValueT>
+	using WatchedListener = std::function<void(std::optional<ValueT>, std::optional<ValueT>)>;
+
+	template<typename ValueT, typename U>
+	using WatchedMethodListener = void (U::*)(std::optional<ValueT>, std::optional<ValueT>);
 
 	using WatchedId = size_t;
 }

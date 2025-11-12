@@ -37,7 +37,7 @@ void ModMenuModule::LastCarCheat::OnFirstEnable()
 {
 	m_currentCarResolver = Core::MakeResolver(
 		Game::Memory::GetPlayerPed,
-		mem_addr(&Game::Ped::currentCar)
+		mem(&Game::Ped::currentCar)
 	);
 
 	m_lastCarIdResolver = [this]() -> Game::uint* {
@@ -48,7 +48,7 @@ void ModMenuModule::LastCarCheat::OnFirstEnable()
 
 void ModMenuModule::LastCarCheat::OnEnable()
 {
-	m_watchedCurrentCar = Core::WatchManager::GetInstance()->Watch<GameTickEvent, Game::Car*>(
+	m_watchedCurrentCar = Core::WatchManager::GetInstance()->Watch<GameTickEvent, Game::Car*, Game::Car*>(
 		m_currentCarResolver,
 		this,
 		&ModMenuModule::LastCarCheat::OnValueUpdate
@@ -63,9 +63,9 @@ void ModMenuModule::LastCarCheat::OnEnable()
 
 void ModMenuModule::LastCarCheat::OnDisable()
 {
-	Core::WatchManager::GetInstance()->Unwatch<Game::Car*>(m_watchedCurrentCar);
+	Core::WatchManager::GetInstance()->Unwatch(m_watchedCurrentCar);
 	m_watchedCurrentCar = nullptr;
-	Core::WatchManager::GetInstance()->Unwatch<Game::uint>(m_watchedLastCarId);
+	Core::WatchManager::GetInstance()->Unwatch(m_watchedLastCarId);
 	m_watchedLastCarId = nullptr;
 
 	m_lastCar = nullptr;

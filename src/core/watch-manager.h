@@ -11,53 +11,27 @@ namespace Core
     public:
         static WatchManager* GetInstance();
 
-        template<typename R>
-        struct ResolverValue;
-
-        template<typename V>
-        struct ResolverValue<V*> { using type = V; };
-
-        template<typename... Vs>
-        struct ResolverValue<std::tuple<Vs*...>> { using type = std::tuple<Vs...>; };
-
-        template<typename EventT, typename T>
-        Watched<T>* Watch(Resolver<T> resolver, WatchedListener<T> listener) {
-            return Watch<EventT, T*>(std::function<T*()>(resolver), std::move(listener));
-        }
-
-        template<typename EventT, typename T, typename U>
-        Watched<T>* Watch(Resolver<T> resolver, U* instance, WatchedMethodListener<T, U> method) {
-            auto listener = [instance, method](std::optional<T> oldVal, std::optional<T> newVal) {
-                (instance->*method)(oldVal, newVal);
-            };
-            return Watch<EventT, T*>(std::function<T*()>(std::move(resolver)), std::move(listener));
-        }
-
-        template<typename EventT, typename ResRet>
-        auto Watch(std::function<ResRet()> resolver, WatchedListener<typename ResolverValue<std::decay_t<ResRet>>::type> listener)
-            -> Watched<typename ResolverValue<std::decay_t<ResRet>>::type>*
+        template<typename EventT, typename ValueT, typename ResRetT>
+        Watched<ValueT, ResRetT>* Watch(Resolver<ResRetT> resolver, WatchedListener<ValueT> listener)
         {
-            using ValueT = typename ResolverValue<std::decay_t<ResRet>>::type;
             static_assert(std::is_copy_constructible<ValueT>::value, "ValueT must be copy-constructible");
             static_assert(std::is_base_of_v<EventBase, EventT> || std::is_same<EventT, void>::value, "EventT must derive from Core::Event or be void");
 
-            auto entry = new Watched<ValueT>(m_nextEntryId++, std::move(resolver), std::move(listener));
+            auto entry = new Watched<ValueT, ResRetT>(m_nextEntryId++, std::move(resolver), std::move(listener));
             RegisterEntry<EventT>(entry);
             return entry;
         }
 
-        template<typename EventT, typename ResRet, typename U>
-        auto Watch(std::function<ResRet()> resolver, U* instance, WatchedMethodListener<typename ResolverValue<std::decay_t<ResRet>>::type, U> method)
-            -> Watched<typename ResolverValue<std::decay_t<ResRet>>::type>*
+        template<typename EventT, typename ValueT, typename ResRetT, typename U>
+        Watched<ValueT, ResRetT>* Watch(Resolver<ResRetT> resolver, U* instance, WatchedMethodListener<ValueT, U> method)
         {
-            using ValueT = typename ResolverValue<std::decay_t<ResRet>>::type;
             static_assert(std::is_copy_constructible<ValueT>::value, "ValueT must be copy-constructible");
             static_assert(std::is_base_of_v<EventBase, EventT> || std::is_same<EventT, void>::value, "EventT must derive from Core::Event or be void");
 
             auto listener = [instance, method](std::optional<ValueT> oldVal, std::optional<ValueT> newVal) {
                 (instance->*method)(oldVal, newVal);
             };
-            return Watch<EventT, ResRet>(std::move(resolver), std::move(listener));
+            return Watch<EventT, ValueT, ResRetT>(std::move(resolver), std::move(listener));
         }
 
         void Unwatch(WatchedId id) {
@@ -79,9 +53,9 @@ namespace Core
 				[id](const auto& entry) { return entry->m_id == id; }), vec.end());
         }
 
-		template <typename T>
-        void Unwatch(Watched<T>* watched) {
-            Unwatch(watched->m_id);
+        void Unwatch(WatchedBase* watched) {
+            if (watched == nullptr) return;
+            Unwatch(watched->GetId());
 		}
 
     private:

@@ -31,8 +31,8 @@ namespace ModMenuModule {
 		void SetWatchingLastCarId(bool watch);
 
 		Core::Resolver<Game::Car*> m_currentCarResolver = nullptr;
-		Core::Watched<Game::Car*>* m_watchedCurrentCar = nullptr;
-		Core::Resolver<Game::uint> m_lastCarIdResolver = nullptr;
+		Core::Watched<Game::Car*, Game::Car*>* m_watchedCurrentCar = nullptr;
+		Core::Resolver<Game::uint*> m_lastCarIdResolver = nullptr;
 		Core::Watched<Game::uint>* m_watchedLastCarId = nullptr;
 		Game::Car* m_lastCar = nullptr;
 		LastCarState m_state = LastCarState::NoCar;

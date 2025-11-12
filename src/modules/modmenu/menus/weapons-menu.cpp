@@ -55,7 +55,7 @@ bool ModMenuModule::WeaponsMenu::Attach()
 	});
 
 	// current weapon
-	Core::Resolver<Game::WEAPON_INDEX> selectedWeaponResolver = Core::MakeResolver(
+	auto selectedWeaponResolver = Core::MakeResolver(
 		Game::Memory::GetPlayerPed,
 		mem(&Game::Ped::selectedWeapon),
 		mem(&Game::WEAPON_STRUCT::id)
@@ -72,7 +72,7 @@ bool ModMenuModule::WeaponsMenu::Attach()
 	m_weaponController->SetConverter<WeaponConverter>();
 
 	// ammo
-	Core::Resolver<short> ammoResolver = Core::MakeResolver(
+	auto ammoResolver = Core::MakeResolver(
 		Game::Memory::GetPlayerPed,
 		mem(&Game::Ped::selectedWeapon),
 		mem(&Game::WEAPON_STRUCT::ammo)

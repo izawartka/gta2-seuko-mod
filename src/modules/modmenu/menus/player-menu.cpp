@@ -29,7 +29,7 @@ bool ModMenuModule::PlayerMenu::Attach()
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Stats", options.textSize);
 
 	// wanted level
-	Core::Resolver<short> wantedLevelResolver = Core::MakeResolver(
+	auto wantedLevelResolver = Core::MakeResolver(
 		Game::Memory::GetPlayerPed,
 		mem(&Game::Ped::copValue)
 	);

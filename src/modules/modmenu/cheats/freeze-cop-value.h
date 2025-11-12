@@ -17,7 +17,7 @@ namespace ModMenuModule {
 
 		void OnValueUpdate(std::optional<short> oldValue, std::optional<short> newValue);
 
-		Core::Resolver<short> m_copValueResolver = nullptr;
+		Core::Resolver<short*> m_copValueResolver = nullptr;
 		Core::Watched<short>* m_watchedCopValue = nullptr;
 		short m_copValue = 0;
 		bool m_justEnabled = false;

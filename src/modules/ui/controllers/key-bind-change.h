@@ -136,7 +136,7 @@ namespace UiModule {
             m_textComponent->SetText(m_options.prefix + m_textBuffer + marker + m_options.suffix);
         }
 
-        void OnValueUpdate(std::optional<const KeyBindingModule::Key> oldValue, std::optional<const KeyBindingModule::Key> newValue) {
+        void OnValueUpdate(std::optional<KeyBindingModule::Key> oldValue, std::optional<KeyBindingModule::Key> newValue) {
             if (m_editing) {
                 spdlog::warn("Tried to update KeyBindChangeController value while editing");
                 return;
@@ -196,8 +196,8 @@ namespace UiModule {
         KeyBindChangeControllerOptions m_options;
 		std::string m_keyBindName;
         Text* m_textComponent = nullptr;
-        Core::Resolver<const KeyBindingModule::Key> m_resolver = nullptr;
-        Core::Watched<const KeyBindingModule::Key>* m_watched = nullptr;
+        Core::Resolver<const KeyBindingModule::Key*> m_resolver = nullptr;
+        Core::Watched<KeyBindingModule::Key, const KeyBindingModule::Key*>* m_watched = nullptr;
         std::optional<KeyBindingModule::Key> m_value = std::nullopt;
         bool m_activeBeforeEdit = false;
         bool m_watchingBeforeEdit = false;

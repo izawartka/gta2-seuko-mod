@@ -252,7 +252,6 @@ exit /b 0
     <ClInclude Include="src\modules\ui\controllers\menu.h" />
     <ClInclude Include="src\modules\ui\controllers\var-text-select.h" />
     <ClInclude Include="src\modules\ui\controllers\var-text.h" />
-    <ClInclude Include="src\modules\ui\default-resolver-return.h" />
     <ClInclude Include="src\modules\ui\standard-binds-support.h" />
     <ClInclude Include="src\modules\ui\rect.h" />
     <ClInclude Include="src\modules\ui\root.h" />

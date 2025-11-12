@@ -30,14 +30,14 @@ void ModMenuModule::FreezeCopValueCheat::OnFirstEnable()
 void ModMenuModule::FreezeCopValueCheat::OnEnable()
 {
 	Core::WatchManager* watchManager = Core::WatchManager::GetInstance();
-	m_watchedCopValue = watchManager->Watch<GameTickEvent, short>(m_copValueResolver, this, &ModMenuModule::FreezeCopValueCheat::OnValueUpdate);
+	m_watchedCopValue = watchManager->Watch<GameTickEvent>(m_copValueResolver, this, &ModMenuModule::FreezeCopValueCheat::OnValueUpdate);
 	m_justEnabled = true;
 }
 
 void ModMenuModule::FreezeCopValueCheat::OnDisable()
 {
 	Core::WatchManager* watchManager = Core::WatchManager::GetInstance();
-	watchManager->Unwatch<short>(m_watchedCopValue);
+	watchManager->Unwatch(m_watchedCopValue);
 	m_watchedCopValue = nullptr;
 }
 

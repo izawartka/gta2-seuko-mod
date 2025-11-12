@@ -1,7 +1,6 @@
 #pragma once
 #include "../common.h"
 #include "menu-item.h"
-#include "../default-resolver-return.h"
 #include "../converter-support.h"
 #include "../components/text.h"
 #include "../../../events/draw.h"
@@ -13,14 +12,11 @@ namespace UiModule {
 		std::wstring nullText = L"N/A";
 	};
 
-	template <typename T, typename ResRet = typename DefaultResolverReturn<T>::type>
-	class VarTextController : public MenuItemController, public Core::EventListenerSupport, public ConverterSupport<T> {
+	template <typename ValueT, typename ResRetT = typename Core::DefaultResRetT<ValueT>::type>
+	class VarTextController : public MenuItemController, public Core::EventListenerSupport, public ConverterSupport<ValueT> {
 	public:
-		using ValueT = T;
-		using Resolver = std::function<ResRet()>;
-
-		VarTextController(Text* text, Resolver resolver, VarTextControllerOptions options = {}) {
-			static_assert(std::is_copy_constructible<T>::value, "T must be copy-constructible");
+		VarTextController(Text* text, Core::Resolver<ResRetT> resolver, VarTextControllerOptions options = {}) {
+			static_assert(std::is_copy_constructible<ValueT>::value, "ValueT must be copy-constructible");
 			m_textComponent = text;
 			m_options = options;
 			m_resolver = resolver;
@@ -37,10 +33,10 @@ namespace UiModule {
 			if (m_watching == watching) return;
 			m_watching = watching;
 			if (m_watching) {
-				m_watched = Core::WatchManager::GetInstance()->Watch<PreDrawUIEvent>(
+				m_watched = Core::WatchManager::GetInstance()->Watch<PreDrawUIEvent, ValueT, ResRetT>(
 					m_resolver,
 					this,
-					&VarTextController<T, ResRet>::OnValueUpdate
+					&VarTextController<ValueT, ResRetT>::OnValueUpdate
 				);
 			}
 			else {
@@ -68,7 +64,7 @@ namespace UiModule {
 			m_textComponent->SetText(m_options.prefix + m_textBuffer + m_options.suffix);
 		}
 
-		void OnValueUpdate(std::optional<T> oldValue, std::optional<T> newValue) {
+		void OnValueUpdate(std::optional<ValueT> oldValue, std::optional<ValueT> newValue) {
 			m_value = newValue;
 			UpdateTextBuffer();
 			UpdateText();
@@ -76,9 +72,9 @@ namespace UiModule {
 
 		VarTextControllerOptions m_options;
 		Text* m_textComponent = nullptr;
-		Resolver m_resolver = nullptr;
-		Core::Watched<T>* m_watched = nullptr;
-		std::optional<T> m_value = std::nullopt;
+		Core::Resolver<ResRetT> m_resolver = nullptr;
+		Core::Watched<ValueT, ResRetT>* m_watched = nullptr;
+		std::optional<ValueT> m_value = std::nullopt;
 		std::wstring m_textBuffer = L"";
 	};
 }

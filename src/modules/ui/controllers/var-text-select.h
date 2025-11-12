@@ -1,7 +1,6 @@
 #pragma once
 #include "../common.h"
 #include "menu-item.h"
-#include "../default-resolver-return.h"
 #include "../converter-support.h"
 #include "../standard-binds-support.h"
 #include "../components/text.h"
@@ -9,11 +8,11 @@
 #include "../../../events/keyboard.h"
 
 namespace UiModule {
-    template <typename T>
-    using VarTextSelectCustomSaveCallback = std::function<void(T newValue)>;
+    template <typename ValueT>
+    using VarTextSelectCustomSaveCallback = std::function<void(ValueT newValue)>;
 
-    template <typename T>
-    using VarTextSelectOptionList = std::vector<T>;
+    template <typename ValueT>
+    using VarTextSelectOptionList = std::vector<ValueT>;
 
     struct VarTextSelectControllerOptions {
         std::wstring prefix = L"";
@@ -26,16 +25,13 @@ namespace UiModule {
         bool liveMode = true; // immediately apply changes when selecting options and change selected option when variable changes
     };
 
-    template <typename T, typename ResRet = typename DefaultResolverReturn<T>::type>
-    class VarTextSelectController : public MenuItemController, public Core::EventListenerSupport, public ConverterSupport<T>, public StandardBindsSupport {
+    template <typename ValueT, typename ResRetT = typename Core::DefaultResRetT<ValueT>::type>
+    class VarTextSelectController : public MenuItemController, public Core::EventListenerSupport, public ConverterSupport<ValueT>, public StandardBindsSupport {
     public:
-        using ValueT = T;
-        using Resolver = std::function<ResRet()>;
-
-        VarTextSelectController(Text* text, Resolver resolver, VarTextSelectOptionList<T> optionList, VarTextSelectControllerOptions options = {})
-		    : StandardBindsSupport::StandardBindsSupport(options.keyBindOptions) 
+        VarTextSelectController(Text* text, Core::Resolver<ResRetT> resolver, VarTextSelectOptionList<ValueT> optionList, VarTextSelectControllerOptions options = {})
+            : StandardBindsSupport::StandardBindsSupport(options.keyBindOptions)
         {
-            static_assert(std::is_copy_constructible<T>::value, "T must be copy-constructible");
+            static_assert(std::is_copy_constructible<ValueT>::value, "ValueT must be copy-constructible");
             m_textComponent = text;
             m_options = options;
             m_resolver = resolver;
@@ -60,10 +56,10 @@ namespace UiModule {
             if (m_watching == watching) return;
             m_watching = watching;
             if (watching) {
-                m_watched = Core::WatchManager::GetInstance()->Watch<PreDrawUIEvent>(
+                m_watched = Core::WatchManager::GetInstance()->Watch<PreDrawUIEvent, ValueT, ResRetT>(
                     m_resolver,
                     this,
-                    &VarTextSelectController<T, ResRet>::OnValueUpdate
+                    &VarTextSelectController<ValueT, ResRetT>::OnValueUpdate
                 );
             }
             else {
@@ -78,7 +74,7 @@ namespace UiModule {
             m_active = active;
 
             if (active) {
-                AddEventListener<KeyDownEvent>(&VarTextSelectController<T, ResRet>::OnKeyDown);
+                AddEventListener<KeyDownEvent>(&VarTextSelectController<ValueT, ResRetT>::OnKeyDown);
             }
             else {
                 RemoveEventListener<KeyDownEvent>();
@@ -98,7 +94,7 @@ namespace UiModule {
                 bool active = m_active;
                 bool watching = m_watching;
                 SetActive(true);
-                if(!m_options.liveMode) SetWatching(false);
+                if (!m_options.liveMode) SetWatching(false);
                 m_activeBeforeEdit = active;
                 m_watchingBeforeEdit = watching;
                 UpdateIndexFromValue();
@@ -116,8 +112,8 @@ namespace UiModule {
             }
         }
 
-        void SetCustomSaveCallback(VarTextSelectCustomSaveCallback<T> callback) {
-             m_customSaveCallback = callback;
+        void SetCustomSaveCallback(VarTextSelectCustomSaveCallback<ValueT> callback) {
+            m_customSaveCallback = callback;
         }
 
     protected:
@@ -134,7 +130,7 @@ namespace UiModule {
                 return;
             }
 
-            T newValue = m_optionList[m_currentIndex];
+            ValueT newValue = m_optionList[m_currentIndex];
             m_pendingSaveValue = m_optionList[m_currentIndex];
 
             if (m_watched) {
@@ -143,13 +139,21 @@ namespace UiModule {
         }
 
         void ApplyPendingSave() {
-            T newValue = m_pendingSaveValue.value();
+            ValueT newValue = m_pendingSaveValue.value();
             m_pendingSaveValue = std::nullopt;
 
             if (m_customSaveCallback) {
                 m_customSaveCallback(newValue);
-            } else if (!m_watched->SetValue(newValue)) {
-                spdlog::warn("Failed to resolve variable for setting new value");
+            }
+            else {
+                if constexpr (Core::WatchedHasSetValue_v<Core::Watched<ValueT, ResRetT>>) {
+                    if (!m_watched->SetValue(newValue)) {
+                        spdlog::warn("Failed to set new value on watched variable");
+                    }
+                }
+                else {
+                    spdlog::error("No custom save callback set and watched variable does not support SetValue");
+				}
             }
 
             m_watched->RequestUpdate();
@@ -160,7 +164,7 @@ namespace UiModule {
             if (!m_displayValue.has_value()) {
                 return;
             }
-            auto it = std::find_if(m_optionList.begin(), m_optionList.end(), [this](const T& val) {
+            auto it = std::find_if(m_optionList.begin(), m_optionList.end(), [this](const ValueT& val) {
                 return this->AreEqual(val, m_displayValue.value());
             });
             if (it == m_optionList.end()) {
@@ -183,7 +187,7 @@ namespace UiModule {
             m_textComponent->SetText(m_options.prefix + m_textBuffer + marker + m_options.suffix);
         }
 
-        void OnValueUpdate(std::optional<T> oldValue, std::optional<T> newValue) {
+        void OnValueUpdate(std::optional<ValueT> oldValue, std::optional<ValueT> newValue) {
             if (!m_options.liveMode && m_editing) {
                 spdlog::warn("Tried to update VarTextSelectController value while editing in non-live mode");
                 return;
@@ -271,16 +275,16 @@ namespace UiModule {
 
         VarTextSelectControllerOptions m_options;
         Text* m_textComponent = nullptr;
-        Resolver m_resolver = nullptr;
-        Core::Watched<T>* m_watched = nullptr;
-        std::optional<T> m_value = std::nullopt;
+        Core::Resolver<ResRetT> m_resolver = nullptr;
+        Core::Watched<ValueT, ResRetT>* m_watched = nullptr;
+        std::optional<ValueT> m_value = std::nullopt;
         bool m_activeBeforeEdit = false;
         bool m_watchingBeforeEdit = false;
         std::wstring m_textBuffer = L"";
-        std::optional<T> m_pendingSaveValue = std::nullopt;
-        VarTextSelectCustomSaveCallback<T> m_customSaveCallback = nullptr;
-        VarTextSelectOptionList<T> m_optionList;
-        std::optional<T> m_displayValue = std::nullopt;
+        std::optional<ValueT> m_pendingSaveValue = std::nullopt;
+        VarTextSelectCustomSaveCallback<ValueT> m_customSaveCallback = nullptr;
+        VarTextSelectOptionList<ValueT> m_optionList;
+        std::optional<ValueT> m_displayValue = std::nullopt;
         int m_currentIndex = 0;
     };
 }

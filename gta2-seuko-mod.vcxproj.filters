@@ -276,9 +276,6 @@
     <ClInclude Include="src\modules\modmenu\menu-manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\modules\ui\default-resolver-return.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\modules\ui\controllers\button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
