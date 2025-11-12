@@ -10,4 +10,6 @@
 #include "weapons-menu.h"
 #include "get-weapon-menu.h"
 #include "misc-menu.h"
+#include "native-cheats-menu.h"
+#include "native-cheats-category-menu.h"
 #include "menu-controls-menu.h"

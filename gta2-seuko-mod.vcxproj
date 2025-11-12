@@ -190,6 +190,8 @@ exit /b 0
     <ClInclude Include="src\modules\modmenu\menus\get-weapon-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\menu-controls-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\misc-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\native-cheats-category-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\native-cheats-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\player-stats-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\spawn-vehicle-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\vehicles-menu.h" />
@@ -298,6 +300,8 @@ exit /b 0
     <ClCompile Include="src\modules\modmenu\menus\main-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\menu-controls-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\misc-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\native-cheats-category-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\native-cheats-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\player-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\player-pos-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\player-stats-menu.cpp" />

@@ -354,6 +354,12 @@
     <ClInclude Include="src\modules\modmenu\cheats\native-cheats-keeper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\modules\modmenu\menus\native-cheats-menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\modmenu\menus\native-cheats-category-menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\converters\native-cheat-state.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -516,6 +522,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\modmenu\cheats\native-cheats-data.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\menus\native-cheats-menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\menus\native-cheats-category-menu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
