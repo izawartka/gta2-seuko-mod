@@ -4,3 +4,4 @@
 #include "infinite-ammo.h"
 #include "instant-reload.h"
 #include "last-car.h"
+#include "native-cheats-keeper.h"
