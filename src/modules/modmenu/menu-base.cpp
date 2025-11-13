@@ -24,7 +24,10 @@ void ModMenuModule::MenuBase::CreateMenu(std::wstring title, UiModule::Component
 	mainCont->SetVisible(false);
 	m_mainComponent = static_cast<UiModule::Component*>(mainCont);
 
-	vertCont = uiRoot->AddComponent<UiModule::VertCont>(mainCont);
+	UiModule::Background* menuBackground = uiRoot->AddComponent<UiModule::Background>(mainCont, options.menuBackgroundOptions);
+	UiModule::Spacer* minWidthSpacer = uiRoot->AddComponent<UiModule::Spacer>(menuBackground, options.minMenuWidth, 0);
+	UiModule::Margin* menuPadding = uiRoot->AddComponent<UiModule::Margin>(menuBackground, options.menuPadding, options.menuPadding);
+	vertCont = uiRoot->AddComponent<UiModule::VertCont>(menuPadding);
 	UiModule::Margin* titleMargin = uiRoot->AddComponent<UiModule::Margin>(vertCont, options.menuHeaderMarginX, options.menuHeaderMarginY);
 	m_titleText = uiRoot->AddComponent<UiModule::Text>(titleMargin, title, options.menuHeaderTextSize);
 
