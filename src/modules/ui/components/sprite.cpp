@@ -29,12 +29,14 @@ void UiModule::Sprite::Draw()
 	float cosRot = cos(m_options.rotation);
 	float sinRot = sin(m_options.rotation);
 
+	uint32_t vertexFlags = 0x00ffffff | (static_cast<uint32_t>(m_options.alpha) << 24);
+
 	Game::GTAVertex vertices[4]{};
 	vertices[0].x = cx - halfWidth * cosRot + halfHeight * sinRot;
 	vertices[0].y = cy - halfWidth * sinRot - halfHeight * cosRot;
 	vertices[0].z = 0.14f;
 	vertices[0].z2 = 0.14f;
-	vertices[0].field_0x10 = 0xa0000000;
+	vertices[0].flags = vertexFlags;
 	vertices[0].u = 0.3f;
 	vertices[0].v = 0.3f;
 
@@ -42,7 +44,7 @@ void UiModule::Sprite::Draw()
 	vertices[1].y = cy + halfWidth * sinRot - halfHeight * cosRot;
 	vertices[1].z = 0.14f;
 	vertices[1].z2 = 0.14f;
-	vertices[1].field_0x10 = 0xa0000000;
+	vertices[1].flags = vertexFlags;
 	vertices[1].u = (float)m_spriteWidth - 0.3f;
 	vertices[1].v = 0.3f;
 
@@ -50,7 +52,7 @@ void UiModule::Sprite::Draw()
 	vertices[2].y = cy + halfWidth * sinRot + halfHeight * cosRot;
 	vertices[2].z = 0.14f;
 	vertices[2].z2 = 0.14f;
-	vertices[2].field_0x10 = 0xa0000000;
+	vertices[2].flags = vertexFlags;
 	vertices[2].u = (float)m_spriteWidth - 0.3f;
 	vertices[2].v = (float)m_spriteHeight - 0.3f;
 
@@ -58,12 +60,12 @@ void UiModule::Sprite::Draw()
 	vertices[3].y = cy - halfWidth * sinRot + halfHeight * cosRot;
 	vertices[3].z = 0.14f;
 	vertices[3].z2 = 0.14f;
-	vertices[3].field_0x10 = 0xa0000000;
+	vertices[3].flags = vertexFlags;
 	vertices[3].u = 0.3f;
 	vertices[3].v = (float)m_spriteHeight - 0.3f;
 
 	Game::Functions::DrawQuad(
-		0x80,
+		m_options.alpha == 0xFF ? 0x28080 : 0xa180,
 		(DWORD)sprite,
 		vertices,
 		0xff

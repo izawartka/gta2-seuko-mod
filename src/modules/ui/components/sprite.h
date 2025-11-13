@@ -10,6 +10,7 @@ namespace UiModule {
 		uint16_t remap = 0;
 		Game::SCR_f scale = Game::Utils::FromFloat(1.0f);
 		float rotation = 0.0f; // in radians
+		uint8_t alpha = 255;
 	};
 
 	class Sprite : public Component {

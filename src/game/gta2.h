@@ -950,7 +950,7 @@ struct GTAVertex {
     float y;
     float z;
     float z2;
-    undefined4 field_0x10;
+    uint32_t flags;
     undefined4 field_0x14;
     float u;
     float v;
