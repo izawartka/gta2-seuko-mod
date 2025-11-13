@@ -401,10 +401,10 @@ typedef enum PED_THREAT_SEARCH {
 } PED_THREAT_SEARCH;
 
 typedef enum PED_THREAT_REACTION {
-	PED_THREAT_REACTION_NO_REACTION=0,
-	PED_THREAT_REACTION_REACT_AS_EMERGENCY=1,
-	PED_THREAT_REACTION_REACT_AS_NORMAL=2,
-	PED_THREAT_REACTION_RUN_AWAY=3
+    PED_THREAT_REACTION_NO_REACTION=0,
+    PED_THREAT_REACTION_REACT_AS_EMERGENCY=1,
+    PED_THREAT_REACTION_REACT_AS_NORMAL=2,
+    PED_THREAT_REACTION_RUN_AWAY=3
 } PED_THREAT_REACTION;
 
 typedef enum PED_REMAP2 {
@@ -464,34 +464,34 @@ typedef enum SPRITE_BIT1 : unsigned char {
 } SPRITE_BIT1;
 
 typedef enum WEAPON_INDEX {
-	WEAPON_PISTOL = 0,
-	WEAPON_S_UZI = 1,
-	WEAPON_ROCKET_LAUNCHER = 2,
-	WEAPON_ELECTROGUN = 3,
-	WEAPON_MOLOTOV_COCTAIL = 4,
-	WEAPON_GRENADE = 5,
-	WEAPON_SHOTGUN = 6,
-	WEAPON_ELECTROBATON = 7,
-	WEAPON_FLAMETHROWER = 8,
-	WEAPON_SILENCED_S_UZI = 9,
-	WEAPON_DUAL_PISTOL = 10,
-	WEAPON_11 = 11,
-	WEAPON_12 = 12,
-	WEAPON_13 = 13,
-	WEAPON_14 = 14,
-	WEAPON_VEHICLE_BOMB = 15,
-	WEAPON_VEHICLE_OIL_SLICK = 16,
-	WEAPON_VEHICLE_MINE = 17,
-	WEAPON_VEHICLE_MACHINE_GUN = 18,
-	WEAPON_VEHICLE_TANK_CANNON = 19,
-	WEAPON_VEHICLE_WATER_CANNON = 20,
-	WEAPON_VEHICLE_FLAMETHROWER = 21,
-	WEAPON_VEHICLE_JEEP_TURRET = 22,
-	WEAPON_VEHICLE_INSTANT_BOMB = 23,
-	WEAPON_VEHICLE_WEAPON_24 = 24,
-	WEAPON_VEHICLE_WEAPON_25 = 25,
-	WEAPON_VEHICLE_WEAPON_26 = 26,
-	WEAPON_VEHICLE_WEAPON_27 = 27
+    WEAPON_PISTOL = 0,
+    WEAPON_S_UZI = 1,
+    WEAPON_ROCKET_LAUNCHER = 2,
+    WEAPON_ELECTROGUN = 3,
+    WEAPON_MOLOTOV_COCTAIL = 4,
+    WEAPON_GRENADE = 5,
+    WEAPON_SHOTGUN = 6,
+    WEAPON_ELECTROBATON = 7,
+    WEAPON_FLAMETHROWER = 8,
+    WEAPON_SILENCED_S_UZI = 9,
+    WEAPON_DUAL_PISTOL = 10,
+    WEAPON_11 = 11,
+    WEAPON_12 = 12,
+    WEAPON_13 = 13,
+    WEAPON_14 = 14,
+    WEAPON_VEHICLE_BOMB = 15,
+    WEAPON_VEHICLE_OIL_SLICK = 16,
+    WEAPON_VEHICLE_MINE = 17,
+    WEAPON_VEHICLE_MACHINE_GUN = 18,
+    WEAPON_VEHICLE_TANK_CANNON = 19,
+    WEAPON_VEHICLE_WATER_CANNON = 20,
+    WEAPON_VEHICLE_FLAMETHROWER = 21,
+    WEAPON_VEHICLE_JEEP_TURRET = 22,
+    WEAPON_VEHICLE_INSTANT_BOMB = 23,
+    WEAPON_VEHICLE_WEAPON_24 = 24,
+    WEAPON_VEHICLE_WEAPON_25 = 25,
+    WEAPON_VEHICLE_WEAPON_26 = 26,
+    WEAPON_VEHICLE_WEAPON_27 = 27
 } WEAPON_INDEX;
 
 typedef enum PLAYER_PHYSICS_MOVEMENT {
@@ -993,7 +993,7 @@ struct Cheats {
     bool giveElectricGun;             // (0x1F)
     bool invulnerability;             // (0x20)
     bool noAudio;                     // (0x21)
-    bool unknown0x73;                 // (0x22) GXT relacted, unused
+    bool unknown0x73;                 // (0x22) GXT related, unused
     bool getAllWeapons;               // (0x23)
     bool noAnnoyingChars;             // (0x24)
     bool showPlayerNames;             // (0x25) test needed
@@ -1035,7 +1035,7 @@ struct Cheats {
     bool doTextIDTest;                // (0x49)
     bool giveFlamethrower;            // (0x4A)
     bool skipLid;                     // (0x4B)
-    bool doPolice2;                   // (0x4C) no effect ovserved
+    bool doPolice2;                   // (0x4C) no effect observed
     bool keepWeaponsAfterDeath;       // (0x4D)
     bool onlyElvisPeds;               // (0x4E)
     bool nekkidPeds;                  // (0x4F)
@@ -5703,7 +5703,9 @@ struct GangRespect {
     undefined4 field_0x10c;
     undefined field_0x110[12];
     char respect;
-    undefined3 field_0x11d;
+    undefined field_0x11d;
+    undefined field_0x11e;
+    undefined field_0x11f;
     undefined2 field_0x120;
     undefined field_0x122[26];
     undefined4 field_0x13c;
@@ -6003,7 +6005,7 @@ struct S10 {
 
 typedef struct RenderDistanceArrayItem {
     int x;
-	int y;
+    int y;
 } RenderDistanceArrayItem;
 
 typedef struct S12 S12, *PS12;
@@ -6028,7 +6030,7 @@ struct S12 {
     byte field_0x19;
     byte field_0x1a;
     byte field_0x1b;
-	RenderDistanceArrayItem renderDistanceArr[1500];
+    RenderDistanceArrayItem renderDistanceArr[1500];
     int currentDrawLayerSize;
     int tilesCount;
 };
@@ -6484,19 +6486,19 @@ typedef struct S4_SUBS1 S4_SUBS1, * PS4_SUBS1;
 struct S4_SUBS1 {
     int field_0x0;
     undefined field_0x4;
-	undefined field_0x5;
+    undefined field_0x5;
     short field_0x6;
-	undefined field_0x8;
-	undefined field_0x9;
-	undefined field_0xa;
-	undefined field_0xb;
-	undefined field_0xc;
-	undefined field_0xd;
-	undefined field_0xe;
-	undefined field_0xf;
-	undefined field_0x10;
-	undefined field_0x11;
-	undefined field_0x12;
+    undefined field_0x8;
+    undefined field_0x9;
+    undefined field_0xa;
+    undefined field_0xb;
+    undefined field_0xc;
+    undefined field_0xd;
+    undefined field_0xe;
+    undefined field_0xf;
+    undefined field_0x10;
+    undefined field_0x11;
+    undefined field_0x12;
     undefined field_0x13;
 };
 
@@ -7240,13 +7242,13 @@ struct S7 {
     undefined field_0x286;
     undefined field_0x287;
     undefined field_0x288;
-	undefined field_0x289;
+    undefined field_0x289;
     undefined field_0x28a;
-	undefined field_0x28b;
+    undefined field_0x28b;
     undefined field_0x28c;
-	undefined field_0x28d;
+    undefined field_0x28d;
     undefined field_0x28e;
-	undefined field_0x28f;
+    undefined field_0x28f;
     undefined field_0x290;
     undefined field_0x291;
     undefined field_0x292;
