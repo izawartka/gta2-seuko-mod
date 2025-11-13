@@ -28,8 +28,6 @@ namespace UiModule {
 		void RecalculateSize();
 
 		SpriteOptions m_options;
-		Game::GTAVertex m_vertices[4];
-
 		int m_spriteWidth = 0;
 		int m_spriteHeight = 0;
 	};

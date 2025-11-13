@@ -369,6 +369,9 @@
     <ClInclude Include="src\converters\in-brackets.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\modules\ui\components\background.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
@@ -528,6 +531,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\modmenu\menus\native-cheats-category-menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\ui\components\background.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
