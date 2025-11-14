@@ -141,6 +141,7 @@ void ModMenuModule::MenuManager::ApplyMenuAdd(PendingChange& change)
 		return;
 	}
 
+	HideTopMenu();
 	DetachTopMenu();
 	spdlog::debug("MenuManager::ApplyMenuAdd: Adding menu with id {}", change.id);
 	m_menus.push_back({ change.id, std::unique_ptr<MenuBase>(newMenu) });
@@ -156,11 +157,25 @@ void ModMenuModule::MenuManager::ApplyMenuRemove(PendingChange& change)
 	}
 
 	if (it == m_menus.end() - 1) {
+		HideTopMenu();
 		DetachTopMenu();
 	}
 
 	spdlog::debug("MenuManager::ApplyMenuRemove: Removing menu with id {}", change.id);
 	m_menus.erase(it);
+}
+
+void ModMenuModule::MenuManager::HideTopMenu()
+{
+	if (m_menus.empty()) {
+		return;
+	}
+	MenuStackEntry& topMenu = m_menus.back();
+	if (m_topMenuVisible) {
+		spdlog::debug("MenuManager::HideTopMenu: Hiding top menu with id {}", topMenu.id);
+		topMenu.menu->SetVisible(false);
+		m_topMenuVisible = false;
+	}
 }
 
 void ModMenuModule::MenuManager::DetachTopMenu()
@@ -185,13 +200,6 @@ void ModMenuModule::MenuManager::ProcessPendingChanges()
 
 	m_processingChanges = true;
 
-	MenuStackEntry* previousTopMenu = m_menus.empty() ? nullptr : &m_menus.back();
-	if (previousTopMenu && previousTopMenu->menu->IsVisible()) {
-		spdlog::debug("MenuManager::ProcessPendingChanges: Hiding top menu with id {}", previousTopMenu->id);
-		previousTopMenu->menu->SetVisible(false);
-		m_topMenuVisible = false;
-	}
-
 	while (!m_pendingChanges.empty()) {
 		PendingChange change = m_pendingChanges.front();
 		m_pendingChanges.pop();
@@ -206,6 +214,7 @@ void ModMenuModule::MenuManager::ProcessPendingChanges()
 			DetachTopMenu();
 			break;
 		case ChangeType::UpdateVisible:
+			if (m_topMenuVisible && !m_visible) HideTopMenu();
 			break;
 		default:
 			spdlog::warn("MenuManager::ProcessPendingChanges: Unknown change type");

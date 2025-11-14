@@ -55,6 +55,7 @@ namespace ModMenuModule {
 
 		void ApplyMenuAdd(PendingChange& change);
 		void ApplyMenuRemove(PendingChange& change);
+		void HideTopMenu();
 		void DetachTopMenu();
 		void ProcessPendingChanges();
 		void AddPendingChange(const PendingChange& change);
