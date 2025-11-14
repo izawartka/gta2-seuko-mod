@@ -23,6 +23,7 @@ namespace ModMenuModule {
 			return id;
 		}
 
+		MenuId GetTopMenuId() const;
 		void RemoveMenu(MenuId id);
 		void RemoveLastMenu();
 		void ClearMenus();

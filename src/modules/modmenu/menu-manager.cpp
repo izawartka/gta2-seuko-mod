@@ -17,6 +17,14 @@ ModMenuModule::MenuManager::~MenuManager() {
 	m_instance = nullptr;
 }
 
+ModMenuModule::MenuId ModMenuModule::MenuManager::GetTopMenuId() const
+{
+	if (m_menuIds.empty()) {
+		return 0;
+	}
+	return m_menuIds.back();
+}
+
 void ModMenuModule::MenuManager::RemoveMenu(MenuId id)
 {
 	auto it = std::find(m_menuIds.begin(), m_menuIds.end(), id);
