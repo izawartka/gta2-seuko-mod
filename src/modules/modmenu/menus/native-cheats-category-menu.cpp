@@ -113,7 +113,6 @@ void ModMenuModule::NativeCheatsCategoryMenu::OnHide()
 void ModMenuModule::NativeCheatsCategoryMenu::OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
 {
 	ModMenuModule::MenuManager* menuManager = ModMenuModule::MenuManager::GetInstance();
-	const NativeCheatCategoryDef& categoryDef = m_categoryDef;
 
 	if (id == 0) {
 		// Go back
@@ -122,16 +121,16 @@ void ModMenuModule::NativeCheatsCategoryMenu::OnMenuAction(UiModule::Selectable*
 	} else if (id == m_prevPageItemId) {
 		// Previous page
 		if (m_page == 0) return;
-		size_t prevPage = m_page - 1;
-		menuManager->RemoveLastMenu();
-		menuManager->AddMenu<NativeCheatsCategoryMenu>(categoryDef, prevPage);
+		MenuId thisMenuId = menuManager->GetTopMenuId();
+		menuManager->AddMenu<NativeCheatsCategoryMenu>(m_categoryDef, m_page - 1);
+		menuManager->RemoveMenu(thisMenuId);
 		return;
 	} else if (id == m_nextPageItemId) {
 		// Next page
 		if (m_page >= m_pageCount - 1) return;
-		size_t nextPage = m_page + 1;
-		menuManager->RemoveLastMenu();
-		menuManager->AddMenu<NativeCheatsCategoryMenu>(categoryDef, nextPage);
+		MenuId thisMenuId = menuManager->GetTopMenuId();
+		menuManager->AddMenu<NativeCheatsCategoryMenu>(m_categoryDef, m_page + 1);
+		menuManager->RemoveMenu(thisMenuId);
 		return;
 	}
 }
