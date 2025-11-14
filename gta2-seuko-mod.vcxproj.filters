@@ -372,6 +372,9 @@
     <ClInclude Include="src\modules\ui\components\background.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\events\cop-value-change.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
@@ -534,6 +537,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\ui\components\background.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\events\cop-value-change.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
