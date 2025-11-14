@@ -1,9 +1,10 @@
 #pragma once
 #include "../common.h"
 #include "../cheat-base.h"
+#include "../../../events/cop-value-change.h"
 
 namespace ModMenuModule {
-	class FreezeCopValueCheat : public CheatBase {
+	class FreezeCopValueCheat : public CheatBase, public Core::EventListenerSupport {
 	public:
 		FreezeCopValueCheat();
 		virtual ~FreezeCopValueCheat();
@@ -16,6 +17,7 @@ namespace ModMenuModule {
 		virtual void OnDisable() override;
 
 		void OnValueUpdate(std::optional<short> oldValue, std::optional<short> newValue);
+		void OnCopValueChange(CopValueChangeEvent& event);
 
 		Core::Resolver<short*> m_copValueResolver = nullptr;
 		Core::Watched<short>* m_watchedCopValue = nullptr;

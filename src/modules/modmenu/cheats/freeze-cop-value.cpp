@@ -32,10 +32,15 @@ void ModMenuModule::FreezeCopValueCheat::OnEnable()
 	Core::WatchManager* watchManager = Core::WatchManager::GetInstance();
 	m_watchedCopValue = watchManager->Watch<GameTickEvent>(m_copValueResolver, this, &ModMenuModule::FreezeCopValueCheat::OnValueUpdate);
 	m_justEnabled = true;
+	m_watchedCopValue->Update();
+
+	AddEventListener<CopValueChangeEvent>(&ModMenuModule::FreezeCopValueCheat::OnCopValueChange);
 }
 
 void ModMenuModule::FreezeCopValueCheat::OnDisable()
 {
+	RemoveEventListener<CopValueChangeEvent>();
+
 	Core::WatchManager* watchManager = Core::WatchManager::GetInstance();
 	watchManager->Unwatch(m_watchedCopValue);
 	m_watchedCopValue = nullptr;
@@ -43,16 +48,18 @@ void ModMenuModule::FreezeCopValueCheat::OnDisable()
 
 void ModMenuModule::FreezeCopValueCheat::OnValueUpdate(std::optional<short> oldValue, std::optional<short> newValue)
 {
-	bool wasJustEnabled = m_justEnabled;
-	m_justEnabled = false;
-	if (!newValue.has_value() || newValue.value() == m_copValue) return;
-
-	if (wasJustEnabled) {
-		m_copValue = newValue.value();
+	if (m_justEnabled) {
+		m_copValue = newValue.value_or(0);
+		m_justEnabled = false;
 		return;
 	}
 
-	m_watchedCopValue->SetValue(m_copValue);
+	m_watchedCopValue->SetValueNoNotify(m_copValue);
+}
+
+void ModMenuModule::FreezeCopValueCheat::OnCopValueChange(CopValueChangeEvent& event)
+{
+	event.SetModifiedNewValue(m_copValue);
 }
 
 REGISTER_CHEAT(FreezeCopValueCheat)
