@@ -2,7 +2,7 @@
 #include "../core/core.h"
 
 /*
-Replaces multiple 5 bytes at given addresses with jumps to the specified jumpAddress
+Replaces multiple 5 bytes at given addresses with jump instructions to the specified jumpAddress.
 @param addresses The addresses where the jump instructions will be placed.
 @param jumpAddress The address to jump to.
 */

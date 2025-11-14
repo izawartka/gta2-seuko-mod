@@ -2,32 +2,32 @@
 #include "../core/core.h"
 
 /*
-Replaces a function call with a call to a custom function.
-@param originalCallAddress The address of the original function call instruction (the CALL opcode).
-@param hookFunction The address of the custom function to call instead.
+Replaces 5 bytes at a given address with a call instruction to a custom function.
+@param addresses The address where the call instruction will be placed.
+@param hookFunction The address of the custom function to call.
 */
 class FunctionCallHook : public Core::HookBase
 {
 public:
-	FunctionCallHook(const DWORD originalCallAddress, const DWORD hookFunction)
-		: originalCallAddress(originalCallAddress), hookFunction(hookFunction) {
+	FunctionCallHook(DWORD address, DWORD hookFunction)
+		: addresses(address), hookFunction(hookFunction) {
 	}
 	~FunctionCallHook() = default;
 
 	static bool Hook(const FunctionCallHook& hookDef) {
 		DWORD OldProtection = { 0 };
-		bool success = VirtualProtectEx(GetCurrentProcess(), (LPVOID)hookDef.originalCallAddress, 5, PAGE_EXECUTE_READWRITE, &OldProtection);
+		bool success = VirtualProtectEx(GetCurrentProcess(), (LPVOID)hookDef.addresses, 5, PAGE_EXECUTE_READWRITE, &OldProtection);
 		if (!success) {
 			return false;
 		}
 
-		*(BYTE*)((LPBYTE)hookDef.originalCallAddress) = 0xE8;
-		DWORD offset = hookDef.hookFunction - hookDef.originalCallAddress - 5;
-		*(DWORD*)((LPBYTE)hookDef.originalCallAddress + 1) = offset;
+		*(BYTE*)((LPBYTE)hookDef.addresses) = 0xE8;
+		DWORD offset = hookDef.hookFunction - hookDef.addresses - 5;
+		*(DWORD*)((LPBYTE)hookDef.addresses + 1) = offset;
 
 		return true;
 	}
 
-	const DWORD originalCallAddress;
+	const DWORD addresses;
 	const DWORD hookFunction;
 };

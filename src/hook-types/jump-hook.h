@@ -2,14 +2,14 @@
 #include "../core/core.h"
 
 /*
-Replaces 5 bytes at the given address with a jump to the specified jumpAddress.
+Replaces 5 bytes at a given address with a jump instruction to a specified address.
 @param address The address where the jump instruction will be placed.
 @param jumpAddress The address to jump to.
 */
 class JumpHook : public Core::HookBase
 {
 public:
-	JumpHook(const DWORD address, const DWORD jumpAddress)
+	JumpHook(DWORD address, DWORD jumpAddress)
 		: address(address), jumpAddress(jumpAddress) {
 	}
 	~JumpHook() = default;
