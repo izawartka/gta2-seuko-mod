@@ -1,18 +1,17 @@
-// dllmain.cpp : Defines the entry point for the DLL application.
-#include "common.h"
+#define NOMINMAX
+#include <windows.h>
+#include "logging.cpp"
 #include "core/core.h"
 #include "modules/persistence/persistence.h"
 #include "modules/keybinding/keybinding.h"
 #include "modules/ui/ui.h"
 #include "modules/modmenu/modmenu.h"
-#include "console.cpp"
-#include "events/game-tick.h"
 
 Core::Core* coreInstance = nullptr;
 
 static void Init()
 {
-	InitConsole();
+	InitLogging();
 	coreInstance = new Core::Core();
 	Core::ModuleManager* moduleManager = Core::ModuleManager::GetInstance();
 	PersistenceModule::RootModule* persistenceModule = moduleManager->AddModule<PersistenceModule::RootModule>();

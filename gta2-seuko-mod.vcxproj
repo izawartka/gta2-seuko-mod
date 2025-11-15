@@ -5,6 +5,10 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseWithLogging|Win32">
+      <Configuration>ReleaseWithLogging</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
@@ -32,6 +36,13 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithLogging|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -45,12 +56,16 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="GTA2.props" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithLogging|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="GTA2.props" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;GTA2SEUKOMOD_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;SEUKOMOD_DISABLE_CRASH_DUMPS;GTA2SEUKOMOD_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
@@ -142,8 +157,57 @@ exit /b 0
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithLogging|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;SEUKOMOD_ENABLE_LOG;GTA2SEUKOMOD_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>
+      </PrecompiledHeaderOutputFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)third_party\spdlog\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+    <PostBuildEvent>
+      <Command>if "$(GTA2_DIR)"=="" (
+  echo ERROR: GTA2_DIR is not set. Make sure to set in in GTA2.props file.
+  exit /b 1
+)
+
+if "$(GTA2_EXE)"=="" (
+  echo ERROR: GTA2_EXE is not set. Make sure to set in in GTA2.props file.
+  exit /b 1
+)
+
+if not exist "$(GTA2_DIR)\" (
+  echo ERROR: GTA2_DIR "$(GTA2_DIR)" specified in GTA2.props does not exist.
+  exit /b 1
+)
+
+if not exist "$(GTA2_DIR)\$(GTA2_EXE)" (
+  echo ERROR: "$(GTA2_EXE)" not found in "$(GTA2_DIR)". Check GTA2.props file.
+  exit /b 1
+)
+
+copy /Y "$(TargetPath)" "$(GTA2_DIR)\"
+if exist "$(TargetDir)$(TargetName).pdb" copy /Y "$(TargetDir)$(TargetName).pdb" "$(GTA2_DIR)\"
+
+exit /b 0
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\common.h" />
     <ClInclude Include="src\converters\ammo.h" />
     <ClInclude Include="src\converters\bit-yes-no.h" />
     <ClInclude Include="src\converters\car-damage.h" />
@@ -267,7 +331,6 @@ exit /b 0
     <ClInclude Include="src\modules\ui\controllers\menu-item.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\console.cpp" />
     <ClCompile Include="src\converters\scrf.h" />
     <ClCompile Include="src\core\core.cpp" />
     <ClCompile Include="src\core\event-listener-support.h" />
@@ -286,6 +349,7 @@ exit /b 0
     <ClCompile Include="src\events\try-shoot-weapon.cpp" />
     <ClCompile Include="src\events\keyboard.cpp" />
     <ClCompile Include="src\game\keycode.cpp" />
+    <ClCompile Include="src\logging.cpp" />
     <ClCompile Include="src\modules\keybinding\bind-manager.cpp" />
     <ClCompile Include="src\modules\keybinding\root.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\freeze-cop-value.cpp" />
