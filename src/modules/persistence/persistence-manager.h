@@ -75,6 +75,20 @@ namespace PersistenceModule {
 			return true;
 		}
 
+		bool LoadRaw(std::string key, std::unique_ptr<uint8_t[]>& data, size_t& size) {
+			spdlog::debug("Loading raw data with key: {}", key);
+			auto it = m_savedValues.find(key);
+			if (it == m_savedValues.end()) {
+				spdlog::debug("Key not found");
+				return false;
+			}
+			auto savedValue = it->second.get();
+			size = savedValue->size;
+			data = std::make_unique<uint8_t[]>(size);
+			std::memcpy(data.get(), savedValue->data.data(), size);
+			return true;
+		}
+
 		void SaveToFile();
 		void LoadFromFile();
 
