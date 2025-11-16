@@ -9,3 +9,4 @@
 #include "var-text-select.h"
 #include "button.h"
 #include "key-bind-change.h"
+#include "key-change.h"
