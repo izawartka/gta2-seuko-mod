@@ -5,8 +5,16 @@
 #include <cassert>
 #include <limits>
 
+template <typename T,
+	bool Supported = (std::is_same_v<std::remove_cv_t<T>, std::wstring> ||
+		std::is_floating_point_v<std::remove_cv_t<T>> ||
+		std::is_integral_v<std::remove_cv_t<T>>)
+>
+class DefaultConverter;
+
+// Specialization for supported types
 template <typename T>
-class DefaultConverter {
+class DefaultConverter<T, true> {
 public:
 	static std::wstring ConvertToString(T value) {
 		using BaseT = std::remove_cv_t<T>;
@@ -20,13 +28,6 @@ public:
 		}
 		else if constexpr (std::is_integral_v<BaseT>) {
 			return std::to_wstring(value);
-		}
-		else {
-#ifdef DEBUG
-			return L"<Unsupported value>";
-#else
-			return L"";
-#endif // DEBUG
 		}
 	}
 
@@ -54,10 +55,6 @@ public:
 			value = std::max(value, static_cast<longT>(std::numeric_limits<BaseT>::min()));
 			return static_cast<BaseT>(value);
 		}
-		else {
-			assert(false, "Unsupported type for DefaultConverter");
-			return T{};
-		}
 	}
 
 	static bool IsValidChar(std::wstring text, wchar_t c) {
@@ -83,14 +80,29 @@ public:
 
 			return (c >= L'0' && c <= L'9');
 		}
-		else {
-			assert(false, "Unsupported type for DefaultConverter");
-			return false;
-		}
 	}
 
 	static bool AreEqual(T a, T b) {
 		return a == b;
+	}
+
+protected:
+	DefaultConverter() = delete;
+	~DefaultConverter() = delete;
+	DefaultConverter(const DefaultConverter&) = delete;
+	DefaultConverter& operator=(const DefaultConverter&) = delete;
+};
+
+// Specialization for unsupported types
+template <typename T>
+class DefaultConverter<T, false> {
+public:
+	static std::wstring ConvertToString(T value) {
+#ifdef DEBUG
+			return L"<Unsupported value>";
+#else
+			return L"";
+#endif // DEBUG
 	}
 
 protected:
