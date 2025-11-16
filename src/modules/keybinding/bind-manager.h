@@ -19,8 +19,8 @@ namespace KeyBindingModule {
 		BindManager& operator=(const BindManager&) = delete;
 
 		Key* SetBindNoLookup(const std::string& name, Key newKey);
-		void SaveToFile() const;
-		void LoadFromFile();
+		void SaveToPersistence() const;
+		void LoadFromPersistence();
 
 		static BindManager* m_instance;
 

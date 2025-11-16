@@ -12,7 +12,7 @@ KeyBindingModule::BindManager::~BindManager() {
 }
 
 KeyBindingModule::BindManager* KeyBindingModule::BindManager::GetInstance() {
-	assert(m_instance != nullptr, "BindManager not initialized!");
+	assert(m_instance, "BindManager not initialized!");
 	return m_instance;
 }
 
@@ -54,42 +54,60 @@ KeyBindingModule::Key* KeyBindingModule::BindManager::SetBindNoLookup(const std:
 	return retPtr;
 }
 
-void KeyBindingModule::BindManager::SaveToFile() const
+void KeyBindingModule::BindManager::SaveToPersistence() const
 {
 	PersistenceModule::PersistenceManager* persistenceManager = PersistenceModule::PersistenceManager::GetInstance();
 
 	spdlog::debug("Saving KeyBindingModule binds to persistence");
+
+	// compute required buffer size
+	size_t totalSize = 0;
+	totalSize += sizeof(size_t);
+	for (const auto& pair : m_keyBinds) {
+		const std::string& name = pair.first;
+		size_t nameLength = name.size();
+		totalSize += sizeof(size_t);
+		totalSize += nameLength;
+		totalSize += sizeof(KeyBindingModule::Key);
+	}
+
 	std::vector<uint8_t> buffer;
-	buffer.reserve(256);
+	buffer.resize(totalSize);
+	size_t offset = 0;
+	auto write = [&buffer, &offset](const void* src, size_t len) {
+		if (len == 0) return;
+		std::memcpy(buffer.data() + offset, src, len);
+		offset += len;
+	};
 
 	// bind count
-	size_t sizeSize = sizeof(size_t);
 	size_t bindCount = m_keyBinds.size();
-	buffer.insert(buffer.end(), reinterpret_cast<uint8_t*>(&bindCount), reinterpret_cast<uint8_t*>(&bindCount) + sizeSize);
+	write(&bindCount, sizeof(size_t));
 
 	for (const auto& pair : m_keyBinds) {
 		const std::string& name = pair.first;
 		const KeyBindingModule::Key& key = *(pair.second);
 		// name length + name
 		size_t nameLength = name.size();
-		buffer.insert(buffer.end(), reinterpret_cast<uint8_t*>(&nameLength), reinterpret_cast<uint8_t*>(&nameLength) + sizeSize);
-		buffer.insert(buffer.end(), reinterpret_cast<const uint8_t*>(name.data()), reinterpret_cast<const uint8_t*>(name.data()) + nameLength);
+		write(&nameLength, sizeof(size_t));
+		if (nameLength > 0) write(name.data(), nameLength);
 		// key data
-		buffer.insert(buffer.end(), reinterpret_cast<const uint8_t*>(&key), reinterpret_cast<const uint8_t*>(&key) + sizeof(KeyBindingModule::Key));
+		write(&key, sizeof(KeyBindingModule::Key));
 	}
 
 	persistenceManager->SaveRaw("KeyBindingModule_BindManager_Binds", buffer.data(), buffer.size());
 }
 
-void KeyBindingModule::BindManager::LoadFromFile()
+void KeyBindingModule::BindManager::LoadFromPersistence()
 {
 	spdlog::debug("Loading KeyBindingModule binds from persistence");
-	uint8_t* data = nullptr;
+	std::unique_ptr<uint8_t[]> dataPtr = nullptr;
 	size_t size = 0;
-	if (!PersistenceModule::PersistenceManager::GetInstance()->LoadRaw("KeyBindingModule_BindManager_Binds", data, size)) {
+	if (!PersistenceModule::PersistenceManager::GetInstance()->LoadRaw("KeyBindingModule_BindManager_Binds", dataPtr, size)) {
 		spdlog::debug("No saved binds found in persistence");
 		return;
 	}
+	uint8_t* data = dataPtr.get();
 
 	size_t offset = 0;
 	auto readSizeT = [&data, &size, &offset]() -> std::optional<size_t> {
@@ -115,7 +133,6 @@ void KeyBindingModule::BindManager::LoadFromFile()
 	auto bindCountOpt = readSizeT();
 	if (!bindCountOpt) {
 		spdlog::error("Failed to read bind count from persistence data");
-		delete[] data;
 		return;
 	}
 
@@ -149,7 +166,6 @@ void KeyBindingModule::BindManager::LoadFromFile()
 		readError = true;
 	}
 
-	delete[] data;
 	if (readError) {
 		spdlog::error("Error occurred while loading binds from persistence data");
 		return;

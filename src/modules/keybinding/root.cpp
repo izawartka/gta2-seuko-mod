@@ -22,7 +22,7 @@ KeyBindingModule::RootModule* KeyBindingModule::RootModule::GetInstance()
 
 bool KeyBindingModule::RootModule::Attach()
 {
-	m_bindManager.LoadFromFile();
+	m_bindManager.LoadFromPersistence();
 	spdlog::info("KeyBindingModule::RootModule module attached.");
 
 	return true;
@@ -30,6 +30,6 @@ bool KeyBindingModule::RootModule::Attach()
 
 void KeyBindingModule::RootModule::Detach()
 {
-	m_bindManager.SaveToFile();
+	m_bindManager.SaveToPersistence();
 	spdlog::info("KeyBindingModule::RootModule module detached.");
 }
