@@ -10,6 +10,7 @@ namespace KeyBindingModule {
 		const Key* GetBind(const std::string& name) const;
 		const Key* GetOrCreateBind(const std::string& name, Key defaultKey);
 		const Key* SetBind(const std::string& name, Key newKey);
+		bool RemoveBind(const std::string& name);
 
 	private:
 		friend class RootModule;

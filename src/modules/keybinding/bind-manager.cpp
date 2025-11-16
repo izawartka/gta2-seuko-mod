@@ -46,6 +46,18 @@ const KeyBindingModule::Key* KeyBindingModule::BindManager::SetBind(const std::s
 	return SetBindNoLookup(name, newKey);
 }
 
+bool KeyBindingModule::BindManager::RemoveBind(const std::string& name)
+{
+	spdlog::debug("Removing key bind: {}", name);
+	auto it = m_keyBinds.find(name);
+	if (it == m_keyBinds.end()) {
+		spdlog::warn("No bind found with name {}", name);
+		return false;
+	}
+	m_keyBinds.erase(it);
+	return true;
+}
+
 KeyBindingModule::Key* KeyBindingModule::BindManager::SetBindNoLookup(const std::string& name, Key newKey)
 {
 	auto keyPtr = std::make_unique<KeyBindingModule::Key>(newKey);
