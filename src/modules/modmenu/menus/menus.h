@@ -12,4 +12,7 @@
 #include "misc-menu.h"
 #include "native-cheats-menu.h"
 #include "native-cheats-category-menu.h"
+#include "quick-actions-menu.h"
+#include "add-quick-action-menu.h"
+#include "quick-action-options-menu.h"
 #include "menu-controls-menu.h"

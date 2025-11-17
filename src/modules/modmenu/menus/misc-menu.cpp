@@ -1,6 +1,7 @@
 #include "misc-menu.h"
 #include "../root.h"
 #include "menu-controls-menu.h"
+#include "quick-actions-menu.h"
 
 ModMenuModule::MiscMenu::MiscMenu()
 {
@@ -21,6 +22,7 @@ bool ModMenuModule::MiscMenu::Attach()
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Menu controls", options.textSize);
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Quick actions", options.textSize);
 
 	// quick save button
 	auto quickSaveText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"Quick save", options.textSize);
@@ -40,6 +42,9 @@ void ModMenuModule::MiscMenu::OnMenuAction(UiModule::Selectable* item, UiModule:
 		break;
 	case 1: // Menu controls
 		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::MenuControlsMenu>();
+		break;
+	case 2: // Quick actions
+		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::QuickActionsMenu>();
 		break;
 	default:
 		break;
