@@ -294,9 +294,7 @@ exit /b 0
     <ClInclude Include="src\events\keyboard.h" />
     <ClInclude Include="src\game\common.h" />
     <ClInclude Include="src\game\keycode.h" />
-    <ClInclude Include="src\game\functions.h">
-      <DeploymentContent>false</DeploymentContent>
-    </ClInclude>
+    <ClInclude Include="src\game\functions.h" />
     <ClInclude Include="src\game\game.h" />
     <ClInclude Include="src\game\gta2.h" />
     <ClInclude Include="src\core\event-manager.h" />

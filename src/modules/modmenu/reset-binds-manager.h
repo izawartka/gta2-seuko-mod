@@ -6,8 +6,6 @@
 #include "../../events/game-end.h"
 
 namespace ModMenuModule {
-	using MenuId = size_t;
-
 	class ResetBindsManager : public Core::EventListenerSupport {
 	public:
 		static ResetBindsManager* GetInstance();

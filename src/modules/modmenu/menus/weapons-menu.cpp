@@ -150,7 +150,7 @@ void ModMenuModule::WeaponsMenu::GetAllWeapons()
 {
 	Game::Ped* playerPed = Game::Memory::GetPlayerPed();
 	if (!playerPed) {
-		spdlog::error("Could not give all weapons: player ped is null.");
+		spdlog::warn("Could not give all weapons: player ped is null.");
 		return;
 	}
 

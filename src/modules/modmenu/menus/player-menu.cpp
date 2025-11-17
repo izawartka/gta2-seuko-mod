@@ -19,6 +19,7 @@ ModMenuModule::PlayerMenu::~PlayerMenu()
 
 bool ModMenuModule::PlayerMenu::Attach()
 {
+
 	UiModule::Component* vertCont;
 	CreateMenu(L"#Player#", vertCont);
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();

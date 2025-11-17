@@ -7,7 +7,7 @@ class KeyConverter {
 public:
 	static std::wstring ConvertToString(KeyBindingModule::Key value) {
 		std::wstring result = L"";
-		std::wstring delimiter = gtaFontSafe ? L"  " : L" + ";
+		std::wstring delimiter = gtaFontSafe ? L" " : L" + ";
 		if (value.ctrl) {
 			result += L"Ctrl" + delimiter;
 		}

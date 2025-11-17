@@ -22,6 +22,7 @@ bool ModMenuModule::NativeCheatsMenu::Attach()
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 
+	// reset all cheats
 	auto resetAllText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"Reset all cheats", options.textSize);
 	auto resetAllBtn = m_menuController->CreateLatestItemController<UiModule::ButtonController>(resetAllText);
 	resetAllBtn->SetCallback([this]() {
@@ -32,6 +33,7 @@ bool ModMenuModule::NativeCheatsMenu::Attach()
 
 	uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, NATIVE_CHEATS_CATEGORIES_OFFSET_Y);
 
+	// categories
 	for (const auto& category : m_categories) {
 		auto categoryText = m_menuController->CreateItem<UiModule::Text>(vertCont, category.name.c_str(), options.textSize);
 		if (m_firstCategoryItemId == -1) {
