@@ -3,6 +3,7 @@
 #include "cheat-base.h"
 #include "menu-manager.h"
 #include "reset-binds-manager.h"
+#include "quick-action-manager.h"
 
 namespace ModMenuModule {
 	struct ModMenuOptions {
@@ -50,6 +51,7 @@ namespace ModMenuModule {
 		ModMenuOptions m_options;
 		MenuManager m_menuManager;
 		ResetBindsManager m_resetBindsManager;
+		QuickActionManager m_quickActionManager;
 		std::unordered_map<std::type_index, std::unique_ptr<CheatBase>> m_cheats;
 	};
 }

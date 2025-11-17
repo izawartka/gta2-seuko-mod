@@ -27,6 +27,7 @@ bool ModMenuModule::RootModule::Attach()
 	InstantiateCheats();
 	m_menuManager.Attach();
 	m_resetBindsManager.Attach();
+	m_quickActionManager.Attach();
 	spdlog::info("ModMenuModule::RootModule module attached.");
 
 	return true;
@@ -34,6 +35,7 @@ bool ModMenuModule::RootModule::Attach()
 
 void ModMenuModule::RootModule::Detach()
 {
+	m_quickActionManager.Detach();
 	m_resetBindsManager.Detach();
 	m_menuManager.Detach();
 	DestroyCheats();

@@ -261,6 +261,10 @@ exit /b 0
     <ClInclude Include="src\modules\modmenu\menus\spawn-vehicle-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\vehicles-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\weapons-menu.h" />
+    <ClInclude Include="src\modules\modmenu\quick-action-base.h" />
+    <ClInclude Include="src\modules\modmenu\quick-action-manager.h" />
+    <ClInclude Include="src\modules\modmenu\quick-action-registry.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\quick-actions.h" />
     <ClInclude Include="src\modules\modmenu\reset-binds-manager.h" />
     <ClInclude Include="src\modules\persistence\common.h" />
     <ClInclude Include="src\modules\persistence\persistence-manager.h" />
@@ -375,6 +379,7 @@ exit /b 0
     <ClCompile Include="src\modules\modmenu\menus\spawn-vehicle-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\vehicles-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\weapons-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-action-manager.cpp" />
     <ClCompile Include="src\modules\modmenu\reset-binds-manager.cpp" />
     <ClCompile Include="src\modules\modmenu\root.cpp" />
     <ClCompile Include="src\modules\persistence\persistence-manager.cpp" />

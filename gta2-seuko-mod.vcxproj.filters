@@ -369,7 +369,19 @@
     <ClInclude Include="src\modules\ui\components\background.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\modules\modmenu\quick-action-base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\modmenu\quick-action-manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\modmenu\quick-actions\quick-actions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\events\cop-value-change.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\modmenu\quick-action-registry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -531,6 +543,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\ui\components\background.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\quick-action-manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\events\cop-value-change.cpp">
