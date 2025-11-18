@@ -15,6 +15,7 @@ namespace ModMenuModule {
 		Game::SCR_f menuHeaderMarginX = 0x60000;
 		Game::SCR_f menuHeaderMarginY = 0x30000;
 		Game::SCR_f menuHeaderTextSize = 0x6000;
+		Game::SCR_f menuSpacerHeight = 0x30000;
 		Game::SCR_f textSize = 0x6000;
 		Game::SCR_f menuPadding = 0x20000;
 		Game::SCR_f minMenuWidth = 0x600000;

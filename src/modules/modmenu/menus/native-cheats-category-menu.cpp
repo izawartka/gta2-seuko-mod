@@ -35,7 +35,7 @@ bool ModMenuModule::NativeCheatsCategoryMenu::Attach()
 		m_nextPageItemId = m_menuController->GetLatestMenuItemId();
 	}
 
-	uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, NATIVE_CHEATS_OFFSET_Y);
+	uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, options.menuSpacerHeight);
 
 	std::vector<NativeCheatState> cheatStates = {
 		NativeCheatState::ForceDisabled,

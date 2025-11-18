@@ -31,7 +31,7 @@ bool ModMenuModule::NativeCheatsMenu::Attach()
 		nativeCheatsKeeper->SetEnabled(false);
 	});
 
-	uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, NATIVE_CHEATS_CATEGORIES_OFFSET_Y);
+	uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, options.menuSpacerHeight);
 
 	// categories
 	for (const auto& category : m_categories) {

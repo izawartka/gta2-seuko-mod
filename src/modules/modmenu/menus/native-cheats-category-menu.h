@@ -5,7 +5,6 @@
 #include "../cheats/native-cheats-keeper.h"
 
 static constexpr size_t CHEATS_PER_PAGE = 9;
-static constexpr Game::SCR_f NATIVE_CHEATS_OFFSET_Y = Game::Utils::FromFloat(12.0f);
 
 namespace ModMenuModule {
 	class NativeCheatsCategoryMenu : public MenuBase, public CheatSupport {

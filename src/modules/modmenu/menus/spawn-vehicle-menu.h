@@ -4,8 +4,6 @@
 
 namespace ModMenuModule {
 	static constexpr Game::SCR_f SPRITE_PREVIEW_SCALE = Game::Utils::FromFloat(2.0f);
-	static constexpr Game::SCR_f SPRITE_PREVIEW_MARGIN_X = Game::Utils::FromFloat(24.0f);
-	static constexpr Game::SCR_f SPRITE_PREVIEW_MARGIN_Y = Game::Utils::FromFloat(24.0f);
 
 	class SpawnVehicleMenu : public MenuBase {
 	public:

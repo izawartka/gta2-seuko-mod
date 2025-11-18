@@ -3,8 +3,6 @@
 #include "../menu-base.h"
 #include "../cheat-support.h"
 
-static constexpr Game::SCR_f CURRENT_WEAPON_OFFSET_Y = Game::Utils::FromFloat(12.0f);
-
 namespace ModMenuModule {
 	class WeaponsMenu : public MenuBase, public CheatSupport, public Core::EventListenerSupport {
 	public:

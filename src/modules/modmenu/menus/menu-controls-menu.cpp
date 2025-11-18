@@ -63,7 +63,7 @@ bool ModMenuModule::MenuControlsMenu::Attach()
 	auto resetInfoMargin = uiRoot->AddComponent<UiModule::Margin>(
 		vertCont, 
 		options.menuControllerOptions.createdSelectableOptions.markerOffsetX, 
-		RESET_TOOLTIP_OFFSET_Y
+		options.menuSpacerHeight
 	);
 
 	std::wstring resetInfo = 

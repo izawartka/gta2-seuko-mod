@@ -122,6 +122,7 @@ void ModMenuModule::SpawnVehicleMenu::UpdateSpritePreview()
 
 void ModMenuModule::SpawnVehicleMenu::UpdateSpritePreviewMargin()
 {
+	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	Game::CAR_MODEL4 selectedModel = m_modelController->GetValue().value();
 
 	Game::Style_S3* styleS3 = Game::Memory::GetStyleS3();
@@ -141,9 +142,9 @@ void ModMenuModule::SpawnVehicleMenu::UpdateSpritePreviewMargin()
 	if (offsetY < 0) offsetY = 0;
 
 	Game::SCR_f scaledOffsetX = Game::Utils::Multiply(Game::Utils::FromFloat(offsetX), SPRITE_PREVIEW_SCALE);
-	Game::SCR_f marginX = SPRITE_PREVIEW_MARGIN_X - scaledOffsetX;
+	Game::SCR_f marginX = options.menuControllerOptions.createdSelectableOptions.markerOffsetX - scaledOffsetX;
 	Game::SCR_f scaledOffsetY = Game::Utils::Multiply(Game::Utils::FromFloat(offsetY), SPRITE_PREVIEW_SCALE);
-	Game::SCR_f marginY = SPRITE_PREVIEW_MARGIN_Y - scaledOffsetY;
+	Game::SCR_f marginY = options.menuSpacerHeight*2 - scaledOffsetY;
 
 	m_spritePreviewMargin->SetMargin(marginX, marginY);
 }

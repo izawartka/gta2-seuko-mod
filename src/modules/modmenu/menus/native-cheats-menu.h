@@ -4,8 +4,6 @@
 #include "../menu-base.h"
 #include "../cheats/native-cheats-keeper.h"
 
-static constexpr Game::SCR_f NATIVE_CHEATS_CATEGORIES_OFFSET_Y = Game::Utils::FromFloat(12.0f);
-
 namespace ModMenuModule {
 	class NativeCheatsMenu : public MenuBase, public CheatSupport {
 	public:

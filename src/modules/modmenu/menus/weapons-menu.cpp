@@ -62,7 +62,7 @@ bool ModMenuModule::WeaponsMenu::Attach()
 		mem(&Game::WEAPON_STRUCT::id)
 	);
 
-	UiModule::Spacer* weaponSpacer = uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, CURRENT_WEAPON_OFFSET_Y);
+	UiModule::Spacer* weaponSpacer = uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, options.menuSpacerHeight);
 	UiModule::Margin* weaponTextMargin = uiRoot->AddComponent<UiModule::Margin>(vertCont, options.menuControllerOptions.createdSelectableOptions.markerOffsetX, 0);
 	UiModule::Text* weaponText = uiRoot->AddComponent<UiModule::Text>(weaponTextMargin, L"", options.textSize);
 	m_weaponController = uiRoot->AddController<UiModule::VarTextController<Game::WEAPON_INDEX>>(
