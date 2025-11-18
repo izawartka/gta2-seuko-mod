@@ -3,7 +3,7 @@
 #include "../quick-action-registry.h"
 
 static const std::string typeId = "ModMenu_GetAllWeapons";
-static const std::wstring typeLabel = L"Get All Weapons";
+static const std::wstring typeLabel = L"Get all weapons";
 
 ModMenuModule::GetAllWeaponsAction::GetAllWeaponsAction()
 {

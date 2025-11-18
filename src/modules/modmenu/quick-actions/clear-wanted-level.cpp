@@ -3,7 +3,7 @@
 #include "../quick-action-registry.h"
 
 static const std::string typeId = "ModMenu_ClearWantedLevel";
-static const std::wstring typeLabel = L"Clear Wanted Level";
+static const std::wstring typeLabel = L"Clear wanted level";
 
 ModMenuModule::ClearWantedLevelAction::ClearWantedLevelAction()
 {
