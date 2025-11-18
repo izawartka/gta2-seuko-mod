@@ -3,6 +3,7 @@
 #include "player-menu.h"
 #include "vehicles-menu.h"
 #include "weapons-menu.h"
+#include "world-menu.h"
 #include "native-cheats-menu.h"
 #include "misc-menu.h"
 
@@ -37,25 +38,28 @@ bool ModMenuModule::MainMenu::Attach()
 
 void ModMenuModule::MainMenu::OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
 {
+	ModMenuModule::MenuManager* menuManager = ModMenuModule::MenuManager::GetInstance();
+
 	switch (id) {
 	case 0: // Player
-		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::PlayerMenu>();
+		menuManager->AddMenu<ModMenuModule::PlayerMenu>();
 		break;
 	case 1: // Vehicles
-		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::VehiclesMenu>();
+		menuManager->AddMenu<ModMenuModule::VehiclesMenu>();
 		break;
 	case 2: // Weapons
-		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::WeaponsMenu>();
+		menuManager->AddMenu<ModMenuModule::WeaponsMenu>();
 		break;
 	case 3: // Camera
 		break;
 	case 4: // World
+		menuManager->AddMenu<ModMenuModule::WorldMenu>();
 		break;
 	case 5: // Native Cheats
-		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::NativeCheatsMenu>();
+		menuManager->AddMenu<ModMenuModule::NativeCheatsMenu>();
 		break;
 	case 6: // Misc
-		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::MiscMenu>();
+		menuManager->AddMenu<ModMenuModule::MiscMenu>();
 		break;
 	default:
 		break;
