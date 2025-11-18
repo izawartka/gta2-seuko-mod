@@ -1900,9 +1900,9 @@ struct CarPhysicsData {
     SCR_f skid_threshhold2;
 };
 
-typedef struct CarsPrefab CarsPrefab, *PCarsPrefab;
+typedef struct CarsManager CarsManager, *PCarsManager;
 
-struct CarsPrefab { /* ptr is here 005e4ca0 */
+struct CarsManager { /* ptr is here 005e4ca0 */
     struct Car * nextFreeCar;
     struct Car * lastCar;
     struct Car arr306Cars[306];

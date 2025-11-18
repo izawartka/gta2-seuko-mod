@@ -23,5 +23,6 @@ namespace Game {
 		static constexpr short GetDefaultFontId() { return *(short*)0x00672f24; }
 		static constexpr S15_Script* GetS15() { return (S15_Script*)*(DWORD*)0x006644bc; }
 		static constexpr Menu* GetMenu() { return (Menu*)0x005ec070; }
+		static constexpr CarsManager* GetCarsManager() { return (CarsManager*)*(DWORD*)0x005e4ca0; }
 	};
 }
