@@ -1,5 +1,5 @@
 #include "get-all-weapons.h"
-#include "../cheats/freeze-cop-value.h"
+#include "../utils/get-all-weapons.h"
 #include "../quick-action-registry.h"
 
 static const std::string typeId = "ModMenu_GetAllWeapons";
@@ -25,20 +25,7 @@ const std::wstring& ModMenuModule::GetAllWeaponsAction::GetTypeLabel()
 
 void ModMenuModule::GetAllWeaponsAction::Execute()
 {
-	Game::Ped* playerPed = Game::Memory::GetPlayerPed();
-	if (!playerPed) {
-		spdlog::warn("Could not give all weapons: player ped is null.");
-		return;
-	}
-
-	for (int i = 0; i < 15; i++) {
-		Game::Functions::AddWeapon(
-			playerPed,
-			0,
-			static_cast<Game::WEAPON_INDEX>(i),
-			99
-		);
-	}
+	ModMenuModule::Utils::GetAllWeapons();
 }
 
 const std::wstring& ModMenuModule::GetAllWeaponsAction::GetLabel() const

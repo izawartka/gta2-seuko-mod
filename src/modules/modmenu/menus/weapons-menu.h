@@ -21,7 +21,6 @@ namespace ModMenuModule {
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 		void OnCheatStateChange(CheatStateEvent& event);
 		void UpdateCheatStates();
-		void GetAllWeapons();
 
 		UiModule::SelectController<bool>* m_infiniteAmmoController = nullptr;
 		UiModule::SelectController<bool>* m_instantReloadController = nullptr;

@@ -273,6 +273,7 @@ exit /b 0
     <ClInclude Include="src\modules\modmenu\quick-actions\get-all-weapons.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\quick-actions.h" />
     <ClInclude Include="src\modules\modmenu\reset-binds-manager.h" />
+    <ClInclude Include="src\modules\modmenu\utils\get-all-weapons.h" />
     <ClInclude Include="src\modules\persistence\common.h" />
     <ClInclude Include="src\modules\persistence\persistence-manager.h" />
     <ClInclude Include="src\modules\persistence\persistence.h" />

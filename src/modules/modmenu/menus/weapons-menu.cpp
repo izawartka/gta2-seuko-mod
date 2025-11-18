@@ -5,6 +5,7 @@
 #include "../../../converters/yes-no.h"
 #include "../../../converters/weapon.h"
 #include "../../../converters/ammo.h"
+#include "../utils/get-all-weapons.h"
 #include "../root.h"
 
 ModMenuModule::WeaponsMenu::WeaponsMenu()
@@ -124,7 +125,7 @@ void ModMenuModule::WeaponsMenu::OnMenuAction(UiModule::Selectable* item, UiModu
 		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::GetWeaponMenu>();
 		break;
 	case 2: // Get all weapons
-		GetAllWeapons();
+		ModMenuModule::Utils::GetAllWeapons();
 		break;
 	default:
 		break;
@@ -144,24 +145,4 @@ void ModMenuModule::WeaponsMenu::UpdateCheatStates()
 {
 	m_infiniteAmmoController->SetValue(IsCheatEnabled<ModMenuModule::InfiniteAmmoCheat>());
 	m_instantReloadController->SetValue(IsCheatEnabled<ModMenuModule::InstantReloadCheat>());
-}
-
-void ModMenuModule::WeaponsMenu::GetAllWeapons()
-{
-	Game::Ped* playerPed = Game::Memory::GetPlayerPed();
-	if (!playerPed) {
-		spdlog::warn("Could not give all weapons: player ped is null.");
-		return;
-	}
-
-	for(int i = 0; i < 15; i++) {
-		Game::Functions::AddWeapon(
-			playerPed,
-			0,
-			static_cast<Game::WEAPON_INDEX>(i),
-			99
-		);
-	}
-
-	spdlog::info("All weapons given.");
 }
