@@ -270,10 +270,15 @@ exit /b 0
     <ClInclude Include="src\modules\modmenu\quick-action-manager.h" />
     <ClInclude Include="src\modules\modmenu\quick-action-registry.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\clear-wanted-level.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\explode-all-vehicles.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\get-all-weapons.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\quick-actions.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\save-game.h" />
     <ClInclude Include="src\modules\modmenu\reset-binds-manager.h" />
+    <ClInclude Include="src\modules\modmenu\utils\explode-all-cars.h" />
     <ClInclude Include="src\modules\modmenu\utils\get-all-weapons.h" />
+    <ClInclude Include="src\modules\modmenu\utils\save-game.h" />
+    <ClInclude Include="src\modules\modmenu\utils\utils.h" />
     <ClInclude Include="src\modules\persistence\common.h" />
     <ClInclude Include="src\modules\persistence\persistence-manager.h" />
     <ClInclude Include="src\modules\persistence\persistence.h" />
@@ -392,7 +397,9 @@ exit /b 0
     <ClCompile Include="src\modules\modmenu\menus\world-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-action-manager.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\clear-wanted-level.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-actions\explode-all-vehicles.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\get-all-weapons.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-actions\save-game.cpp" />
     <ClCompile Include="src\modules\modmenu\reset-binds-manager.cpp" />
     <ClCompile Include="src\modules\modmenu\root.cpp" />
     <ClCompile Include="src\modules\persistence\persistence-manager.cpp" />
