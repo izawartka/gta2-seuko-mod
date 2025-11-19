@@ -20,7 +20,7 @@ ModMenuModule::NativeCheatsCategoryMenu::~NativeCheatsCategoryMenu()
 bool ModMenuModule::NativeCheatsCategoryMenu::Attach()
 {
 	UiModule::Component* vertCont;
-	CreateMenu(GetTitle(), vertCont);
+	CreateMenu(GetPageTitle(), vertCont);
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 
@@ -120,14 +120,12 @@ void ModMenuModule::NativeCheatsCategoryMenu::OnMenuAction(UiModule::Selectable*
 		return;
 	} else if (id == m_prevPageItemId) {
 		// Previous page
-		if (m_page == 0) return;
 		MenuId thisMenuId = menuManager->GetTopMenuId();
 		menuManager->AddMenu<NativeCheatsCategoryMenu>(m_categoryDef, m_page - 1);
 		menuManager->RemoveMenu(thisMenuId);
 		return;
 	} else if (id == m_nextPageItemId) {
 		// Next page
-		if (m_page >= m_pageCount - 1) return;
 		MenuId thisMenuId = menuManager->GetTopMenuId();
 		menuManager->AddMenu<NativeCheatsCategoryMenu>(m_categoryDef, m_page + 1);
 		menuManager->RemoveMenu(thisMenuId);
@@ -135,7 +133,7 @@ void ModMenuModule::NativeCheatsCategoryMenu::OnMenuAction(UiModule::Selectable*
 	}
 }
 
-std::wstring ModMenuModule::NativeCheatsCategoryMenu::GetTitle() const
+std::wstring ModMenuModule::NativeCheatsCategoryMenu::GetPageTitle() const
 {
 	if (m_pageCount > 1) {
 		return L"#Native cheats - " + m_categoryDef.name + L" (" + std::to_wstring(m_page + 1) + L"/" + std::to_wstring(m_pageCount) + L")#";

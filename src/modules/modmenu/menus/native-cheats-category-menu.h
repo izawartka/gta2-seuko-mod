@@ -20,7 +20,7 @@ namespace ModMenuModule {
 
 	private:
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
-		std::wstring GetTitle() const;
+		std::wstring GetPageTitle() const;
 
 		const NativeCheatCategoryDef& m_categoryDef;
 		const std::vector<NativeCheatDef>& m_cheats;
