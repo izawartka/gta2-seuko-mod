@@ -31,8 +31,18 @@ UiModule::MenuItemId UiModule::MenuController::AddItem(Selectable* item)
 	MenuItem menuItem = {};
 	menuItem.id = m_nextItemId++;
 	menuItem.item = item;
+	menuItem.groupId = m_currentGroupId;
 
-	m_items.push_back(menuItem);
+	if(m_nextAddedItemIndex > m_items.size()) {
+		spdlog::warn("MenuController::AddItem: Invalid next added item index {}", m_nextAddedItemIndex);
+		m_nextAddedItemIndex = m_items.size();
+	}
+	
+	m_items.insert(m_items.begin() + m_nextAddedItemIndex, menuItem);
+	if (m_currentIndex >= m_nextAddedItemIndex) {
+		SetIndex(m_currentIndex + 1);
+	}
+	m_nextAddedItemIndex++;
 
 	if (m_items.size() == 1) {
 		SetIndex(0);
@@ -123,6 +133,32 @@ void UiModule::MenuController::DeleteItemController(MenuItemId id)
 
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	uiRoot->RemoveController((Controller*)controller);
+}
+
+void UiModule::MenuController::DeleteGroupItems(MenuItemGroupId groupId)
+{
+	for (size_t i = m_items.size(); i-- > 0;) {
+		MenuItem& menuItem = m_items[i];
+		if (menuItem.groupId == groupId) {
+			if (menuItem.controller) {
+				UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
+				uiRoot->RemoveController(static_cast<Controller*>(menuItem.controller));
+			}
+			menuItem.item->SetSelected(false);
+			m_items.erase(m_items.begin() + i);
+			if (i < m_nextAddedItemIndex) {
+				m_nextAddedItemIndex--;
+			}
+			if (i <= m_currentIndex && m_currentIndex > 0) {
+				SetIndex(m_currentIndex - 1);
+			}
+		}
+	}
+}
+
+void UiModule::MenuController::DeleteCurrentGroupItems()
+{
+	DeleteGroupItems(m_currentGroupId);
 }
 
 void UiModule::MenuController::SetItemsWatching(bool watching)

@@ -9,6 +9,7 @@
 
 namespace UiModule {
 	using MenuItemId = size_t;
+	using MenuItemGroupId = size_t;
 	using MenuActionCallback = std::function<void(Selectable*, MenuItemId)>;
 
 	struct MenuControllerOptions {
@@ -82,6 +83,14 @@ namespace UiModule {
 		void DeleteItemController(MenuItemId id);
 		MenuItemId GetLatestMenuItemId() const { return m_nextItemId - 1; }
 
+		void SetNextAddedItemIndex(size_t index) { m_nextAddedItemIndex = index; }
+		size_t GetNextAddedItemIndex() const { return m_nextAddedItemIndex; }
+
+		MenuItemGroupId GetCurrentGroupId() const { return m_currentGroupId; }
+		void SetCurrentGroupId(MenuItemGroupId groupId) { m_currentGroupId = groupId; }
+		void DeleteGroupItems(MenuItemGroupId groupId);
+		void DeleteCurrentGroupItems();
+
 		void SetItemsWatching(bool watching);
 		bool IsItemsWatching() const { return m_itemsWatching; }
 
@@ -105,6 +114,7 @@ namespace UiModule {
 			MenuItemId id;
 			Selectable* item;
 			MenuItemController* controller;
+			MenuItemGroupId groupId;
 		};
 
 		MenuItem* GetItemById(MenuItemId id);
@@ -115,7 +125,9 @@ namespace UiModule {
 		MenuControllerOptions m_options;
 		std::vector<MenuItem> m_items;
 		MenuItemId m_nextItemId = 0;
+		MenuItemGroupId m_currentGroupId = 0;
 		size_t m_currentIndex = -1;
+		size_t m_nextAddedItemIndex = 0;
 		bool m_itemsWatching = false;
 		bool m_active = false;
 		bool m_activeMenuControl = false;
