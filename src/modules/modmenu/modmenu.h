@@ -6,6 +6,8 @@
 #include "cheat-registry.h"
 #include "cheat-support.h"
 #include "cheats/cheats.h"
+#include "segment-base.h"
+#include "segments/segments.h"
 #include "quick-action-base.h"
 #include "quick-action-registry.h"
 #include "quick-action-manager.h"

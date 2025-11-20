@@ -1,12 +1,15 @@
 #pragma once
 #include "common.h"
+#include "segment-base.h"
 
 namespace ModMenuModule {
 	class MenuBase {
 	public:
 		virtual ~MenuBase() = default;
+
 	protected:
 		friend class MenuManager;
+		friend class SegmentBase;
 		MenuBase() = default;
 
 		virtual bool Attach();
