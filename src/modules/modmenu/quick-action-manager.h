@@ -36,10 +36,15 @@ namespace ModMenuModule {
 		static QuickActionManager* GetInstance();
 		static std::vector<QuickActionTypeIndex> GetAllTypes();
 		static const std::wstring& GetTypeLabel(QuickActionTypeIndex typeIndex);
+		
+		static bool HasSegmentFactory(QuickActionTypeIndex typeIndex);
+		static SegmentBase* CreateSegment(QuickActionTypeIndex typeIndex);
 
 		std::optional<QuickActionInfo> GetInfo(QuickActionId actionId) const;
 		std::vector<QuickActionId> GetAll() const;
 
+		bool SetDataFromSegmentData(QuickActionId actionId, SegmentBase* segment);
+		bool SetSegmentDataFromData(QuickActionId actionId, SegmentBase* segment);
 		QuickActionId Add(KeyBindingModule::Key key, QuickActionTypeIndex typeIndex);
 		void Update(QuickActionId actionId, const QuickActionInfo& info);
 		void Remove(QuickActionId actionId);
@@ -69,6 +74,7 @@ namespace ModMenuModule {
 			QuickActionTypeIndex typeIndex = std::type_index(typeid(void)); 
 			const QuickActionRegistryItem* actionItem = nullptr; 
 			std::wstring customLabel = L"";
+			std::vector<uint8_t> serializedData = {}; // only used for persistence
 		};
 
 		void OnKeyDown(KeyDownEvent& event);

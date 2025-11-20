@@ -29,6 +29,30 @@ const std::wstring& ModMenuModule::QuickActionManager::GetTypeLabel(QuickActionT
 	return actionItem->typeLabel;
 }
 
+bool ModMenuModule::QuickActionManager::HasSegmentFactory(QuickActionTypeIndex typeIndex)
+{
+	auto actionItem = QuickActionRegistry::GetByTypeIndex(typeIndex);
+	if (actionItem == nullptr) {
+		spdlog::error("HasSegmentFactory: No quick action type found for index {}", std::type_index(typeIndex).name());
+		return false;
+	}
+	return actionItem->segmentFactory != nullptr;
+}
+
+ModMenuModule::SegmentBase* ModMenuModule::QuickActionManager::CreateSegment(QuickActionTypeIndex typeIndex)
+{
+	auto actionItem = QuickActionRegistry::GetByTypeIndex(typeIndex);
+	if (actionItem == nullptr) {
+		spdlog::error("CreateSegment: No quick action type found for index {}", std::type_index(typeIndex).name());
+		return nullptr;
+	}
+	if (actionItem->segmentFactory == nullptr) {
+		spdlog::error("CreateSegment: Action type '{}' has no segment factory", actionItem->typeId);
+		return nullptr;
+	}
+	return actionItem->segmentFactory();
+}
+
 std::optional<ModMenuModule::QuickActionInfo> ModMenuModule::QuickActionManager::GetInfo(QuickActionId actionId) const
 {
 	QuickActionEntry* entry = const_cast<QuickActionManager*>(this)->GetQuickActionEntry(actionId);
@@ -54,6 +78,32 @@ std::vector<ModMenuModule::QuickActionId> ModMenuModule::QuickActionManager::Get
 		ids.push_back(pair.first);
 	}
 	return ids;
+}
+
+bool ModMenuModule::QuickActionManager::SetDataFromSegmentData(QuickActionId actionId, SegmentBase* segment)
+{
+	spdlog::debug("SetDataFromSegmentData: Setting data for quick action ID {}", actionId);
+
+	QuickActionEntry* entry = GetQuickActionEntry(actionId);
+	if (!entry) {
+		spdlog::error("SetDataFromSegmentData: No quick action found for ID {}", actionId);
+		return false;
+	}
+
+	entry->action->SetDataFromSegmentData(segment);
+	return true;
+}
+
+bool ModMenuModule::QuickActionManager::SetSegmentDataFromData(QuickActionId actionId, SegmentBase* segment)
+{
+	spdlog::debug("SetSegmentDataFromData: Setting segment data for quick action ID {}", actionId);
+
+	QuickActionEntry* entry = GetQuickActionEntry(actionId);
+	if (!entry) {
+		spdlog::error("SetSegmentDataFromData: No quick action found for ID {}", actionId);
+		return false;
+	}
+	return entry->action->SetSegmentDataFromData(segment);
 }
 
 ModMenuModule::QuickActionId ModMenuModule::QuickActionManager::Add(KeyBindingModule::Key key, QuickActionTypeIndex typeIndex)
@@ -168,6 +218,10 @@ void ModMenuModule::QuickActionManager::AddQuickActionInternal(const AddQuickAct
 	newEntry.typeIndex = data.typeIndex;
 	newEntry.customLabel = data.customLabel;
 
+	if (!data.serializedData.empty()) {
+		newEntry.action->DeserializeData(data.serializedData);
+	}
+
 	m_quickActions[data.actionId] = std::move(newEntry);
 }
 
@@ -175,6 +229,8 @@ void ModMenuModule::QuickActionManager::SaveToPersistence() const
 {
 	spdlog::debug("Saving quick actions to persistence");
 	PersistenceModule::PersistenceManager* persistenceManager = PersistenceModule::PersistenceManager::GetInstance();
+
+	std::vector<std::vector<uint8_t>> serializedDataCache = {};
 
 	// compute required buffer size
 	size_t totalSize = 0;
@@ -193,6 +249,12 @@ void ModMenuModule::QuickActionManager::SaveToPersistence() const
 		totalSize += typeIdLength;
 		totalSize += sizeof(size_t);
 		totalSize += labelLength * sizeof(wchar_t);
+
+		std::vector<uint8_t> serializedData = entry.action->SerializeData();
+		serializedDataCache.push_back(std::move(serializedData));
+		size_t dataLength = serializedDataCache.back().size();
+		totalSize += sizeof(size_t);
+		totalSize += dataLength;
 	}
 
 	std::vector<uint8_t> buffer;
@@ -216,6 +278,7 @@ void ModMenuModule::QuickActionManager::SaveToPersistence() const
 	size_t actionCount = m_quickActions.size();
 	write(&actionCount, sizeof(size_t));
 
+	size_t serializedDataIndex = 0;
 	for (const auto& pair : m_quickActions) {
 		QuickActionId actionId = pair.first;
 		const QuickActionEntry& entry = pair.second;
@@ -236,6 +299,14 @@ void ModMenuModule::QuickActionManager::SaveToPersistence() const
 		write(&labelLength, sizeof(size_t));
 		if (labelLength > 0) {
 			write(entry.customLabel.data(), labelLength * sizeof(wchar_t));
+		}
+
+		// serialized data length and data
+		const std::vector<uint8_t>& serializedData = serializedDataCache[serializedDataIndex++];
+		size_t dataLength = serializedData.size();
+		write(&dataLength, sizeof(size_t));
+		if (dataLength > 0) {
+			write(serializedData.data(), dataLength);
 		}
 	}
 
@@ -355,6 +426,24 @@ void ModMenuModule::QuickActionManager::LoadFromPersistence()
 				break;
 			}
 			newAction.customLabel = labelOpt.value();
+		}
+
+		// serialized data
+		auto dataLengthOpt = readSizeT();
+		if (!dataLengthOpt.has_value()) {
+			readError = true;
+			break;
+		}
+		if (dataLengthOpt.value() > 0) {
+			auto dataOpt = readString(dataLengthOpt.value());
+			if (!dataOpt.has_value()) {
+				readError = true;
+				break;
+			}
+			newAction.serializedData = std::vector<uint8_t>(
+				dataOpt.value().begin(),
+				dataOpt.value().end()
+			);
 		}
 
 		if (!skipAction) loadedActions.push_back(newAction);
