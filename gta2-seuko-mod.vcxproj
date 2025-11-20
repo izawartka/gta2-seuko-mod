@@ -274,6 +274,7 @@ exit /b 0
     <ClInclude Include="src\modules\modmenu\quick-actions\get-all-weapons.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\quick-actions.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\save-game.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\spawn-vehicle.h" />
     <ClInclude Include="src\modules\modmenu\reset-binds-manager.h" />
     <ClInclude Include="src\modules\modmenu\segment-base.h" />
     <ClInclude Include="src\modules\modmenu\segments\segments.h" />
@@ -404,6 +405,7 @@ exit /b 0
     <ClCompile Include="src\modules\modmenu\quick-actions\explode-all-vehicles.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\get-all-weapons.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\save-game.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-actions\spawn-vehicle.cpp" />
     <ClCompile Include="src\modules\modmenu\reset-binds-manager.cpp" />
     <ClCompile Include="src\modules\modmenu\root.cpp" />
     <ClCompile Include="src\modules\modmenu\segment-base.cpp" />

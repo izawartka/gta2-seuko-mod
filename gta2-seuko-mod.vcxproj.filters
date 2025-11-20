@@ -426,6 +426,9 @@
     <ClInclude Include="src\modules\modmenu\segments\segments.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\modules\modmenu\quick-actions\spawn-vehicle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\modules\modmenu\utils\spawn-car-at-player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -621,6 +624,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\modmenu\segment-base.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\quick-actions\spawn-vehicle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
