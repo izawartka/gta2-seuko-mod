@@ -18,9 +18,8 @@ bool ModMenuModule::QuickActionsMenu::Attach()
 {
 	ModMenuModule::QuickActionManager* quickActionManager = ModMenuModule::QuickActionManager::GetInstance();
 	auto actionIds = quickActionManager->GetAll();
-	size_t pageCount = (actionIds.size() + ACTIONS_PER_PAGE - 1) / ACTIONS_PER_PAGE;
-
-	if(m_page >= pageCount && pageCount > 0) {
+	size_t pageCount = std::max((actionIds.size() + ACTIONS_PER_PAGE - 1) / ACTIONS_PER_PAGE, 1U);
+	if (m_page >= pageCount && pageCount > 0) {
 		m_page = pageCount - 1;
 	}
 
@@ -43,7 +42,7 @@ bool ModMenuModule::QuickActionsMenu::Attach()
 		m_nextPageItemId = m_menuController->GetLatestMenuItemId();
 	}
 
-	uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, options.menuSpacerHeight);
+	if(actionIds.size() > 0) uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, options.menuSpacerHeight);
 
 	m_firstActionItemId = -1;
 	for (size_t i = m_page * ACTIONS_PER_PAGE; i < std::min(actionIds.size(), (m_page + 1) * ACTIONS_PER_PAGE); i++) {
