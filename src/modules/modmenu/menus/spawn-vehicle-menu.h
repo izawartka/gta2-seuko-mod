@@ -1,10 +1,9 @@
 #pragma once
 #include "../common.h"
 #include "../menu-base.h"
+#include "../segments/spawn-vehicle-segment.h"
 
 namespace ModMenuModule {
-	static constexpr Game::SCR_f SPRITE_PREVIEW_SCALE = Game::Utils::FromFloat(2.0f);
-
 	class SpawnVehicleMenu : public MenuBase {
 	public:
 		SpawnVehicleMenu();
@@ -15,15 +14,8 @@ namespace ModMenuModule {
 
 	private:
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
-		void UpdateSpritePreview();
-		void UpdateSpritePreviewMargin();
 		void Spawn();
 
-		UiModule::SelectController<Game::CAR_MODEL4>* m_modelController = nullptr;
-		UiModule::SelectController<std::tuple<short, Game::PALETTE_BASE>>* m_remapController = nullptr;
-
-		UiModule::Margin* m_spritePreviewMargin = nullptr;
-		UiModule::Sprite* m_spritePreview = nullptr;
-		UiModule::SpriteOptions m_spritePreviewOptions;
+		SpawnVehicleSegment m_spawnSegment;
 	};
 }
