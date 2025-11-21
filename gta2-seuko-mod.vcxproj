@@ -216,6 +216,7 @@ exit /b 0
     <ClInclude Include="src\converters\cop-value.h" />
     <ClInclude Include="src\converters\default.h" />
     <ClInclude Include="src\converters\enabled-disabled.h" />
+    <ClInclude Include="src\converters\explosion-size.h" />
     <ClInclude Include="src\converters\float.h" />
     <ClInclude Include="src\converters\in-brackets.h" />
     <ClInclude Include="src\converters\key-code.h" />
