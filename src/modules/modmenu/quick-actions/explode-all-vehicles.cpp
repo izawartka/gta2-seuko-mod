@@ -23,9 +23,20 @@ const std::wstring& ModMenuModule::ExplodeAllVehiclesAction::GetTypeLabel()
 	return typeLabel;
 }
 
+ModMenuModule::ExplodeAllVehiclesSegment* ModMenuModule::ExplodeAllVehiclesAction::CreateSegmentInstance()
+{
+	return new ModMenuModule::ExplodeAllVehiclesSegment();
+}
+
 void ModMenuModule::ExplodeAllVehiclesAction::Execute()
 {
-	ModMenuModule::Utils::ExplodeAllCars(true, Game::EXPLOSION_SIZE_MEDIUM);
+	if (!m_data.has_value()) {
+		spdlog::error("SpawnVehicleAction::Execute: No data to execute action.");
+		return;
+	}
+
+	ExplodeAllVehiclesSegmentData data = m_data.value();
+	ModMenuModule::Utils::ExplodeAllCars(data.excludePlayerVehicle, data.explosionSize);
 }
 
 const std::wstring& ModMenuModule::ExplodeAllVehiclesAction::GetLabel() const
@@ -33,4 +44,4 @@ const std::wstring& ModMenuModule::ExplodeAllVehiclesAction::GetLabel() const
 	return typeLabel;
 }
 
-REGISTER_QUICK_ACTION(ExplodeAllVehiclesAction)
+REGISTER_QUICK_ACTION_WITH_SEGMENT(ExplodeAllVehiclesAction)

@@ -417,6 +417,15 @@
     <ClInclude Include="src\modules\modmenu\utils\save-game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\modules\modmenu\menus\world-menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\modmenu\quick-actions\explode-all-vehicles.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\modmenu\utils\explode-all-cars.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\modules\modmenu\segments\spawn-vehicle-segment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -618,6 +627,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\modmenu\quick-actions\save-game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\menus\world-menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\quick-actions\explode-all-vehicles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\modmenu\segments\spawn-vehicle-segment.cpp">

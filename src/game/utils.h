@@ -77,5 +77,14 @@ namespace Game {
 		static bool IsWeaponVehicleWeapon(WEAPON_INDEX weapon) {
 			return static_cast<int>(weapon) >= 15;
 		}
+
+		static std::vector<EXPLOSION_SIZE> GetAvailableExplosionSizes() {
+			return {
+				EXPLOSION_SIZE_NONE,
+				EXPLOSION_SIZE_SMALL,
+				EXPLOSION_SIZE_MEDIUM,
+				EXPLOSION_SIZE_LARGE
+			};
+		}
 	};
 }
