@@ -57,6 +57,31 @@ namespace ModMenuModule {
 			}
 			return typedSegment->SetSegmentData(m_data.value());
 		}
+
+		std::vector<uint8_t> SerializeData() const override {
+			if (!m_data.has_value()) {
+				spdlog::error("QuickActionWithSegment::SerializeData: No data to serialize.");
+				return {};
+			}
+			const DataT& data = m_data.value();
+			std::vector<uint8_t> buffer;
+			buffer.resize(sizeof(data));
+			std::memcpy(buffer.data(), &data, sizeof(data));
+			return buffer;
+		}
+
+		bool DeserializeData(const std::vector<uint8_t>& data) override {
+			if (data.size() != sizeof(DataT)) {
+				spdlog::error("QuickActionWithSegment::DeserializeData: Invalid data size.");
+				return false;
+			}
+			DataT dataValue;
+			std::memcpy(&dataValue, data.data(), sizeof(DataT));
+			m_data = dataValue;
+			OnDataChange();
+			return true;
+		}
+
 	protected:
 		QuickActionWithSegment() = default;
 
