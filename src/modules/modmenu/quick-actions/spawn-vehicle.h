@@ -10,7 +10,7 @@ namespace ModMenuModule {
 		virtual ~SpawnVehicleAction();
 		static const std::string& GetTypeId();
 		static const std::wstring& GetTypeLabel();
-		static Segment<SpawnVehicleSegmentData>* CreateSegmentInstance();
+		static SpawnVehicleSegment* CreateSegmentInstance();
 
 		void Execute() override;
 		const std::wstring& GetLabel() const override;

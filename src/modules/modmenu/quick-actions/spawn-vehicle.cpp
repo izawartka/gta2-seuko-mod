@@ -25,7 +25,7 @@ const std::wstring& ModMenuModule::SpawnVehicleAction::GetTypeLabel()
 	return typeLabel;
 }
 
-ModMenuModule::Segment<ModMenuModule::SpawnVehicleSegmentData>* ModMenuModule::SpawnVehicleAction::CreateSegmentInstance()
+ModMenuModule::SpawnVehicleSegment* ModMenuModule::SpawnVehicleAction::CreateSegmentInstance()
 {
 	return new SpawnVehicleSegment();
 }
@@ -48,7 +48,12 @@ const std::wstring& ModMenuModule::SpawnVehicleAction::GetLabel() const
 
 void ModMenuModule::SpawnVehicleAction::OnDataChange()
 {
-	m_label = L"Spawn " + CarModelConverter::ConvertToString(m_data->model);
+	if (m_data.has_value()) {
+		m_label = L"Spawn " + CarModelConverter::ConvertToString(m_data->model);
+	}
+	else {
+		m_label = typeLabel;
+	}
 }
 
 REGISTER_QUICK_ACTION_WITH_SEGMENT(SpawnVehicleAction)
