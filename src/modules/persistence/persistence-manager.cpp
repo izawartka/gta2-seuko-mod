@@ -3,7 +3,7 @@
 PersistenceModule::PersistenceManager* PersistenceModule::PersistenceManager::m_instance = nullptr;
 
 PersistenceModule::PersistenceManager::PersistenceManager() {
-	assert(!m_instance, "PersistenceManager instance already exists");
+	assert(!m_instance && "PersistenceManager instance already exists");
 	m_instance = this;
 }
 
@@ -12,7 +12,7 @@ PersistenceModule::PersistenceManager::~PersistenceManager() {
 }
 
 PersistenceModule::PersistenceManager* PersistenceModule::PersistenceManager::GetInstance() {
-	assert(m_instance != nullptr, "PersistenceManager not initialized!");
+	assert(m_instance != nullptr && "PersistenceManager not initialized!");
 	return m_instance;
 }
 

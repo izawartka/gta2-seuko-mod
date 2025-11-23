@@ -14,7 +14,7 @@ void ModMenuModule::SegmentBase::Detach()
 
 void ModMenuModule::SegmentBase::CreateSegment(ModMenuModule::MenuBase* menu, UiModule::Component* parent)
 {
-	assert(!m_vertCont, "Segment already created");
+	assert(!m_vertCont && "Segment already created");
 
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 

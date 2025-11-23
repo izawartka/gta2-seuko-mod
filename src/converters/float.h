@@ -42,7 +42,7 @@ public:
 			return static_cast<BaseT>(std::stod(text));
 		}
 		else {
-			assert(false, "Unsupported type for FloatConverter");
+			assert(false && "Unsupported type for FloatConverter");
 			return T{};
 		}
 	}
@@ -60,7 +60,7 @@ public:
 			return (c >= L'0' && c <= L'9');
 		}
 		else {
-			assert(false, "Unsupported type for FloatConverter");
+			assert(false && "Unsupported type for FloatConverter");
 			return false;
 		}
 	}

@@ -3,7 +3,7 @@
 KeyBindingModule::BindManager* KeyBindingModule::BindManager::m_instance = nullptr;
 
 KeyBindingModule::BindManager::BindManager() {
-	assert(!m_instance, "BindManager instance already exists");
+	assert(!m_instance && "BindManager instance already exists");
 	m_instance = this;
 }
 
@@ -12,7 +12,7 @@ KeyBindingModule::BindManager::~BindManager() {
 }
 
 KeyBindingModule::BindManager* KeyBindingModule::BindManager::GetInstance() {
-	assert(m_instance, "BindManager not initialized!");
+	assert(m_instance && "BindManager not initialized!");
 	return m_instance;
 }
 

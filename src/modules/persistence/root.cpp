@@ -4,7 +4,7 @@ PersistenceModule::RootModule* PersistenceModule::RootModule::m_instance = nullp
 
 PersistenceModule::RootModule::RootModule() {
 
-	assert(m_instance == nullptr, "PersistenceModule::RootModule instance already exists!");
+	assert(m_instance == nullptr && "PersistenceModule::RootModule instance already exists!");
 	m_instance = this;
 	spdlog::info("PersistenceModule::RootModule module initialized.");
 }

@@ -6,7 +6,7 @@ ModMenuModule::QuickActionManager* ModMenuModule::QuickActionManager::m_instance
 
 ModMenuModule::QuickActionManager* ModMenuModule::QuickActionManager::GetInstance() 
 {
-	assert(m_instance, "QuickActionManager not initialized!");
+	assert(m_instance && "QuickActionManager not initialized!");
 	return m_instance;
 }
 
@@ -158,7 +158,7 @@ void ModMenuModule::QuickActionManager::Remove(QuickActionId actionId)
 
 ModMenuModule::QuickActionManager::QuickActionManager() 
 {
-	assert(!m_instance, "QuickActionManager instance already exists");
+	assert(!m_instance && "QuickActionManager instance already exists");
 	m_instance = this;
 }
 

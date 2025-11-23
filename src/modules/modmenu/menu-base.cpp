@@ -15,7 +15,7 @@ void ModMenuModule::MenuBase::Detach()
 
 void ModMenuModule::MenuBase::CreateMenu(std::wstring title, UiModule::Component*& vertCont)
 {
-	assert(!m_mainComponent && !m_menuController, "Menu already created");
+	assert(!m_mainComponent && !m_menuController && "Menu already created");
 
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	ModMenuOptions options = RootModule::GetInstance()->GetOptions();

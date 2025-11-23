@@ -4,8 +4,8 @@ KeyBindingModule::RootModule* KeyBindingModule::RootModule::m_instance = nullptr
 
 KeyBindingModule::RootModule::RootModule() {
 
-	assert(PersistenceModule::RootModule::GetInstance() != nullptr, "KeyBindingModule::RootModule requires PersistenceModule::RootModule to be initialized first!");
-	assert(m_instance == nullptr, "KeyBindingModule::RootModule instance already exists!");
+	assert(PersistenceModule::RootModule::GetInstance() != nullptr && "KeyBindingModule::RootModule requires PersistenceModule::RootModule to be initialized first!");
+	assert(m_instance == nullptr && "KeyBindingModule::RootModule instance already exists!");
 	m_instance = this;
 	spdlog::info("KeyBindingModule::RootModule module initialized.");
 }

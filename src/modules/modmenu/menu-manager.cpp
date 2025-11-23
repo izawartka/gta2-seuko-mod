@@ -4,12 +4,12 @@
 ModMenuModule::MenuManager* ModMenuModule::MenuManager::m_instance = nullptr;
 
 ModMenuModule::MenuManager* ModMenuModule::MenuManager::GetInstance() {
-	assert(m_instance, "MenuManager not initialized!");
+	assert(m_instance && "MenuManager not initialized!");
 	return m_instance;
 }
 
 ModMenuModule::MenuManager::MenuManager() {
-	assert(!m_instance, "MenuManager instance already exists");
+	assert(!m_instance && "MenuManager instance already exists");
 	m_instance = this;
 }
 

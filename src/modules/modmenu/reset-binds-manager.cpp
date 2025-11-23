@@ -4,12 +4,12 @@
 ModMenuModule::ResetBindsManager* ModMenuModule::ResetBindsManager::m_instance = nullptr;
 
 ModMenuModule::ResetBindsManager* ModMenuModule::ResetBindsManager::GetInstance() {
-	assert(m_instance, "ResetBindsManager not initialized!");
+	assert(m_instance && "ResetBindsManager not initialized!");
 	return m_instance;
 }
 
 ModMenuModule::ResetBindsManager::ResetBindsManager() {
-	assert(!m_instance, "ResetBindsManager instance already exists");
+	assert(!m_instance && "ResetBindsManager instance already exists");
 	m_instance = this;
 }
 
