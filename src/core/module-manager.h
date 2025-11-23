@@ -67,10 +67,10 @@ namespace Core
 			}
 		}
 
-    private:
-        friend class Core;
-        ModuleManager();
-        ~ModuleManager();
+	private:
+		friend class Core;
+		ModuleManager();
+		~ModuleManager();
 		ModuleManager(const ModuleManager&) = delete;
 		ModuleManager& operator=(const ModuleManager&) = delete;
 

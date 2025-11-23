@@ -3,12 +3,12 @@
 
 namespace UiModule
 {
-    class Controller
-    {
-    public:
-        virtual ~Controller() = default;
+	class Controller
+	{
+	public:
+		virtual ~Controller() = default;
 
-    protected:
-        Controller() = default;
-    };
+	protected:
+		Controller() = default;
+	};
 }
