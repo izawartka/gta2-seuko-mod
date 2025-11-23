@@ -25,7 +25,7 @@ const KeyBindingModule::Key* KeyBindingModule::BindManager::GetBind(const std::s
 	return nullptr;
 }
 
-const KeyBindingModule::Key* KeyBindingModule::BindManager::GetOrCreateBind(const std::string& name, KeyBindingModule::Key defaultKey)
+const KeyBindingModule::Key* KeyBindingModule::BindManager::GetOrCreateBind(const std::string& name, const KeyBindingModule::Key& defaultKey)
 {
 	auto it = m_keyBinds.find(name);
 	if (it != m_keyBinds.end()) {
@@ -35,7 +35,7 @@ const KeyBindingModule::Key* KeyBindingModule::BindManager::GetOrCreateBind(cons
 	return SetBindNoLookup(name, defaultKey);
 }
 
-const KeyBindingModule::Key* KeyBindingModule::BindManager::SetBind(const std::string& name, KeyBindingModule::Key newKey)
+const KeyBindingModule::Key* KeyBindingModule::BindManager::SetBind(const std::string& name, const KeyBindingModule::Key& newKey)
 {
 	spdlog::debug("Setting key bind: {}", name);
 	auto it = m_keyBinds.find(name);
@@ -58,7 +58,7 @@ bool KeyBindingModule::BindManager::RemoveBind(const std::string& name)
 	return true;
 }
 
-KeyBindingModule::Key* KeyBindingModule::BindManager::SetBindNoLookup(const std::string& name, Key newKey)
+KeyBindingModule::Key* KeyBindingModule::BindManager::SetBindNoLookup(const std::string& name, const Key& newKey)
 {
 	auto keyPtr = std::make_unique<KeyBindingModule::Key>(newKey);
 	KeyBindingModule::Key* retPtr = keyPtr.get();
