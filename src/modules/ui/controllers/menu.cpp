@@ -1,7 +1,7 @@
 #include "menu.h"
 #include "var-text.h"
 
-UiModule::MenuController::MenuController(MenuControllerOptions options)
+UiModule::MenuController::MenuController(const MenuControllerOptions& options)
 	: StandardBindsSupport::StandardBindsSupport(options.keyBindOptions)
 {
 	m_options = options;

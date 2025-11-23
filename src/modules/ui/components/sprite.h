@@ -15,11 +15,11 @@ namespace UiModule {
 
 	class Sprite : public Component {
 	public:
-		Sprite(Component* parent, SpriteOptions options);
+		Sprite(Component* parent, const SpriteOptions& options);
 		virtual void Draw() override;
 
-		void SetOptions(SpriteOptions options);
-		SpriteOptions GetOptions() const { return m_options; }
+		void SetOptions(const SpriteOptions& options);
+		const SpriteOptions& GetOptions() const { return m_options; }
 
 		int GetSpriteWidth() const { return m_spriteWidth; }
 		int GetSpriteHeight() const { return m_spriteHeight; }

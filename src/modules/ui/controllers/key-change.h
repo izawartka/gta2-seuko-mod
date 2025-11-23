@@ -8,7 +8,7 @@
 #include "../../../events/keyboard.h"
 
 namespace UiModule {
-	using KeyChangeSaveCallback = std::function<void(KeyBindingModule::Key newValue)>;
+	using KeyChangeSaveCallback = std::function<void(const KeyBindingModule::Key&)>;
 
 	struct KeyChangeControllerOptions {
 		std::wstring prefix = L"";
@@ -23,7 +23,7 @@ namespace UiModule {
 
 	class KeyChangeController : public MenuItemController, public Core::EventListenerSupport, public StandardBindsSupport {
 	public:
-		KeyChangeController(Text* text, std::optional<KeyBindingModule::Key> value, KeyChangeControllerOptions options = {})
+		KeyChangeController(Text* text, const std::optional<KeyBindingModule::Key>& value, const KeyChangeControllerOptions& options = {})
 			: StandardBindsSupport::StandardBindsSupport(options.keyBindOptions)
 		{
 			m_textComponent = text;
@@ -80,8 +80,7 @@ namespace UiModule {
 			m_saveCallback = callback;
 		}
 
-		void SetValue(std::optional<KeyBindingModule::Key> value) {
-			bool hasValue = value.has_value();
+		void SetValue(const std::optional<KeyBindingModule::Key>& value) {
 			m_value = value;
 
 			if (m_editing) return;
@@ -90,12 +89,12 @@ namespace UiModule {
 			UpdateText();
 		}
 
-		std::optional<KeyBindingModule::Key> GetValue() const {
+		const std::optional<KeyBindingModule::Key>& GetValue() const {
 			return m_value;
 		}
 
 	protected:
-		void Save(KeyBindingModule::Key newValue) {
+		void Save(const KeyBindingModule::Key& newValue) {
 			if (!m_editing) return;
 			m_value = newValue;
 

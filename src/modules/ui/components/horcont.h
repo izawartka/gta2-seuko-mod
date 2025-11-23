@@ -16,7 +16,7 @@ namespace UiModule {
 			Game::SCR_f maxHeight = 0;
 			for (auto child : m_children) {
 				child->SetPosition(currentX, m_rect.y);
-				Rect childRect = child->GetRect();
+				const Rect& childRect = child->GetRect();
 				currentX += childRect.width;
 				maxHeight = std::max(maxHeight, childRect.height);
 			}

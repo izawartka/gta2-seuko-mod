@@ -53,7 +53,7 @@ void UiModule::Component::RemoveChild(Component* child)
 void UiModule::Component::UpdateChildrenPos()
 {
 	for (auto child : m_children) {
-		child->SetPosition(m_rect.x, m_rect.y);
+		child->SetPosition(GetRect().x, GetRect().y);
 	}
 }
 
@@ -66,9 +66,10 @@ void UiModule::Component::SetPosition(Game::SCR_f x, Game::SCR_f y)
 
 void UiModule::Component::OnChildSizeUpdate(Component* child)
 {
-	Rect prevRect = m_rect;
+	Rect prevRect = GetRect();
 	UpdateChildrenPos();
-	if (m_parent && (m_rect.width != prevRect.width || m_rect.height != prevRect.height)) {
+	const Rect& rect = GetRect();
+	if (m_parent && (rect.width != prevRect.width || rect.height != prevRect.height)) {
 		m_parent->OnChildSizeUpdate(this);
 	}
 }

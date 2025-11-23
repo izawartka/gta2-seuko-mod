@@ -13,7 +13,7 @@ namespace UiModule {
 
 	class Selectable : public Component {
 	public:
-		Selectable(Component* parent, SelectableOptions options = {});
+		Selectable(Component* parent, const SelectableOptions& options = {});
 		virtual void Draw() override;
 
 		virtual void UpdateChildrenPos() override;

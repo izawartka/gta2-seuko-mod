@@ -1,6 +1,6 @@
 #include "sprite.h"
 
-UiModule::Sprite::Sprite(Component* parent, SpriteOptions options)
+UiModule::Sprite::Sprite(Component* parent, const SpriteOptions& options)
 {
 	SetOptions(options);
 
@@ -72,7 +72,7 @@ void UiModule::Sprite::Draw()
 	);
 }
 
-void UiModule::Sprite::SetOptions(SpriteOptions options)
+void UiModule::Sprite::SetOptions(const SpriteOptions& options)
 {
 	m_options = options;
 	RecalculateSize();

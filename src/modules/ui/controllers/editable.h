@@ -23,7 +23,7 @@ namespace UiModule {
 	template <typename T>
 	class EditableController : public MenuItemController, public Core::EventListenerSupport, public ConverterSupport<T>, public StandardBindsSupport {
 	public:
-		EditableController(Text* text, std::optional<T> value, EditableControllerOptions options = {})
+		EditableController(Text* text, const std::optional<T>& value, const EditableControllerOptions& options = {})
 			: StandardBindsSupport::StandardBindsSupport(options.keyBindOptions)
 		{
 			static_assert(std::is_copy_constructible<T>::value, "T must be copy-constructible");
@@ -96,7 +96,7 @@ namespace UiModule {
 			m_saveCallback = callback;
 		}
 
-		void SetValue(std::optional<T> value) {
+		void SetValue(const std::optional<T>& value) {
 			m_value = value;
 			if (m_editing) {
 				// do not update displayed/editing buffer while editing
@@ -107,7 +107,7 @@ namespace UiModule {
 			UpdateText();
 		}
 
-		std::optional<T> GetValue() const {
+		const std::optional<T>& GetValue() const {
 			return m_value;
 		}
 
@@ -184,12 +184,14 @@ namespace UiModule {
 				Save();
 				SetEditing(!m_editing);
 				return;
-			} else if (keyCode == Game::KeyCode::DIK_BACK) {
+			}
+			else if (keyCode == Game::KeyCode::DIK_BACK) {
 				if (!m_textBuffer.empty()) {
 					m_textBuffer.pop_back();
 				}
 				UpdateText();
-			} else {
+			}
+			else {
 				char c = Game::GetCharFromKeyCode(keyCode, isShiftPressed, false); /// TODO handle caps lock
 				if (c == '\0') return;
 

@@ -14,7 +14,7 @@ namespace UiModule {
 
 	class ButtonController : public MenuItemController, public Core::EventListenerSupport, public StandardBindsSupport {
 	public:
-		ButtonController(Text* text, ButtonControllerOptions options = {})
+		ButtonController(Text* text, const ButtonControllerOptions& options = {})
 			: StandardBindsSupport::StandardBindsSupport(options.keyBindOptions)
 		{
 			m_textComponent = text;

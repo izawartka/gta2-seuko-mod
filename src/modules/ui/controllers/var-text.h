@@ -15,7 +15,7 @@ namespace UiModule {
 	template <typename ValueT, typename ResRetT = typename Core::DefaultResRetT<ValueT>::type>
 	class VarTextController : public MenuItemController, public Core::EventListenerSupport, public ConverterSupport<ValueT> {
 	public:
-		VarTextController(Text* text, Core::Resolver<ResRetT> resolver, VarTextControllerOptions options = {}) {
+		VarTextController(Text* text, Core::Resolver<ResRetT> resolver, const VarTextControllerOptions& options = {}) {
 			static_assert(std::is_copy_constructible<ValueT>::value, "ValueT must be copy-constructible");
 			m_textComponent = text;
 			m_options = options;

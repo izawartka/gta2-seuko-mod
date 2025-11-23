@@ -28,7 +28,7 @@ namespace UiModule {
 	template <typename T>
 	class SelectController : public MenuItemController, public Core::EventListenerSupport, public ConverterSupport<T>, public StandardBindsSupport {
 	public:
-		SelectController(Text* text, SelectOptionList<T> optionList, std::optional<T> value, SelectControllerOptions options = {})
+		SelectController(Text* text, const SelectOptionList<T>& optionList, const std::optional<T>& value, const SelectControllerOptions& options = {})
 			: StandardBindsSupport::StandardBindsSupport(options.keyBindOptions) 
 		{
 			static_assert(std::is_copy_constructible<T>::value, "T must be copy-constructible");
@@ -92,7 +92,7 @@ namespace UiModule {
 			m_saveCallback = callback;
 		}
 
-		void SetValue(std::optional<T> value) {
+		void SetValue(const std::optional<T>& value) {
 			bool hasValue = value.has_value();
 			m_value = value;
 
@@ -110,7 +110,7 @@ namespace UiModule {
 			UpdateText();
 		}
 
-		std::optional<T> GetValue() const {
+		const std::optional<T>& GetValue() const {
 			return m_value;
 		}
 

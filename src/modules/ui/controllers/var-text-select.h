@@ -28,7 +28,7 @@ namespace UiModule {
 	template <typename ValueT, typename ResRetT = typename Core::DefaultResRetT<ValueT>::type>
 	class VarTextSelectController : public MenuItemController, public Core::EventListenerSupport, public ConverterSupport<ValueT>, public StandardBindsSupport {
 	public:
-		VarTextSelectController(Text* text, Core::Resolver<ResRetT> resolver, VarTextSelectOptionList<ValueT> optionList, VarTextSelectControllerOptions options = {})
+		VarTextSelectController(Text* text, Core::Resolver<ResRetT> resolver, const VarTextSelectOptionList<ValueT>& optionList, const VarTextSelectControllerOptions& options = {})
 			: StandardBindsSupport::StandardBindsSupport(options.keyBindOptions)
 		{
 			static_assert(std::is_copy_constructible<ValueT>::value, "ValueT must be copy-constructible");

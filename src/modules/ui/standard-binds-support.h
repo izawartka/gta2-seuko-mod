@@ -30,7 +30,7 @@ namespace UiModule {
 		}
 
 	protected:
-		StandardBindsSupport(StandardBindsSupportOptions options = {}) {
+		StandardBindsSupport(const StandardBindsSupportOptions& options = {}) {
 			KeyBindingModule::BindManager* bindManager = KeyBindingModule::BindManager::GetInstance();
 			m_keyBindPrev = bindManager->GetOrCreateBind(options.keyBindPrevName, KeyBindingModule::Key::ToNoShift(options.keyBindPrevDefault));
 			m_keyBindNext = bindManager->GetOrCreateBind(options.keyBindNextName, KeyBindingModule::Key::ToNoShift(options.keyBindNextDefault));

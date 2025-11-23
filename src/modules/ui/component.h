@@ -14,7 +14,7 @@ namespace UiModule {
 		virtual void UpdateChildrenPos();
 		void SetPosition(Game::SCR_f x, Game::SCR_f y);
 
-		Rect GetRect() const { return m_rect; }
+		const Rect& GetRect() const { return m_rect; }
 		Component* GetParent() const { return m_parent; }
 		std::vector<Component*> GetChildren() const { return m_children; }
 		void OnChildSizeUpdate(Component* child);

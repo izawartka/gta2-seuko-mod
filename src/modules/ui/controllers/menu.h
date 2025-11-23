@@ -21,7 +21,7 @@ namespace UiModule {
 
 	class MenuController : public Controller, public Core::EventListenerSupport, public StandardBindsSupport {
 	public:
-		MenuController(MenuControllerOptions options = {});
+		MenuController(const MenuControllerOptions& options = {});
 		virtual ~MenuController();
 
 		template<typename ComponentT, typename... Args>

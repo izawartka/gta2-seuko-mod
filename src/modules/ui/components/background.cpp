@@ -1,6 +1,6 @@
 #include "background.h"
 
-UiModule::Background::Background(Component* parent, BackgroundOptions options)
+UiModule::Background::Background(Component* parent, const BackgroundOptions& options)
 {
 	SetOptions(options);
 
@@ -69,7 +69,7 @@ void UiModule::Background::UpdateChildrenPos() {
 	Game::SCR_f maxWidth = 0;
 	for (auto child : m_children) {
 		child->SetPosition(m_rect.x, m_rect.y);
-		Rect childRect = child->GetRect();
+		const Rect& childRect = child->GetRect();
 		maxWidth = std::max(maxWidth, childRect.width);
 		maxHeight = std::max(maxHeight, childRect.height);
 	}

@@ -1,6 +1,6 @@
 #include "selectable.h"
 
-UiModule::Selectable::Selectable(Component* parent, SelectableOptions options)
+UiModule::Selectable::Selectable(Component* parent, const SelectableOptions& options)
 {
 	m_options = options;
 	m_rect.width = options.markerOffsetX;
@@ -37,7 +37,7 @@ void UiModule::Selectable::UpdateChildrenPos()
 	Game::SCR_f maxHeight = 0;
 	for (auto child : m_children) {
 		child->SetPosition(m_rect.x + m_options.markerOffsetX, m_rect.y);
-		Rect childRect = child->GetRect();
+		const Rect& childRect = child->GetRect();
 		maxWidth = std::max(maxWidth, m_options.markerOffsetX + childRect.width);
 		maxHeight = std::max(maxHeight, childRect.height);
 

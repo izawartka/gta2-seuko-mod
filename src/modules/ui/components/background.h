@@ -9,12 +9,12 @@ namespace UiModule {
 
 	class Background : public Component {
 	public:
-		Background(Component* parent, BackgroundOptions options);
+		Background(Component* parent, const BackgroundOptions& options);
 		virtual void Draw() override;
 		virtual void UpdateChildrenPos() override;
 
-		void SetOptions(BackgroundOptions options) { m_options = options; }
-		BackgroundOptions GetOptions() const { return m_options; }
+		void SetOptions(const BackgroundOptions& options) { m_options = options; }
+		const BackgroundOptions& GetOptions() const { return m_options; }
 
 	protected:
 		BackgroundOptions m_options;
