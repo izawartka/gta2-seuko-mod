@@ -23,10 +23,10 @@ namespace Core
 	struct DefaultResRetT<std::tuple<Values...>> { using type = std::tuple<Values*...>; };
 
 	template<typename ValueT>
-	using WatchedListener = std::function<void(std::optional<ValueT>, std::optional<ValueT>)>;
+	using WatchedListener = std::function<void(const std::optional<ValueT>&, const std::optional<ValueT>&)>;
 
 	template<typename ValueT, typename U>
-	using WatchedMethodListener = void (U::*)(std::optional<ValueT>, std::optional<ValueT>);
+	using WatchedMethodListener = void (U::*)(const std::optional<ValueT>&, const std::optional<ValueT>&);
 
 	using WatchedId = size_t;
 }

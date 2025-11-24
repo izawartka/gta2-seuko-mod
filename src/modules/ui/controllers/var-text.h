@@ -64,7 +64,7 @@ namespace UiModule {
 			m_textComponent->SetText(m_options.prefix + m_textBuffer + m_options.suffix);
 		}
 
-		void OnValueUpdate(std::optional<ValueT> oldValue, std::optional<ValueT> newValue) {
+		void OnValueUpdate(const std::optional<ValueT>& oldValue, const std::optional<ValueT>& newValue) {
 			m_value = newValue;
 			UpdateTextBuffer();
 			UpdateText();

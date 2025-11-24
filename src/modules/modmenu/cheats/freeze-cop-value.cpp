@@ -46,7 +46,7 @@ void ModMenuModule::FreezeCopValueCheat::OnDisable()
 	m_watchedCopValue = nullptr;
 }
 
-void ModMenuModule::FreezeCopValueCheat::OnValueUpdate(std::optional<short> oldValue, std::optional<short> newValue)
+void ModMenuModule::FreezeCopValueCheat::OnValueUpdate(const std::optional<short>& oldValue, const std::optional<short>& newValue)
 {
 	if (m_justEnabled) {
 		m_copValue = newValue.value_or(0);
@@ -54,7 +54,7 @@ void ModMenuModule::FreezeCopValueCheat::OnValueUpdate(std::optional<short> oldV
 		return;
 	}
 
-	m_watchedCopValue->SetValueNoNotify(m_copValue);
+	m_watchedCopValue->SetValueNow(m_copValue);
 }
 
 void ModMenuModule::FreezeCopValueCheat::OnCopValueChange(CopValueChangeEvent& event)

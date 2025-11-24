@@ -25,8 +25,8 @@ namespace ModMenuModule {
 		virtual void OnDisable() override;
 		virtual bool AutoEnableOnAttach() const override { return true; }
 
-		void OnValueUpdate(std::optional<Game::Car*> oldValue, std::optional<Game::Car*> newValue);
-		void OnValueUpdate(std::optional<Game::uint> oldValue, std::optional<Game::uint> newValue);
+		void OnCurrentCarUpdate(const std::optional<Game::Car*>& oldValue, const std::optional<Game::Car*>& newValue);
+		void OnLastCarIdUpdate(const std::optional<Game::uint>& oldValue, const std::optional<Game::uint>& newValue);
 		void SetState(LastCarState state);
 
 		Core::Resolver<Game::Car*> m_currentCarResolver = nullptr;

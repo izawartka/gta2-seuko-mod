@@ -10,6 +10,8 @@ namespace Core
 		virtual ~WatchedBase() = default;
 		WatchedBase(const WatchedBase&) = delete;
 		WatchedBase& operator=(const WatchedBase&) = delete;
+		WatchedBase(WatchedBase&&) = delete;
+		WatchedBase& operator=(WatchedBase&&) = delete;
 
 		virtual void Update() = 0;
 		virtual WatchedId GetId() const final { return m_id; }
@@ -30,25 +32,30 @@ namespace Core
 	template<typename WatchedT>
 	static constexpr bool WatchedHasSetValue_v = WatchedCapabilities<WatchedT>::has_set_value;
 
-	template<typename WatchedT>
-	static constexpr bool WatchedHasGetPointer_v = WatchedCapabilities<WatchedT>::has_get_pointer;
-
 	// Specialization for value types
 	template<typename T>
 	class Watched<T, T> : public WatchedBase {
 	public:
-		std::optional<T> GetValue() {
-			return m_resolver();
+		Resolver<T> GetResolver() {
+			return m_resolver;
 		}
+
+		const std::optional<T>& GetSavedValue() const {
+			return m_savedValue;
+		}
+
+		// No SetValue for value types (read-only)
 
 		void Update() override {
 			T value = m_resolver();
 
-			if (m_needsUpdate || !m_lastValue.has_value() || value != m_lastValue.value()) {
-				std::optional<T> lastValue = m_lastValue;
+			bool changed = !m_savedValue.has_value() || (value != m_savedValue.value());
+
+			if (m_needsUpdate || changed) {
+				std::optional<T> lastValue = m_savedValue;
 				m_needsUpdate = false;
-				m_lastValue = value;
-				m_listener(lastValue, value);
+				m_savedValue = value;
+				m_listener(lastValue, m_savedValue);
 			}
 		}
 
@@ -62,58 +69,70 @@ namespace Core
 
 		Resolver<T> m_resolver;
 		WatchedListener<T> m_listener;
-		std::optional<T> m_lastValue;
+		std::optional<T> m_savedValue = std::nullopt;
 	};
 
 	template<typename ValueT, typename ResRetT>
 	struct WatchedCapabilities<Watched<ValueT, ResRetT>> {
 		static constexpr bool has_set_value = false;
-		static constexpr bool has_get_pointer = false;
 	};
 
 	// Specialization for ptr types
 	template<typename T>
 	class Watched<T, T*> : public WatchedBase {
 	public:
-		T* GetPointer() {
-			return m_resolver();
+		Resolver<T> GetResolver() {
+			return m_resolver;
 		}
 
-		std::optional<T> GetValue() {
-			T* p = m_resolver();
-			if (p) return *p;
-			return std::nullopt;
+		const std::optional<T>& GetSavedValue() const {
+			return m_savedValue;
 		}
 
-		bool SetValue(T value) {
-			T* p = m_resolver();
-			if (p) {
-				*p = value;
-				return true;
-			}
-			return false;
-		}
-
-		bool SetValueNoNotify(T value) {
-			if (SetValue(value)) {
-				m_lastValue = value;
-				return true;
+		void SetValue(const T& newValue, bool notify = false) {
+			if (m_nextValue) {
+				spdlog::warn("Watched::SetValue: Overwriting previously scheduled value change");
 			}
 
-			return false;
+			m_nextValue = newValue;
+			m_nextValueNotify = notify;
+		}
+
+		bool SetValueNow(const T& newValue, bool notify = false) {
+			T* valuePtr = m_resolver();
+			if (valuePtr == nullptr) return false;
+			*valuePtr = newValue;
+			if(!notify) {
+				m_savedValue = newValue;
+			}
+			return true;
 		}
 
 		void Update() override {
-			T* p = m_resolver();
-			bool present = (p != nullptr);
-			std::optional<T> value = std::nullopt;
-			if (present) value = *p;
+			T* valuePtr = m_resolver();
+			bool present = (valuePtr != nullptr);
 
-			if (m_needsUpdate || value != m_lastValue) {
-				std::optional<T> lastValue = m_lastValue;
+			if (m_nextValue.has_value()) {
+				if (present) {
+					*valuePtr = *m_nextValue;
+					if(!m_nextValueNotify) {
+						m_savedValue = *m_nextValue;
+					}
+				}
+				else {
+					spdlog::warn("Watched::Update: Tried to set value but pointer was null");
+				}
+				m_nextValue = std::nullopt;
+			}
+
+			bool changed = (present != m_savedValue.has_value()) ||
+				(present && m_savedValue.has_value() && (*valuePtr != m_savedValue.value()));
+
+			if (m_needsUpdate || changed) {
+				std::optional<T> lastValue = m_savedValue;
 				m_needsUpdate = false;
-				m_lastValue = value;
-				m_listener(lastValue, value);
+				m_savedValue = present ? std::optional<T>(*valuePtr) : std::nullopt;
+				m_listener(lastValue, m_savedValue);
 			}
 		}
 
@@ -128,42 +147,42 @@ namespace Core
 
 		Resolver<T*> m_resolver;
 		WatchedListener<T> m_listener;
-		std::optional<T> m_lastValue;
+		std::optional<T> m_savedValue = std::nullopt;
+		std::optional<T> m_nextValue = std::nullopt;
+		bool m_nextValueNotify = false;
 	};
 
 	template<typename T>
 	struct WatchedCapabilities<Watched<T, T*>> {
 		static constexpr bool has_set_value = true;
-		static constexpr bool has_get_pointer = true;
 	};
 
 	// Specialization for const ptr types
 	template<typename T>
 	class Watched<T, const T*> : public WatchedBase {
 	public:
-		const T* GetPointer() {
-			return m_resolver();
+		Resolver<const T*> GetResolver() {
+			return m_resolver;
 		}
 
-		std::optional<T> GetValue() {
-			const T* p = m_resolver();
-			if (p) return *p;
-			return std::nullopt;
+		const std::optional<std::remove_const_t<T>>& GetSavedValue() const {
+			return m_savedValue;
 		}
 
 		// No SetValue for const types (read-only)
 
 		void Update() override {
-			const T* p = m_resolver();
-			bool present = (p != nullptr);
-			std::optional<std::remove_const_t<T>> value = std::nullopt;
-			if (present) value = *p;
+			const T* valuePtr = m_resolver();
+			bool present = (valuePtr != nullptr);
 
-			if (m_needsUpdate || value != m_lastValue) {
-				std::optional<std::remove_const_t<T>> lastValue = m_lastValue;
+			bool changed = (present != m_savedValue.has_value()) ||
+				(present && m_savedValue.has_value() && (*valuePtr != m_savedValue.value()));
+
+			if (m_needsUpdate || changed) {
+				std::optional<std::remove_const_t<T>> lastValue = m_savedValue;
 				m_needsUpdate = false;
-				m_lastValue = value;
-				m_listener(lastValue, value);
+				m_savedValue = present ? std::optional<std::remove_const_t<T>>(*valuePtr) : std::nullopt;
+				m_listener(lastValue, m_savedValue);
 			}
 		}
 
@@ -178,14 +197,13 @@ namespace Core
 
 		Resolver<const T*> m_resolver;
 		WatchedListener<T> m_listener;
-		std::optional<std::remove_const_t<T>> m_lastValue;
+		std::optional<std::remove_const_t<T>> m_savedValue;
 		bool m_needsUpdate = true;
 	};
 
 	template<typename T>
 	struct WatchedCapabilities<Watched<T, const T*>> {
 		static constexpr bool has_set_value = false;
-		static constexpr bool has_get_pointer = true;
 	};
 
 	// Specialization for tuple types where resolver returns a tuple of pointers
@@ -195,39 +213,57 @@ namespace Core
 		using Tuple = std::tuple<Values...>;
 		using PtrTuple = std::tuple<Values*...>;
 
-		// No GetPointer for tuple
-
-		std::optional<Tuple> GetValue() {
-			PtrTuple ptrs = m_resolver();
-			if (any_null(ptrs)) return std::nullopt;
-			return std::optional<Tuple>(deref_tuple(ptrs));
+		Resolver<PtrTuple> GetResolver() {
+			return m_resolver;
 		}
 
-		bool SetValue(Tuple value) {
+		const std::optional<Tuple>& GetSavedValue() const {
+			return m_savedValue;
+		}
+
+		void SetValue(const Tuple& newValue, bool notify = false) {
+			if (m_nextValue) {
+				spdlog::warn("Watched::SetValue: Overwriting previously scheduled value change");
+			}
+
+			m_nextValue = newValue;
+			m_nextValueNotify = notify;
+		}
+
+		bool SetValueNow(const Tuple& newValue, bool notify = false) {
 			PtrTuple ptrs = m_resolver();
 			if (any_null(ptrs)) return false;
-			assign_tuple(ptrs, value);
-			return true;
-		}
-
-		bool SetValueNoNotify(Tuple value) {
-			if (SetValue(value)) {
-				m_lastValue = value;
-				return true;
+			assign_tuple(ptrs, newValue);
+			if (!notify) {
+				m_savedValue = newValue;
 			}
-			return false;
+			return true;
 		}
 
 		void Update() override {
 			PtrTuple ptrs = m_resolver();
 			bool present = !any_null(ptrs);
+
+			if (m_nextValue.has_value()) {
+				if (present) {
+					assign_tuple(ptrs, *m_nextValue);
+					if (!m_nextValueNotify) {
+						m_savedValue = *m_nextValue;
+					}
+				}
+				else {
+					spdlog::warn("Watched::Update: Tried to set value but pointer was null");
+				}
+				m_nextValue = std::nullopt;
+			}
+
 			std::optional<Tuple> value = std::nullopt;
 			if (present) value = deref_tuple(ptrs);
 
-			if (m_needsUpdate || value != m_lastValue) {
-				std::optional<Tuple> lastValue = m_lastValue;
+			if (m_needsUpdate || value != m_savedValue) {
+				std::optional<Tuple> lastValue = m_savedValue;
 				m_needsUpdate = false;
-				m_lastValue = value;
+				m_savedValue = value;
 				m_listener(lastValue, value);
 			}
 		}
@@ -272,13 +308,13 @@ namespace Core
 
 		Resolver<PtrTuple> m_resolver;
 		WatchedListener<Tuple> m_listener;
-		std::optional<Tuple> m_lastValue;
-		bool m_needsUpdate = true;
+		std::optional<Tuple> m_savedValue = std::nullopt;
+		std::optional<Tuple> m_nextValue = std::nullopt;
+		bool m_nextValueNotify = false;
 	};
 
 	template<typename... Values>
 	struct WatchedCapabilities<Watched<std::tuple<Values...>, std::tuple<Values*...>>> {
 		static constexpr bool has_set_value = true;
-		static constexpr bool has_get_pointer = false;
 	};
 }

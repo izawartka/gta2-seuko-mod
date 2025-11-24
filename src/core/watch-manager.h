@@ -28,7 +28,7 @@ namespace Core
 			static_assert(std::is_copy_constructible<ValueT>::value, "ValueT must be copy-constructible");
 			static_assert(std::is_base_of_v<EventBase, EventT> || std::is_same<EventT, void>::value, "EventT must derive from Core::Event or be void");
 
-			auto listener = [instance, method](std::optional<ValueT> oldVal, std::optional<ValueT> newVal) {
+			auto listener = [instance, method](const std::optional<ValueT>& oldVal, const std::optional<ValueT>& newVal) {
 				(instance->*method)(oldVal, newVal);
 			};
 			return Watch<EventT, ValueT, ResRetT>(std::move(resolver), std::move(listener));

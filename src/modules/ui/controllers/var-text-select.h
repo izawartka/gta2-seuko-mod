@@ -147,7 +147,7 @@ namespace UiModule {
 			}
 			else {
 				if constexpr (Core::WatchedHasSetValue_v<Core::Watched<ValueT, ResRetT>>) {
-					if (!m_watched->SetValue(newValue)) {
+					if (!m_watched->SetValueNow(newValue, true)) {
 						spdlog::warn("Failed to set new value on watched variable");
 					}
 				}
@@ -187,7 +187,7 @@ namespace UiModule {
 			m_textComponent->SetText(m_options.prefix + m_textBuffer + marker + m_options.suffix);
 		}
 
-		void OnValueUpdate(std::optional<ValueT> oldValue, std::optional<ValueT> newValue) {
+		void OnValueUpdate(const std::optional<ValueT>& oldValue, const std::optional<ValueT>& newValue) {
 			if (!m_options.liveMode && m_editing) {
 				spdlog::warn("Tried to update VarTextSelectController value while editing in non-live mode");
 				return;

@@ -51,13 +51,13 @@ void ModMenuModule::LastCarCheat::OnEnable()
 	m_watchedCurrentCar = Core::WatchManager::GetInstance()->Watch<GameTickEvent, Game::Car*, Game::Car*>(
 		m_currentCarResolver,
 		this,
-		&ModMenuModule::LastCarCheat::OnValueUpdate
+		&ModMenuModule::LastCarCheat::OnCurrentCarUpdate
 	);
 
 	m_watchedLastCarId = Core::WatchManager::GetInstance()->Watch<GameTickEvent, Game::uint>(
 		m_lastCarIdResolver,
 		this,
-		&ModMenuModule::LastCarCheat::OnValueUpdate
+		&ModMenuModule::LastCarCheat::OnLastCarIdUpdate
 	);
 }
 
@@ -69,10 +69,10 @@ void ModMenuModule::LastCarCheat::OnDisable()
 	m_watchedLastCarId = nullptr;
 
 	m_lastCar = nullptr;
-	m_state = LastCarState::NoCar;
+	SetState(LastCarState::NoCar);
 }
 
-void ModMenuModule::LastCarCheat::OnValueUpdate(std::optional<Game::Car*> oldValue, std::optional<Game::Car*> newValue)
+void ModMenuModule::LastCarCheat::OnCurrentCarUpdate(const std::optional<Game::Car*>& oldValue, const std::optional<Game::Car*>& newValue)
 {
 	if (newValue.has_value() && newValue.value() != nullptr) {
 		m_lastCar = newValue.value();
@@ -80,7 +80,7 @@ void ModMenuModule::LastCarCheat::OnValueUpdate(std::optional<Game::Car*> oldVal
 		SetState(LastCarState::InCar);
 	}
 	else {
-		// Exited a car
+		// Exited the car
 		if (m_lastCar != nullptr) {
 			SetState(LastCarState::OutOfCar);
 		}
@@ -91,7 +91,7 @@ void ModMenuModule::LastCarCheat::OnValueUpdate(std::optional<Game::Car*> oldVal
 	}
 }
 
-void ModMenuModule::LastCarCheat::OnValueUpdate(std::optional<Game::uint> oldValue, std::optional<Game::uint> newValue)
+void ModMenuModule::LastCarCheat::OnLastCarIdUpdate(const std::optional<Game::uint>& oldValue, const std::optional<Game::uint>& newValue)
 {
 	if (m_state != LastCarState::OutOfCar) return;
 	if (newValue.has_value() && m_lastCarId == newValue.value()) return;

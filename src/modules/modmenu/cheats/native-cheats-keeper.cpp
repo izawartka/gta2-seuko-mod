@@ -83,7 +83,7 @@ void ModMenuModule::NativeCheatsKeeperCheat::OnAfterDebugFlags(AfterDebugFlagsEv
 	}
 }
 
-void ModMenuModule::NativeCheatsKeeperCheat::OnCheatValueChange(size_t cheatAddress, std::optional<bool> oldValue, std::optional<bool> newValue)
+void ModMenuModule::NativeCheatsKeeperCheat::OnCheatValueChange(size_t cheatAddress, const std::optional<bool>& oldValue, const std::optional<bool>& newValue)
 {
 	NativeCheatsKeeperEntry& entry = m_cheatEntries[cheatAddress];
 	if (entry.ignoreValueChange) {
@@ -98,7 +98,7 @@ void ModMenuModule::NativeCheatsKeeperCheat::OnCheatValueChange(size_t cheatAddr
 
 	if (!newValue.has_value()) return;
 	entry.originalValue = newValue.value();
-	entry.watched->SetValueNoNotify(entry.state == NativeCheatState::ForceEnabled);
+	entry.watched->SetValueNow(entry.state == NativeCheatState::ForceEnabled);
 }
 
 void ModMenuModule::NativeCheatsKeeperCheat::OnFirstEnable()
@@ -165,7 +165,7 @@ void ModMenuModule::NativeCheatsKeeperCheat::SetCheatStateInternal(size_t cheatA
 		entry.watched->Update();
 	}
 
-	entry.watched->SetValueNoNotify(state == NativeCheatState::ForceEnabled);
+	entry.watched->SetValueNow(state == NativeCheatState::ForceEnabled);
 }
 
 REGISTER_CHEAT(NativeCheatsKeeperCheat)

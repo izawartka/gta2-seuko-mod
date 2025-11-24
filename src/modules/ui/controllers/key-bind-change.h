@@ -136,7 +136,7 @@ namespace UiModule {
 			m_textComponent->SetText(m_options.prefix + m_textBuffer + marker + m_options.suffix);
 		}
 
-		void OnValueUpdate(std::optional<KeyBindingModule::Key> oldValue, std::optional<KeyBindingModule::Key> newValue) {
+		void OnValueUpdate(const std::optional<KeyBindingModule::Key>& oldValue, const std::optional<KeyBindingModule::Key>& newValue) {
 			if (m_editing) {
 				spdlog::warn("Tried to update KeyBindChangeController value while editing");
 				return;

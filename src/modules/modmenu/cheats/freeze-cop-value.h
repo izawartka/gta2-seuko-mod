@@ -16,7 +16,7 @@ namespace ModMenuModule {
 		virtual void OnEnable() override;
 		virtual void OnDisable() override;
 
-		void OnValueUpdate(std::optional<short> oldValue, std::optional<short> newValue);
+		void OnValueUpdate(const std::optional<short>& oldValue, const std::optional<short>& newValue);
 		void OnCopValueChange(CopValueChangeEvent& event);
 
 		Core::Resolver<short*> m_copValueResolver = nullptr;

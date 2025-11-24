@@ -60,7 +60,7 @@ namespace ModMenuModule {
 		};
 
 		void OnAfterDebugFlags(AfterDebugFlagsEvent& event);
-		void OnCheatValueChange(size_t cheatAddress, std::optional<bool> oldValue, std::optional<bool> newValue);
+		void OnCheatValueChange(size_t cheatAddress, const std::optional<bool>& oldValue, const std::optional<bool>& newValue);
 
 		virtual void OnFirstEnable() override;
 		virtual void OnEnable() override;
