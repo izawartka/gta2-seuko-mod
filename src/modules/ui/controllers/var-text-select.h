@@ -9,7 +9,7 @@
 
 namespace UiModule {
 	template <typename ValueT>
-	using VarTextSelectCustomSaveCallback = std::function<void(ValueT newValue)>;
+	using VarTextSelectCustomSaveCallback = std::function<void(const ValueT& newValue)>;
 
 	template <typename ValueT>
 	using VarTextSelectOptionList = std::vector<ValueT>;
@@ -85,8 +85,14 @@ namespace UiModule {
 			if (m_editing == editing) return;
 			m_editing = editing;
 			if (editing) {
-				if (!m_value.has_value()) {
+				if (!m_watched || !m_watched->GetSavedValue().has_value()) {
 					spdlog::warn("Invalid value, cannot edit");
+					m_editing = false;
+					if (m_onEditStop) m_onEditStop();
+					return;
+				}
+				if (m_pendingSaveValue.has_value()) {
+					spdlog::warn("Save pending, cannot edit");
 					m_editing = false;
 					if (m_onEditStop) m_onEditStop();
 					return;
@@ -130,7 +136,6 @@ namespace UiModule {
 				return;
 			}
 
-			ValueT newValue = m_optionList[m_currentIndex];
 			m_pendingSaveValue = m_optionList[m_currentIndex];
 
 			if (m_watched) {
@@ -198,7 +203,6 @@ namespace UiModule {
 				return;
 			}
 
-			m_value = newValue;
 			m_displayValue = newValue;
 
 			UpdateTextBuffer();
@@ -230,7 +234,7 @@ namespace UiModule {
 			}
 
 			if (IsActionKey(key)) {
-				Save();
+				if(!m_options.liveMode) Save();
 				SetEditing(false);
 				return;
 			}
@@ -277,7 +281,6 @@ namespace UiModule {
 		Text* m_textComponent = nullptr;
 		Core::Resolver<ResRetT> m_resolver = nullptr;
 		Core::Watched<ValueT, ResRetT>* m_watched = nullptr;
-		std::optional<ValueT> m_value = std::nullopt;
 		bool m_activeBeforeEdit = false;
 		bool m_watchingBeforeEdit = false;
 		std::wstring m_textBuffer = L"";

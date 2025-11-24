@@ -9,7 +9,7 @@
 
 namespace UiModule {
 	template <typename T>
-	using EditableSaveCallback = std::function<void(T newValue)>;
+	using EditableSaveCallback = std::function<void(const T& newValue)>;
 
 	struct EditableControllerOptions {
 		std::wstring prefix = L"";
@@ -30,7 +30,6 @@ namespace UiModule {
 			m_textComponent = text;
 			m_options = options;
 			m_value = value;
-			m_displayValue = value;
 
 			UpdateTextBuffer();
 			UpdateText();
@@ -61,30 +60,17 @@ namespace UiModule {
 			if (m_editing == editing) return;
 			m_editing = editing;
 			if (editing) {
-				if (!m_value.has_value()) {
-					spdlog::warn("Invalid value, cannot edit");
-					m_editing = false;
-					if (m_onEditStop) m_onEditStop();
-					return;
-				}
 				bool active = m_active;
 				SetActive(true);
 				m_activeBeforeEdit = active;
-				// prepare text buffer for editing from current value
-				if (m_displayValue.has_value()) {
-					m_textBuffer = this->ConvertToString(m_displayValue.value());
-				}
-				else {
-					m_textBuffer = m_options.nullText;
-				}
 				SetUpdateUIListener(true);
+				UpdateTextBuffer();
 				UpdateText();
 			}
 			else {
 				if (!m_activeBeforeEdit) {
 					SetActive(false);
 				}
-				m_displayValue = m_value;
 				SetUpdateUIListener(false);
 				UpdateTextBuffer();
 				UpdateText();
@@ -102,7 +88,6 @@ namespace UiModule {
 				// do not update displayed/editing buffer while editing
 				return;
 			}
-			m_displayValue = value;
 			UpdateTextBuffer();
 			UpdateText();
 		}
@@ -144,17 +129,15 @@ namespace UiModule {
 			}
 
 			m_value = newValue;
-			m_displayValue = m_value;
 
 			if (m_saveCallback) {
 				m_saveCallback(newValue);
 			}
-			UpdateTextBuffer();
 		}
 
 		void UpdateTextBuffer() {
-			if (m_displayValue.has_value()) {
-				m_textBuffer = this->ConvertToString(m_displayValue.value());
+			if (m_value.has_value()) {
+				m_textBuffer = this->ConvertToString(m_value.value());
 			}
 			else {
 				m_textBuffer = m_options.nullText;
@@ -213,7 +196,6 @@ namespace UiModule {
 		EditableControllerOptions m_options;
 		Text* m_textComponent = nullptr;
 		std::optional<T> m_value = std::nullopt;
-		std::optional<T> m_displayValue = std::nullopt;
 		bool m_activeBeforeEdit = false;
 		bool m_hasUpdateListener = false;
 		std::wstring m_textBuffer = L"";

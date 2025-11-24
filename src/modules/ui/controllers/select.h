@@ -9,7 +9,7 @@
 
 namespace UiModule {
 	template <typename T>
-	using SelectSaveCallback = std::function<void(T newValue)>;
+	using SelectSaveCallback = std::function<void(const T& newValue)>;
 
 	template <typename T>
 	using SelectOptionList = std::vector<T>;
@@ -65,12 +65,6 @@ namespace UiModule {
 			if (m_editing == editing) return;
 			m_editing = editing;
 			if (editing) {
-				if (!m_value.has_value()) {
-					spdlog::warn("Invalid value, cannot edit");
-					m_editing = false;
-					if (m_onEditStop) m_onEditStop();
-					return;
-				}
 				bool active = m_active;
 				SetActive(true);
 				m_activeBeforeEdit = active;
