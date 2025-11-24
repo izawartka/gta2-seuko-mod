@@ -4,7 +4,7 @@
 #include "../converter-support.h"
 #include "../standard-binds-support.h"
 #include "../components/text.h"
-#include "../../../events/draw.h"
+#include "../events/update-ui.h"
 #include "../../../events/keyboard.h"
 
 namespace UiModule {
@@ -56,7 +56,7 @@ namespace UiModule {
 			if (m_watching == watching) return;
 			m_watching = watching;
 			if (watching) {
-				m_watched = Core::WatchManager::GetInstance()->Watch<PreDrawUIEvent, ValueT, ResRetT>(
+				m_watched = Core::WatchManager::GetInstance()->Watch<UiModule::UpdateUIEvent, ValueT, ResRetT>(
 					m_resolver,
 					this,
 					&VarTextSelectController<ValueT, ResRetT>::OnValueUpdate

@@ -4,7 +4,7 @@
 #include "../standard-binds-support.h"
 #include "../components/text.h"
 #include "../../../converters/key.h"
-#include "../../../events/draw.h"
+#include "../events/update-ui.h"
 #include "../../../events/keyboard.h"
 
 namespace UiModule {
@@ -53,7 +53,7 @@ namespace UiModule {
 			if (m_watching == watching) return;
 			m_watching = watching;
 			if (watching) {
-				m_watched = Core::WatchManager::GetInstance()->Watch<PreDrawUIEvent>(
+				m_watched = Core::WatchManager::GetInstance()->Watch<UiModule::UpdateUIEvent>(
 					m_resolver,
 					this,
 					&KeyBindChangeController::OnValueUpdate

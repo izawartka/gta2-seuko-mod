@@ -4,7 +4,7 @@
 #include "../converter-support.h"
 #include "../standard-binds-support.h"
 #include "../components/text.h"
-#include "../../../events/draw.h"
+#include "../events/update-ui.h"
 #include "../../../events/keyboard.h"
 
 namespace UiModule {
@@ -51,11 +51,9 @@ namespace UiModule {
 
 			if (active) {
 				AddEventListener<KeyDownEvent>(&EditableController<T>::OnKeyDown);
-				if (m_editing) SetPreDrawUIListener(true);
 			}
 			else {
 				RemoveEventListener<KeyDownEvent>();
-				SetPreDrawUIListener(false);
 			}
 		}
 
@@ -79,6 +77,7 @@ namespace UiModule {
 				else {
 					m_textBuffer = m_options.nullText;
 				}
+				SetUpdateUIListener(true);
 				UpdateText();
 			}
 			else {
@@ -86,6 +85,7 @@ namespace UiModule {
 					SetActive(false);
 				}
 				m_displayValue = m_value;
+				SetUpdateUIListener(false);
 				UpdateTextBuffer();
 				UpdateText();
 				if (m_onEditStop) m_onEditStop();
@@ -119,15 +119,15 @@ namespace UiModule {
 			UpdateText();
 		}
 
-		void SetPreDrawUIListener(bool enable) {
-			if (enable == m_hasPreDrawListener) return;
-			m_hasPreDrawListener = enable;
+		void SetUpdateUIListener(bool enable) {
+			if (enable == m_hasUpdateListener) return;
+			m_hasUpdateListener = enable;
 			if (enable) {
-				AddEventListener<PreDrawUIEvent>(&EditableController<T>::OnPreDrawUI);
+				AddEventListener<UiModule::UpdateUIEvent>(&EditableController<T>::OnUpdateUI);
 				m_blinkCounter = 0;
 			}
 			else {
-				RemoveEventListener<PreDrawUIEvent>();
+				RemoveEventListener<UiModule::UpdateUIEvent>();
 			}
 		}
 
@@ -202,7 +202,7 @@ namespace UiModule {
 			}
 		}
 
-		void OnPreDrawUI(PreDrawUIEvent& event) {
+		void OnUpdateUI(UiModule::UpdateUIEvent& event) {
 			if (!m_editing) return;
 			if (m_blinkCounter == 0 || m_blinkCounter == m_options.blinkInterval) {
 				UpdateText();
@@ -215,7 +215,7 @@ namespace UiModule {
 		std::optional<T> m_value = std::nullopt;
 		std::optional<T> m_displayValue = std::nullopt;
 		bool m_activeBeforeEdit = false;
-		bool m_hasPreDrawListener = false;
+		bool m_hasUpdateListener = false;
 		std::wstring m_textBuffer = L"";
 		EditableSaveCallback<T> m_saveCallback = nullptr;
 		int m_blinkCounter = 0;

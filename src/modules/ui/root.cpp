@@ -1,4 +1,5 @@
 #include "root.h"
+#include "events/update-ui.h"
 
 UiModule::RootModule* UiModule::RootModule::m_instance = nullptr;
 
@@ -59,6 +60,14 @@ void UiModule::RootModule::ClearControllers()
 
 void UiModule::RootModule::OnDraw(DrawUIEvent& event)
 {
+	Core::EventManager* eventManager = Core::EventManager::GetInstance();
+
+	UiModule::PreUpdateUIEvent preUpdateEvent;
+	eventManager->Dispatch(preUpdateEvent);
+
+	UiModule::UpdateUIEvent updateEvent;
+	eventManager->Dispatch(updateEvent);
+
 	for (const auto& component : m_components) {
 		component->DrawIfVisible();
 	}

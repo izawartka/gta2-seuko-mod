@@ -4,7 +4,7 @@
 #include "../converter-support.h"
 #include "../standard-binds-support.h"
 #include "../components/text.h"
-#include "../../../events/draw.h"
+#include "../events/update-ui.h"
 #include "../../../events/keyboard.h"
 
 namespace UiModule {
@@ -50,7 +50,7 @@ namespace UiModule {
 			if (m_watching == watching) return;
 			m_watching = watching;
 			if (watching) {
-				m_watched = Core::WatchManager::GetInstance()->Watch<PreDrawUIEvent, ValueT, ResRetT>(
+				m_watched = Core::WatchManager::GetInstance()->Watch<UiModule::UpdateUIEvent, ValueT, ResRetT>(
 					m_resolver,
 					this,
 					&VarTextEditableController<ValueT, ResRetT>::OnValueUpdate
@@ -69,11 +69,9 @@ namespace UiModule {
 
 			if (active) {
 				AddEventListener<KeyDownEvent>(&VarTextEditableController<ValueT, ResRetT>::OnKeyDown);
-				if (m_editing) SetPreDrawUIListener(true);
 			}
 			else {
 				RemoveEventListener<KeyDownEvent>();
-				SetPreDrawUIListener(false);
 			}
 		}
 
@@ -99,6 +97,7 @@ namespace UiModule {
 				SetActive(true);
 				m_watchingBeforeEdit = watching;
 				m_activeBeforeEdit = active;
+				SetUpdateUIListener(true);
 				UpdateText();
 			}
 			else {
@@ -108,7 +107,7 @@ namespace UiModule {
 				if (!m_activeBeforeEdit) {
 					SetActive(false);
 				}
-				SetPreDrawUIListener(false);
+				SetUpdateUIListener(false);
 				UpdateText();
 				if (m_onEditStop) m_onEditStop();
 			}
@@ -126,15 +125,15 @@ namespace UiModule {
 			UpdateText();
 		}
 
-		void SetPreDrawUIListener(bool enable) {
-			if (enable == m_hasPreDrawListener) return;
-			m_hasPreDrawListener = enable;
+		void SetUpdateUIListener(bool enable) {
+			if (enable == m_hasUpdateListener) return;
+			m_hasUpdateListener = enable;
 			if (enable) {
-				AddEventListener<PreDrawUIEvent>(&VarTextEditableController<ValueT, ResRetT>::OnPreDrawUI);
+				AddEventListener<UiModule::UpdateUIEvent>(&VarTextEditableController<ValueT, ResRetT>::OnUpdateUI);
 				m_blinkCounter = 0;
 			}
 			else {
-				RemoveEventListener<PreDrawUIEvent>();
+				RemoveEventListener<UiModule::UpdateUIEvent>();
 			}
 		}
 
@@ -242,7 +241,7 @@ namespace UiModule {
 			}
 		}
 
-		void OnPreDrawUI(PreDrawUIEvent& event) {
+		void OnUpdateUI(UiModule::UpdateUIEvent& event) {
 			if (!m_editing) return;
 			if (m_blinkCounter == 0 || m_blinkCounter == m_options.blinkInterval) {
 				UpdateText();
@@ -257,7 +256,7 @@ namespace UiModule {
 		std::optional<ValueT> m_value = std::nullopt;
 		bool m_watchingBeforeEdit = false;
 		bool m_activeBeforeEdit = false;
-		bool m_hasPreDrawListener = false;
+		bool m_hasUpdateListener = false;
 		std::wstring m_textBuffer = L"";
 		std::optional<ValueT> m_pendingSaveValue = std::nullopt;
 		VarTextEditableCustomSaveCallback<ValueT> m_customSaveCallback = nullptr;

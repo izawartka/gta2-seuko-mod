@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.h"
+#include "events/update-ui.h"
 #include "rect.h"
 #include "root.h"
 #include "component.h"
