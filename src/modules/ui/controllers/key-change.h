@@ -4,7 +4,6 @@
 #include "../standard-binds-support.h"
 #include "../components/text.h"
 #include "../../../converters/key.h"
-#include "../../../events/draw.h"
 #include "../../../events/keyboard.h"
 
 namespace UiModule {
