@@ -31,13 +31,13 @@ void ModMenuModule::ResetBindsManager::Reset() {
 void ModMenuModule::ResetBindsManager::Attach() {
 	AddEventListener<KeyDownEvent>(&ResetBindsManager::OnKeyDown);
 	AddEventListener<KeyUpEvent>(&ResetBindsManager::OnKeyUp);
-	AddEventListener<PreDrawUIEvent>(&ResetBindsManager::OnPreDrawUI);
+	AddEventListener<UiModule::PreUpdateUIEvent>(&ResetBindsManager::OnPreUpdateUI);
 	AddEventListener<PreGameEndEvent>(&ResetBindsManager::OnPreGameEnd);
 }
 
 void ModMenuModule::ResetBindsManager::Detach() {
 	RemoveEventListener<PreGameEndEvent>();
-	RemoveEventListener<PreDrawUIEvent>();
+	RemoveEventListener<UiModule::PreUpdateUIEvent>();
 	RemoveEventListener<KeyUpEvent>();
 	RemoveEventListener<KeyDownEvent>();
 	m_resetKeyHoldFrames = 0;
@@ -60,7 +60,7 @@ void ModMenuModule::ResetBindsManager::OnKeyUp(KeyUpEvent& event)
 	}
 }
 
-void ModMenuModule::ResetBindsManager::OnPreDrawUI(PreDrawUIEvent& event)
+void ModMenuModule::ResetBindsManager::OnPreUpdateUI(UiModule::PreUpdateUIEvent& event)
 {
 	if (m_resetKeyHoldFrames == 0) return;
 	m_resetKeyHoldFrames++;

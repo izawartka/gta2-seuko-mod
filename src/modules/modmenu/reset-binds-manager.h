@@ -2,7 +2,6 @@
 #include "common.h"
 #include "menu-base.h"
 #include "../../events/keyboard.h"
-#include "../../events/draw.h"
 #include "../../events/game-end.h"
 
 namespace ModMenuModule {
@@ -26,7 +25,7 @@ namespace ModMenuModule {
 
 		void OnKeyDown(KeyDownEvent& event);
 		void OnKeyUp(KeyUpEvent& event);
-		void OnPreDrawUI(PreDrawUIEvent& event);
+		void OnPreUpdateUI(UiModule::PreUpdateUIEvent& event);
 		void OnPreGameEnd(PreGameEndEvent& event);
 
 		unsigned int m_resetKeyHoldFrames = 0;
