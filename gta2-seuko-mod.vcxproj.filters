@@ -450,6 +450,9 @@
     <ClInclude Include="src\modules\ui\events\update-ui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\modules\ui\components\horcentered.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
@@ -654,6 +657,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\modmenu\segments\explode-all-vehicles-segment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\ui\components\horcentered.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

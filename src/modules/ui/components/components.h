@@ -8,3 +8,4 @@
 #include "./selectable.h"
 #include "./sprite.h"
 #include "./background.h"
+#include "./horcentered.h"
