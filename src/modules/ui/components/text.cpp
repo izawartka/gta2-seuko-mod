@@ -15,12 +15,19 @@ UiModule::Text::Text(Component* parent, const std::wstring& text, Game::SCR_f sc
 
 void UiModule::Text::Draw()
 {
-	short fontId = Game::Memory::GetDefaultFontId();
+	short fontId = *Game::Memory::GetDefaultFontId();
 	if (fontId == 0) {
 		spdlog::warn("UiModule::Text::Draw: Default font ID is 0, cannot draw text");
 		return;
 	}
 
+	Game::Camera* mainCamera = Game::Memory::GetMainCamera();
+	if (!mainCamera) {
+		spdlog::warn("UiModule::Text::Draw: Main camera is null, cannot get UI scale");
+		return;
+	}
+
+	Game::SCR_f uiScale = mainCamera->uiScale;
 	Game::PALETTE_BASE paletteBase = m_remap < 0
 		? Game::PALETTE_BASE::PALETTE_BASE_SPRITE
 		: Game::PALETTE_BASE::PALETTE_BASE_FONT_REMAP;
@@ -29,10 +36,10 @@ void UiModule::Text::Draw()
 
 	Game::Functions::DrawGTAText(
 		m_text.c_str(),
-		m_rect.x,
-		m_rect.y,
+		Game::Utils::Multiply(m_rect.x, uiScale),
+		Game::Utils::Multiply(m_rect.y, uiScale),
 		fontId,
-		m_scale,
+		Game::Utils::Multiply(m_scale, uiScale),
 		&paletteBase,
 		remap,
 		Game::SPRITE_INVISIBILITY_VISIBLE,
@@ -68,7 +75,7 @@ Game::SCR_f UiModule::Text::GetTextWidth() const
 		return 0;
 	}
 
-	short fontId = Game::Memory::GetDefaultFontId();
+	short fontId = *Game::Memory::GetDefaultFontId();
 	return Game::Functions::GetGTATextWidth(m_text.c_str(), fontId) * m_scale;
 }
 

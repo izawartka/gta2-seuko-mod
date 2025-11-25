@@ -11,6 +11,13 @@ UiModule::Sprite::Sprite(Component* parent, const SpriteOptions& options)
 
 void UiModule::Sprite::Draw()
 {
+	Game::Camera* mainCamera = Game::Memory::GetMainCamera();
+	if (!mainCamera) {
+		spdlog::warn("UiModule::Sprite::Draw: Main camera is null, cannot get UI scale");
+		return;
+	}
+	Game::SCR_f uiScale = mainCamera->uiScale;
+
 	Game::S4* s4 = Game::Memory::GetS4();
 	void* sprite = Game::Functions::GetSpriteTexture(
 		s4, 
@@ -21,11 +28,11 @@ void UiModule::Sprite::Draw()
 		m_options.remap
 	);
 
-	float scale = Game::Utils::ToFloat(m_options.scale);
+	float scale = Game::Utils::ToFloat(Game::Utils::Multiply(m_options.scale, uiScale));
 	float halfWidth = (float)m_spriteWidth * scale / 2.0f;
 	float halfHeight = (float)m_spriteHeight * scale / 2.0f;
-	float cx = Game::Utils::ToFloat(m_rect.x + m_rect.width / 2);
-	float cy = Game::Utils::ToFloat(m_rect.y + m_rect.height / 2);
+	float cx = Game::Utils::ToFloat(Game::Utils::Multiply(m_rect.x + m_rect.width / 2, uiScale));
+	float cy = Game::Utils::ToFloat(Game::Utils::Multiply(m_rect.y + m_rect.height / 2, uiScale));
 	float cosRot = cos(m_options.rotation);
 	float sinRot = sin(m_options.rotation);
 

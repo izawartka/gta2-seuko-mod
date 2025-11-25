@@ -17,13 +17,23 @@ void UiModule::Selectable::Draw()
 		return;
 	}
 
+	Game::Camera* mainCamera = Game::Memory::GetMainCamera();
+	if (!mainCamera) {
+		spdlog::warn("UiModule::Selectable::Draw: Main camera is null, cannot get UI scale");
+		return;
+	}
+	Game::SCR_f uiScale = mainCamera->uiScale;
+
+	Game::SCR_f x = Game::Utils::Multiply(m_rect.x, uiScale);
+	Game::SCR_f additionalYOffset = Game::Utils::Multiply(m_options.markerAdditionalOffsetY, m_rect.height);
+	Game::SCR_f y = Game::Utils::Multiply(m_rect.y + additionalYOffset, uiScale);
 	Game::PALETTE_BASE paletteBase = Game::PALETTE_BASE::PALETTE_BASE_SPRITE;
 	Game::Functions::DrawGTAText(
 		(WCHAR*)m_options.markerText.c_str(),
-		m_rect.x,
-		m_rect.y + m_options.markerAdditionalOffsetY,
+		x,
+		y,
 		1,
-		m_options.markerScale,
+		Game::Utils::Multiply(m_options.markerScale, uiScale),
 		&paletteBase,
 		0,
 		Game::SPRITE_INVISIBILITY_VISIBLE,

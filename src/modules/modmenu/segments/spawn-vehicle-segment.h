@@ -3,7 +3,7 @@
 #include "../segment-base.h"
 
 namespace ModMenuModule {
-	static constexpr Game::SCR_f SPAWN_VEHICLE_SPRITE_PREVIEW_SCALE = Game::Utils::FromFloat(2.0f);
+	static constexpr Game::SCR_f SPAWN_VEHICLE_SPRITE_PREVIEW_SCALE = Game::Utils::FromFloat(1.25f);
 
 	struct SpawnVehicleSegmentData {
 		Game::CAR_MODEL4 model;

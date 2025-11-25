@@ -10,15 +10,15 @@ namespace ModMenuModule {
 		std::string keyBindToggleMenuName = "ModMenu_ToggleMenu";
 		KeyBindingModule::Key keyBindToggleMenuDefault = KeyBindingModule::Key(Game::KeyCode::DIK_F11);
 		unsigned int resetBindsHoldTime = 90; // frames
-		Game::SCR_f menuX = 0x20000;
-		Game::SCR_f menuY = 0x200000;
-		Game::SCR_f menuHeaderMarginX = 0x60000;
-		Game::SCR_f menuHeaderMarginY = 0x30000;
-		Game::SCR_f menuHeaderTextSize = 0x6000;
-		Game::SCR_f menuSpacerHeight = 0x30000;
-		Game::SCR_f textSize = 0x6000;
-		Game::SCR_f menuPadding = 0x20000;
-		Game::SCR_f minMenuWidth = 0x600000;
+		Game::SCR_f menuX = Game::Utils::FromFloat(9.0f);
+		Game::SCR_f menuY = Game::Utils::FromFloat(90.0f);
+		Game::SCR_f menuHeaderMarginX = Game::Utils::FromFloat(15.0f);
+		Game::SCR_f menuHeaderMarginY = Game::Utils::FromFloat(10.0f);
+		Game::SCR_f menuHeaderTextSize = Game::Utils::FromFloat(1.0f);
+		Game::SCR_f menuSpacerHeight = Game::Utils::FromFloat(5.0f);
+		Game::SCR_f textSize = Game::Utils::FromFloat(1.0f);
+		Game::SCR_f menuPadding = Game::Utils::FromFloat(5.0f);
+		Game::SCR_f minMenuWidth = Game::Utils::FromFloat(250.0f);
 		UiModule::MenuControllerOptions menuControllerOptions = {};
 		UiModule::BackgroundOptions menuBackgroundOptions = { 128 };
 	};
