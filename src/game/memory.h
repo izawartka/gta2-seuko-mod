@@ -20,9 +20,10 @@ namespace Game {
 		static constexpr Style_S3* GetStyleS3() { return (Style_S3*)*(DWORD*)0x00670684; }
 		static constexpr Cheats* GetCheats() { return (Cheats*)0x005ead51; }
 		static constexpr GangRespectContainer* GetGangRespectContainer() { return (GangRespectContainer*)*(DWORD*)0x005eb898; }
-		static constexpr short GetDefaultFontId() { return *(short*)0x00672f24; }
+		static constexpr short* GetDefaultFontId() { return (short*)0x00672f24; }
 		static constexpr S15_Script* GetS15() { return (S15_Script*)*(DWORD*)0x006644bc; }
 		static constexpr Menu* GetMenu() { return (Menu*)0x005ec070; }
 		static constexpr CarsManager* GetCarsManager() { return (CarsManager*)*(DWORD*)0x005e4ca0; }
+		static constexpr Camera* GetMainCamera() { return (Camera*)*(DWORD*)0x005e3cc4; }
 	};
 }

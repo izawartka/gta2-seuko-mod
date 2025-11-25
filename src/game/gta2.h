@@ -1237,7 +1237,7 @@ struct Camera {
 	WorldRect cameraBoundariesNonNegative;
 	CameraPos cameraPos2;
 	CameraPos cameraPos;
-	int uiScale;
+	SCR_f uiScale;
 	CameraPos cameraVelocity;
 };
 
