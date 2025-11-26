@@ -292,6 +292,7 @@ exit /b 0
     <ClInclude Include="src\modules\persistence\root.h" />
     <ClInclude Include="src\modules\ui\components\background.h" />
     <ClInclude Include="src\modules\ui\components\horcentered.h" />
+    <ClInclude Include="src\modules\ui\components\overridepos.h" />
     <ClInclude Include="src\modules\ui\components\sprite.h" />
     <ClInclude Include="src\modules\ui\controllers\button.h" />
     <ClInclude Include="src\modules\ui\controllers\editable.h" />
@@ -420,6 +421,7 @@ exit /b 0
     <ClCompile Include="src\modules\ui\component.cpp" />
     <ClCompile Include="src\modules\ui\components\background.cpp" />
     <ClCompile Include="src\modules\ui\components\horcentered.cpp" />
+    <ClCompile Include="src\modules\ui\components\overridepos.cpp" />
     <ClCompile Include="src\modules\ui\components\selectable.cpp" />
     <ClCompile Include="src\modules\ui\components\sprite.cpp" />
     <ClCompile Include="src\modules\ui\components\text.cpp" />
