@@ -1,5 +1,6 @@
 #include "save-game.h"
 #include "../utils/save-game.h"
+#include "../toast-manager.h"
 #include "../quick-action-registry.h"
 
 static const std::string typeId = "ModMenu_SaveGame";
@@ -26,6 +27,7 @@ const std::wstring& ModMenuModule::SaveGameAction::GetTypeLabel()
 void ModMenuModule::SaveGameAction::Execute()
 {
 	ModMenuModule::Utils::SaveGame();
+	ModMenuModule::ToastManager::GetInstance()->Show({ L"Game saved" });
 }
 
 const std::wstring& ModMenuModule::SaveGameAction::GetLabel() const

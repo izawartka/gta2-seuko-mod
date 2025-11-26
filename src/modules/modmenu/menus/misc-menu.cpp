@@ -3,6 +3,7 @@
 #include "menu-controls-menu.h"
 #include "quick-actions-menu.h"
 #include "../utils/save-game.h"
+#include "../toast-manager.h"
 
 ModMenuModule::MiscMenu::MiscMenu()
 {
@@ -55,4 +56,5 @@ void ModMenuModule::MiscMenu::OnMenuAction(UiModule::Selectable* item, UiModule:
 void ModMenuModule::MiscMenu::QuickSave()
 {
 	ModMenuModule::Utils::SaveGame();
+	ModMenuModule::ToastManager::GetInstance()->Show({ L"Game saved" });
 }

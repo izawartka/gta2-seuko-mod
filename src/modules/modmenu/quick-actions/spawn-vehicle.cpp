@@ -1,6 +1,7 @@
 #include "spawn-vehicle.h"
 #include "../utils/spawn-car-at-player.h"
 #include "../../../converters/car-model.h"
+#include "../toast-manager.h"
 #include "../quick-action-registry.h"
 
 static const std::string typeId = "ModMenu_SpawnVehicle";
@@ -39,6 +40,7 @@ void ModMenuModule::SpawnVehicleAction::Execute()
 
 	SpawnVehicleSegmentData data = m_data.value();
 	ModMenuModule::Utils::SpawnCarAtPlayer(data.model, data.remap, data.palette);
+	ModMenuModule::ToastManager::GetInstance()->Show({ CarModelConverter::ConvertToString(data.model) + L" spawned" });
 }
 
 const std::wstring& ModMenuModule::SpawnVehicleAction::GetLabel() const

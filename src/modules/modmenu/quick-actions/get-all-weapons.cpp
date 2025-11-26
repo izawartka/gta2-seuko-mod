@@ -1,5 +1,6 @@
 #include "get-all-weapons.h"
 #include "../utils/get-all-weapons.h"
+#include "../toast-manager.h"
 #include "../quick-action-registry.h"
 
 static const std::string typeId = "ModMenu_GetAllWeapons";
@@ -26,6 +27,7 @@ const std::wstring& ModMenuModule::GetAllWeaponsAction::GetTypeLabel()
 void ModMenuModule::GetAllWeaponsAction::Execute()
 {
 	ModMenuModule::Utils::GetAllWeapons();
+	ModMenuModule::ToastManager::GetInstance()->Show({ L"All weapons given" });
 }
 
 const std::wstring& ModMenuModule::GetAllWeaponsAction::GetLabel() const

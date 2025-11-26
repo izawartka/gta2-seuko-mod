@@ -1,5 +1,6 @@
 #include "explode-all-vehicles.h"
 #include "../utils/explode-all-cars.h"
+#include "../toast-manager.h"
 #include "../quick-action-registry.h"
 
 static const std::string typeId = "ModMenu_ExplodeAllVeguckes";
@@ -37,6 +38,7 @@ void ModMenuModule::ExplodeAllVehiclesAction::Execute()
 
 	ExplodeAllVehiclesSegmentData data = m_data.value();
 	ModMenuModule::Utils::ExplodeAllCars(data.excludePlayerVehicle, data.explosionSize);
+	ModMenuModule::ToastManager::GetInstance()->Show({ L"All vehicles exploded" });
 }
 
 const std::wstring& ModMenuModule::ExplodeAllVehiclesAction::GetLabel() const
