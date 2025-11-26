@@ -21,7 +21,7 @@ bool ModMenuModule::LastVehicleMenu::Attach()
 	UiModule::Component* vertCont;
 	CreateMenu(L"#Current vehicle#", vertCont);
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
-	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
+	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 
 	auto lastCarResolver = [this]() {
 		return this->GetLastCar();

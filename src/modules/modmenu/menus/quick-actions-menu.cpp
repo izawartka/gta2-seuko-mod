@@ -26,7 +26,7 @@ bool ModMenuModule::QuickActionsMenu::Attach()
 	UiModule::Component* vertCont;
 	CreateMenu(GetPageTitle(pageCount), vertCont);
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
-	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
+	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Add quick action", options.textSize);

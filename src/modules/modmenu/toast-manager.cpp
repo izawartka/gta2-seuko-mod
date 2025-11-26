@@ -27,7 +27,7 @@ void ModMenuModule::ToastManager::Show(const Toast& toast) {
 }
 
 void ModMenuModule::ToastManager::Attach() {
-	ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
+	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	m_mainContainer = uiRoot->AddComponent<UiModule::OverridePos>(nullptr, std::nullopt, options.toastPadding);
 	m_toastListContainer = uiRoot->AddComponent<UiModule::VertCont>(m_mainContainer);
@@ -70,6 +70,7 @@ void ModMenuModule::ToastManager::Update() {
 	}
 
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
+	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 
 	auto it = std::remove_if(
 		m_toasts.begin(),
@@ -96,7 +97,7 @@ void ModMenuModule::ToastManager::Update() {
 		toast.text = uiRoot->AddComponent<UiModule::Text>(
 			toast.container,
 			toast.message,
-			ModMenuModule::RootModule::GetInstance()->GetOptions().toastTextSize,
+			options.toastTextSize,
 			GetToastTypeRemap(toast.type)
 		);
 	}

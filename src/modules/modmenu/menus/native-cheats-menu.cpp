@@ -18,7 +18,7 @@ bool ModMenuModule::NativeCheatsMenu::Attach()
 	UiModule::Component* vertCont;
 	CreateMenu(L"#Native cheats#", vertCont);
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
-	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
+	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 

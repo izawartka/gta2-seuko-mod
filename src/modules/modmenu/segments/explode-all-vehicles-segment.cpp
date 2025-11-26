@@ -19,7 +19,7 @@ bool ModMenuModule::ExplodeAllVehiclesSegment::Attach(ModMenuModule::MenuBase* m
 	CreateSegment(menu, parent);
 
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
-	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
+	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 
 	auto selectedExcludePlayerVehicle = true;

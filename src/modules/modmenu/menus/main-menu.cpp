@@ -21,7 +21,7 @@ bool ModMenuModule::MainMenu::Attach()
 {
 	UiModule::Component* vertCont;
 	CreateMenu(L"#Mod Menu#", vertCont);
-	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
+	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Player", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Vehicles", options.textSize);

@@ -3,7 +3,7 @@
 
 ModMenuModule::RootModule* ModMenuModule::RootModule::m_instance = nullptr;
 
-ModMenuModule::RootModule::RootModule(ModMenuOptions options) : m_options(options) {
+ModMenuModule::RootModule::RootModule(const ModMenuOptions& options) : m_options(options) {
 	assert(PersistenceModule::RootModule::GetInstance() != nullptr && "ModMenuModule::RootModule requires PersistenceModule::RootModule to be initialized first!");
 	assert(KeyBindingModule::RootModule::GetInstance() != nullptr && "ModMenuModule::RootModule requires KeyBindingModule::RootModule to be initialized first!");
 	assert(UiModule::RootModule::GetInstance() != nullptr && "ModMenuModule::RootModule requires Ui::RootModule to be initialized first!");

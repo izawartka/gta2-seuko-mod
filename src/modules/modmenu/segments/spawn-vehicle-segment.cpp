@@ -20,7 +20,7 @@ bool ModMenuModule::SpawnVehicleSegment::Attach(ModMenuModule::MenuBase* menu, U
 	CreateSegment(menu, parent);
 
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
-	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
+	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 
 	UiModule::SelectOptionList<Game::CAR_MODEL4> modelOptionList = Game::Utils::GetSpawnableCarModels();
@@ -137,7 +137,7 @@ void ModMenuModule::SpawnVehicleSegment::UpdateSpritePreview()
 
 void ModMenuModule::SpawnVehicleSegment::UpdateSpritePreviewMargin()
 {
-	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
+	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	Game::CAR_MODEL4 selectedModel = m_modelController->GetValue().value();
 
 	Game::Style_S3* styleS3 = Game::Memory::GetStyleS3();

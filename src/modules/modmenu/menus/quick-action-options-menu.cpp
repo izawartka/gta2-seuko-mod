@@ -17,7 +17,7 @@ bool ModMenuModule::QuickActionOptionsMenu::Attach()
 	UiModule::Component* vertCont;
 	CreateMenu(L"#Quick action options#", vertCont);
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
-	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
+	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	ModMenuModule::QuickActionManager* quickActionManager = ModMenuModule::QuickActionManager::GetInstance();
 	m_actionInfo = quickActionManager->GetInfo(m_actionId);
 	if(!m_actionInfo.has_value()) {

@@ -19,7 +19,7 @@ ModMenuModule::ResetBindsManager::~ResetBindsManager() {
 
 void ModMenuModule::ResetBindsManager::Reset() {
 	spdlog::info("Resetting Mod Menu key binds to default values");
-	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
+	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	auto* bindManager = KeyBindingModule::BindManager::GetInstance();
 	bindManager->SetBind(options.keyBindToggleMenuName, options.keyBindToggleMenuDefault);
 	UiModule::StandardBindsSupportOptions uiBindOptions = options.menuControllerOptions.keyBindOptions;
@@ -44,7 +44,7 @@ void ModMenuModule::ResetBindsManager::Detach() {
 }
 
 void ModMenuModule::ResetBindsManager::OnKeyDown(KeyDownEvent& event) {
-	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
+	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyDownEvent(event);
 	if (key == options.keyBindToggleMenuDefault) {
 		m_resetKeyHoldFrames++;
@@ -53,7 +53,7 @@ void ModMenuModule::ResetBindsManager::OnKeyDown(KeyDownEvent& event) {
 
 void ModMenuModule::ResetBindsManager::OnKeyUp(KeyUpEvent& event)
 {
-	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
+	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	Game::KeyCode keyCode = event.GetKeyCode();
 	if (keyCode == options.keyBindToggleMenuDefault.keyCode) {
 		m_resetKeyHoldFrames = 0;
@@ -65,7 +65,7 @@ void ModMenuModule::ResetBindsManager::OnPreUpdateUI(UiModule::PreUpdateUIEvent&
 	if (m_resetKeyHoldFrames == 0) return;
 	m_resetKeyHoldFrames++;
 
-	ModMenuModule::ModMenuOptions options = ModMenuModule::RootModule::GetInstance()->GetOptions();
+	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	if (m_resetKeyHoldFrames > options.resetBindsHoldTime) {
 		Reset();
 		m_resetKeyHoldFrames = 0;

@@ -28,7 +28,7 @@ namespace ModMenuModule {
 
 	class RootModule : public Core::ModuleBase {
 	public:
-		RootModule(ModMenuOptions options = {});
+		RootModule(const ModMenuOptions& options = {});
 		virtual ~RootModule() override;
 		static RootModule* GetInstance();
 		bool Attach();
@@ -45,7 +45,7 @@ namespace ModMenuModule {
 			return static_cast<CheatT*>(it->second.get());
 		}
 
-		ModMenuOptions GetOptions() const { return m_options; }
+		const ModMenuOptions& GetOptions() const { return m_options; }
 
 	private:
 		void InstantiateCheats();

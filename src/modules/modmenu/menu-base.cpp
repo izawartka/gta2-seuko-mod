@@ -18,7 +18,7 @@ void ModMenuModule::MenuBase::CreateMenu(std::wstring title, UiModule::Component
 	assert(!m_mainComponent && !m_menuController && "Menu already created");
 
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
-	ModMenuOptions options = RootModule::GetInstance()->GetOptions();
+	const auto& options = RootModule::GetInstance()->GetOptions();
 
 	UiModule::Margin* mainCont = uiRoot->AddComponent<UiModule::Margin>(nullptr, options.menuX, options.menuY);
 	mainCont->SetVisible(false);
