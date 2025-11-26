@@ -24,6 +24,7 @@ ModMenuModule::RootModule* ModMenuModule::RootModule::GetInstance()
 
 bool ModMenuModule::RootModule::Attach()
 {
+	m_toastManager.Attach();
 	InstantiateCheats();
 	m_menuManager.Attach();
 	m_resetBindsManager.Attach();
@@ -39,6 +40,7 @@ void ModMenuModule::RootModule::Detach()
 	m_resetBindsManager.Detach();
 	m_menuManager.Detach();
 	DestroyCheats();
+	m_toastManager.Detach();
 	spdlog::info("ModMenuModule::RootModule module detached.");
 }
 

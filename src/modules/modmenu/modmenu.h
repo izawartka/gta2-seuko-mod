@@ -2,6 +2,7 @@
 
 #include "common.h"
 #include "utils/utils.h"
+#include "toast-manager.h"
 #include "cheat-base.h"
 #include "cheat-registry.h"
 #include "cheat-support.h"

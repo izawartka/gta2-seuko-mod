@@ -1,5 +1,6 @@
 #pragma once
 #include "common.h"
+#include "toast-manager.h"
 #include "cheat-base.h"
 #include "menu-manager.h"
 #include "reset-binds-manager.h"
@@ -19,6 +20,8 @@ namespace ModMenuModule {
 		Game::SCR_f textSize = Game::Utils::FromFloat(1.0f);
 		Game::SCR_f menuPadding = Game::Utils::FromFloat(5.0f);
 		Game::SCR_f minMenuWidth = Game::Utils::FromFloat(250.0f);
+		Game::SCR_f toastTextSize = Game::Utils::FromFloat(1.0f);
+		Game::SCR_f toastPadding = Game::Utils::FromFloat(5.0f);
 		UiModule::MenuControllerOptions menuControllerOptions = {};
 		UiModule::BackgroundOptions menuBackgroundOptions = { 128 };
 	};
@@ -50,6 +53,7 @@ namespace ModMenuModule {
 		static RootModule* m_instance;
 
 		ModMenuOptions m_options;
+		ToastManager m_toastManager;
 		MenuManager m_menuManager;
 		ResetBindsManager m_resetBindsManager;
 		QuickActionManager m_quickActionManager;
