@@ -35,8 +35,9 @@ namespace Core
 			std::type_index eventTypeIdx = typeid(EventT);
 
 			auto it = m_listeners.find(eventTypeIdx);
-			if (it == m_listeners.end()) {
-				callInit<EventT>();
+			if (it == m_listeners.end() && !callInit<EventT>()) {
+				spdlog::error("Event type {} failed to initialize, listener not added", eventTypeIdx.name());
+				return 0;
 			}
 
 			EventListenerId id = m_nextListenerId++;
@@ -150,10 +151,13 @@ namespace Core
 		struct has_init<T, std::void_t<decltype(T::Init())>> : std::true_type {};
 
 		template<typename EventT>
-		void callInit() {
+		bool callInit() {
 			if constexpr (has_init<EventT>::value) {
 				spdlog::debug("Calling Init for event type: {}", typeid(EventT).name());
-				EventT::Init();
+				return EventT::Init();
+			}
+			else {
+				return true;
 			}
 		}
 	};
