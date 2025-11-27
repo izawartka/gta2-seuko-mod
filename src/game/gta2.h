@@ -1227,7 +1227,7 @@ struct Camera {
 	SCR_f altMovingStateDown;
 	SCR_f altMovingStateLeft;
 	SCR_f altMovingStateRight;
-	uint altMovingArrowsRelated;
+	SCR_f field_0x60;
 	undefined2 field_0x64;
 	short altMovingLimit;
 	int screenPxWidth;

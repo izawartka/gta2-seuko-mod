@@ -42,8 +42,8 @@ namespace Game {
 		typedef SpriteEntry* (__fastcall GetSpriteEntryType)(Style_S3* style, DWORD edx, uint spriteIndex);
 		static constexpr GetSpriteEntryType* GetSpriteEntry = (GetSpriteEntryType*)0x004bf280;
 
-		static void DrawQuad(uint16_t flags, DWORD sprite, GTAVertex* verticies, uint16_t flags2) {
-			typedef void(__stdcall DrawQuadType)(uint16_t flags, DWORD sprite, GTAVertex* verticies, uint16_t flags2);
+		static void DrawQuad(uint32_t flags, DWORD sprite, GTAVertex* verticies, uint16_t flags2) {
+			typedef void(__stdcall DrawQuadType)(uint32_t flags, DWORD sprite, GTAVertex* verticies, uint16_t flags2);
 			static DrawQuadType* DrawQuadFunc = *(DrawQuadType**)0x005952c4;
 			DrawQuadFunc(flags, sprite, verticies, flags2);
 		}
