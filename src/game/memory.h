@@ -25,5 +25,10 @@ namespace Game {
 		static constexpr Menu* GetMenu() { return (Menu*)0x005ec070; }
 		static constexpr CarsManager* GetCarsManager() { return (CarsManager*)*(DWORD*)0x005e4ca0; }
 		static constexpr Camera* GetMainCamera() { return (Camera*)*(DWORD*)0x005e3cc4; }
+		static constexpr bool* GetIsFullScreen() { return (bool*)0x00595014; }
+		static constexpr int* GetFullScreenWidth() { return (int*)0x006732e4; }
+		static constexpr int* GetFullScreenHeight() { return (int*)0x006732e0; }
+		static constexpr int* GetWindowedWidth() { return (int*)0x00673578; }
+		static constexpr int* GetWindowedHeight() { return (int*)0x006732e8; }
 	};
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "gta2_wrapper.h"
+#include "memory.h"
 #include <vector>
 
 namespace Game {
@@ -85,6 +86,13 @@ namespace Game {
 				EXPLOSION_SIZE_MEDIUM,
 				EXPLOSION_SIZE_LARGE
 			};
+		}
+
+		static std::pair<int, int> GetScreenDimensions() {
+			bool isFullscreen = *Memory::GetIsFullScreen();
+			int width = isFullscreen ? *Memory::GetFullScreenWidth() : *Memory::GetWindowedWidth();
+			int height = isFullscreen ? *Memory::GetFullScreenHeight() : *Memory::GetWindowedHeight();
+			return { width, height };
 		}
 	};
 }
