@@ -9,8 +9,8 @@ namespace Core
 	public:
 		static HookManager* GetInstance();
 
-		template<typename HookT>
-		bool AddHook(const HookT& hookDef) {
+		template<typename HookT, typename... Args>
+		bool AddHook(const HookT& hookDef, Args... args) {
 			static_assert(std::is_base_of<HookBase, HookT>::value, "HookT must derive from Core::HookBase");
 			spdlog::debug("Adding hook: {}", typeid(HookT).name());
 			
@@ -19,7 +19,7 @@ namespace Core
 				return true;
 			}
 
-			if (!HookT::Hook(hookDef)) {
+			if (!HookT::Hook(hookDef, std::forward<Args>(args)...)) {
 				spdlog::error("Failed to add hook: {}", typeid(HookT).name());
 				return false;
 			}
