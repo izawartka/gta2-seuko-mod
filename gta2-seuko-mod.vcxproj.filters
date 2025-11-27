@@ -459,6 +459,9 @@
     <ClInclude Include="src\modules\ui\components\overridepos.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\hook-types\function-ptr-hook.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">

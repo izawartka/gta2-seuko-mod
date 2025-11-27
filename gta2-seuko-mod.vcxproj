@@ -233,6 +233,7 @@ exit /b 0
     <ClInclude Include="src\events\try-shoot-weapon.h" />
     <ClInclude Include="src\game\car-roof-utils.h" />
     <ClInclude Include="src\hook-types\jump-hook.h" />
+    <ClInclude Include="src\hook-types\function-ptr-hook.h" />
     <ClInclude Include="src\hook-types\multi-jump-hook.h" />
     <ClInclude Include="src\modules\keybinding\common.h" />
     <ClInclude Include="src\modules\keybinding\key.h" />
