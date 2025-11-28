@@ -36,7 +36,7 @@
     <ClInclude Include="src\core\hook-manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\events\draw.h">
+    <ClInclude Include="src\events\draw-ui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\core\hook-base.h">
@@ -476,7 +476,7 @@
     <ClCompile Include="src\core\module-manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\events\draw.cpp">
+    <ClCompile Include="src\events\draw-ui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\core\core.cpp">

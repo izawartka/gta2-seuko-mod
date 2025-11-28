@@ -326,7 +326,7 @@ exit /b 0
     <ClInclude Include="src\core\module-base.h" />
     <ClInclude Include="src\game\memory.h" />
     <ClInclude Include="src\core\common.h" />
-    <ClInclude Include="src\events\draw.h" />
+    <ClInclude Include="src\events\draw-ui.h" />
     <ClInclude Include="src\hook-types\function-multi-call-hook.h" />
     <ClInclude Include="src\modules\modmenu\common.h" />
     <ClInclude Include="src\modules\modmenu\menu-base.h" />
@@ -369,7 +369,7 @@ exit /b 0
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\events\after-debug-flags.cpp" />
     <ClCompile Include="src\events\cop-value-change.cpp" />
-    <ClCompile Include="src\events\draw.cpp" />
+    <ClCompile Include="src\events\draw-ui.cpp" />
     <ClCompile Include="src\events\game-end.cpp" />
     <ClCompile Include="src\events\game-start.cpp" />
     <ClCompile Include="src\events\game-tick.cpp" />
