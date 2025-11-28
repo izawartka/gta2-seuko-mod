@@ -69,7 +69,7 @@ void UiModule::Background::Draw()
 	vertices[3].v = 0.7f;
 
 	Game::Functions::DrawQuad(
-		m_options.alpha == 0xFF ? 0x28080 : 0xa180,
+		m_options.alpha == 0xFF ? 0x28080 : 0x2a180,
 		(DWORD)sprite,
 		vertices,
 		0xff
