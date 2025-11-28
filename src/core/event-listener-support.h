@@ -15,18 +15,35 @@ namespace Core {
 		}
 
 		template<typename EventT, typename U>
-		void AddEventListener(EventMethodListener<EventT, U> method) {
+		bool AddEventListener(EventMethodListener<EventT, U> method, bool oneTime = false) {
 			static_assert(std::is_base_of<EventBase, EventT>::value, "EventT must derive from Core::EventBase");
 			const std::type_index eventTypeIdx = typeid(EventT);
 
 			if (m_eventListenerIds.find(eventTypeIdx) != m_eventListenerIds.end()) {
 				spdlog::error("Event listener for event type {} already added", eventTypeIdx.name());
-				return;
+				return false;
 			}
 
+			EventListenerId listenerId = 0;
 			auto* eventManager = EventManager::GetInstance();
-			EventListenerId listenerId = eventManager->AddListener<EventT, U>(static_cast<U*>(this), method);
+			if (oneTime) {
+				// create lambda that removes the listener from m_eventListenerIds after first call
+				listenerId = eventManager->AddListener<EventT>([this, method, eventTypeIdx](EventT& event) {
+					auto it = m_eventListenerIds.find(eventTypeIdx);
+					if (it != m_eventListenerIds.end()) {
+						m_eventListenerIds.erase(it);
+					}
+					(static_cast<U*>(this)->*method)(event);
+				}, true);
+			}
+			else {
+				listenerId = eventManager->AddListener<EventT>(static_cast<U*>(this), method);
+			}
+
+			if (listenerId == 0) return false;
+
 			m_eventListenerIds[eventTypeIdx] = listenerId;
+			return true;
 		}
 
 		template<typename EventT>
