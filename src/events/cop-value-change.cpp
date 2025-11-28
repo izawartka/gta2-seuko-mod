@@ -146,11 +146,13 @@ const FunctionMultiCallHook setCopStarsHook = {
 
 bool CopValueChangeEvent::Init()
 {
-	return Core::HookManager::GetInstance()->AddHook(copKillHook) &&
-		Core::HookManager::GetInstance()->AddHook(addCopValueHook1) &&
-		Core::HookManager::GetInstance()->AddHook(addCopValueHook2) &&
-		Core::HookManager::GetInstance()->AddHook(addCopValueHook3) &&
-		Core::HookManager::GetInstance()->AddHook(explodeCarHook) &&
-		Core::HookManager::GetInstance()->AddHook(setCopValue0Hook) &&
-		Core::HookManager::GetInstance()->AddHook(setCopStarsHook);
+	Core::HookManager* hookManager = Core::HookManager::GetInstance();
+
+	return hookManager->AddHook(copKillHook) &&
+		hookManager->AddHook(addCopValueHook1) &&
+		hookManager->AddHook(addCopValueHook2) &&
+		hookManager->AddHook(addCopValueHook3) &&
+		hookManager->AddHook(explodeCarHook) &&
+		hookManager->AddHook(setCopValue0Hook) &&
+		hookManager->AddHook(setCopStarsHook);
 }
