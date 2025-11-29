@@ -462,6 +462,9 @@
     <ClInclude Include="src\hook-types\function-ptr-hook.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\events\draw-frame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
@@ -675,6 +678,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\ui\components\horcentered.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\events\draw-frame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
