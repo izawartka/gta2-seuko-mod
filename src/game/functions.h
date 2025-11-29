@@ -12,7 +12,7 @@ namespace Game {
 		typedef void DeinitGameType();
 		static constexpr DeinitGameType* DeinitGame = (DeinitGameType*)0x00462060;
 
-		typedef void(__fastcall EachFrameDrawType)(Game* game, DWORD edx);  
+		typedef void(__fastcall EachFrameDrawType)(Game* gamePtr);  
 		static constexpr EachFrameDrawType* EachFrameDraw = (EachFrameDrawType*)0x0045a5a0; 
 
 		typedef void(__fastcall GameTickType)(Game* game, DWORD edx);
@@ -42,10 +42,22 @@ namespace Game {
 		typedef SpriteEntry* (__fastcall GetSpriteEntryType)(Style_S3* style, DWORD edx, uint spriteIndex);
 		static constexpr GetSpriteEntryType* GetSpriteEntry = (GetSpriteEntryType*)0x004bf280;
 
+		typedef void(__stdcall DrawQuadType)(uint32_t flags, DWORD sprite, GTAVertex* verticies, uint16_t flags2);
 		static void DrawQuad(uint32_t flags, DWORD sprite, GTAVertex* verticies, uint16_t flags2) {
-			typedef void(__stdcall DrawQuadType)(uint32_t flags, DWORD sprite, GTAVertex* verticies, uint16_t flags2);
 			static DrawQuadType* DrawQuadFunc = *(DrawQuadType**)0x005952c4;
 			DrawQuadFunc(flags, sprite, verticies, flags2);
+		}
+
+		typedef void(__stdcall FlipBuffersType)(SVideo* sVideo);
+		static void FlipBuffers(SVideo* sVideo) {
+			static FlipBuffersType* FlipBuffersFunc = *(FlipBuffersType**)0x00595044;
+			FlipBuffersFunc(sVideo);
+		}
+
+		typedef void(__stdcall ClearScreenType)(SVideo* sVideo, DWORD param_2, DWORD param_3, DWORD param_4, DWORD param_5, DWORD param_6, DWORD param_7, DWORD param_8);
+		static void ClearScreen(SVideo* sVideo, DWORD param_2, DWORD param_3, DWORD param_4, DWORD param_5, DWORD param_6, DWORD param_7, DWORD param_8) {
+			static ClearScreenType* ClearScreenFunc = *(ClearScreenType**)0x00595064;
+			ClearScreenFunc(sVideo, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
 		}
 
 		typedef Car*(__stdcall SpawnCarType)(int x, int y, int z, short rot, CAR_MODEL4 model);

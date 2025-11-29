@@ -24,6 +24,8 @@ namespace Game {
 		static Menu* GetMenu() { return (Menu*)0x005ec070; }
 		static CarsManager* GetCarsManager() { return (CarsManager*)*(DWORD*)0x005e4ca0; }
 		static Camera* GetMainCamera() { return (Camera*)*(DWORD*)0x005e3cc4; }
+		static bool* GetIsRendererLoaded() { return (bool*)0x00675358; }
+		static SVideo** GetSVideoPtr() { return (SVideo**)0x00673d20; }
 		static bool* GetIsFullScreen() { return (bool*)0x00595014; }
 		static int* GetFullScreenWidth() { return (int*)0x006732e4; }
 		static int* GetFullScreenHeight() { return (int*)0x006732e0; }
