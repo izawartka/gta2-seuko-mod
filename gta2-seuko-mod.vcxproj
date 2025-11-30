@@ -229,6 +229,7 @@ exit /b 0
     <ClInclude Include="src\events\after-debug-flags.h" />
     <ClInclude Include="src\events\cop-value-change.h" />
     <ClInclude Include="src\events\draw-frame.h" />
+    <ClInclude Include="src\events\renderer.h" />
     <ClInclude Include="src\events\game-end.h" />
     <ClInclude Include="src\events\game-start.h" />
     <ClInclude Include="src\events\is-ammo-kf-call.h" />
@@ -373,6 +374,7 @@ exit /b 0
     <ClCompile Include="src\events\cop-value-change.cpp" />
     <ClCompile Include="src\events\draw-frame.cpp" />
     <ClCompile Include="src\events\draw-ui.cpp" />
+    <ClCompile Include="src\events\renderer.cpp" />
     <ClCompile Include="src\events\game-end.cpp" />
     <ClCompile Include="src\events\game-start.cpp" />
     <ClCompile Include="src\events\game-tick.cpp" />
