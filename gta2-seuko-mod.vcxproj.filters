@@ -135,9 +135,6 @@
     <ClInclude Include="src\modules\ui\controller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\core\listener-base.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\modules\modmenu\common.h">
       <Filter>Header Files</Filter>
     </ClInclude>

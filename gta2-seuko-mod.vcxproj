@@ -306,7 +306,6 @@ exit /b 0
     <ClInclude Include="src\modules\ui\controllers\select.h" />
     <ClInclude Include="src\modules\ui\converter-support.h" />
     <ClInclude Include="src\core\core.h" />
-    <ClInclude Include="src\core\listener-base.h" />
     <ClInclude Include="src\core\make-resolver.h" />
     <ClInclude Include="src\core\types.h" />
     <ClInclude Include="src\core\watch-manager.h" />

@@ -57,7 +57,7 @@ namespace Core {
 				return;
 			}
 			auto* eventManager = EventManager::GetInstance();
-			eventManager->RemoveListener(eventTypeIdx, it->second);
+			eventManager->RemoveListener<EventT>(it->second);
 			m_eventListenerIds.erase(it);
 		}
 

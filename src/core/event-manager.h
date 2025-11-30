@@ -3,8 +3,120 @@
 #include "types.h"
 #include "event-base.h"
 
-namespace Core
-{
+namespace Core {
+    class EventManager;
+
+	template<typename EventT>
+	class EventSpecificManager
+	{
+		friend class EventManager;
+
+		EventSpecificManager() = default;
+		~EventSpecificManager() = default;
+		EventSpecificManager(const EventSpecificManager&) = delete;
+		EventSpecificManager& operator=(const EventSpecificManager&) = delete;
+
+		static EventSpecificManager<EventT>* GetInstance() {
+			static EventSpecificManager<EventT> instance;
+			return &instance;
+		}
+
+		void Dispatch(EventT& event) {
+			m_dispatching = true;
+			for (auto& wrapper : m_listeners) {
+				wrapper.listener(event);
+				if (wrapper.isOneTime) {
+					m_pendingChanges.push({ ChangeType::Remove, wrapper.id });
+				}
+			}
+			m_dispatching = false;
+			ProcessPendingChanges();
+		}
+
+		void AddListener(EventListener<EventT> listener, EventListenerId id, bool oneTime) {
+			PendingChange change = { ChangeType::Add, id, std::move(listener), oneTime };
+			if (m_dispatching) {
+				m_pendingChanges.push(std::move(change));
+				return;
+			}
+			AddListenerEntry(std::move(change));
+		}
+
+		void RemoveListener(EventListenerId id) {
+			PendingChange change = { ChangeType::Remove, id };
+			if (m_dispatching) {
+				m_pendingChanges.push(std::move(change));
+				return;
+			}
+			RemoveListenerEntry(change);
+		}
+
+		struct ListenerWrapper {
+			EventListenerId id;
+			EventListener<EventT> listener;
+			bool isOneTime = false;
+		};
+
+		enum class ChangeType { Add, Remove };
+
+		struct PendingChange {
+			ChangeType type;
+			EventListenerId id;
+			EventListener<EventT> listener = nullptr; // Only used for Add
+			bool isOneTime = false; // Only used for Add
+		};
+
+		void AddListenerEntry(PendingChange&& change) {
+			spdlog::debug("Adding listener id {} for event type: {}", change.id, typeid(EventT).name());
+			m_listeners.push_back({ change.id, std::move(change.listener), change.isOneTime });
+		}
+
+		void RemoveListenerEntry(const PendingChange& change) {
+			spdlog::debug("Removing listener id {} for event type: {}", change.id, typeid(EventT).name());
+			auto lit = std::find_if(m_listeners.begin(), m_listeners.end(), [id = change.id](const ListenerWrapper& wrapper) {
+				return wrapper.id == id;
+			});
+			if (lit == m_listeners.end()) {
+				spdlog::warn("Listener id {} not found for event type: {}", change.id, typeid(EventT).name());
+				return;
+			}
+			m_listeners.erase(lit);
+		}
+
+		void ProcessPendingChanges() {
+			while (!m_pendingChanges.empty()) {
+				auto change = std::move(m_pendingChanges.front());
+				m_pendingChanges.pop();
+				if (change.type == ChangeType::Add) {
+					AddListenerEntry(std::move(change));
+				}
+				
+				if (change.type == ChangeType::Remove) {
+					RemoveListenerEntry(change);
+				}
+			}
+		}
+
+		bool CallInitIfNeeded() {
+			if (!m_initialized) {
+				if constexpr (EventHasInit_v<EventT>) {
+					spdlog::debug("Calling Init for event type: {}", typeid(EventT).name());
+					m_initialized = EventT::Init();
+				}
+				else {
+					m_initialized = true;
+				}
+			}
+			return m_initialized;
+		}
+
+		std::vector<ListenerWrapper> m_listeners = {};
+		bool m_dispatching = false;
+		std::queue<PendingChange> m_pendingChanges = {};
+		bool m_initialized = false;
+		bool m_hasRemoveLink = false;
+	};
+
 	class EventManager
 	{
 	public:
@@ -13,42 +125,23 @@ namespace Core
 		template<typename EventT>
 		void Dispatch(EventT& event) {
 			static_assert(std::is_base_of<EventBase, EventT>::value, "EventT must derive from Core::EventBase");
-
-			auto it = m_listeners.find(typeid(EventT));
-			if (it == m_listeners.end()) return;
-
-			m_dispatching = true;
-			auto& listeners = it->second;
-			for (auto& wrapper : listeners) {
-				wrapper.listener(event);
-				if (wrapper.isOneTime) {
-					RemoveListenerEntry({ ChangeType::Remove, typeid(EventT), wrapper.id });
-				}
-			}
-			m_dispatching = false;
-			ProcessPendingChanges();
+			EventSpecificManager<EventT>::GetInstance()->Dispatch(event);
 		}
 
 		template<typename EventT>
 		EventListenerId AddListener(EventListener<EventT> listener, bool oneTime = false) {
 			static_assert(std::is_base_of<EventBase, EventT>::value, "EventT must derive from Core::EventBase");
-			std::type_index eventTypeIdx = typeid(EventT);
-
-			auto it = m_listeners.find(eventTypeIdx);
-			if (it == m_listeners.end() && !callInit<EventT>()) {
-				spdlog::error("Event type {} failed to initialize, listener not added", eventTypeIdx.name());
+			EventSpecificManager<EventT>* specificManager = EventSpecificManager<EventT>::GetInstance();
+			if(specificManager->m_hasRemoveLink == false) {
+				m_removalMap[typeid(EventT)] = std::bind(&EventSpecificManager<EventT>::RemoveListener, specificManager, std::placeholders::_1);
+				specificManager->m_hasRemoveLink = true;
+			}
+			if(!specificManager->CallInitIfNeeded()) {
+				spdlog::error("Failed to initialize event type: {}", typeid(EventT).name());
 				return 0;
 			}
-
 			EventListenerId id = m_nextListenerId++;
-			PendingChange change = { ChangeType::Add, eventTypeIdx, id, [listener](EventBase& e) {
-				listener(static_cast<EventT&>(e));
-			}, oneTime };
-			if (m_dispatching) {
-				m_pendingChanges.push(change);
-				return id;
-			}
-			AddListenerEntry(change);
+			specificManager->AddListener(listener, id, oneTime);
 			return id;
 		}
 
@@ -61,18 +154,19 @@ namespace Core
 		}
 
 		void RemoveListener(std::type_index eventType, EventListenerId id) {
-			PendingChange change = { ChangeType::Remove, eventType, id };
-			if (m_dispatching) {
-				m_pendingChanges.push(change);
-				return;
+			auto it = m_removalMap.find(eventType);
+			if (it != m_removalMap.end()) {
+				it->second(id);
 			}
-			RemoveListenerEntry(change);
+			else {
+				spdlog::error("Cannot remove listener id {}: Event of type {} has never been added", id, eventType.name());
+			}
 		}
 
 		template<typename EventT>
 		void RemoveListener(EventListenerId id) {
 			static_assert(std::is_base_of<EventBase, EventT>::value, "EventT must derive from Core::EventBase");
-			RemoveListener(typeid(EventT), id);
+			EventSpecificManager<EventT>::GetInstance()->RemoveListener(id);
 		}
 
 	private:
@@ -83,82 +177,8 @@ namespace Core
 		EventManager& operator=(const EventManager&) = delete;
 
 		static EventManager* m_instance;
-
-		struct ListenerWrapper {
-			EventListenerId id;
-			EventListener<EventBase> listener;
-			bool isOneTime = false;
-		};
-
-		enum class ChangeType { Add, Remove };
-		struct PendingChange {
-			ChangeType type;
-			std::type_index eventType;
-			EventListenerId id;
-			EventListener<EventBase> listener = nullptr; // Only used for Add
-			bool isOneTime = false; // Only used for Add
-		};
-
-		void AddListenerEntry(PendingChange change) {
-			spdlog::debug("Adding listener id {} for event type: {}", change.id, change.eventType.name());
-			auto& listeners = m_listeners[change.eventType];
-			listeners.push_back({ change.id, change.listener, change.isOneTime });
-		}
-
-		void RemoveListenerEntry(PendingChange change) {
-			spdlog::debug("Removing listener id {} for event type: {}", change.id, change.eventType.name());
-			auto it = m_listeners.find(change.eventType);
-			if (it == m_listeners.end()) {
-				spdlog::warn("No listeners found for event type: {}", change.eventType.name());
-				return;
-			}
-			auto& listeners = it->second;
-			auto lit = std::find_if(listeners.begin(), listeners.end(), [id = change.id](const ListenerWrapper& wrapper) {
-				return wrapper.id == id;
-			});
-			if (lit == listeners.end()) {
-				spdlog::warn("Listener id {} not found for event type: {}", change.id, change.eventType.name());
-				return;
-			}
-			listeners.erase(lit);
-			// Note: m_listeners entry is not being removed 
-		}
-
-		void ProcessPendingChanges() {
-			while (!m_pendingChanges.empty()) {
-				auto change = m_pendingChanges.front();
-				m_pendingChanges.pop();
-
-				if (change.type == ChangeType::Add) {
-					AddListenerEntry(change);
-				}
-				
-				if (change.type == ChangeType::Remove) {
-					RemoveListenerEntry(change);
-				}
-			}
-		}
-
-		std::unordered_map<std::type_index, std::vector<ListenerWrapper>> m_listeners;
 		EventListenerId m_nextListenerId = 1;
-		bool m_dispatching = false;
-		std::queue<PendingChange> m_pendingChanges;
 
-		template<typename T, typename = void>
-		struct has_init : std::false_type {};
-
-		template<typename T>
-		struct has_init<T, std::void_t<decltype(T::Init())>> : std::true_type {};
-
-		template<typename EventT>
-		bool callInit() {
-			if constexpr (has_init<EventT>::value) {
-				spdlog::debug("Calling Init for event type: {}", typeid(EventT).name());
-				return EventT::Init();
-			}
-			else {
-				return true;
-			}
-		}
+		std::unordered_map<std::type_index, std::function<void(EventListenerId)>> m_removalMap;
 	};
 }
