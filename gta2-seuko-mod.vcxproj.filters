@@ -465,6 +465,9 @@
     <ClInclude Include="src\events\draw-frame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\converters\radians.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
