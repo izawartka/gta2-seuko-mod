@@ -67,4 +67,26 @@ namespace Game {
 		});
 		return explosionSizes;
 	}
+
+	std::pair<int, int> Utils::GetScreenDimensions() {
+		bool isFullscreen = *Memory::GetIsFullScreen();
+		int width = isFullscreen ? *Memory::GetFullScreenWidth() : *Memory::GetWindowedWidth();
+		int height = isFullscreen ? *Memory::GetFullScreenHeight() : *Memory::GetWindowedHeight();
+		return { width, height };
+	}
+
+	short* Utils::GetPlayerPedRotationPtr() {
+		Ped* playerPed = Memory::GetPlayerPed();
+		if (playerPed == nullptr) return nullptr;
+
+		if (playerPed->gameObject != nullptr) {
+			return &playerPed->gameObject->spriteRotation;
+		}
+
+		if (playerPed->currentCar != nullptr && playerPed->currentCar->sprite != nullptr) {
+			return reinterpret_cast<short*>(&playerPed->currentCar->sprite->rotation);
+		}
+
+		return nullptr;
+	}
 }
