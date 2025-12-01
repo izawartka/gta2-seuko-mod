@@ -230,6 +230,7 @@ exit /b 0
     <ClInclude Include="src\events\cop-value-change.h" />
     <ClInclude Include="src\events\culling-check.h" />
     <ClInclude Include="src\events\draw-frame.h" />
+    <ClInclude Include="src\events\draw-map-layer.h" />
     <ClInclude Include="src\events\renderer.h" />
     <ClInclude Include="src\events\game-end.h" />
     <ClInclude Include="src\events\game-start.h" />
@@ -374,6 +375,7 @@ exit /b 0
     <ClCompile Include="src\events\cop-value-change.cpp" />
     <ClCompile Include="src\events\culling-check.cpp" />
     <ClCompile Include="src\events\draw-frame.cpp" />
+    <ClCompile Include="src\events\draw-map-layer.cpp" />
     <ClCompile Include="src\events\draw-ui.cpp" />
     <ClCompile Include="src\events\renderer.cpp" />
     <ClCompile Include="src\events\game-end.cpp" />

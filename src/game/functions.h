@@ -15,6 +15,13 @@ namespace Game {
 		typedef void(__fastcall EachFrameDrawType)(Game* gamePtr);  
 		static constexpr EachFrameDrawType* EachFrameDraw = (EachFrameDrawType*)0x0045a5a0; 
 
+		typedef void(__fastcall DrawMapLayerType)(S12* s12);
+		// PreDrawMapLayerEvent won't be called.
+		static constexpr DrawMapLayerType* DrawMapLayer = (DrawMapLayerType*)0x004720e0;
+
+		typedef void(__fastcall DrawTileBlockType)(S12* s12, int param_2, int* x, int* y);
+		static constexpr DrawTileBlockType* DrawTileBlock = (DrawTileBlockType*)0x00471f20;
+
 		typedef void(__fastcall GameTickType)(Game* game, DWORD edx);
 		static constexpr GameTickType* GameTick = (GameTickType*)0x0045c1f0;
 
