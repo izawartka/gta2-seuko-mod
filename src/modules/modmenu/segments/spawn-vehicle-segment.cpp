@@ -23,9 +23,9 @@ bool ModMenuModule::SpawnVehicleSegment::Attach(ModMenuModule::MenuBase* menu, U
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 
-	UiModule::SelectOptionList<Game::CAR_MODEL4> modelOptionList = Game::Utils::GetSpawnableCarModels();
-	Game::CAR_MODEL4 selectedModel = modelOptionList[0];
-	auto remapOptionList = Game::Utils::GetAvailableCarRemapsWithPalette();
+	const auto& modelOptionList = Game::Utils::GetSpawnableCarModels();
+	auto selectedModel = modelOptionList[0];
+	const auto& remapOptionList = Game::Utils::GetAvailableCarRemapsWithPalette();
 	auto selectedRemap = remapOptionList[0];
 
 	if(m_persistencePrefix.size()) {

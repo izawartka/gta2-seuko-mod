@@ -25,8 +25,8 @@ bool ModMenuModule::GetWeaponMenu::Attach()
 
 	// weapon
 	UiModule::Text* weaponText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	UiModule::SelectOptionList<Game::WEAPON_INDEX> weaponOptionList = Game::Utils::GetAvailableWeapons();
-	Game::WEAPON_INDEX weaponDefault = persistence->Load("ModMenu_GetWeaponMenu_SelectedWeapon", weaponOptionList[0]);
+	const auto& weaponOptionList = Game::Utils::GetAvailableWeapons();
+	auto weaponDefault = persistence->Load("ModMenu_GetWeaponMenu_SelectedWeapon", weaponOptionList[0]);
 	m_weaponController = m_menuController->CreateLatestItemController<UiModule::SelectController<Game::WEAPON_INDEX>>(
 		weaponText,
 		weaponOptionList,

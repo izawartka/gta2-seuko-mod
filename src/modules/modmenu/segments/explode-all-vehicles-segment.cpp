@@ -23,7 +23,7 @@ bool ModMenuModule::ExplodeAllVehiclesSegment::Attach(ModMenuModule::MenuBase* m
 	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 
 	auto selectedExcludePlayerVehicle = true;
-	auto explosionSizeOptionList = Game::Utils::GetAvailableExplosionSizes();
+	const auto& explosionSizeOptionList = Game::Utils::GetAvailableExplosionSizes();
 	auto selectedExplosionSize = Game::EXPLOSION_SIZE_MEDIUM;
 
 	if (m_persistencePrefix.size()) {

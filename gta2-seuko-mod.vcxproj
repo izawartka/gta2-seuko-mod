@@ -383,6 +383,7 @@ exit /b 0
     <ClCompile Include="src\events\try-shoot-weapon.cpp" />
     <ClCompile Include="src\events\keyboard.cpp" />
     <ClCompile Include="src\game\keycode.cpp" />
+    <ClCompile Include="src\game\utils.cpp" />
     <ClCompile Include="src\logging.cpp" />
     <ClCompile Include="src\modules\keybinding\bind-manager.cpp" />
     <ClCompile Include="src\modules\keybinding\root.cpp" />

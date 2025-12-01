@@ -46,7 +46,7 @@ bool ModMenuModule::LastVehicleMenu::Attach()
 
 	// remap
 	UiModule::Text* remapText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	auto remapOptionList = Game::Utils::GetAvailableCarRemapsWithPalette();
+	const auto& remapOptionList = Game::Utils::GetAvailableCarRemapsWithPalette();
 	auto remapController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<std::tuple<short, Game::PALETTE_BASE>>>(
 		remapText,
 		Core::MakeResolver(
