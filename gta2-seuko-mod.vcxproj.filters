@@ -471,6 +471,9 @@
     <ClInclude Include="src\events\culling-check.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\modules\modmenu\utils\angle-utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\events\draw-map-layer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -702,6 +705,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\events\draw-map-layer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\utils\angle-utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

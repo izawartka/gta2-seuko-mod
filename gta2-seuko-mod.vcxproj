@@ -290,6 +290,7 @@ exit /b 0
     <ClInclude Include="src\modules\modmenu\toast-manager.h" />
     <ClInclude Include="src\modules\modmenu\utils\explode-all-cars.h" />
     <ClInclude Include="src\modules\modmenu\utils\get-all-weapons.h" />
+    <ClInclude Include="src\modules\modmenu\utils\angle-utils.h" />
     <ClInclude Include="src\modules\modmenu\utils\save-game.h" />
     <ClInclude Include="src\modules\modmenu\utils\spawn-car-at-player.h" />
     <ClInclude Include="src\modules\modmenu\utils\utils.h" />
@@ -428,6 +429,7 @@ exit /b 0
     <ClCompile Include="src\modules\modmenu\segments\explode-all-vehicles-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\spawn-vehicle-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\toast-manager.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\angle-utils.cpp" />
     <ClCompile Include="src\modules\persistence\persistence-manager.cpp" />
     <ClCompile Include="src\modules\persistence\root.cpp" />
     <ClCompile Include="src\modules\ui\component.cpp" />
