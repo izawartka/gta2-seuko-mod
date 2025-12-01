@@ -46,6 +46,21 @@ namespace Core {
 			return true;
 		}
 
+		template<typename EventT, typename U>
+		void SetEventListener(EventMethodListener<EventT, U> method, bool enabled) {
+			static_assert(std::is_base_of<EventBase, EventT>::value, "EventT must derive from Core::EventBase");
+			if (enabled) {
+				if (!HasEventListener<EventT>()) {
+					AddEventListener<EventT, U>(method);
+				}
+			}
+			else {
+				if (HasEventListener<EventT>()) {
+					RemoveEventListener<EventT>();
+				}
+			}
+		}
+
 		template<typename EventT>
 		void RemoveEventListener() {
 			static_assert(std::is_base_of<EventBase, EventT>::value, "EventT must derive from Core::EventBase");
