@@ -477,6 +477,9 @@
     <ClInclude Include="src\events\draw-map-layer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\modules\modmenu\cheats\camera\clear-screen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
@@ -708,6 +711,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\modmenu\utils\angle-utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\cheats\camera\clear-screen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

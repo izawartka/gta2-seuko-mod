@@ -248,6 +248,7 @@ exit /b 0
     <ClInclude Include="src\modules\modmenu\cheat-base.h" />
     <ClInclude Include="src\modules\modmenu\cheat-registry.h" />
     <ClInclude Include="src\modules\modmenu\cheat-support.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\camera\clear-screen.h" />
     <ClInclude Include="src\modules\modmenu\cheats\cheats.h" />
     <ClInclude Include="src\modules\modmenu\cheats\freeze-cop-value.h" />
     <ClInclude Include="src\modules\modmenu\cheats\infinite-ammo.h" />
@@ -390,6 +391,7 @@ exit /b 0
     <ClCompile Include="src\logging.cpp" />
     <ClCompile Include="src\modules\keybinding\bind-manager.cpp" />
     <ClCompile Include="src\modules\keybinding\root.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\camera\clear-screen.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\freeze-cop-value.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\infinite-ammo.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\instant-reload.cpp" />
