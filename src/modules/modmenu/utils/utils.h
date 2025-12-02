@@ -4,4 +4,6 @@
 #include "get-all-weapons.h"
 #include "save-game.h"
 #include "spawn-car-at-player.h"
+#include "vertex-utils.h"
 #include "angle-utils.h"
+#include "custom-render-queue-utils.h"

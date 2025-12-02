@@ -456,10 +456,16 @@
     <ClInclude Include="src\modules\ui\components\overridepos.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\modules\modmenu\cheats\camera\camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\hook-types\function-ptr-hook.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\events\renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\modmenu\utils\vertex-utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\events\draw-frame.h">
@@ -481,6 +487,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\modules\modmenu\cheats\camera\disable-culling.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\modules\modmenu\utils\custom-render-queue-utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -698,7 +707,13 @@
     <ClCompile Include="src\modules\ui\components\horcentered.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\modules\modmenu\cheats\camera\camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\events\renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\utils\vertex-utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\events\draw-frame.cpp">
@@ -720,6 +735,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\modmenu\cheats\camera\disable-culling.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\utils\custom-render-queue-utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
