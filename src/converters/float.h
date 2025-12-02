@@ -39,6 +39,7 @@ public:
 		std::fesetround(FE_TONEAREST);
 
 		if constexpr (std::is_floating_point_v<BaseT>) {
+			if (text.empty()) return T{};
 			return static_cast<BaseT>(std::stod(text));
 		}
 		else {

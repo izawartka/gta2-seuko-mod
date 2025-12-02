@@ -1,8 +1,5 @@
 #pragma once
-#include <string>
-#include <cfenv>
-#include <type_traits>
-#include <cassert>
+#include "float.h"
 #include <limits>
 
 template <typename T,
@@ -24,7 +21,7 @@ public:
 			return value;
 		}
 		else if constexpr (std::is_floating_point_v<BaseT>) {
-			return std::to_wstring(value);
+			return FloatConverter<BaseT>::ConvertToString(value);
 		}
 		else if constexpr (std::is_integral_v<BaseT>) {
 			return std::to_wstring(value);
@@ -39,9 +36,11 @@ public:
 			return text;
 		}
 		else if constexpr (std::is_floating_point_v<BaseT>) {
-			return static_cast<BaseT>(std::stod(text));
+			return FloatConverter<BaseT>::ConvertFromString(text);
 		}
 		else if constexpr (std::is_integral_v<BaseT>) {
+			if (text.empty()) return static_cast<BaseT>(0);
+
 			using longT = std::conditional_t<std::is_signed_v<BaseT>, long long, unsigned long long>;
 			longT value = 0;
 			if constexpr (std::is_signed_v<BaseT>) {
@@ -64,13 +63,7 @@ public:
 			return c >= 32 && c <= 126;
 		}
 		else if constexpr (std::is_floating_point_v<BaseT>) {
-			bool hasDecimal = text.find(L'.') != std::wstring::npos;
-			if (c == L'.') return !hasDecimal;
-
-			bool hasLength = text.length() > 0;
-			if (c == L'-') return !hasLength;
-
-			return (c >= L'0' && c <= L'9');
+			return FloatConverter<BaseT>::IsValidChar(text, c);
 		}
 		else if constexpr (std::is_integral_v<BaseT>) {
 			if constexpr (std::is_signed_v<BaseT>) {
@@ -83,7 +76,14 @@ public:
 	}
 
 	static bool AreEqual(T a, T b) {
-		return a == b;
+		using BaseT = std::remove_cv_t<T>;
+
+		if constexpr (std::is_floating_point_v<BaseT>) {
+			return FloatConverter<BaseT>::AreEqual(a, b);
+		}
+		else {
+			return a == b;
+		}
 	}
 
 protected:
