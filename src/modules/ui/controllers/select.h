@@ -176,7 +176,7 @@ namespace UiModule {
 			}
 
 			if (IsActionKey(key)) {
-				Save();
+				if(!m_options.liveMode)	Save();
 				SetEditing(false);
 				return;
 			}
