@@ -8,3 +8,4 @@
 #include "camera/camera.h"
 #include "camera/clear-screen.h"
 #include "camera/disable-culling.h"
+#include "camera/camera-pos.h"
