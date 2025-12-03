@@ -39,6 +39,6 @@ namespace ModMenuModule::Utils::Vertex {
 	void ApplyCameraTransform(Game::GTAVertex* vertices, size_t vertexCount, const CameraValues& cameraValues, const CameraTransform& cameraTransform);
 	bool ApplyCustomCulling(Game::GTAVertex* vertices, size_t vertexCount, const CameraValues& cameraValues);
 
-	CameraValues GetCameraValues(const Game::Camera& camera, const Game::Ped* playerPed);
+	CameraValues GetCameraValues(const Game::Camera& camera, Game::SCR_f playerPedZ);
 	CustomCameraPos GetCustomCameraPos(const CameraValues& cameraValues, const CameraTransform& cameraTransform);
 }

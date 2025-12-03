@@ -142,7 +142,7 @@ bool ModMenuModule::Utils::Vertex::ApplyCustomCulling(Game::GTAVertex* vertices,
 	return true;
 }
 
-ModMenuModule::Utils::Vertex::CameraValues ModMenuModule::Utils::Vertex::GetCameraValues(const Game::Camera& camera, const Game::Ped* playerPed)
+ModMenuModule::Utils::Vertex::CameraValues ModMenuModule::Utils::Vertex::GetCameraValues(const Game::Camera& camera, Game::SCR_f playerPedZ)
 {
 	const int screenWidth = *Game::Memory::GetScreenWidth();
 	const int screenHeight = *Game::Memory::GetScreenHeight();
@@ -150,7 +150,7 @@ ModMenuModule::Utils::Vertex::CameraValues ModMenuModule::Utils::Vertex::GetCame
 	float xCenter = static_cast<float>(screenWidth) / 2.0f;
 	float yCenter = static_cast<float>(screenHeight) / 2.0f;
 	float zCenter = 0;
-	float horZCenter = Game::Utils::ToFloat(playerPed ? playerPed->z : 0) + 0.5f;
+	float horZCenter = Game::Utils::ToFloat(playerPedZ) + 0.5f;
 	float zoomFactor = static_cast<float>(camera.cameraPos.zoom) / 14540.0f;
 	float field60 = Game::Utils::ToFloat(camera.field_0x60);
 	float gameCameraX = Game::Utils::ToFloat(camera.cameraPos.x);

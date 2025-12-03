@@ -1,7 +1,9 @@
 #include "camera.h"
+#include "camera-pos.h"
 #include "../../cheat-registry.h"
 #include "../../utils/angle-utils.h"
 #include "../../utils/custom-render-queue-utils.h"
+#include "../../root.h"
 
 ModMenuModule::CameraCheat::CameraCheat() : ModMenuModule::CheatBase("Cheat_Camera_IsEnabled") {
 }
@@ -124,7 +126,12 @@ void ModMenuModule::CameraCheat::OnPreDrawFrame(PreDrawFrameEvent& event)
 	}
 
 	if (mainCamera) {
-		m_cameraValues = Utils::Vertex::GetCameraValues(*mainCamera, playerPed);
+		auto* moduleRoot = ModMenuModule::RootModule::GetInstance();
+		auto* cameraPosCheat = moduleRoot->GetCheat<ModMenuModule::CameraPosCheat>();
+		bool ignorePlayerPedZ = !playerPed || (cameraPosCheat && cameraPosCheat->IsEnabled() && cameraPosCheat->GetOptions().lockedZ.has_value());
+		Game::SCR_f playerPedZ = ignorePlayerPedZ ? Game::Utils::FromFloat(2.0f) : playerPed->z;
+
+		m_cameraValues = Utils::Vertex::GetCameraValues(*mainCamera, playerPedZ);
 		m_customCameraPos = Utils::Vertex::GetCustomCameraPos(
 			m_cameraValues.value(),
 			m_options.cameraTransform

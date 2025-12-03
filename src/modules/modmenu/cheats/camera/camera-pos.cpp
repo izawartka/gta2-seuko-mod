@@ -54,6 +54,7 @@ void ModMenuModule::CameraPosCheat::OnEnable()
 {
 	m_setFromCurrentRequested = false;
 	m_setFromOriginalTargetRequested = false;
+	m_options = {};
 	AddEventListener<GameTickEvent>(&ModMenuModule::CameraPosCheat::OnGameTick);
 }
 
