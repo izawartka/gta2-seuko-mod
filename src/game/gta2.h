@@ -1218,7 +1218,10 @@ struct Camera {
 	enum PLAYER_PHYSICS_MOVEMENT movementBitmask;
 	struct Ped * ped;
 	undefined4 field_0x38;
-	int followedPedID;
+	bool doFollowPlayer;
+	undefined field_0x3d;
+	undefined field_0x3e;
+	undefined field_0x3f;
 	int targetElevation;
 	int flyTimerMaybe;
 	SCR_f altMovingPosX;
@@ -2682,9 +2685,9 @@ struct Player { /* Player actually */
 	undefined field_0x8d;
 	undefined1 field_0x8e;
 	byte field_0x8f;
-	struct Camera ph1; /* player ped related */
-	struct Camera ph2; /* camera related, for example teleport use this struct */
-	struct Camera ph3;
+	struct Camera ph1; /* player camera */
+	struct Camera ph2; /* actual camera */
+	struct Camera ph3; /* aux camera maybe? */
 	struct Ped* ped;
 	struct Ped* ped2;
 	void * field_0x2cc;
