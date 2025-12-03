@@ -31,6 +31,8 @@ namespace Game {
 		static int* GetFullScreenHeight() { return (int*)0x006732e0; }
 		static int* GetWindowedWidth() { return (int*)0x00673578; }
 		static int* GetWindowedHeight() { return (int*)0x006732e8; }
+		static int* GetScreenWidth() { return (int*)0x00673584; }
+		static int* GetScreenHeight() { return (int*)0x00673474; }
 		static int* GetCurrentlyDrawnMapLayerIndex() { return (int*)0x006633a0; }
 	};
 }

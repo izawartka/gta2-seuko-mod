@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "memory.h"
 
 namespace Game {
 	const std::vector<CAR_MODEL4>& Utils::GetSpawnableCarModels() {
@@ -66,13 +67,6 @@ namespace Game {
 			EXPLOSION_SIZE_LARGE
 		});
 		return explosionSizes;
-	}
-
-	std::pair<int, int> Utils::GetScreenDimensions() {
-		bool isFullscreen = *Memory::GetIsFullScreen();
-		int width = isFullscreen ? *Memory::GetFullScreenWidth() : *Memory::GetWindowedWidth();
-		int height = isFullscreen ? *Memory::GetFullScreenHeight() : *Memory::GetWindowedHeight();
-		return { width, height };
 	}
 
 	short* Utils::GetPlayerPedRotationPtr() {

@@ -1,6 +1,5 @@
 #pragma once
 #include "gta2_wrapper.h"
-#include "memory.h"
 #include <vector>
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -38,7 +37,6 @@ namespace Game {
 		static const std::vector<WEAPON_INDEX>& GetAvailableWeapons();
 		static bool IsWeaponVehicleWeapon(WEAPON_INDEX weapon);
 		static const std::vector<EXPLOSION_SIZE>& GetAvailableExplosionSizes();
-		static std::pair<int, int> GetScreenDimensions();
 		static short* GetPlayerPedRotationPtr();
 	};
 }
