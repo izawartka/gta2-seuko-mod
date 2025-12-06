@@ -1,7 +1,6 @@
 #pragma once
 #include "../../common.h"
 #include "../../cheat-base.h"
-#include "../../../../events/game-tick.h"
 #include "../../../../events/camera-pos-apply.h"
 
 namespace ModMenuModule {
@@ -45,6 +44,9 @@ namespace ModMenuModule {
 		void OnCameraPosApply(CameraPosApplyEvent& event);
 		void ApplyCoordinate(CameraPosCheatCoordinate& coord, Game::SCR_f& camCoord, Game::SCR_f& camCoordTarget2) const;
 		void ApplyReverseZMinLock(Game::Camera* camera) const;
+
+		void SaveToPersistence() const;
+		void LoadFromPersistence();
 
 		CameraPosCheatOptions m_options;
 		bool m_lockAtCurrentRequested = false;

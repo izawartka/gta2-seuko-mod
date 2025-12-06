@@ -242,6 +242,7 @@ void ModMenuModule::CameraCheat::LoadFromPersistence()
 	if (!persistence->LoadRaw("Cheat_Camera_State", dataPtr, dataSize)) return;
 	if (dataSize < 1) {
 		spdlog::error("CameraCheat::LoadFromPersistence: invalid data size");
+		return;
 	}
 	uint8_t version = dataPtr[0];
 	if (version != 1) {

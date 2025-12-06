@@ -47,7 +47,7 @@ void ModMenuModule::CameraPosCheat::SetOptions(const CameraPosCheatOptions& opti
 
 void ModMenuModule::CameraPosCheat::OnFirstEnable()
 {
-
+	LoadFromPersistence();
 }
 
 void ModMenuModule::CameraPosCheat::OnEnable()
@@ -61,6 +61,8 @@ void ModMenuModule::CameraPosCheat::OnDisable()
 	m_lockAtCurrentRequested = false;
 	m_snapToTargetRequested = false;
 	m_snapAndDisableRequested = false;
+
+	SaveToPersistence();
 }
 
 void ModMenuModule::CameraPosCheat::OnCameraPosApply(CameraPosApplyEvent& event)
@@ -123,6 +125,41 @@ void ModMenuModule::CameraPosCheat::ApplyReverseZMinLock(Game::Camera* camera) c
 	if (!playerPed) return;
 
 	camera->cameraPosTarget2.z += std::min(Game::Utils::FromFloat(3.0f), playerPed->z) - Game::Utils::FromFloat(2.0f);
+}
+
+void ModMenuModule::CameraPosCheat::SaveToPersistence() const
+{
+	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
+	size_t dataSize = 1 + sizeof(CameraPosCheatOptions);
+	std::unique_ptr<uint8_t[]> dataPtr = std::make_unique<uint8_t[]>(dataSize);
+
+	dataPtr[0] = 1; // version
+	memcpy(dataPtr.get() + 1, &m_options, sizeof(CameraPosCheatOptions));
+
+	persistence->SaveRaw("Cheat_CameraPos_State", dataPtr.get(), dataSize);
+}
+
+void ModMenuModule::CameraPosCheat::LoadFromPersistence()
+{
+	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
+	std::unique_ptr<uint8_t[]> dataPtr = nullptr;
+	size_t dataSize = 0;
+	if (!persistence->LoadRaw("Cheat_CameraPos_State", dataPtr, dataSize)) return;
+	if (dataSize < 1) {
+		spdlog::error("CameraPosCheat::LoadFromPersistence: invalid data size");
+		return;
+	}
+	uint8_t version = dataPtr[0];
+	if (version != 1) {
+		spdlog::error("CameraPosCheat::LoadFromPersistence: unsupported version {}", version);
+		return;
+	}
+	if (dataSize != 1 + sizeof(CameraPosCheatOptions)) {
+		spdlog::error("CameraPosCheat::LoadFromPersistence: invalid data size for version {}", version);
+		return;
+	}
+	memcpy(&m_options, dataPtr.get() + 1, sizeof(CameraPosCheatOptions));
+	SetOptions(m_options);
 }
 
 REGISTER_CHEAT(CameraPosCheat);
