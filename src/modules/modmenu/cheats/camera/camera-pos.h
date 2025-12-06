@@ -2,12 +2,27 @@
 #include "../../common.h"
 #include "../../cheat-base.h"
 #include "../../../../events/game-tick.h"
+#include "../../../../events/camera-pos-apply.h"
 
 namespace ModMenuModule {
-	struct CameraPosOptions {
-		std::optional<Game::SCR_f> lockedX = std::nullopt;
-		std::optional<Game::SCR_f> lockedY = std::nullopt;
-		std::optional<Game::SCR_f> lockedZ = std::nullopt;
+	enum class CameraPosCheatMode {
+		Unmodified = 0,
+		LockTargetAt,
+		IncrementTargetBy
+	};
+
+	struct CameraPosCheatCoordinate {
+		CameraPosCheatMode mode = CameraPosCheatMode::Unmodified;
+		Game::SCR_f value = Game::Utils::FromFloat(0.0f);
+		bool lockAtTarget = false;
+	};
+
+	struct CameraPosCheatOptions {
+		CameraPosCheatCoordinate x;
+		CameraPosCheatCoordinate y;
+		CameraPosCheatCoordinate z;
+		CameraPosCheatCoordinate zoom;
+		bool reverseZMinLock = false;
 	};
 
 	class CameraPosCheat : public CheatBase, public Core::EventListenerSupport {
@@ -15,22 +30,25 @@ namespace ModMenuModule {
 		CameraPosCheat();
 		virtual ~CameraPosCheat();
 
-		void SetFromCurrentPos(); // locks camera to current position
-		void SetFromOriginalTargetPos(); // jumps and locks camera to original target position
-		void SetOptions(const CameraPosOptions& options);
-		const CameraPosOptions& GetOptions() const { return m_options; }
+		void LockAtCurrentPos(); // locks camera target to current camera position
+		void SnapToTargetPos(); // snaps camera position to target camera position
+		void SnapAndDisable(); // snaps camera position to original target camera position and disables the cheat
+
+		void SetOptions(const CameraPosCheatOptions& options);
+		const CameraPosCheatOptions& GetOptions() const { return m_options; }
 
 	private:
 		virtual void OnFirstEnable() override;
 		virtual void OnEnable() override;
 		virtual void OnDisable() override;
 
-		void OnGameTick(GameTickEvent& event);
+		void OnCameraPosApply(CameraPosApplyEvent& event);
+		void ApplyCoordinate(CameraPosCheatCoordinate& coord, Game::SCR_f& camCoord, Game::SCR_f& camCoordTarget2) const;
+		void ApplyReverseZMinLock(Game::Camera* camera) const;
 
-		CameraPosOptions m_options;
-		Core::Resolver<Game::Camera*> m_camera1Resolver = nullptr;
-		Core::Resolver<Game::Camera*> m_camera2Resolver = nullptr;
-		bool m_setFromCurrentRequested = false;
-		bool m_setFromOriginalTargetRequested = false;
+		CameraPosCheatOptions m_options;
+		bool m_lockAtCurrentRequested = false;
+		bool m_snapToTargetRequested = false;
+		bool m_snapAndDisableRequested = false;
 	};
 }

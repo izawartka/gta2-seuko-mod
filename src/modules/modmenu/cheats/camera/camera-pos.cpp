@@ -8,25 +8,35 @@ ModMenuModule::CameraPosCheat::~CameraPosCheat()
 {
 }
 
-void ModMenuModule::CameraPosCheat::SetFromCurrentPos()
+void ModMenuModule::CameraPosCheat::LockAtCurrentPos()
 {
 	if(!IsEnabled()) {
-		spdlog::warn("CameraPosCheat::SetFromCurrentPos: Cheat is not enabled, cannot set from current");
+		spdlog::warn("CameraPosCheat::LockAtCurrentPos: Cheat is not enabled, cannot lock at current pos");
 		return;
 	}
-	m_setFromCurrentRequested = true;
+	m_lockAtCurrentRequested = true;
 }
 
-void ModMenuModule::CameraPosCheat::SetFromOriginalTargetPos()
+void ModMenuModule::CameraPosCheat::SnapToTargetPos()
 {
-	if(!IsEnabled()) {
-		spdlog::warn("CameraPosCheat::SetFromOriginalTargetPos: Cheat is not enabled, cannot set from player");
+	if (!IsEnabled()) {
+		spdlog::warn("CameraPosCheat::SnapToTargetPos: Cheat is not enabled, cannot snap to target pos");
 		return;
 	}
-	m_setFromOriginalTargetRequested = true;
+	m_snapToTargetRequested = true;
 }
 
-void ModMenuModule::CameraPosCheat::SetOptions(const CameraPosOptions& options)
+void ModMenuModule::CameraPosCheat::SnapAndDisable()
+{
+	if (!IsEnabled()) {
+		spdlog::warn("CameraPosCheat::SnapAndDisable: Cheat is not enabled, cannot snap and disable");
+		return;
+	}
+	m_snapToTargetRequested = true;
+	m_snapAndDisableRequested = true;
+}
+
+void ModMenuModule::CameraPosCheat::SetOptions(const CameraPosCheatOptions& options)
 {
 	if (!IsEnabled()) {
 		spdlog::warn("CameraPosCheat::SetOptions: Cheat is not enabled, cannot set options");
@@ -37,80 +47,82 @@ void ModMenuModule::CameraPosCheat::SetOptions(const CameraPosOptions& options)
 
 void ModMenuModule::CameraPosCheat::OnFirstEnable()
 {
-	m_camera1Resolver = Core::MakeResolver(
-		Game::Memory::GetGame,
-		mem(&Game::Game::CurrentPlayer),
-		mem(&Game::Player::ph1)
-	);
 
-	m_camera2Resolver = Core::MakeResolver(
-		Game::Memory::GetGame,
-		mem(&Game::Game::CurrentPlayer),
-		mem(&Game::Player::ph2)
-	);
 }
 
 void ModMenuModule::CameraPosCheat::OnEnable()
 {
-	m_setFromCurrentRequested = false;
-	m_setFromOriginalTargetRequested = false;
-	m_options = {};
-	AddEventListener<GameTickEvent>(&ModMenuModule::CameraPosCheat::OnGameTick);
+	AddEventListener<CameraPosApplyEvent>(&ModMenuModule::CameraPosCheat::OnCameraPosApply);
 }
 
 void ModMenuModule::CameraPosCheat::OnDisable()
 {
-	RemoveEventListener<GameTickEvent>();
-	AddEventListener<GameTickEvent>(&ModMenuModule::CameraPosCheat::OnGameTick, true);
-	m_setFromCurrentRequested = false;
-	m_setFromOriginalTargetRequested = true;
+	RemoveEventListener<CameraPosApplyEvent>();
+	m_lockAtCurrentRequested = false;
+	m_snapToTargetRequested = false;
+	m_snapAndDisableRequested = false;
 }
 
-void ModMenuModule::CameraPosCheat::OnGameTick(GameTickEvent& event)
+void ModMenuModule::CameraPosCheat::OnCameraPosApply(CameraPosApplyEvent& event)
 {
-	Game::Camera* camera1 = m_camera1Resolver();
-	Game::Camera* camera2 = m_camera2Resolver();
+	event.SetDoApply(false);
 
-	if (m_setFromOriginalTargetRequested) {
-		if (camera2) {
-			m_options.lockedX = camera2->cameraPosTarget.x;
-			m_options.lockedY = camera2->cameraPosTarget.y;
-			m_options.lockedZ = camera2->cameraPosTarget.z;
-		}
+	Game::Camera* camera = event.GetCamera();
+	if (!camera) return;
+
+	if (m_lockAtCurrentRequested) {
+		m_options.x = { CameraPosCheatMode::LockTargetAt, camera->cameraPos.x };
+		m_options.y = { CameraPosCheatMode::LockTargetAt, camera->cameraPos.y };
+		m_options.z = { CameraPosCheatMode::LockTargetAt, camera->cameraPos.z };
+		m_options.zoom = { CameraPosCheatMode::LockTargetAt, camera->cameraPos.zoom };
+		m_lockAtCurrentRequested = false;
 	}
 
-	if (m_setFromCurrentRequested) {
-		if (camera2) {
-			m_options.lockedX = camera2->cameraPos.x;
-			m_options.lockedY = camera2->cameraPos.y;
-			m_options.lockedZ = camera2->cameraPos.z;
-		}
+	camera->cameraPosTarget2 = camera->cameraPosTarget;
 
-		m_setFromCurrentRequested = false;
+	if (m_snapAndDisableRequested) {
+		camera->cameraPos = camera->cameraPosTarget2;
+		SetEnabled(false);
+		return;
 	}
 
-	if (!camera1 || !camera2) return;
+	ApplyCoordinate(m_options.x, camera->cameraPos.x, camera->cameraPosTarget2.x);
+	ApplyCoordinate(m_options.y, camera->cameraPos.y, camera->cameraPosTarget2.y);
+	ApplyCoordinate(m_options.z, camera->cameraPos.z, camera->cameraPosTarget2.z);
+	ApplyCoordinate(m_options.zoom, camera->cameraPos.zoom, camera->cameraPosTarget2.zoom);
 
-	if (m_options.lockedX.has_value()) {
-		camera1->cameraPos.x = m_options.lockedX.value();
-		camera1->cameraPosTarget.x = m_options.lockedX.value();
-		camera2->cameraPos.x = m_options.lockedX.value();
-		camera2->cameraPosTarget.x = m_options.lockedX.value();
+	if (m_options.reverseZMinLock && m_options.z.mode != CameraPosCheatMode::LockTargetAt) {
+		ApplyReverseZMinLock(camera);
 	}
 
-	if (m_options.lockedY.has_value()) {
-		camera1->cameraPos.y = m_options.lockedY.value();
-		camera1->cameraPosTarget.y = m_options.lockedY.value();
-		camera2->cameraPos.y = m_options.lockedY.value();
-		camera2->cameraPosTarget.y = m_options.lockedY.value();
+	m_snapToTargetRequested = false;
+}
+
+void ModMenuModule::CameraPosCheat::ApplyCoordinate(CameraPosCheatCoordinate& coord, Game::SCR_f& camCoord, Game::SCR_f& camCoordTarget2) const
+{
+	switch (coord.mode) {
+	case CameraPosCheatMode::LockTargetAt:
+		camCoordTarget2 = coord.value;
+		break;
+	case CameraPosCheatMode::IncrementTargetBy:
+		camCoordTarget2 += coord.value;
+		break;
+	case CameraPosCheatMode::Unmodified:
+	default:
+		break;
 	}
 
-	if (m_options.lockedZ.has_value()) {
-		camera1->cameraPos.z = m_options.lockedZ.value();
-		camera1->cameraPosTarget.z = m_options.lockedZ.value();
-		camera2->cameraPos.z = m_options.lockedZ.value();
-		camera2->cameraPosTarget.z = m_options.lockedZ.value();
+	if (coord.lockAtTarget || m_snapToTargetRequested) {
+		camCoord = camCoordTarget2;
 	}
+}
+
+void ModMenuModule::CameraPosCheat::ApplyReverseZMinLock(Game::Camera* camera) const
+{
+	Game::Ped* playerPed = Game::Memory::GetPlayerPed();
+	if (!playerPed) return;
+
+	camera->cameraPosTarget2.z += std::min(Game::Utils::FromFloat(3.0f), playerPed->z) - Game::Utils::FromFloat(2.0f);
 }
 
 REGISTER_CHEAT(CameraPosCheat);
