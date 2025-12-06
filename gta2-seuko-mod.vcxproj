@@ -227,6 +227,7 @@ exit /b 0
     <ClInclude Include="src\converters\weapon.h" />
     <ClInclude Include="src\converters\yes-no.h" />
     <ClInclude Include="src\events\after-debug-flags.h" />
+    <ClInclude Include="src\events\camera-pos-apply.h" />
     <ClInclude Include="src\events\cop-value-change.h" />
     <ClInclude Include="src\events\culling-check.h" />
     <ClInclude Include="src\events\draw-frame.h" />
@@ -379,6 +380,7 @@ exit /b 0
     <ClCompile Include="src\core\watch-manager.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\events\after-debug-flags.cpp" />
+    <ClCompile Include="src\events\camera-pos-apply.cpp" />
     <ClCompile Include="src\events\cop-value-change.cpp" />
     <ClCompile Include="src\events\culling-check.cpp" />
     <ClCompile Include="src\events\draw-frame.cpp" />

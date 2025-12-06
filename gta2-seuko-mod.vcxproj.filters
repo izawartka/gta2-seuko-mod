@@ -495,6 +495,9 @@
     <ClInclude Include="src\modules\modmenu\cheats\camera\camera-pos.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\events\camera-pos-apply.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
@@ -744,6 +747,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\modmenu\cheats\camera\camera-pos.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\events\camera-pos-apply.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
