@@ -10,6 +10,7 @@
 #include "weapons-menu.h"
 #include "get-weapon-menu.h"
 #include "camera-menu.h"
+#include "camera-pos-menu.h"
 #include "world-menu.h"
 #include "native-cheats-menu.h"
 #include "native-cheats-category-menu.h"

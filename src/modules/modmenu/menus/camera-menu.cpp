@@ -1,4 +1,5 @@
 #include "camera-menu.h"
+#include "camera-pos-menu.h"
 #include "../root.h"
 #include "../cheats/camera/camera.h"
 #include "../cheats/camera/clear-screen.h"
@@ -29,6 +30,7 @@ bool ModMenuModule::CameraMenu::Attach()
 	DisableCullingCheat* disableCullingCheat = GetCheat<DisableCullingCheat>();
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Camera position", options.textSize);
 
 	// camera cheat
 	UiModule::Text* cameraCheatText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
@@ -204,6 +206,9 @@ void ModMenuModule::CameraMenu::OnMenuAction(UiModule::Selectable* item, UiModul
 	switch (id) {
 	case 0: // Go back
 		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
+		break;
+	case 1: // Camera position
+		ModMenuModule::MenuManager::GetInstance()->AddMenu<CameraPosMenu>();
 		break;
 	default:
 		break;

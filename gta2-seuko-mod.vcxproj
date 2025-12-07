@@ -269,6 +269,7 @@ exit /b 0
     <ClInclude Include="src\modules\modmenu\menu-manager.h" />
     <ClInclude Include="src\modules\modmenu\menus\add-quick-action-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\camera-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\camera-pos-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\quick-action-options-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\quick-actions-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\last-vehicle-physics-menu.h" />
@@ -418,6 +419,7 @@ exit /b 0
     <ClCompile Include="src\modules\modmenu\menu-manager.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\add-quick-action-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\camera-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\camera-pos-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\quick-action-options-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\quick-actions-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\last-vehicle-physics-menu.cpp" />
