@@ -74,6 +74,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)third_party\spdlog\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -123,6 +124,7 @@ exit /b 0
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)third_party\spdlog\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -173,6 +175,7 @@ exit /b 0
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)third_party\spdlog\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -265,6 +268,7 @@ exit /b 0
     <ClInclude Include="src\modules\modmenu\events\last-car-state.h" />
     <ClInclude Include="src\modules\modmenu\menu-manager.h" />
     <ClInclude Include="src\modules\modmenu\menus\add-quick-action-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\camera-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\quick-action-options-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\quick-actions-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\last-vehicle-physics-menu.h" />
@@ -413,6 +417,7 @@ exit /b 0
     <ClCompile Include="src\modules\modmenu\menu-base.cpp" />
     <ClCompile Include="src\modules\modmenu\menu-manager.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\add-quick-action-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\camera-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\quick-action-options-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\quick-actions-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\last-vehicle-physics-menu.cpp" />

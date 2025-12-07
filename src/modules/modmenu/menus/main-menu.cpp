@@ -3,6 +3,7 @@
 #include "player-menu.h"
 #include "vehicles-menu.h"
 #include "weapons-menu.h"
+#include "camera-menu.h"
 #include "world-menu.h"
 #include "native-cheats-menu.h"
 #include "misc-menu.h"
@@ -51,6 +52,7 @@ void ModMenuModule::MainMenu::OnMenuAction(UiModule::Selectable* item, UiModule:
 		menuManager->AddMenu<ModMenuModule::WeaponsMenu>();
 		break;
 	case 3: // Camera
+		menuManager->AddMenu<ModMenuModule::CameraMenu>();
 		break;
 	case 4: // World
 		menuManager->AddMenu<ModMenuModule::WorldMenu>();

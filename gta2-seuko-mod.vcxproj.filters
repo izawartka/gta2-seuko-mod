@@ -468,6 +468,9 @@
     <ClInclude Include="src\modules\modmenu\utils\vertex-utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\modules\modmenu\menus\camera-menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\events\draw-frame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -723,6 +726,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\modmenu\utils\vertex-utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\menus\camera-menu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\events\draw-frame.cpp">
