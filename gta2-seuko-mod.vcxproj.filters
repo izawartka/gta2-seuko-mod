@@ -498,6 +498,9 @@
     <ClInclude Include="src\events\camera-pos-apply.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\converters\camera-pos-cheat-mode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
