@@ -53,8 +53,9 @@ namespace UiModule {
 
 			UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 			MenuItemControllerT* controller = uiRoot->AddController<MenuItemControllerT>(std::forward<Args>(args)...);
-			controller->SetEditStopCallback(std::bind(&MenuController::OnItemEditStop, this));
 			menuItem->controller = controller;
+			controller->SetEditStopCallback(std::bind(&MenuController::OnItemEditStop, this));
+			if (m_itemsWatching) controller->SetWatching(true);
 			return controller;
 		}
 

@@ -98,6 +98,7 @@ void UiModule::MenuController::AddItemController(MenuItemId id, MenuItemControll
 	}
 	menuItem->controller = controller;
 	controller->SetEditStopCallback(std::bind(&MenuController::OnItemEditStop, this));
+	if (m_itemsWatching) controller->SetWatching(true);
 }
 
 void UiModule::MenuController::AddLatestItemController(MenuItemController* controller)
@@ -122,6 +123,8 @@ UiModule::MenuItemController* UiModule::MenuController::RemoveItemController(Men
 
 	if (m_activeController == controller) SetActiveController(nullptr);
 
+	controller->SetEditStopCallback(nullptr);
+
 	menuItem->controller = nullptr;
 	return controller;
 }
@@ -130,6 +133,8 @@ void UiModule::MenuController::DeleteItemController(MenuItemId id)
 {
 	MenuItemController* controller = RemoveItemController(id);
 	if (controller == nullptr) return;
+
+	if(m_itemsWatching) controller->SetWatching(false);
 
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	uiRoot->RemoveController((Controller*)controller);
