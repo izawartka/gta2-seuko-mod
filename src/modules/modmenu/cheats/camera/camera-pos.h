@@ -29,6 +29,9 @@ namespace ModMenuModule {
 		CameraPosCheat();
 		virtual ~CameraPosCheat();
 
+		static const std::vector<CameraPosCheatMode> GetAllCameraPosCheatModes();
+
+		void ResetPosOptions(); // resets all position options to unmodified
 		void LockAtCurrentPos(); // locks camera target to current camera position
 		void SnapToTargetPos(); // snaps camera position to target camera position
 		void SnapAndDisable(); // snaps camera position to original target camera position and disables the cheat

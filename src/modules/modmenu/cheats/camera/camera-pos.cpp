@@ -8,6 +8,27 @@ ModMenuModule::CameraPosCheat::~CameraPosCheat()
 {
 }
 
+const std::vector<ModMenuModule::CameraPosCheatMode> ModMenuModule::CameraPosCheat::GetAllCameraPosCheatModes()
+{
+	return {
+		CameraPosCheatMode::Unmodified,
+		CameraPosCheatMode::LockTargetAt,
+		CameraPosCheatMode::IncrementTargetBy
+	};
+}
+
+void ModMenuModule::CameraPosCheat::ResetPosOptions()
+{
+	if (!IsEnabled()) {
+		spdlog::warn("CameraPosCheat::ResetPosOptions: Cheat is not enabled, cannot reset pos options");
+		return;
+	}
+	m_options.x = { CameraPosCheatMode::Unmodified, Game::Utils::FromFloat(0.0f), false };
+	m_options.y = { CameraPosCheatMode::Unmodified, Game::Utils::FromFloat(0.0f), false };
+	m_options.z = { CameraPosCheatMode::Unmodified, Game::Utils::FromFloat(0.0f), false };
+	m_options.zoom = { CameraPosCheatMode::Unmodified, Game::Utils::FromFloat(0.0f), false };
+}
+
 void ModMenuModule::CameraPosCheat::LockAtCurrentPos()
 {
 	if(!IsEnabled()) {
