@@ -22,10 +22,14 @@ void ModMenuModule::SegmentBase::CreateSegment(ModMenuModule::MenuBase* menu, Ui
 	m_parent = parent;
 	m_vertCont = uiRoot->AddComponent<UiModule::VertCont>(parent);
 	m_menuController = menu->m_menuController;
+	m_menuGroupId = m_menuController->RegisterGroup();
+	m_menuController->SetCurrentGroupId(m_menuGroupId);
 }
 
 void ModMenuModule::SegmentBase::DestroySegment()
 {
+	m_menuController->DeleteGroupItems(m_menuGroupId);
+
 	if(m_vertCont) {
 		UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 		uiRoot->RemoveComponent(m_vertCont, true);
@@ -34,4 +38,5 @@ void ModMenuModule::SegmentBase::DestroySegment()
 
 	m_menu = nullptr;
 	m_menuController = nullptr;
+	m_menuGroupId = -1;
 }

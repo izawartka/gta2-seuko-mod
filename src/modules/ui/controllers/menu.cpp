@@ -15,7 +15,7 @@ UiModule::MenuController::~MenuController()
 	while (!m_items.empty()) {
 		MenuItem& menuItem = m_items.back();
 		if (menuItem.controller) {
-			uiRoot->RemoveController(static_cast<Controller*>(menuItem.controller));
+			uiRoot->RemoveController(menuItem.controller);
 		}
 		m_items.pop_back();
 	}
@@ -60,19 +60,21 @@ std::vector<UiModule::MenuItemId> UiModule::MenuController::AddItems(const std::
 	return ids;
 }
 
-void UiModule::MenuController::RemoveItem(MenuItemId id)
+void UiModule::MenuController::DeleteItem(MenuItemId id)
 {
 	MenuItem* item = GetItemById(id);
 	if (!item) return;
 
+	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
+
 	if(item->controller) {
-		spdlog::error("MenuController::RemoveItem: Item with id {} has a controller managed by this menu. Remove the controller first.", id);
-		return;
+		if (m_activeController == item->controller) SetActiveController(nullptr);
+		if(m_itemsWatching) item->controller->SetWatching(false);
+		uiRoot->RemoveController(item->controller);
 	}
 
+	uiRoot->RemoveComponent(item->item, true);
 	size_t itemIndex = std::distance(m_items.data(), item);
-
-	item->item->SetSelected(false);
 	m_items.erase(m_items.begin() + itemIndex);
 
 	if(m_items.empty()) {
@@ -122,7 +124,6 @@ UiModule::MenuItemController* UiModule::MenuController::RemoveItemController(Men
 	}
 
 	if (m_activeController == controller) SetActiveController(nullptr);
-
 	controller->SetEditStopCallback(nullptr);
 
 	menuItem->controller = nullptr;
@@ -137,28 +138,66 @@ void UiModule::MenuController::DeleteItemController(MenuItemId id)
 	if(m_itemsWatching) controller->SetWatching(false);
 
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
-	uiRoot->RemoveController((Controller*)controller);
+	uiRoot->RemoveController(controller);
+}
+
+size_t UiModule::MenuController::GetItemIndex(MenuItemId id) const
+{
+	for (const auto& menuItem : m_items) {
+		if (menuItem.id == id) {
+			return &menuItem - m_items.data();
+		}
+	}
+	return -1;
+}
+
+void UiModule::MenuController::SetCurrentGroupId(MenuItemGroupId groupId)
+{
+	if (groupId >= m_nextFreeGroupId || groupId == -1) {
+		spdlog::error("UiModule::MenuController::SetCurrentGroupId: Invalid group ID: {}", groupId);
+		return;
+	}
+
+	m_currentGroupId = groupId;
 }
 
 void UiModule::MenuController::DeleteGroupItems(MenuItemGroupId groupId)
 {
-	for (size_t i = m_items.size(); i-- > 0;) {
-		MenuItem& menuItem = m_items[i];
-		if (menuItem.groupId == groupId) {
-			if (menuItem.controller) {
-				UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
-				uiRoot->RemoveController(static_cast<Controller*>(menuItem.controller));
-			}
-			menuItem.item->SetSelected(false);
-			m_items.erase(m_items.begin() + i);
-			if (i < m_nextAddedItemIndex) {
-				m_nextAddedItemIndex--;
-			}
-			if (i <= m_currentIndex && m_currentIndex > 0) {
-				SetIndex(m_currentIndex - 1);
-			}
-		}
+	if (groupId == -1) {
+		spdlog::error("UiModule::MenuController::DeleteGroupItems: Cannot delete items from group -1");
+		return;
 	}
+
+	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
+	size_t newIndex = m_currentIndex;
+
+	auto removeCondition = [&](const MenuItem& menuItem) {
+		if (menuItem.groupId != groupId) return false;
+					
+		if (menuItem.controller) {
+			if (m_activeController == menuItem.controller) SetActiveController(nullptr);
+			if (m_itemsWatching) menuItem.controller->SetWatching(false);
+			uiRoot->RemoveController(static_cast<Controller*>(menuItem.controller));
+		}
+		uiRoot->RemoveComponent(menuItem.item, true);
+					
+		size_t itemIndex = &menuItem - m_items.data();
+		if (itemIndex < m_nextAddedItemIndex) {
+			m_nextAddedItemIndex--;
+		}
+		if (itemIndex <= newIndex && newIndex > 0) {
+			newIndex--;
+		}
+					
+		return true;
+	};
+
+	m_items.erase(
+		std::remove_if(m_items.begin(), m_items.end(), removeCondition),
+		m_items.end()
+	);
+
+	SetIndex(newIndex);
 }
 
 void UiModule::MenuController::DeleteCurrentGroupItems()

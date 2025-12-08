@@ -20,7 +20,6 @@ bool ModMenuModule::AddQuickActionMenu::Attach()
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	ModMenuModule::QuickActionManager* quickActionManager = ModMenuModule::QuickActionManager::GetInstance();
 
-	m_menuController->SetCurrentGroupId(0); // main group
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 	
 	// key
@@ -109,7 +108,6 @@ void ModMenuModule::AddQuickActionMenu::CreateSegment(QuickActionTypeIndex actio
 
 	m_segmentInstance = ModMenuModule::QuickActionManager::CreateSegment(actionType);
 	m_menuController->SetNextAddedItemIndex(m_segmentBaseIndex);
-	m_menuController->SetCurrentGroupId(1); // segment group
 
 	m_segmentInstance->Attach(this, m_segmentContainer);
 	if(m_visible) {
@@ -125,7 +123,6 @@ void ModMenuModule::AddQuickActionMenu::DestroySegment()
 		m_segmentInstance->OnHide();
 	}
 	m_segmentInstance->Detach();
-	m_menuController->DeleteGroupItems(1); // segment group
 	delete m_segmentInstance;
 	m_segmentInstance = nullptr;
 }

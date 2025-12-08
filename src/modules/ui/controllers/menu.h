@@ -35,7 +35,7 @@ namespace UiModule {
 
 		MenuItemId AddItem(Selectable* item);
 		std::vector<MenuItemId> AddItems(const std::vector<Selectable*>& items);
-		void RemoveItem(MenuItemId id);
+		void DeleteItem(MenuItemId id);
 
 		template<typename MenuItemControllerT, typename... Args>
 		MenuItemControllerT* CreateItemController(MenuItemId id, Args&&... args) {
@@ -86,9 +86,11 @@ namespace UiModule {
 
 		void SetNextAddedItemIndex(size_t index) { m_nextAddedItemIndex = index; }
 		size_t GetNextAddedItemIndex() const { return m_nextAddedItemIndex; }
+		size_t GetItemIndex(MenuItemId id) const;
 
+		MenuItemGroupId RegisterGroup() { return m_nextFreeGroupId++; }
 		MenuItemGroupId GetCurrentGroupId() const { return m_currentGroupId; }
-		void SetCurrentGroupId(MenuItemGroupId groupId) { m_currentGroupId = groupId; }
+		void SetCurrentGroupId(MenuItemGroupId groupId);
 		void DeleteGroupItems(MenuItemGroupId groupId);
 		void DeleteCurrentGroupItems();
 
@@ -127,6 +129,7 @@ namespace UiModule {
 		std::vector<MenuItem> m_items;
 		MenuItemId m_nextItemId = 0;
 		MenuItemGroupId m_currentGroupId = 0;
+		MenuItemGroupId m_nextFreeGroupId = 1;
 		size_t m_currentIndex = -1;
 		size_t m_nextAddedItemIndex = 0;
 		bool m_itemsWatching = false;

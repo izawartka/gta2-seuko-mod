@@ -25,11 +25,12 @@ namespace ModMenuModule {
 		UiModule::Component* m_parent = nullptr;
 		UiModule::VertCont* m_vertCont = nullptr;
 		UiModule::MenuController* m_menuController = nullptr;
+		UiModule::MenuItemGroupId m_menuGroupId = -1;
 	};
 
 	template<typename DataT>
 	class Segment : public SegmentBase {
-		public:
+	public:
 		virtual std::optional<DataT> GetSegmentData() const = 0;
 		virtual bool SetSegmentData(const DataT& data) = 0;
 	};
