@@ -18,7 +18,15 @@ namespace Core
 			static_assert(std::is_base_of_v<EventBase, EventT> || std::is_same<EventT, void>::value, "EventT must derive from Core::Event or be void");
 
 			auto entry = new Watched<ValueT, ResRetT>(m_nextEntryId++, std::move(resolver), std::move(listener));
-			RegisterEntry<EventT>(entry);
+			
+			if (m_updating) {
+				PendingChange change(ChangeType::Add, entry->m_id, std::type_index(typeid(EventT)), entry);
+				m_pendingChanges.push(change);
+			}
+			else {
+				RegisterEntry<EventT>(entry);
+			}
+			
 			return entry;
 		}
 
@@ -46,11 +54,14 @@ namespace Core
 			}
 
 			auto eventTypeIdx = it->second;
-			m_idToEventType.erase(it);
-
-			auto& vec = m_entries[eventTypeIdx];
-			vec.erase(std::remove_if(vec.begin(), vec.end(),
-				[id](const auto& entry) { return entry->m_id == id; }), vec.end());
+			
+			if (m_updating) {
+				PendingChange change(ChangeType::Remove, id, eventTypeIdx, nullptr);
+				m_pendingChanges.push(change);
+			}
+			else {
+				RemoveEntry(id, eventTypeIdx);
+			}
 		}
 
 		void Unwatch(WatchedBase* watched) {
@@ -65,6 +76,18 @@ namespace Core
 		WatchManager(const WatchManager&) = delete;
 		WatchManager& operator=(const WatchManager&) = delete;
 
+		enum class ChangeType { Add, Remove };
+
+		struct PendingChange {
+			ChangeType type;
+			WatchedId id;
+			std::type_index eventType;
+			WatchedBase* entry; // Only used for Add
+			
+			PendingChange(ChangeType t, WatchedId i, std::type_index et, WatchedBase* e)
+				: type(t), id(i), eventType(et), entry(e) {}
+		};
+
 		template<typename EventT>
 		void RegisterEntry(WatchedBase* entry) {
 			WatchedId id = entry->m_id;
@@ -75,6 +98,19 @@ namespace Core
 			auto eventTypeIdx = std::type_index(typeid(EventT));
 			m_entries[eventTypeIdx].push_back(std::unique_ptr<WatchedBase>(entry));
 			m_idToEventType.push_back({ id, eventTypeIdx });
+		}
+
+		void RemoveEntry(WatchedId id, std::type_index eventTypeIdx) {
+			auto idIt = std::find_if(m_idToEventType.begin(), m_idToEventType.end(),
+				[id](const auto& pair) { return pair.first == id; });
+
+			if (idIt != m_idToEventType.end()) {
+				m_idToEventType.erase(idIt);
+			}
+
+			auto& vec = m_entries[eventTypeIdx];
+			vec.erase(std::remove_if(vec.begin(), vec.end(),
+				[id](const auto& entry) { return entry->m_id == id; }), vec.end());
 		}
 
 		template<typename EventT>
@@ -118,6 +154,37 @@ namespace Core
 			m_typeToListenerId.erase(it);
 		}
 
+		void ProcessPendingChanges() {
+			while (!m_pendingChanges.empty()) {
+				PendingChange change = m_pendingChanges.front();
+				m_pendingChanges.pop();
+
+				if (change.type == ChangeType::Add) {
+					ApplyAdd(change);
+				}
+				else if (change.type == ChangeType::Remove) {
+					ApplyRemove(change);
+				}
+			}
+		}
+
+		void ApplyAdd(PendingChange& change) {
+			WatchedBase* entry = change.entry;
+			WatchedId id = entry->m_id;
+			std::type_index eventTypeIdx = change.eventType;
+
+			spdlog::debug("Applying queued add for watched: {} with id: {} (Event: {})", 
+				typeid(*entry).name(), id, eventTypeIdx.name());
+
+			m_entries[eventTypeIdx].push_back(std::unique_ptr<WatchedBase>(entry));
+			m_idToEventType.push_back({ id, eventTypeIdx });
+		}
+
+		void ApplyRemove(PendingChange& change) {
+			spdlog::debug("Applying queued remove for watched with id: {}", change.id);
+			RemoveEntry(change.id, change.eventType);
+		}
+
 		void Update(std::type_index eventType) {
 			auto it = m_entries.find(eventType);
 			if (it == m_entries.end()) return;
@@ -127,9 +194,14 @@ namespace Core
 				return;
 			}
 
+			m_updating = true;
+
 			for (auto& entry : it->second) {
 				entry->Update();
 			}
+
+			m_updating = false;
+			ProcessPendingChanges();
 		}
 
 		static WatchManager* m_instance;
@@ -137,5 +209,7 @@ namespace Core
 		std::vector<std::pair<WatchedId, std::type_index>> m_idToEventType;
 		std::unordered_map<std::type_index, EventListenerId> m_typeToListenerId;
 		WatchedId m_nextEntryId = 1;
+		bool m_updating = false;
+		std::queue<PendingChange> m_pendingChanges = {};
 	};
 }
