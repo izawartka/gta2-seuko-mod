@@ -3,6 +3,7 @@
 #include "../menu-base.h"
 #include "../cheat-support.h"
 #include "../events/cheat-state.h"
+#include "../segments/camera-pos-cheat-coord-segment.h"
 
 namespace ModMenuModule {
 	class CameraPosMenu : public MenuBase, public Core::EventListenerSupport, public CheatSupport {
@@ -23,8 +24,15 @@ namespace ModMenuModule {
 		void OnCheatStateChange(CheatStateEvent& event);
 		void UpdateCheatStates();
 
-		UiModule::VertCont* m_cheatItemsOuterCont = nullptr;
+		UiModule::VertCont* m_cheatItemsCont = nullptr;
 		UiModule::VertCont* m_cheatItemsInnerCont = nullptr;
 		UiModule::SelectController<bool>* m_cameraPosCheatController = nullptr;
+		UiModule::MenuItemGroupId m_cheatItemsGroupId = -1;
+		bool m_cheatItemsAttached = false;
+
+		CameraPosCheatCoordSegment m_xPosSegment{ L"X: ", 0 };
+		CameraPosCheatCoordSegment m_yPosSegment{ L"Y: ", 1 };
+		CameraPosCheatCoordSegment m_zPosSegment{ L"Z: ", 2 };
+		CameraPosCheatCoordSegment m_zoomSegment{ L"Zoom: ", 3 };
 	};
 }

@@ -40,7 +40,8 @@ bool ModMenuModule::CameraPosMenu::Attach()
 		else cameraPosCheat->SnapAndDisable();
 	});
 
-	m_cheatItemsOuterCont = uiRoot->AddComponent<UiModule::VertCont>(vertCont);
+	m_cheatItemsCont = uiRoot->AddComponent<UiModule::VertCont>(vertCont);
+	m_cheatItemsGroupId = m_menuController->RegisterGroup();
 
 	UpdateCheatStates();
 	SetPreviousSelectedIndex();
@@ -50,7 +51,8 @@ bool ModMenuModule::CameraPosMenu::Attach()
 
 void ModMenuModule::CameraPosMenu::Detach()
 {
-
+	DetachCheatMenuItems();
+	DestroyMenu();
 }
 
 void ModMenuModule::CameraPosMenu::OnShow()
@@ -77,16 +79,14 @@ void ModMenuModule::CameraPosMenu::OnMenuAction(UiModule::Selectable* item, UiMo
 
 void ModMenuModule::CameraPosMenu::AttachCheatMenuItems()
 {
-	if (m_cheatItemsInnerCont != nullptr) return;
+	if (m_cheatItemsAttached) return;
 
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	CameraPosCheat* cameraPosCheat = GetCheat<CameraPosCheat>();
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
+	UiModule::VertCont* container = m_cheatItemsCont;
 
-	m_cheatItemsInnerCont = uiRoot->AddComponent<UiModule::VertCont>(m_cheatItemsOuterCont);
-	UiModule::VertCont* container = m_cheatItemsInnerCont;
-
-	m_menuController->SetCurrentGroupId(1);
+	m_menuController->SetCurrentGroupId(m_cheatItemsGroupId);
 
 	// lock at current position button
 	UiModule::Text* lockAtCurrentPosText = m_menuController->CreateItem<UiModule::Text>(container, L"Lock at current position", options.textSize);
@@ -111,72 +111,10 @@ void ModMenuModule::CameraPosMenu::AttachCheatMenuItems()
 
 	uiRoot->AddComponent<UiModule::Spacer>(container, 0, options.menuSpacerHeight);
 
-	// x position
-	UiModule::Text* xPosText = m_menuController->CreateItem<UiModule::Text>(container, L"", options.textSize);
-	auto xPosController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<Game::SCR_f, Game::SCR_f>>(
-		xPosText,
-		[cameraPosCheat]() {
-			return cameraPosCheat->GetOptions().x.value;
-		},
-		UiModule::VarTextEditableControllerOptions{ L"X: #", L"#" }
-	);
-	xPosController->SetConverter<ScrfConverter>();
-	xPosController->SetCustomSaveCallback([cameraPosCheat](Game::SCR_f newValue) {
-		CameraPosCheatOptions options = cameraPosCheat->GetOptions();
-		options.x.value = newValue;
-		cameraPosCheat->SetOptions(options);
-	});
-
-	// y position
-	UiModule::Text* yPosText = m_menuController->CreateItem<UiModule::Text>(container, L"", options.textSize);
-	auto yPosController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<Game::SCR_f, Game::SCR_f>>(
-		yPosText,
-		[cameraPosCheat]() {
-			return cameraPosCheat->GetOptions().y.value;
-		},
-		UiModule::VarTextEditableControllerOptions{ L"Y: #", L"#" }
-	);
-	yPosController->SetConverter<ScrfConverter>();
-	yPosController->SetCustomSaveCallback([cameraPosCheat](Game::SCR_f newValue) {
-		CameraPosCheatOptions options = cameraPosCheat->GetOptions();
-		options.y.value = newValue;
-		options.y.mode = CameraPosCheatMode::LockTargetAt;
-		cameraPosCheat->SetOptions(options);
-	});
-
-	// z position
-	UiModule::Text* zPosText = m_menuController->CreateItem<UiModule::Text>(container, L"", options.textSize);
-	auto zPosController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<Game::SCR_f, Game::SCR_f>>(
-		zPosText,
-		[cameraPosCheat]() {
-			return cameraPosCheat->GetOptions().z.value;
-		},
-		UiModule::VarTextEditableControllerOptions{ L"Z: #", L"#" }
-	);
-	zPosController->SetConverter<ScrfConverter>();
-	zPosController->SetCustomSaveCallback([cameraPosCheat](Game::SCR_f newValue) {
-		CameraPosCheatOptions options = cameraPosCheat->GetOptions();
-		options.z.value = newValue;
-		options.z.mode = CameraPosCheatMode::LockTargetAt;
-		cameraPosCheat->SetOptions(options);
-	});
-
-	// zoom
-	UiModule::Text* zoomText = m_menuController->CreateItem<UiModule::Text>(container, L"", options.textSize);
-	auto zoomController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<Game::SCR_f, Game::SCR_f>>(
-		zoomText,
-		[cameraPosCheat]() {
-			return cameraPosCheat->GetOptions().zoom.value;
-		},
-		UiModule::VarTextEditableControllerOptions{ L"Zoom: #", L"#" }
-	);
-	zoomController->SetConverter<ScrfConverter>();
-	zoomController->SetCustomSaveCallback([cameraPosCheat](Game::SCR_f newValue) {
-		CameraPosCheatOptions options = cameraPosCheat->GetOptions();
-		options.zoom.value = newValue;
-		options.zoom.mode = CameraPosCheatMode::LockTargetAt;
-		cameraPosCheat->SetOptions(options);
-	});
+	m_xPosSegment.Attach(this, container);
+	m_yPosSegment.Attach(this, container);
+	m_zPosSegment.Attach(this, container);
+	m_zoomSegment.Attach(this, container);
 
 	// reverse z min lock
 	UiModule::Text* reverseZMinLockText = m_menuController->CreateItem<UiModule::Text>(container, L"", options.textSize);
@@ -194,18 +132,21 @@ void ModMenuModule::CameraPosMenu::AttachCheatMenuItems()
 		options.reverseZMinLock = newValue;
 		cameraPosCheat->SetOptions(options);
 	});
+
+	m_cheatItemsAttached = true;
 }
 
 void ModMenuModule::CameraPosMenu::DetachCheatMenuItems()
 {
-	m_menuController->DeleteGroupItems(1);
-	m_menuController->SetCurrentGroupId(0);
+	if (!m_cheatItemsAttached) return;
 
-	if (m_cheatItemsInnerCont) {
-		UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
-		uiRoot->RemoveComponent(m_cheatItemsInnerCont, true);
-		m_cheatItemsInnerCont = nullptr;
-	}
+	m_xPosSegment.Detach();
+	m_yPosSegment.Detach();
+	m_zPosSegment.Detach();
+	m_zoomSegment.Detach();
+
+	m_menuController->DeleteGroupItems(m_cheatItemsGroupId);
+	m_cheatItemsAttached = false;
 }
 
 void ModMenuModule::CameraPosMenu::OnCheatStateChange(CheatStateEvent& event)
