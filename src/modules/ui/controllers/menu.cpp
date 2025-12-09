@@ -40,13 +40,10 @@ UiModule::MenuItemId UiModule::MenuController::AddItem(Selectable* item)
 	
 	m_items.insert(m_items.begin() + m_nextAddedItemIndex, menuItem);
 	if (m_currentIndex >= m_nextAddedItemIndex) {
-		SetIndex(m_currentIndex + 1);
+		m_currentIndex++;
 	}
 	m_nextAddedItemIndex++;
-
-	if (m_items.size() == 1) {
-		SetIndex(0);
-	}
+	UpdateIndex();
 
 	return m_nextItemId - 1;
 }
@@ -82,11 +79,13 @@ void UiModule::MenuController::DeleteItem(MenuItemId id)
 		return;
 	}
 
-	if (itemIndex <= m_currentIndex && m_currentIndex > 0) {
-		SetIndex(m_currentIndex - 1);
-	}
-	else {
+	if (itemIndex == m_currentIndex) {
+		m_currentIndex--;
+		if (m_currentIndex < 0) m_currentIndex = 0;
 		UpdateIndex();
+	}
+	else if (itemIndex < m_currentIndex) {
+		m_currentIndex--;
 	}
 }
 
@@ -169,35 +168,31 @@ void UiModule::MenuController::DeleteGroupItems(MenuItemGroupId groupId)
 	}
 
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
-	size_t newIndex = m_currentIndex;
 
-	auto removeCondition = [&](const MenuItem& menuItem) {
-		if (menuItem.groupId != groupId) return false;
-					
+	for (size_t i = 0; i < m_items.size(); i++) {
+		MenuItem& menuItem = m_items.at(i);
+		if (menuItem.groupId != groupId) continue;
+
 		if (menuItem.controller) {
 			if (m_activeController == menuItem.controller) SetActiveController(nullptr);
 			if (m_itemsWatching) menuItem.controller->SetWatching(false);
 			uiRoot->RemoveController(static_cast<Controller*>(menuItem.controller));
 		}
 		uiRoot->RemoveComponent(menuItem.item, true);
-					
+
 		size_t itemIndex = &menuItem - m_items.data();
 		if (itemIndex < m_nextAddedItemIndex) {
 			m_nextAddedItemIndex--;
 		}
-		if (itemIndex <= newIndex && newIndex > 0) {
-			newIndex--;
+		if (itemIndex <= m_currentIndex && m_currentIndex > 0) {
+			m_currentIndex--;
 		}
-					
-		return true;
-	};
 
-	m_items.erase(
-		std::remove_if(m_items.begin(), m_items.end(), removeCondition),
-		m_items.end()
-	);
+		m_items.erase(m_items.begin() + itemIndex);
+		i--;
+	}
 
-	SetIndex(newIndex);
+	UpdateIndex();
 }
 
 void UiModule::MenuController::DeleteCurrentGroupItems()
