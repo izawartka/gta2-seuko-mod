@@ -3,13 +3,12 @@
 #include "../menu-base.h"
 #include "../cheat-support.h"
 #include "../events/cheat-state.h"
-#include "../segments/camera-pos-cheat-coord-segment.h"
 
 namespace ModMenuModule {
-	class CameraPosMenu : public MenuBase, public Core::EventListenerSupport, public CheatSupport {
+	class CameraAdvancedMenu : public MenuBase, public Core::EventListenerSupport, public CheatSupport {
 	public:
-		CameraPosMenu();
-		virtual ~CameraPosMenu();
+		CameraAdvancedMenu();
+		virtual ~CameraAdvancedMenu();
 
 		virtual bool Attach() override;
 		virtual void Detach() override;
@@ -24,14 +23,12 @@ namespace ModMenuModule {
 		void OnCheatStateChange(CheatStateEvent& event);
 		void UpdateCheatStates();
 
+		UiModule::SelectController<bool>* m_cameraCheatController = nullptr;
+		UiModule::SelectController<bool>* m_clearScreenCheatController = nullptr;
+		UiModule::SelectController<bool>* m_disableCullingCheatController = nullptr;
+		UiModule::SelectController<bool>* m_shadowsFixCheatController = nullptr;
 		UiModule::VertCont* m_cheatItemsCont = nullptr;
-		UiModule::SelectController<bool>* m_cameraPosCheatController = nullptr;
 		UiModule::MenuItemGroupId m_cheatItemsGroupId = -1;
 		bool m_cheatItemsAttached = false;
-
-		CameraPosCheatCoordSegment m_xPosSegment{ L"X: ", 0 };
-		CameraPosCheatCoordSegment m_yPosSegment{ L"Y: ", 1 };
-		CameraPosCheatCoordSegment m_zPosSegment{ L"Z: ", 2 };
-		CameraPosCheatCoordSegment m_zoomSegment{ L"Zoom: ", 3 };
 	};
 }

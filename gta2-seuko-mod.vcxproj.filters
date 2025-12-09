@@ -516,6 +516,9 @@
     <ClInclude Include="src\modules\modmenu\cheats\camera\shadows-fix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\modules\modmenu\menus\camera-advanced-menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
@@ -783,6 +786,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\modmenu\cheats\camera\shadows-fix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\menus\camera-advanced-menu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
