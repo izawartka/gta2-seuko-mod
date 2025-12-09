@@ -19,7 +19,7 @@ static __declspec(naked) void CopKillHookFunction(void)
 		push ebx
 		call DispatchCopValueChangeEvent
 		pop esi
-		mov WORD ptr[esi + 0x20a], ax
+		mov word ptr[esi + 0x20a], ax
 		jmp CopKillHookReturnAddress
 	}
 }
@@ -38,7 +38,7 @@ static __declspec(naked) void AddCopValueHook1Function(void)
 		push 0
 		call DispatchCopValueChangeEvent
 		pop ecx
-		mov WORD ptr[ecx + 0x20a], ax
+		mov word ptr[ecx + 0x20a], ax
 		jmp AddCopValueHook1ReturnAddress
 	}
 }
@@ -57,7 +57,7 @@ static __declspec(naked) void AddCopValueHook2Function(void)
 		push 0x2ee0
 		call DispatchCopValueChangeEvent
 		pop ecx
-		mov WORD ptr[ecx + 0x20a], ax
+		mov word ptr[ecx + 0x20a], ax
 		jmp AddCopValueHook2ReturnAddress
 	}
 }
@@ -76,7 +76,7 @@ static __declspec(naked) void AddCopValueHook3Function(void)
 		push eax
 		call DispatchCopValueChangeEvent
 		pop ecx
-		add WORD ptr[ecx + 0x20a], ax
+		add word ptr[ecx + 0x20a], ax
 		jmp AddCopValueHook3ReturnAddress
 	}
 }
@@ -95,7 +95,7 @@ static __declspec(naked) void ExplodeCarHookFunction(void)
 		push eax
 		call DispatchCopValueChangeEvent
 		pop edi
-		mov WORD ptr[edi + 0x20a], ax
+		mov word ptr[edi + 0x20a], ax
 		jmp ExplodeCarHookReturnAddress
 	}
 }
@@ -112,7 +112,7 @@ static __declspec(naked) void SetCopValue0HookFunction(void)
 		push 0
 		call DispatchCopValueChangeEvent
 		pop ecx
-		mov WORD ptr[ecx + 0x20a], ax
+		mov word ptr[ecx + 0x20a], ax
 		ret
 	}
 }
@@ -129,10 +129,10 @@ static __declspec(naked) void SetCopStarsHookFunction()
 	__asm {
 		push edx
 		push ecx
-		mov eax, DWORD ptr[esp + 0x4]
+		mov eax, dword ptr[esp + 0x4]
 		push eax
 		call DispatchCopValueChangeEvent
-		mov DWORD ptr[esp + 0x4], eax
+		mov dword ptr[esp + 0x4], eax
 		pop ecx
 		pop edx
 		jmp SetCopStarsOriginalFn

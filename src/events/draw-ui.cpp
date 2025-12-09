@@ -1,7 +1,6 @@
-#include "../game/game.h"
-#include "../core/core.h"
-#include "../hook-types/function-call-hook.h"
 #include "draw-ui.h"
+#include "../game/game.h"
+#include "../hook-types/function-call-hook.h"
 
 static void DispatchPreDrawUIEvent()
 {

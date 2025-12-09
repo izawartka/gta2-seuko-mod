@@ -1,6 +1,6 @@
+#include "renderer.h"
 #include "../hook-types/function-call-hook.h"
 #include "../hook-types/function-ptr-hook.h"
-#include "renderer.h"
 
 static void DispatchRendererLoadEvent()
 {

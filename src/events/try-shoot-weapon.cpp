@@ -10,13 +10,9 @@ static void __fastcall DispatchTryShootWeaponEvent(Game::WEAPON_STRUCT* weapon)
 static __declspec(naked) void TryShootWeaponHookFunction(void)
 {
 	__asm {
-		push ecx
-		push edx
-		push esi
+		pushad
 		call DispatchTryShootWeaponEvent
-		pop esi
-		pop edx
-		pop ecx
+		popad
 		jmp Game::Functions::ShootFromWeapon
 	}
 }

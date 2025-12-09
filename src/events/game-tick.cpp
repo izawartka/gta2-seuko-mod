@@ -1,7 +1,6 @@
-#include "../game/game.h"
-#include "../core/core.h"
-#include "../hook-types/function-multi-call-hook.h"
 #include "game-tick.h"
+#include "../game/game.h"
+#include "../hook-types/function-multi-call-hook.h"
 
 static void DispatchPreGameTickEvent()
 {

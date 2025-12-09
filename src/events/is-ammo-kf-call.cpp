@@ -1,6 +1,5 @@
-#include "../core/core.h"
-#include "../hook-types/function-multi-call-hook.h"
 #include "is-ammo-kf-call.h"
+#include "../hook-types/function-multi-call-hook.h"
 
 static bool __fastcall DispatchIsAmmoKfCallEvent(bool value)
 {

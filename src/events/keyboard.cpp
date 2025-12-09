@@ -1,7 +1,5 @@
-#include "../game/game.h"
-#include "../core/core.h"
-#include "../hook-types/function-call-hook.h"
 #include "keyboard.h"
+#include "../hook-types/function-call-hook.h"
 
 static bool isLeftShiftPressed = false;
 static bool isLeftCtrlPressed = false;
