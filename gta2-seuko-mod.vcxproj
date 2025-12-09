@@ -258,6 +258,7 @@ exit /b 0
     <ClInclude Include="src\modules\modmenu\cheats\camera\camera.h" />
     <ClInclude Include="src\modules\modmenu\cheats\camera\clear-screen.h" />
     <ClInclude Include="src\modules\modmenu\cheats\camera\disable-culling.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\camera\shadows-fix.h" />
     <ClInclude Include="src\modules\modmenu\cheats\cheats.h" />
     <ClInclude Include="src\modules\modmenu\cheats\freeze-cop-value.h" />
     <ClInclude Include="src\modules\modmenu\cheats\infinite-ammo.h" />
@@ -411,6 +412,7 @@ exit /b 0
     <ClCompile Include="src\modules\modmenu\cheats\camera\camera.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\camera\clear-screen.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\camera\disable-culling.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\camera\shadows-fix.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\freeze-cop-value.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\infinite-ammo.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\instant-reload.cpp" />

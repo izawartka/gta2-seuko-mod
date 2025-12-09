@@ -9,3 +9,4 @@
 #include "camera/clear-screen.h"
 #include "camera/disable-culling.h"
 #include "camera/camera-pos.h"
+#include "camera/shadows-fix.h"
