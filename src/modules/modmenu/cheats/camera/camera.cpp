@@ -41,6 +41,12 @@ void ModMenuModule::CameraCheat::OnDisable()
 	m_cameraValues = std::nullopt;
 	m_customCameraPos = std::nullopt;
 	m_customRenderQueue.clear();
+	m_snapVerticalRotation = false;
+}
+
+void ModMenuModule::CameraCheat::OnGameStart(GameStartEvent& event)
+{
+	if(IsEnabled())	m_snapVerticalRotation = true;
 }
 
 void ModMenuModule::CameraCheat::OnRendererLoad(RendererLoadEvent& event)
@@ -122,8 +128,15 @@ void ModMenuModule::CameraCheat::OnPreDrawFrame(PreDrawFrameEvent& event)
 	if (playerPedRotationPtr != nullptr && m_options.followPedRotation) {
 		float pedRotationRad = Game::Utils::FromGTAAngleToRad(*playerPedRotationPtr) + static_cast<float>(M_PI);
 		float& cameraRotation = m_options.cameraTransform.verticalAngleRad;
-		cameraRotation = Utils::Angle::LerpAngle(cameraRotation, pedRotationRad, m_options.followPedRotationLerpFactor);
+		if (m_snapVerticalRotation) {
+			cameraRotation = pedRotationRad;
+		}
+		else {
+			cameraRotation = Utils::Angle::LerpAngle(cameraRotation, pedRotationRad, m_options.followPedRotationLerpFactor);
+		}
 	}
+
+	m_snapVerticalRotation = false;
 
 	if (mainCamera) {
 		auto* moduleRoot = ModMenuModule::RootModule::GetInstance();
@@ -170,6 +183,7 @@ void ModMenuModule::CameraCheat::OnPreDrawMapLayer(PreDrawMapLayerEvent& event)
 
 void ModMenuModule::CameraCheat::RequestAddCameraListeners()
 {
+	AddEventListener<GameStartEvent>(&ModMenuModule::CameraCheat::OnGameStart);
 	AddEventListener<PreDrawFrameEvent>(&ModMenuModule::CameraCheat::OnPreDrawFrame);
 
 	if(!*Game::Memory::GetIsRendererLoaded()) {
@@ -195,6 +209,7 @@ void ModMenuModule::CameraCheat::AddCameraListeners()
 
 void ModMenuModule::CameraCheat::RemoveCameraListeners()
 {
+	RemoveEventListener<GameStartEvent>();
 	RemoveEventListener<PreDrawFrameEvent>();
 
 	if (HasEventListener<CullingCheckEvent>()) {

@@ -1,6 +1,7 @@
 #pragma once
 #include "../../common.h"
 #include "../../cheat-base.h"
+#include "../../../../events/game-start.h"
 #include "../../../../events/draw-frame.h"
 #include "../../../../events/renderer.h"
 #include "../../../../events/culling-check.h"
@@ -30,6 +31,7 @@ namespace ModMenuModule {
 		virtual void OnEnable() override;
 		virtual void OnDisable() override;
 
+		void OnGameStart(GameStartEvent& event);
 		void OnRendererLoad(RendererLoadEvent& event);
 		void OnDrawTile(RendererDrawTileEvent& event);
 		void OnDrawQuad(RendererDrawQuadEvent& event);
@@ -47,6 +49,7 @@ namespace ModMenuModule {
 
 		CameraCheatOptions m_options;
 		bool m_hasRendererListeners = false;
+		bool m_snapVerticalRotation = false;
 		Game::GTAVertex m_vertexBuffer[8] = {};
 		std::optional<Utils::Vertex::CameraValues> m_cameraValues = std::nullopt;
 		std::optional<Utils::Vertex::CustomCameraPos> m_customCameraPos = std::nullopt;
