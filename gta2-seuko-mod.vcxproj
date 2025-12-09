@@ -240,6 +240,7 @@ exit /b 0
     <ClInclude Include="src\events\game-end.h" />
     <ClInclude Include="src\events\game-start.h" />
     <ClInclude Include="src\events\is-ammo-kf-call.h" />
+    <ClInclude Include="src\events\scale-shadow.h" />
     <ClInclude Include="src\events\try-shoot-weapon.h" />
     <ClInclude Include="src\game\car-roof-utils.h" />
     <ClInclude Include="src\hook-types\jump-hook.h" />
@@ -398,6 +399,7 @@ exit /b 0
     <ClCompile Include="src\events\game-start.cpp" />
     <ClCompile Include="src\events\game-tick.cpp" />
     <ClCompile Include="src\events\is-ammo-kf-call.cpp" />
+    <ClCompile Include="src\events\scale-shadow.cpp" />
     <ClCompile Include="src\events\try-shoot-weapon.cpp" />
     <ClCompile Include="src\events\keyboard.cpp" />
     <ClCompile Include="src\game\keycode.cpp" />

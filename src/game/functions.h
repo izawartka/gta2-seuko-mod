@@ -104,5 +104,8 @@ namespace Game {
 
 		typedef void(__fastcall SaveGameType)(S15_Script* s15, DWORD edx, const char* saveFileName);
 		static constexpr SaveGameType* SaveGame = (SaveGameType*)0x0047ef40;
+
+		typedef SCR_f* (__fastcall ScaleScrfType)(SCR_f* value, SCR_f* target, int* scalar);
+		static constexpr ScaleScrfType* ScaleScrf = (ScaleScrfType*)0x00401bd0;
 	};  
 }
