@@ -131,14 +131,16 @@ void ModMenuModule::AddQuickActionMenu::OnSave()
 {
 	ModMenuModule::QuickActionManager* quickActionManager = ModMenuModule::QuickActionManager::GetInstance();
 
-	auto keyOpt = m_keyController->GetValue();
+	auto& keyOpt = m_keyController->GetValue();
 	if (!keyOpt.has_value()) {
+		ToastManager* toastManager = ToastManager::GetInstance();
+		toastManager->Show({ L"Cannot add quick action: no key bind set", ToastType::Warning });
 		spdlog::warn("Cannot add quick action: no key bind set");
 		return;
 	}
 	KeyBindingModule::Key key = keyOpt.value();
 
-	auto actionTypeOpt = m_actionTypeController->GetValue();
+	auto& actionTypeOpt = m_actionTypeController->GetValue();
 	if (!actionTypeOpt.has_value()) {
 		spdlog::warn("Cannot add quick action: no action type selected");
 		return;
