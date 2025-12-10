@@ -1,6 +1,36 @@
 #include "segment-base.h"
 #include "root.h"
 
+ModMenuModule::SegmentBase::~SegmentBase()
+{
+	assert(!m_attached && "Segment must be detached before destruction");
+}
+
+void ModMenuModule::SegmentBase::SetAttached(bool attached, ModMenuModule::MenuBase* menu, UiModule::Component* parent)
+{
+	if (m_attached == attached) return;
+	if(attached) {
+		assert(menu && parent && "Menu and parent must be provided when attaching");
+		m_attached = Attach(menu, parent);
+	} else {
+		assert(!menu && !parent && "Menu and parent must be null when detaching");
+		SetVisible(false);
+		Detach();
+		m_attached = false;
+	}
+}
+
+void ModMenuModule::SegmentBase::SetVisible(bool visible)
+{
+	if (m_visible == visible) return;
+	m_visible = visible;
+	if (m_visible) {
+		OnShow();
+	} else {
+		OnHide();
+	}
+}
+
 bool ModMenuModule::SegmentBase::Attach(ModMenuModule::MenuBase* menu, UiModule::Component* parent)
 {
 	CreateSegment(menu, parent);

@@ -6,8 +6,13 @@ namespace ModMenuModule {
 
 	class SegmentBase {
 	public:
-		virtual ~SegmentBase() = default;
+		virtual ~SegmentBase();
 		SegmentBase() = default;
+
+		virtual void SetAttached(bool attached, ModMenuModule::MenuBase* menu = nullptr, UiModule::Component* parent = nullptr) final;
+		virtual bool IsAttached() const final { return m_attached; }
+		virtual void SetVisible(bool visible) final;
+		virtual bool IsVisible() const final { return m_visible; }
 
 		virtual bool Attach(ModMenuModule::MenuBase* menu, UiModule::Component* parent);
 		virtual void Detach();
@@ -16,11 +21,12 @@ namespace ModMenuModule {
 		virtual void OnHide() {}
 
 	protected:
-		friend class MenuBase;
 
 		virtual void CreateSegment(ModMenuModule::MenuBase* menu, UiModule::Component* parent) final;
 		virtual void DestroySegment() final;
 
+		bool m_attached = false;
+		bool m_visible = false;
 		ModMenuModule::MenuBase* m_menu = nullptr;
 		UiModule::Component* m_parent = nullptr;
 		UiModule::VertCont* m_vertCont = nullptr;
