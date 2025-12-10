@@ -11,6 +11,11 @@ Core::WatchManager::WatchManager()
 
 Core::WatchManager::~WatchManager()
 {
+	spdlog::debug("WatchManager::~WatchManager: Removing all event listeners");
+	for (auto& [eventType, listenerId] : m_typeToListenerId) {
+		EventManager::GetInstance()->RemoveListener(eventType, listenerId);
+	}
+
 	m_instance = nullptr;
 }
 
