@@ -74,11 +74,13 @@ void ModMenuModule::CameraPosCheat::OnFirstEnable()
 void ModMenuModule::CameraPosCheat::OnEnable()
 {
 	AddEventListener<CameraPosApplyEvent>(&ModMenuModule::CameraPosCheat::OnCameraPosApply);
+	AddEventListener<GameStartEvent>(&ModMenuModule::CameraPosCheat::OnGameStart);
 }
 
 void ModMenuModule::CameraPosCheat::OnDisable()
 {
 	RemoveEventListener<CameraPosApplyEvent>();
+	RemoveEventListener<GameStartEvent>();
 	m_lockAtCurrentRequested = false;
 	m_snapToTargetRequested = false;
 	m_snapAndDisableRequested = false;
@@ -126,6 +128,11 @@ void ModMenuModule::CameraPosCheat::OnCameraPosApply(CameraPosApplyEvent& event)
 		camera->cameraPos.z,
 		camera->cameraPos.zoom
 	};
+}
+
+void ModMenuModule::CameraPosCheat::OnGameStart(GameStartEvent& event)
+{
+	if (IsEnabled()) m_snapToTargetRequested = true;
 }
 
 void ModMenuModule::CameraPosCheat::ApplyCoordinate(CameraPosCheatCoordinate& coord, Game::SCR_f& camCoord, Game::SCR_f& camCoordTarget2) const
