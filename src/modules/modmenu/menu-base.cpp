@@ -1,6 +1,11 @@
 #include "menu-base.h"
 #include "root.h"
 
+ModMenuModule::MenuBase::~MenuBase()
+{
+	assert(!m_attached && "Menu must be detached before destruction");
+}
+
 bool ModMenuModule::MenuBase::Attach()
 {
 	UiModule::Component* vertCont = nullptr;
@@ -11,6 +16,19 @@ bool ModMenuModule::MenuBase::Attach()
 void ModMenuModule::MenuBase::Detach()
 {
 	DestroyMenu();
+}
+
+void ModMenuModule::MenuBase::SetAttached(bool attached)
+{
+	if (m_attached == attached) return;
+
+	if (attached) {
+		m_attached = Attach();
+	} else {
+		SetVisible(false);
+		Detach();
+		m_attached = false;
+	}
 }
 
 void ModMenuModule::MenuBase::CreateMenu(std::wstring title, UiModule::Component*& vertCont)
@@ -69,6 +87,10 @@ void ModMenuModule::MenuBase::SetTitle(std::wstring title)
 void ModMenuModule::MenuBase::SetVisible(bool visible)
 {
 	if (m_visible == visible) return;
+	if (!m_attached) {
+		spdlog::error("MenuBase::SetVisible: Cannot change visibility of a menu that is not attached");
+	}
+
 	m_visible = visible;
 
 	if (visible) {

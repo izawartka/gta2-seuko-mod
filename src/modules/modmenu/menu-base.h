@@ -5,7 +5,7 @@
 namespace ModMenuModule {
 	class MenuBase {
 	public:
-		virtual ~MenuBase() = default;
+		virtual ~MenuBase();
 
 	protected:
 		friend class MenuManager;
@@ -14,6 +14,9 @@ namespace ModMenuModule {
 
 		virtual bool Attach();
 		virtual void Detach();
+
+		virtual void SetAttached(bool attached) final;
+		virtual bool IsAttached() const final { return m_attached; }
 
 		virtual void CreateMenu(std::wstring title, UiModule::Component*& vertCont) final;
 		virtual void SetPreviousSelectedIndex() final;
@@ -31,6 +34,7 @@ namespace ModMenuModule {
 		UiModule::Text* m_titleText = nullptr;
 		UiModule::Component* m_mainComponent = nullptr;
 		UiModule::MenuController* m_menuController = nullptr;
+		bool m_attached = false;
 		bool m_visible = false;
 		size_t m_selectedIndex = -1;
 	};

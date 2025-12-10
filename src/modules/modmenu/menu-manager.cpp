@@ -171,10 +171,9 @@ void ModMenuModule::MenuManager::HideTopMenu()
 		return;
 	}
 	MenuStackEntry& topMenu = m_menus.back();
-	if (m_topMenuVisible) {
+	if (topMenu.menu->IsVisible()) {
 		spdlog::debug("MenuManager::HideTopMenu: Hiding top menu with id {}", topMenu.id);
 		topMenu.menu->SetVisible(false);
-		m_topMenuVisible = false;
 	}
 }
 
@@ -185,10 +184,9 @@ void ModMenuModule::MenuManager::DetachTopMenu()
 	}
 
 	MenuStackEntry& topMenu = m_menus.back();
-	if (m_topMenuAttached) {
+	if (topMenu.menu->IsAttached()) {
 		spdlog::debug("MenuManager::DetachTopMenu: Detaching top menu with id {}", topMenu.id);
-		topMenu.menu->Detach();
-		m_topMenuAttached = false;
+		topMenu.menu->SetAttached(false);
 	}
 }
 
@@ -199,6 +197,8 @@ void ModMenuModule::MenuManager::ProcessPendingChanges()
 	}
 
 	m_processingChanges = true;
+
+	MenuStackEntry* currentTopMenu = m_menus.empty() ? nullptr : &m_menus.back();
 
 	while (!m_pendingChanges.empty()) {
 		PendingChange change = m_pendingChanges.front();
@@ -214,7 +214,7 @@ void ModMenuModule::MenuManager::ProcessPendingChanges()
 			DetachTopMenu();
 			break;
 		case ChangeType::UpdateVisible:
-			if (m_topMenuVisible && !m_visible) HideTopMenu();
+			if (!m_visible) HideTopMenu();
 			break;
 		default:
 			spdlog::warn("MenuManager::ProcessPendingChanges: Unknown change type");
@@ -224,16 +224,17 @@ void ModMenuModule::MenuManager::ProcessPendingChanges()
 
 	MenuStackEntry* newTopMenu = m_menus.empty() ? nullptr : &m_menus.back();
 
-	if(!m_topMenuAttached && newTopMenu && !m_aboutToEndGame) {
+	if(newTopMenu && !newTopMenu->menu->IsAttached() && !m_aboutToEndGame) {
 		spdlog::debug("MenuManager::ProcessPendingChanges: Attaching top menu with id {}", newTopMenu->id);
-		newTopMenu->menu->Attach();
-		m_topMenuAttached = true;
+		newTopMenu->menu->SetAttached(true);
+		if (!newTopMenu->menu->IsAttached()) {
+			spdlog::error("MenuManager::ProcessPendingChanges: Failed to attach menu with id {}", newTopMenu->id);
+		}
 	}
 
-	if(!m_topMenuVisible && newTopMenu && m_visible && !m_aboutToEndGame) {
+	if(newTopMenu && newTopMenu->menu->IsAttached() && !newTopMenu->menu->IsVisible() && m_visible && !m_aboutToEndGame) {
 		spdlog::debug("MenuManager::ProcessPendingChanges: Setting top menu with id {} visible", newTopMenu->id);
 		newTopMenu->menu->SetVisible(true);
-		m_topMenuVisible = true;
 	}
 
 	m_processingChanges = false;

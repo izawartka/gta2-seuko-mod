@@ -69,8 +69,6 @@ namespace ModMenuModule {
 		std::vector<MenuStackEntry> m_menus;
 		bool m_visible = false;
 		bool m_processingChanges = false;
-		bool m_topMenuAttached = false;
-		bool m_topMenuVisible = false;
 		bool m_aboutToEndGame = false;
 		bool m_inGame = false;
 		MenuId m_nextMenuId = 1;
