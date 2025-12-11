@@ -4,10 +4,17 @@
 #include "../root.h"
 
 ModMenuModule::CameraPosCheatCoordSegment::CameraPosCheatCoordSegment(const std::wstring& coordLabel, size_t coordIndex)
-	: m_coordLabel(coordLabel), m_coordIndex(coordIndex) { }
+	: m_coordLabel(coordLabel), m_coordIndex(coordIndex) 
+{
+	m_modeResolver = [this]() {
+		CameraPosCheatCoordinate coordOptions = GetCurrentCoordinateOptions();
+		return coordOptions.mode;
+	};
+}
 
 ModMenuModule::CameraPosCheatCoordSegment::~CameraPosCheatCoordSegment()
 {
+
 }
 
 bool ModMenuModule::CameraPosCheatCoordSegment::Attach(ModMenuModule::MenuBase* menu, UiModule::Component* parent)
@@ -27,21 +34,22 @@ bool ModMenuModule::CameraPosCheatCoordSegment::Attach(ModMenuModule::MenuBase* 
 	UiModule::Text* modeText = m_menuController->CreateItem<UiModule::Text>(m_horCont, L"", options.textSize);
 	auto modeController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<CameraPosCheatMode, CameraPosCheatMode>>(
 		modeText,
-		[cameraPosCheat, this]() {
-			const CameraPosCheatOptions& cheatOptions = cameraPosCheat->GetOptions();
-			const CameraPosCheatCoordinate* coordinate = GetCoordinate(&cheatOptions, m_coordIndex);
-			CameraPosCheatMode mode = coordinate->mode;
-			SetValueVisible(mode != CameraPosCheatMode::Unmodified);
-			return mode;
-		},
+		m_modeResolver,
 		CameraPosCheat::GetAllCameraPosCheatModes(),
 		UiModule::VarTextSelectControllerOptions{ m_coordLabel + L"#", L"#" }
 	);
 	modeController->SetConverter<CameraPosCheatModeConverter>();
 	modeController->SetCustomSaveCallback([cameraPosCheat, this](CameraPosCheatMode newMode) {
 		CameraPosCheatOptions options = cameraPosCheat->GetOptions();
-		CameraPosCheatCoordinate* coordinate = const_cast<CameraPosCheatCoordinate*>(GetCoordinate(&options, m_coordIndex));
+		CameraPosCheatCoordinate* coordinate = const_cast<CameraPosCheatCoordinate*>(GetCoordinate(options, m_coordIndex));
 		coordinate->mode = newMode;
+		if (newMode == CameraPosCheatMode::LockTargetAt) {
+			const auto& lastPos = cameraPosCheat->GetLastPosition();
+			Game::SCR_f lastPosCoord = GetPosCoordinate(lastPos, m_coordIndex);
+			coordinate->value = lastPosCoord;
+		} else {
+			coordinate->value = Game::Utils::FromFloat(0.0f);
+		}
 		cameraPosCheat->SetOptions(options);
 	});
 	m_modeMenuItemId = m_menuController->GetLatestMenuItemId();
@@ -57,26 +65,66 @@ void ModMenuModule::CameraPosCheatCoordSegment::Detach()
 
 void ModMenuModule::CameraPosCheatCoordSegment::OnShow()
 {
+	m_watchedMode = Core::WatchManager::GetInstance()->Watch<UiModule::UpdateUIEvent>(
+		m_modeResolver,
+		this,
+		&CameraPosCheatCoordSegment::OnModeChange
+	);
 }
 
 void ModMenuModule::CameraPosCheatCoordSegment::OnHide()
 {
+	if (m_watchedMode) {
+		Core::WatchManager::GetInstance()->Unwatch(m_watchedMode);
+		m_watchedMode = nullptr;
+	}
 }
 
-const ModMenuModule::CameraPosCheatCoordinate* ModMenuModule::CameraPosCheatCoordSegment::GetCoordinate(const CameraPosCheatOptions* cameraPosCheat, size_t coordIndex)
+const ModMenuModule::CameraPosCheatCoordinate* ModMenuModule::CameraPosCheatCoordSegment::GetCoordinate(const CameraPosCheatOptions& cheatOptions, size_t coordIndex)
 {
 	switch (coordIndex) {
 	case 0:
-		return &cameraPosCheat->x;
+		return &cheatOptions.x;
 	case 1:
-		return &cameraPosCheat->y;
+		return &cheatOptions.y;
 	case 2:
-		return &cameraPosCheat->z;
+		return &cheatOptions.z;
 	case 3:
-		return &cameraPosCheat->zoom;
+		return &cheatOptions.zoom;
 	default:
 		return nullptr;
 	}
+}
+
+Game::SCR_f ModMenuModule::CameraPosCheatCoordSegment::GetPosCoordinate(const std::optional<CameraPosCheatPosition>& position, size_t coordIndex)
+{
+	switch (coordIndex) {
+	case 0:
+		return position.has_value() ? position->x : Game::Utils::FromFloat(0.0f);
+	case 1:
+		return position.has_value() ? position->y : Game::Utils::FromFloat(0.0f);
+	case 2:
+		return position.has_value() ? position->z : Game::Utils::FromFloat(0.0f);
+	case 3:
+		return position.has_value() ? position->zoom : Game::Utils::FromFloat(1.0f);
+	default:
+		return Game::Utils::FromFloat(1.0f);
+	}
+}
+
+ModMenuModule::CameraPosCheatCoordinate ModMenuModule::CameraPosCheatCoordSegment::GetCurrentCoordinateOptions() const
+{
+	ModMenuModule::RootModule* root = ModMenuModule::RootModule::GetInstance();
+	CameraPosCheat* cameraPosCheat = root->GetCheat<CameraPosCheat>();
+	const CameraPosCheatOptions& cheatOptions = cameraPosCheat->GetOptions();
+	return *GetCoordinate(cheatOptions, m_coordIndex);
+}
+
+void ModMenuModule::CameraPosCheatCoordSegment::OnModeChange(
+	const std::optional<ModMenuModule::CameraPosCheatMode>& prevMode, 
+	const std::optional<ModMenuModule::CameraPosCheatMode>& newMode
+) {
+	SetValueVisible(newMode.has_value() && newMode.value() != CameraPosCheatMode::Unmodified);
 }
 
 void ModMenuModule::CameraPosCheatCoordSegment::SetValueVisible(bool visible)
@@ -97,15 +145,15 @@ void ModMenuModule::CameraPosCheatCoordSegment::SetValueVisible(bool visible)
 			valueText,
 			[cameraPosCheat, this]() {
 				const CameraPosCheatOptions& cheatOptions = cameraPosCheat->GetOptions();
-				const CameraPosCheatCoordinate* coordinate = GetCoordinate(&cheatOptions, m_coordIndex);
+				const CameraPosCheatCoordinate* coordinate = GetCoordinate(cheatOptions, m_coordIndex);
 				return coordinate->value;
 			},
-			UiModule::VarTextEditableControllerOptions{ m_coordLabel + L"#", L"#" }
+			UiModule::VarTextEditableControllerOptions{ L"#", L"#" }
 		);
 		m_valueController->SetConverter<ScrfConverter>();
 		m_valueController->SetCustomSaveCallback([cameraPosCheat, this](Game::SCR_f newValue) {
 			CameraPosCheatOptions options = cameraPosCheat->GetOptions();
-			CameraPosCheatCoordinate* coordinate = const_cast<CameraPosCheatCoordinate*>(GetCoordinate(&options, m_coordIndex));
+			CameraPosCheatCoordinate* coordinate = const_cast<CameraPosCheatCoordinate*>(GetCoordinate(options, m_coordIndex));
 			coordinate->value = newValue;
 			cameraPosCheat->SetOptions(options);
 		});
