@@ -8,6 +8,7 @@
 #include "cheat-support.h"
 #include "cheats/cheats.h"
 #include "segment-base.h"
+#include "segment-support.h"
 #include "segments/segments.h"
 #include "quick-action-base.h"
 #include "quick-action-registry.h"
