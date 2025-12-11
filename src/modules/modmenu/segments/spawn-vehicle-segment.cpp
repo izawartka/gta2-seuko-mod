@@ -15,6 +15,32 @@ ModMenuModule::SpawnVehicleSegment::~SpawnVehicleSegment()
 
 }
 
+std::optional<ModMenuModule::SpawnVehicleSegmentData> ModMenuModule::SpawnVehicleSegment::GetSegmentData() const
+{
+	if (!m_modelController || !m_remapController) {
+		spdlog::error("Cannot get segment data: controllers are not initialized.");
+		return std::nullopt;
+	}
+
+	return SpawnVehicleSegmentData{
+		m_modelController->GetValue().value(),
+		std::get<0>(m_remapController->GetValue().value()),
+		std::get<1>(m_remapController->GetValue().value())
+	};
+}
+
+bool ModMenuModule::SpawnVehicleSegment::SetSegmentData(const SpawnVehicleSegmentData& data)
+{
+	if (!m_modelController || !m_remapController) {
+		spdlog::error("Cannot set segment data: controllers are not initialized.");
+		return false;
+	}
+
+	m_modelController->SetValue(data.model);
+	m_remapController->SetValue(std::make_tuple(data.remap, data.palette));
+	return true;
+}
+
 bool ModMenuModule::SpawnVehicleSegment::Attach(ModMenuModule::MenuBase* menu, UiModule::Component* parent)
 {
 	CreateSegment(menu, parent);
@@ -79,32 +105,6 @@ void ModMenuModule::SpawnVehicleSegment::Detach()
 
 	DestroySegment();
 	m_spritePreview = nullptr; // has to be cleared because is used in UpdateSpritePreview to check if it exists
-}
-
-std::optional<ModMenuModule::SpawnVehicleSegmentData> ModMenuModule::SpawnVehicleSegment::GetSegmentData() const
-{
-	if(!m_modelController || !m_remapController) {
-		spdlog::error("Cannot get segment data: controllers are not initialized.");
-		return std::nullopt;
-	}
-
-	return SpawnVehicleSegmentData{
-		m_modelController->GetValue().value(),
-		std::get<0>(m_remapController->GetValue().value()),
-		std::get<1>(m_remapController->GetValue().value())
-	};
-}
-
-bool ModMenuModule::SpawnVehicleSegment::SetSegmentData(const SpawnVehicleSegmentData& data)
-{
-	if(!m_modelController || !m_remapController) {
-		spdlog::error("Cannot set segment data: controllers are not initialized.");
-		return false;
-	}
-
-	m_modelController->SetValue(data.model);
-	m_remapController->SetValue(std::make_tuple(data.remap, data.palette));
-	return true;
 }
 
 void ModMenuModule::SpawnVehicleSegment::UpdateSpritePreview()

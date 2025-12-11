@@ -17,13 +17,13 @@ namespace ModMenuModule {
 		SpawnVehicleSegment(const std::string& persistencePrefix);
 		virtual ~SpawnVehicleSegment();
 
-		virtual bool Attach(ModMenuModule::MenuBase* menu, UiModule::Component* parent) override;
-		virtual void Detach() override;
-
 		virtual std::optional<SpawnVehicleSegmentData> GetSegmentData() const override;
 		virtual bool SetSegmentData(const SpawnVehicleSegmentData& data) override;
 
 	private:
+		virtual bool Attach(ModMenuModule::MenuBase* menu, UiModule::Component* parent) override;
+		virtual void Detach() override;
+
 		void UpdateSpritePreview();
 		void UpdateSpritePreviewMargin();
 

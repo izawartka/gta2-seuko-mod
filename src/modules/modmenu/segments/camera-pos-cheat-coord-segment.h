@@ -9,13 +9,13 @@ namespace ModMenuModule {
 		CameraPosCheatCoordSegment(const std::wstring& coordLabel, size_t coordIndex);
 		virtual ~CameraPosCheatCoordSegment();
 
+	private:
 		virtual bool Attach(ModMenuModule::MenuBase* menu, UiModule::Component* parent) override;
 		virtual void Detach() override;
 
 		virtual void OnShow() override;
 		virtual void OnHide() override;
 
-	private:
 		static const CameraPosCheatCoordinate* GetCoordinate(const CameraPosCheatOptions& cheatOptions, size_t coordIndex);
 		static Game::SCR_f GetPosCoordinate(const std::optional<CameraPosCheatPosition>& position, size_t coordIndex);
 

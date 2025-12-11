@@ -14,6 +14,31 @@ ModMenuModule::ExplodeAllVehiclesSegment::~ExplodeAllVehiclesSegment()
 
 }
 
+std::optional<ModMenuModule::ExplodeAllVehiclesSegmentData> ModMenuModule::ExplodeAllVehiclesSegment::GetSegmentData() const
+{
+	if (!m_excludePlayerVehicleController || !m_explosionSizeController) {
+		spdlog::error("Cannot get segment data: controllers are not initialized.");
+		return std::nullopt;
+	}
+
+	return ExplodeAllVehiclesSegmentData{
+		m_excludePlayerVehicleController->GetValue().value(),
+		m_explosionSizeController->GetValue().value()
+	};
+}
+
+bool ModMenuModule::ExplodeAllVehiclesSegment::SetSegmentData(const ExplodeAllVehiclesSegmentData& data)
+{
+	if (!m_excludePlayerVehicleController || !m_explosionSizeController) {
+		spdlog::error("Cannot set segment data: controllers are not initialized.");
+		return false;
+	}
+
+	m_excludePlayerVehicleController->SetValue(data.excludePlayerVehicle);
+	m_explosionSizeController->SetValue(data.explosionSize);
+	return true;
+}
+
 bool ModMenuModule::ExplodeAllVehiclesSegment::Attach(ModMenuModule::MenuBase* menu, UiModule::Component* parent)
 {
 	CreateSegment(menu, parent);
@@ -63,29 +88,4 @@ void ModMenuModule::ExplodeAllVehiclesSegment::Detach()
 	}
 
 	DestroySegment();
-}
-
-std::optional<ModMenuModule::ExplodeAllVehiclesSegmentData> ModMenuModule::ExplodeAllVehiclesSegment::GetSegmentData() const
-{
-	if (!m_excludePlayerVehicleController || !m_explosionSizeController) {
-		spdlog::error("Cannot get segment data: controllers are not initialized.");
-		return std::nullopt;
-	}
-
-	return ExplodeAllVehiclesSegmentData{
-		m_excludePlayerVehicleController->GetValue().value(),
-		m_explosionSizeController->GetValue().value()
-	};
-}
-
-bool ModMenuModule::ExplodeAllVehiclesSegment::SetSegmentData(const ExplodeAllVehiclesSegmentData& data)
-{
-	if (!m_excludePlayerVehicleController || !m_explosionSizeController) {
-		spdlog::error("Cannot set segment data: controllers are not initialized.");
-		return false;
-	}
-
-	m_excludePlayerVehicleController->SetValue(data.excludePlayerVehicle);
-	m_explosionSizeController->SetValue(data.explosionSize);
-	return true;
 }

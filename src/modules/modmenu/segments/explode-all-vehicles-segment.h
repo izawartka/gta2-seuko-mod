@@ -14,13 +14,13 @@ namespace ModMenuModule {
 		ExplodeAllVehiclesSegment(const std::string& persistencePrefix);
 		virtual ~ExplodeAllVehiclesSegment();
 
-		virtual bool Attach(ModMenuModule::MenuBase* menu, UiModule::Component* parent) override;
-		virtual void Detach() override;
-
 		virtual std::optional<ExplodeAllVehiclesSegmentData> GetSegmentData() const override;
 		virtual bool SetSegmentData(const ExplodeAllVehiclesSegmentData& data) override;
 
 	private:
+		virtual bool Attach(ModMenuModule::MenuBase* menu, UiModule::Component* parent) override;
+		virtual void Detach() override;
+
 		UiModule::SelectController<bool>* m_excludePlayerVehicleController = nullptr;
 		UiModule::SelectController<Game::EXPLOSION_SIZE>* m_explosionSizeController = nullptr;
 
