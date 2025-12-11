@@ -1,12 +1,14 @@
 #include "spawn-vehicle-menu.h"
+#include "../segments/spawn-vehicle-segment.h"
 #include "../../../converters/car-model.h"
 #include "../../../converters/yes-no.h"
 #include "../../../converters/car-remap.h"
 #include "../root.h"
 #include "../utils/spawn-car-at-player.h"
 
-ModMenuModule::SpawnVehicleMenu::SpawnVehicleMenu() : m_spawnSegment("ModMenu_SpawnVehicleMenu")
+ModMenuModule::SpawnVehicleMenu::SpawnVehicleMenu()
 {
+	m_spawnVehicleSegment = CreateSegment<ModMenuModule::SpawnVehicleSegment>("ModMenu_SpawnVehicleMenu_SpawnSegment");
 }
 
 ModMenuModule::SpawnVehicleMenu::~SpawnVehicleMenu()
@@ -24,7 +26,7 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 
-	m_spawnSegment.Attach(this, vertCont);
+	AttachSegment(m_spawnVehicleSegment, this, vertCont);
 
 	// spawn button
 	auto spawnText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"Spawn", options.textSize);
@@ -38,7 +40,7 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 
 void ModMenuModule::SpawnVehicleMenu::Detach()
 {
-	m_spawnSegment.Detach();
+	DetachSegment(m_spawnVehicleSegment);
 	DestroyMenu();
 }
 
@@ -55,7 +57,7 @@ void ModMenuModule::SpawnVehicleMenu::OnMenuAction(UiModule::Selectable* item, U
 
 void ModMenuModule::SpawnVehicleMenu::Spawn()
 {
-	auto segmentDataOpt = m_spawnSegment.GetSegmentData();
+	auto segmentDataOpt = m_spawnVehicleSegment->GetSegmentData();
 	if (!segmentDataOpt.has_value()) {
 		spdlog::error("Cannot spawn vehicle: failed to get segment data.");
 		return;

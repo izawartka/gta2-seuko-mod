@@ -1,4 +1,5 @@
 #include "camera-pos-menu.h"
+#include "../segments/camera-pos-cheat-coord-segment.h"
 #include "../root.h"
 #include "../cheats/camera/camera-pos.h"
 #include "../../../converters/enabled-disabled.h"
@@ -7,7 +8,10 @@
 
 ModMenuModule::CameraPosMenu::CameraPosMenu()
 {
-
+	CreateSegment<CameraPosCheatCoordSegment>(L"X: ", 0);
+	CreateSegment<CameraPosCheatCoordSegment>(L"Y: ", 1);
+	CreateSegment<CameraPosCheatCoordSegment>(L"Z: ", 2);
+	CreateSegment<CameraPosCheatCoordSegment>(L"Zoom: ", 3);
 }
 
 ModMenuModule::CameraPosMenu::~CameraPosMenu()
@@ -59,10 +63,12 @@ void ModMenuModule::CameraPosMenu::OnShow()
 {
 	AddEventListener<ModMenuModule::CheatStateEvent>(&CameraPosMenu::OnCheatStateChange);
 	UpdateCheatStates();
+	SetSegmentsVisible(true);
 }
 
 void ModMenuModule::CameraPosMenu::OnHide()
 {
+	SetSegmentsVisible(false);
 	RemoveEventListener<ModMenuModule::CheatStateEvent>();
 }
 
@@ -111,10 +117,7 @@ void ModMenuModule::CameraPosMenu::AttachCheatMenuItems()
 
 	uiRoot->AddComponent<UiModule::Spacer>(container, 0, options.menuSpacerHeight);
 
-	m_xPosSegment.Attach(this, container);
-	m_yPosSegment.Attach(this, container);
-	m_zPosSegment.Attach(this, container);
-	m_zoomSegment.Attach(this, container);
+	AttachAllSegments(this, container);
 
 	// reverse z min lock
 	UiModule::Text* reverseZMinLockText = m_menuController->CreateItem<UiModule::Text>(container, L"", options.textSize);
@@ -140,12 +143,13 @@ void ModMenuModule::CameraPosMenu::DetachCheatMenuItems()
 {
 	if (!m_cheatItemsAttached) return;
 
-	m_xPosSegment.Detach();
-	m_yPosSegment.Detach();
-	m_zPosSegment.Detach();
-	m_zoomSegment.Detach();
+	DetachAllSegments();
 
 	m_menuController->DeleteGroupItems(m_cheatItemsGroupId);
+
+	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
+	uiRoot->RemoveComponent(m_cheatItemsSpacer, true);
+
 	m_cheatItemsAttached = false;
 }
 

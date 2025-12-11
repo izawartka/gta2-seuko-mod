@@ -62,22 +62,18 @@ bool ModMenuModule::AddQuickActionMenu::Attach()
 
 void ModMenuModule::AddQuickActionMenu::Detach()
 {
-	DestroySegment();
+	DetachAllSegments();
 	DestroyMenu();
 }
 
 void ModMenuModule::AddQuickActionMenu::OnShow()
 {
-	if (m_segmentInstance != nullptr) {
-		m_segmentInstance->OnShow();
-	}
+	SetSegmentsVisible(true);
 }
 
 void ModMenuModule::AddQuickActionMenu::OnHide()
 {
-	if (m_segmentInstance != nullptr) {
-		m_segmentInstance->OnHide();
-	}
+	SetSegmentsVisible(false);
 }
 
 void ModMenuModule::AddQuickActionMenu::OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
@@ -106,25 +102,21 @@ void ModMenuModule::AddQuickActionMenu::CreateSegment(QuickActionTypeIndex actio
 		return;
 	}
 
-	m_segmentInstance = ModMenuModule::QuickActionManager::CreateSegment(actionType);
 	m_menuController->SetNextAddedItemIndex(m_segmentBaseIndex);
+	m_segmentInstance = ModMenuModule::QuickActionManager::CreateSegment(actionType);
 
-	m_segmentInstance->Attach(this, m_segmentContainer);
-	if(m_visible) {
-		m_segmentInstance->OnShow();
-	}
+	AddAttachSetVisibleSegment(
+		m_segmentInstance,
+		this,
+		m_segmentContainer
+	);
 }
 
 void ModMenuModule::AddQuickActionMenu::DestroySegment()
 {
 	if (m_segmentInstance == nullptr) return;
 
-	if (m_visible) {
-		m_segmentInstance->OnHide();
-	}
-	m_segmentInstance->Detach();
-	delete m_segmentInstance;
-	m_segmentInstance = nullptr;
+	DeleteSegment(m_segmentInstance);
 }
 
 void ModMenuModule::AddQuickActionMenu::OnSave()

@@ -1,10 +1,11 @@
 #pragma once
 #include "../common.h"
 #include "../menu-base.h"
+#include "../segment-support.h"
 #include "../quick-action-registry.h"
 
 namespace ModMenuModule {
-	class AddQuickActionMenu : public MenuBase {
+	class AddQuickActionMenu : public MenuBase, public SegmentSupport {
 	public:
 		AddQuickActionMenu();
 		virtual ~AddQuickActionMenu();
