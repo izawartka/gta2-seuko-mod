@@ -28,6 +28,7 @@ namespace ModMenuModule {
 		UiModule::VertCont* m_cheatItemsCont = nullptr;
 		UiModule::SelectController<bool>* m_cameraPosCheatController = nullptr;
 		UiModule::MenuItemGroupId m_cheatItemsGroupId = -1;
+		UiModule::Spacer* m_cheatItemsSpacer = nullptr;
 		bool m_cheatItemsAttached = false;
 	};
 }

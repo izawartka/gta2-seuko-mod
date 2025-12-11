@@ -115,7 +115,8 @@ void ModMenuModule::CameraPosMenu::AttachCheatMenuItems()
 		cameraPosCheat->ResetPosOptions();
 	});
 
-	uiRoot->AddComponent<UiModule::Spacer>(container, 0, options.menuSpacerHeight);
+	// spacer
+	m_cheatItemsSpacer = uiRoot->AddComponent<UiModule::Spacer>(container, 0, options.menuSpacerHeight);
 
 	AttachAllSegments(this, container);
 
@@ -149,6 +150,7 @@ void ModMenuModule::CameraPosMenu::DetachCheatMenuItems()
 
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	uiRoot->RemoveComponent(m_cheatItemsSpacer, true);
+	m_cheatItemsSpacer = nullptr;
 
 	m_cheatItemsAttached = false;
 }
