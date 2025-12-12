@@ -494,21 +494,22 @@ typedef enum WEAPON_INDEX {
 	WEAPON_VEHICLE_WEAPON_27 = 27
 } WEAPON_INDEX;
 
-typedef enum PLAYER_PHYSICS_MOVEMENT {
-	PLAYER_PHYSICS_MOVEMENT_BACKWARD=256,
-	PLAYER_PHYSICS_MOVEMENT_DO_NOTHING=0,
-	PLAYER_PHYSICS_MOVEMENT_FORWARD=1,
-	PLAYER_PHYSICS_MOVEMENT_LEFT=65536,
-	PLAYER_PHYSICS_MOVEMENT_RIGHT=16777216,
-	PLAYER_PHYSICS_MOVEMENT_UNK2=2
-} PLAYER_PHYSICS_MOVEMENT;
+typedef enum CAMERA_MOVEMENT {
+	CAMERA_MOVEMENT_BACKWARD=256,
+	CAMERA_MOVEMENT_DO_NOTHING=0,
+	CAMERA_MOVEMENT_FORWARD=1,
+	CAMERA_MOVEMENT_LEFT=65536,
+	CAMERA_MOVEMENT_RIGHT=16777216,
+	CAMERA_MOVEMENT_UNK2=2
+} CAMERA_MOVEMENT;
 
-typedef enum PLAYER_PHYSICS_STATE2 {
-	PLAYER_PHYSICS_STATE2_190=400,
-	PLAYER_PHYSICS_STATE2_258=600,
-	PLAYER_PHYSICS_STATE2_NO_TELEPORT=2,
-	PLAYER_PHYSICS_STATE2_TELEPORT=1
-} PLAYER_PHYSICS_STATE2;
+typedef enum CAMERA_FOLLOW_STATE {
+	CAMERA_FOLLOW_STATE_190=400,
+	CAMERA_FOLLOW_STATE_258=600,
+	CAMERA_FOLLOW_STATE_TELEPORT=2,
+	CAMERA_FOLLOW_STATE_FOLLOW=1,
+	CAMERA_FOLLOW_STATE_NO_FOLLOW=0
+} CAMERA_FOLLOW_STATE;
 
 struct WEAPON_PLAYER_LIST {
 	undefined field_0x0;
@@ -1215,13 +1216,10 @@ struct Camera {
 	CameraPos cameraPosTarget2; 
 	CameraPos cameraPosTarget;
 	WorldRect cameraBoundaries;
-	enum PLAYER_PHYSICS_MOVEMENT movementBitmask;
+	enum CAMERA_MOVEMENT movementBitmask;
 	struct Ped * ped;
 	undefined4 field_0x38;
-	bool doFollowPlayer;
-	undefined field_0x3d;
-	undefined field_0x3e;
-	undefined field_0x3f;
+	enum CAMERA_FOLLOW_STATE followState;
 	int targetElevation;
 	int flyTimerMaybe;
 	SCR_f altMovingPosX;
@@ -2652,7 +2650,7 @@ struct Player { /* Player actually */
 	undefined field_0x66;
 	undefined field_0x67;
 	enum PLAYER_PHYSICS_STATE state1;
-	int field_0x6c;
+	int teleportMode;
 	byte up;
 	byte down;
 	byte left;
@@ -5880,9 +5878,9 @@ struct LocaleSingle {
 	char id[8];
 };
 
-typedef struct MapRelated_S11 MapRelated_S11, *PMapRelated_S11;
+typedef struct MapBlocks MapBlocks, *PMapBlocks;
 
-struct MapRelated_S11 {
+struct MapBlocks {
 	int field_0x0;
 	undefined4 field_0x4[200];
 	undefined field_0x324;
