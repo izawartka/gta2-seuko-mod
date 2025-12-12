@@ -19,7 +19,7 @@ Event will fail to initialize if the renderer is not loaded yet.
 class RendererDrawTileEvent : public Core::EventBase {
 public:
 	static bool Init();
-	RendererDrawTileEvent(uint32_t flags, Game::GTAVertex*& vertices) 
+	RendererDrawTileEvent(uint32_t flags, Game::GTAVertex* vertices) 
 		: m_flags(flags), m_vertices(vertices) {};
 	virtual ~RendererDrawTileEvent() override {};
 
@@ -29,7 +29,7 @@ public:
 
 private:
 	uint32_t m_flags;
-	Game::GTAVertex*& m_vertices;
+	Game::GTAVertex* m_vertices;
 };
 
 /*
@@ -39,7 +39,7 @@ Event will fail to initialize if the renderer is not loaded yet.
 class RendererDrawQuadEvent : public Core::EventBase {
 public:
 	static bool Init();
-	RendererDrawQuadEvent(uint32_t flags, Game::GTAVertex*& vertices)
+	RendererDrawQuadEvent(uint32_t flags, Game::GTAVertex* vertices)
 		: m_flags(flags), m_vertices(vertices) {};
 	virtual ~RendererDrawQuadEvent() override {};
 
@@ -49,7 +49,7 @@ public:
 
 private:
 	uint32_t m_flags;
-	Game::GTAVertex*& m_vertices;
+	Game::GTAVertex* m_vertices;
 };
 
 /*
@@ -60,7 +60,7 @@ Event will fail to initialize if the renderer is not loaded yet.
 class RendererDrawTriangleEvent : public Core::EventBase {
 public:
 	static bool Init();
-	RendererDrawTriangleEvent(uint32_t flags, Game::GTAVertex*& vertices)
+	RendererDrawTriangleEvent(uint32_t flags, Game::GTAVertex* vertices)
 		: m_flags(flags), m_vertices(vertices) {};
 	virtual ~RendererDrawTriangleEvent() override {};
 
@@ -70,5 +70,5 @@ public:
 
 private:
 	uint32_t m_flags;
-	Game::GTAVertex*& m_vertices;
+	Game::GTAVertex* m_vertices;
 };

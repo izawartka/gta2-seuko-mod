@@ -100,7 +100,7 @@ static __declspec(naked) void CullingCheckHookFunction(void)
 		setz cl
 		and ecx, 1
 		call DispatchCullingCheckEvent
-		test eax, eax
+		test al, al
 		jz L_doNotCull
 		popad
 		jmp SafelyReturn

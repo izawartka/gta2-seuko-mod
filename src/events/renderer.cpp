@@ -29,10 +29,11 @@ bool RendererLoadEvent::Init()
 	return Core::HookManager::GetInstance()->AddHook(rendererLoadHook);
 }
 
-static void __stdcall DispatchDrawTileEvent(uint32_t flags, Game::GTAVertex*& vertices)
+static Game::GTAVertex* __stdcall DispatchDrawTileEvent(uint32_t flags, Game::GTAVertex* vertices)
 {
 	RendererDrawTileEvent event(flags, vertices);
 	Core::EventManager::GetInstance()->Dispatch(event);
+	return event.GetVertices();
 }
 
 DWORD drawTileOriginalFunction = 0;
@@ -40,10 +41,10 @@ DWORD drawTileOriginalFunction = 0;
 static __declspec(naked) void DrawTileHookFunction(void)
 {
 	__asm {
-		push esp
-		add [esp], 0xc
-		push[esp + 0x8]
+		push [esp + 0xc]
+		push [esp + 0x8]
 		call DispatchDrawTileEvent
+		mov	[esp + 0xc], eax
 
 		jmp drawTileOriginalFunction
 	}
@@ -61,10 +62,11 @@ bool RendererDrawTileEvent::Init()
 	return Core::HookManager::GetInstance()->AddHook(drawTileHook, &drawTileOriginalFunction);
 }
 
-static void __stdcall DispatchDrawQuadEvent(uint32_t flags, Game::GTAVertex*& vertices)
+static Game::GTAVertex* __stdcall DispatchDrawQuadEvent(uint32_t flags, Game::GTAVertex* vertices)
 {
 	RendererDrawQuadEvent event(flags, vertices);
 	Core::EventManager::GetInstance()->Dispatch(event);
+	return event.GetVertices();
 }
 
 DWORD drawQuadOriginalFunction = 0;
@@ -72,10 +74,10 @@ DWORD drawQuadOriginalFunction = 0;
 static __declspec(naked) void DrawQuadHookFunction(void)
 {
 	__asm {
-		push esp
-		add [esp], 0xc
-		push [esp+0x8]
+		push [esp + 0xc]
+		push [esp + 0x8]
 		call DispatchDrawQuadEvent
+		mov [esp + 0xc], eax
 
 		jmp drawQuadOriginalFunction
 	}
@@ -93,10 +95,11 @@ bool RendererDrawQuadEvent::Init()
 	return Core::HookManager::GetInstance()->AddHook(drawQuadHook, &drawQuadOriginalFunction);
 }
 
-static void __stdcall DispatchDrawTriangleEvent(uint32_t flags, Game::GTAVertex*& vertices)
+static Game::GTAVertex* __stdcall DispatchDrawTriangleEvent(uint32_t flags, Game::GTAVertex* vertices)
 {
 	RendererDrawTriangleEvent event(flags, vertices);
 	Core::EventManager::GetInstance()->Dispatch(event);
+	return event.GetVertices();
 }
 
 DWORD drawTriangleOriginalFunction = 0;
@@ -104,10 +107,10 @@ DWORD drawTriangleOriginalFunction = 0;
 static __declspec(naked) void DrawTriangleHookFunction(void)
 {
 	__asm {
-		push esp
-		add [esp], 0xc
-		push[esp + 0x8]
+		push [esp + 0xc]
+		push [esp + 0x8]
 		call DispatchDrawTriangleEvent
+		mov [esp + 0xc], eax
 
 		jmp drawTriangleOriginalFunction
 	}

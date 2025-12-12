@@ -14,7 +14,7 @@ static __declspec(naked) void CameraPosApplyHookFunction(void)
 		pushad
 		push esi
 		call DispatchCameraPosApplyEvent
-		test eax, eax
+		test al, al
 		popad
 		jz L_skipApply
 		mov eax, dword ptr[edx]

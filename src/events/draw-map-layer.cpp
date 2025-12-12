@@ -1,7 +1,7 @@
 #include "draw-map-layer.h"
 #include "../hook-types/function-call-hook.h"
 
-static bool __fastcall DispatchPreDrawMapLayerEvent(Game::S12* s12)
+static bool __stdcall DispatchPreDrawMapLayerEvent(Game::S12* s12)
 {
 	PreDrawMapLayerEvent event(s12);
 	Core::EventManager::GetInstance()->Dispatch(event);
@@ -12,8 +12,9 @@ static __declspec(naked) void DrawMapLayerHookFunction(void)
 {
 	__asm {
 		pushad
+		push ecx
 		call DispatchPreDrawMapLayerEvent
-		test eax, eax
+		test al, al
 		jz L_doDraw
 		popad
 		ret
