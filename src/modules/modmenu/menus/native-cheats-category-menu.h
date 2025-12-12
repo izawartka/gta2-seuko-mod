@@ -12,13 +12,13 @@ namespace ModMenuModule {
 		NativeCheatsCategoryMenu(const NativeCheatCategoryDef& categoryDef, size_t page = 0);
 		virtual ~NativeCheatsCategoryMenu();
 
+	private:
 		virtual bool Attach() override;
 		virtual void Detach() override;
 
 		virtual void OnShow() override;
 		virtual void OnHide() override;
 
-	private:
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 		std::wstring GetPageTitle() const;
 

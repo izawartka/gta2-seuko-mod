@@ -10,9 +10,9 @@ namespace ModMenuModule {
 		NativeCheatsMenu();
 		virtual ~NativeCheatsMenu();
 
+	private:
 		virtual bool Attach() override;
 
-	private:
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 
 		const std::vector<NativeCheatCategoryDef>& m_categories = NativeCheatsKeeperCheat::GetAllNativeCheatCategories();

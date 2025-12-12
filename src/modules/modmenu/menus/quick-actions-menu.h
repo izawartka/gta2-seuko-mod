@@ -10,9 +10,9 @@ namespace ModMenuModule {
 		QuickActionsMenu(size_t page = 0);
 		virtual ~QuickActionsMenu();
 
+	private:
 		virtual bool Attach() override;
 
-	private:
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 		std::wstring GetPageTitle(size_t pageCount) const;
 

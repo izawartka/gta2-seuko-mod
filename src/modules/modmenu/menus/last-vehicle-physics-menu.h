@@ -10,12 +10,12 @@ namespace ModMenuModule {
 		LastVehiclePhysicsMenu();
 		virtual ~LastVehiclePhysicsMenu();
 
+	private:
 		virtual bool Attach() override;
 
 		virtual void OnShow() override;
 		virtual void OnHide() override;
 
-	private:
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 		void OnLastCarStateChange(ModMenuModule::LastCarStateEvent& event);
 		void UpdateLastCarState();

@@ -9,9 +9,9 @@ namespace ModMenuModule {
 		QuickActionOptionsMenu(QuickActionId actionId);
 		virtual ~QuickActionOptionsMenu();
 
+	private:
 		virtual bool Attach() override;
 
-	private:
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 
 		QuickActionId m_actionId;

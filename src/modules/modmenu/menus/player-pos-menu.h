@@ -8,9 +8,9 @@ namespace ModMenuModule {
 		PlayerPosMenu();
 		virtual ~PlayerPosMenu();
 
+	private:
 		virtual bool Attach() override;
 
-	private:
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 	};
 }
