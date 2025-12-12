@@ -146,7 +146,7 @@ namespace UiModule {
 				newValue = this->ConvertFromString(m_textBuffer);
 			}
 			catch (const std::exception& e) {
-				spdlog::warn("Failed to parse input '{}': {}", std::string(m_textBuffer.begin(), m_textBuffer.end()), e.what());
+				spdlog::warn("UiModule::VarTextEditableController: Failed to parse input: {}", e.what());
 				return;
 			}
 
