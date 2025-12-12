@@ -58,9 +58,8 @@ void ModMenuModule::CameraCheat::OnDrawTile(RendererDrawTileEvent& event)
 {
 	if (!m_cameraValues.has_value()) return;
 
-	Utils::Vertex::ApplyCameraTransform(
+	Utils::Vertex::ApplyQuadCameraTransform(
 		event.GetVertices(),
-		4,
 		m_cameraValues.value(),
 		m_options.cameraTransform
 	);
@@ -83,9 +82,8 @@ void ModMenuModule::CameraCheat::OnDrawQuad(RendererDrawQuadEvent& event)
 	memcpy(m_vertexBuffer, event.GetVertices(), sizeof(m_vertexBuffer));
 	event.SetVertices(m_vertexBuffer);
 
-	Utils::Vertex::ApplyCameraTransform(
+	Utils::Vertex::ApplyQuadCameraTransform(
 		m_vertexBuffer,
-		4,
 		m_cameraValues.value(),
 		m_options.cameraTransform
 	);
@@ -103,11 +101,12 @@ void ModMenuModule::CameraCheat::OnDrawTriangle(RendererDrawTriangleEvent& event
 {
 	if (!m_cameraValues.has_value()) return;
 
-	Utils::Vertex::ApplyCameraTransform(
+	bool isReversed;
+	Utils::Vertex::ApplyTriangleCameraTransform(
 		event.GetVertices(),
-		3,
 		m_cameraValues.value(),
-		m_options.cameraTransform
+		m_options.cameraTransform,
+		&isReversed
 	);
 
 	if (!m_options.customCulling) return;
@@ -115,7 +114,8 @@ void ModMenuModule::CameraCheat::OnDrawTriangle(RendererDrawTriangleEvent& event
 	Utils::Vertex::ApplyCustomCulling(
 		event.GetVertices(),
 		3,
-		m_cameraValues.value()
+		m_cameraValues.value(),
+		isReversed
 	);
 }
 

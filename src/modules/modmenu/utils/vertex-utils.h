@@ -34,10 +34,10 @@ namespace ModMenuModule::Utils::Vertex {
 	void ToWorldSpaceVertex(Game::GTAVertex& vertex, const CameraValues& cameraValues);
 	void ToScreenSpaceVertex(Game::GTAVertex& vertex, const CameraValues& cameraValues);
 	float GetCrossProduct(const Game::GTAVertex& v1, const Game::GTAVertex& v2, const Game::GTAVertex& v3);
-	bool DoReverseTriangleCross(const Game::GTAVertex* vertices, const CameraValues& cameraValues);
 	
-	void ApplyCameraTransform(Game::GTAVertex* vertices, size_t vertexCount, const CameraValues& cameraValues, const CameraTransform& cameraTransform);
-	bool ApplyCustomCulling(Game::GTAVertex* vertices, size_t vertexCount, const CameraValues& cameraValues);
+	void ApplyQuadCameraTransform(Game::GTAVertex* vertices, const CameraValues& cameraValues, const CameraTransform& cameraTransform);
+	void ApplyTriangleCameraTransform(Game::GTAVertex* vertices, const CameraValues& cameraValues, const CameraTransform& cameraTransform, bool* isReversedOut = nullptr);
+	bool ApplyCustomCulling(Game::GTAVertex* vertices, size_t vertexCount, const CameraValues& cameraValues, bool isReversed = false);
 
 	CameraValues GetCameraValues(const Game::Camera& camera, Game::SCR_f playerPedZ);
 	CustomCameraPos GetCustomCameraPos(const CameraValues& cameraValues, const CameraTransform& cameraTransform);

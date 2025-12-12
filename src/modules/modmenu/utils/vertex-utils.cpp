@@ -63,31 +63,19 @@ float ModMenuModule::Utils::Vertex::GetCrossProduct(const Game::GTAVertex& v1, c
 	return ax * by - ay * bx;
 }
 
-bool ModMenuModule::Utils::Vertex::DoReverseTriangleCross(const Game::GTAVertex* vertices, const CameraValues& cameraValues)
+void ModMenuModule::Utils::Vertex::ApplyQuadCameraTransform(Game::GTAVertex* vertices, const CameraValues& cameraValues, const CameraTransform& cameraTransform)
 {
-	Game::GTAVertex worldSpaceVerts[3];
-	memcpy(worldSpaceVerts, vertices, sizeof(Game::GTAVertex) * 3);
-	for (size_t i = 0; i < 3; ++i) {
-		ToWorldSpaceVertex(worldSpaceVerts[i], cameraValues);
-	}
-
-	float cross = GetCrossProduct(worldSpaceVerts[0], worldSpaceVerts[1], worldSpaceVerts[2]);
-
-	// if the face is facing back even in world coords, reverse it
-	return cross < 0.0f;
-}
-
-void ModMenuModule::Utils::Vertex::ApplyCameraTransform(Game::GTAVertex* vertices, size_t vertexCount, const CameraValues& cameraValues, const CameraTransform& cameraTransform)
-{
-	for (size_t i = 0; i < vertexCount; ++i) {
+	for (size_t i = 0; i < 4; ++i) {
 		ToCenteredScreenSpaceVertex(vertices[i], cameraValues);
 		Game::GTAVertex& vertex = vertices[i];
 		if(cameraTransform.verticalAngleRad != 0.0f) {
 			RotateVertexZ(vertex, cameraTransform.verticalAngleRad);
 		}
-		if(cameraTransform.horizontalAngleRad != 0.0f) {
+		if(cameraTransform.horizontalAngleRad != 0.0f || cameraTransform.additionalZOffset) {
 			ToWorldSpaceVertex(vertex, cameraValues);
-			RotateVertexX(vertex, cameraTransform.horizontalAngleRad);
+			if (cameraTransform.horizontalAngleRad != 0.0f) {
+				RotateVertexX(vertex, cameraTransform.horizontalAngleRad);
+			}
 			vertex.z += cameraTransform.additionalZOffset;
 			ToScreenSpaceVertex(vertex, cameraValues);
 		}
@@ -95,14 +83,43 @@ void ModMenuModule::Utils::Vertex::ApplyCameraTransform(Game::GTAVertex* vertice
 	}
 }
 
-bool ModMenuModule::Utils::Vertex::ApplyCustomCulling(Game::GTAVertex* vertices, size_t vertexCount, const CameraValues& cameraValues)
+void ModMenuModule::Utils::Vertex::ApplyTriangleCameraTransform(Game::GTAVertex* vertices, const CameraValues& cameraValues, const CameraTransform& cameraTransform, bool* isReversedOut)
+{
+	Game::GTAVertex worldSpaceVerts[3];
+
+	for (size_t i = 0; i < 3; ++i) {
+		ToCenteredScreenSpaceVertex(vertices[i], cameraValues);
+		Game::GTAVertex& vertex = vertices[i];
+		if(cameraTransform.verticalAngleRad != 0.0f) {
+			RotateVertexZ(vertex, cameraTransform.verticalAngleRad);
+		}
+		if (cameraTransform.horizontalAngleRad != 0.0f || cameraTransform.additionalZOffset || isReversedOut != nullptr) {
+			ToWorldSpaceVertex(vertex, cameraValues);
+			worldSpaceVerts[i] = vertex;
+			if(cameraTransform.horizontalAngleRad != 0.0f) {
+				RotateVertexX(vertex, cameraTransform.horizontalAngleRad);
+			}
+			vertex.z += cameraTransform.additionalZOffset;
+			ToScreenSpaceVertex(vertex, cameraValues);
+		}
+		FromCenteredScreenSpaceVertex(vertex, cameraValues);
+	}
+
+	if (isReversedOut != nullptr) {
+		float cross = GetCrossProduct(worldSpaceVerts[0], worldSpaceVerts[1], worldSpaceVerts[2]);
+		*isReversedOut = cross < 0.0f;
+	}
+}
+
+bool ModMenuModule::Utils::Vertex::ApplyCustomCulling(Game::GTAVertex* vertices, size_t vertexCount, const CameraValues& cameraValues, bool isReversed)
 {
 	bool culled = false;
 
 	// backface culling
-	float cross = GetCrossProduct(vertices[0], vertices[1], vertices[2]);
-	bool reverse = vertexCount == 3 && DoReverseTriangleCross(vertices, cameraValues);
-	if ((cross > 0.0f) == reverse) culled = true;
+	float cross = isReversed ? GetCrossProduct(vertices[0], vertices[2], vertices[1]) : GetCrossProduct(vertices[0], vertices[1], vertices[2]);
+	if (cross < 0.0f) {
+		culled = true;
+	}
 
 	// frustum culling
 	if (!culled) {
