@@ -273,8 +273,10 @@ exit /b 0
     <ClInclude Include="src\modules\modmenu\cheats\invulnerability.h" />
     <ClInclude Include="src\modules\modmenu\cheats\last-car.h" />
     <ClInclude Include="src\modules\modmenu\cheats\native-cheats-keeper.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\player-pos.h" />
     <ClInclude Include="src\modules\modmenu\events\cheat-state.h" />
     <ClInclude Include="src\modules\modmenu\events\last-car-state.h" />
+    <ClInclude Include="src\modules\modmenu\events\player-pos-update.h" />
     <ClInclude Include="src\modules\modmenu\menu-manager.h" />
     <ClInclude Include="src\modules\modmenu\menus\add-quick-action-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\camera-advanced-menu.h" />
@@ -432,6 +434,7 @@ exit /b 0
     <ClCompile Include="src\modules\modmenu\cheats\last-car.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\native-cheats-data.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\native-cheats-keeper.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\player-pos.cpp" />
     <ClCompile Include="src\modules\modmenu\menu-base.cpp" />
     <ClCompile Include="src\modules\modmenu\menu-manager.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\add-quick-action-menu.cpp" />
