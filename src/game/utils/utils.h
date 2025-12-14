@@ -5,4 +5,5 @@
 #include "lists-utils.h"
 #include "player-utils.h"
 #include "scrf-utils.h"
+#include "teleport-utils.h"
 #include "weapon-utils.h"

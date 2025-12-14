@@ -7,3 +7,4 @@
 #include <atlstr.h>
 #include <vector>
 #include <math.h>
+#include "spdlog/spdlog.h"

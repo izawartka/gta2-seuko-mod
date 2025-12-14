@@ -534,6 +534,9 @@
     <ClInclude Include="src\game\utils\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\game\utils\teleport-utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
@@ -816,6 +819,9 @@
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="src\game\utils\lists-utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\utils\teleport-utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
