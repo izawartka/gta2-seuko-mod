@@ -99,7 +99,7 @@ void ModMenuModule::GetWeaponMenu::GetWeapon()
 		selectedAmmo
 	);
 
-	Game::CarRoofUtils::AddCarRoofForWeapon(playerPed->currentCar, selectedWeapon);
+	Game::Utils::AddCarRoofForWeapon(playerPed->currentCar, selectedWeapon);
 
 	playerPed->playerWeapons->selectedWeapon = static_cast<short>(selectedWeapon);
 }

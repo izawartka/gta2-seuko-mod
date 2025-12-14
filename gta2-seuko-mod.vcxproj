@@ -244,7 +244,12 @@ exit /b 0
     <ClInclude Include="src\events\is-ammo-kf-call.h" />
     <ClInclude Include="src\events\scale-shadow.h" />
     <ClInclude Include="src\events\try-shoot-weapon.h" />
-    <ClInclude Include="src\game\car-roof-utils.h" />
+    <ClInclude Include="src\game\utils\angle-utils.h" />
+    <ClInclude Include="src\game\utils\car-roof-utils.h" />
+    <ClInclude Include="src\game\utils\weapon-utils.h" />
+    <ClInclude Include="src\game\utils\lists-utils.h" />
+    <ClInclude Include="src\game\utils\scrf-utils.h" />
+    <ClInclude Include="src\game\utils\utils.h" />
     <ClInclude Include="src\hook-types\jump-hook.h" />
     <ClInclude Include="src\hook-types\function-ptr-hook.h" />
     <ClInclude Include="src\hook-types\multi-jump-hook.h" />
@@ -344,7 +349,6 @@ exit /b 0
     <ClInclude Include="src\core\event-base.h" />
     <ClInclude Include="src\core\hook-manager.h" />
     <ClInclude Include="src\game\gta2_wrapper.h" />
-    <ClInclude Include="src\game\utils.h" />
     <ClInclude Include="src\hook-types\function-call-hook.h" />
     <ClInclude Include="src\core\hook-base.h" />
     <ClInclude Include="src\core\module-manager.h" />
@@ -408,7 +412,10 @@ exit /b 0
     <ClCompile Include="src\events\try-shoot-weapon.cpp" />
     <ClCompile Include="src\events\keyboard.cpp" />
     <ClCompile Include="src\game\keycode.cpp" />
-    <ClCompile Include="src\game\utils.cpp" />
+    <ClCompile Include="src\game\utils\car-roof-utils.cpp" />
+    <ClCompile Include="src\game\utils\player-utils.cpp" />
+    <ClCompile Include="src\game\utils\player-utils.h" />
+    <ClCompile Include="src\game\utils\lists-utils.cpp" />
     <ClCompile Include="src\logging.cpp" />
     <ClCompile Include="src\modules\keybinding\bind-manager.cpp" />
     <ClCompile Include="src\modules\keybinding\root.cpp" />

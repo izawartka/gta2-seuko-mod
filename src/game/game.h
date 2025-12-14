@@ -3,5 +3,4 @@
 #include "gta2_wrapper.h"
 #include "memory.h"
 #include "functions.h"
-#include "utils.h"
-#include "car-roof-utils.h"
+#include "utils/utils.h"
