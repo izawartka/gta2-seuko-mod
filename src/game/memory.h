@@ -34,5 +34,6 @@ namespace Game {
 		static int* GetScreenWidth() { return (int*)0x00673584; }
 		static int* GetScreenHeight() { return (int*)0x00673474; }
 		static int* GetCurrentlyDrawnMapLayerIndex() { return (int*)0x006633a0; }
+		static MapBlocks* GetMapBlocks() { return (MapBlocks*)*(DWORD*)0x00662c08; }
 	};
 }

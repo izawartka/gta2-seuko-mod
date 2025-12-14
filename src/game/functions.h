@@ -88,12 +88,12 @@ namespace Game {
 		typedef void(__fastcall CarAddRoofAntennaType)(Car* car);
 		static constexpr CarAddRoofAntennaType* CarAddRoofAntenna = (CarAddRoofAntennaType*)0x00425fd0;
 
-		// also set car->fireState to 0 to fully extinguish
 		typedef void(__fastcall ExtinguishCarType)(Car* car, DWORD edx);
+		// also set car->fireState to 0 to fully extinguish
 		static constexpr ExtinguishCarType* ExtinguishCar = (ExtinguishCarType*)0x004bf070;
 
-		// allows to run the engine even after the car exploded
 		typedef void(__fastcall FixCarBrokenEngineType)(Car* car, DWORD edx);
+		// allows to run the engine even after the car exploded
 		static constexpr FixCarBrokenEngineType* FixCarBrokenEngine = (FixCarBrokenEngineType*)0x00421570;
 
 		typedef void(__fastcall ExplodeCarType)(Car* car, DWORD edx, EXPLOSION_SIZE explosionSize);
@@ -107,5 +107,18 @@ namespace Game {
 
 		typedef SCR_f* (__fastcall ScaleScrfType)(SCR_f* value, SCR_f* target, int* scalar);
 		static constexpr ScaleScrfType* ScaleScrf = (ScaleScrfType*)0x00401bd0;
+
+		typedef void(__fastcall FindMaxZType)(MapBlocks* mapBlocks, DWORD edx, SCR_f* outZ, SCR_f x, SCR_f y);
+		static constexpr FindMaxZType* FindMaxZ = (FindMaxZType*)0x0046a420;
+
+		typedef void(__fastcall TeleportCarType)(Car* car, DWORD edx, SCR_f x, SCR_f y, SCR_f z);
+		static constexpr TeleportCarType* TeleportCar = (TeleportCarType*)0x004207f0;
+
+		typedef void(__fastcall TeleportGameObjectType)(GameObject* gameObject, DWORD edx, SCR_f x, SCR_f y, SCR_f z);
+		static constexpr TeleportGameObjectType* TeleportGameObject = (TeleportGameObjectType*)0x00491e00;
+
+		typedef void(__fastcall TeleportPedType)(Ped* ped, DWORD edx, SCR_f x, SCR_f y);
+		// z is auto-calculated based on the ground level
+		static constexpr TeleportPedType* TeleportPed = (TeleportPedType*)0x00435c80;
 	};  
 }
