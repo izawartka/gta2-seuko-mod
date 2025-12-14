@@ -75,15 +75,18 @@ void ModMenuModule::CameraPosCheat::OnEnable()
 {
 	AddEventListener<CameraPosApplyEvent>(&ModMenuModule::CameraPosCheat::OnCameraPosApply);
 	AddEventListener<GameStartEvent>(&ModMenuModule::CameraPosCheat::OnGameStart);
+	AddEventListener<GameEndEvent>(&ModMenuModule::CameraPosCheat::OnGameEnd);
 }
 
 void ModMenuModule::CameraPosCheat::OnDisable()
 {
 	RemoveEventListener<CameraPosApplyEvent>();
 	RemoveEventListener<GameStartEvent>();
+	RemoveEventListener<GameEndEvent>();
 	m_lockAtCurrentRequested = false;
 	m_snapToTargetRequested = false;
 	m_snapAndDisableRequested = false;
+	m_lastPosition = std::nullopt;
 
 	SaveToPersistence();
 }
@@ -133,6 +136,14 @@ void ModMenuModule::CameraPosCheat::OnCameraPosApply(CameraPosApplyEvent& event)
 void ModMenuModule::CameraPosCheat::OnGameStart(GameStartEvent& event)
 {
 	if (IsEnabled()) m_snapToTargetRequested = true;
+}
+
+void ModMenuModule::CameraPosCheat::OnGameEnd(GameEndEvent& event)
+{
+	m_lockAtCurrentRequested = false;
+	m_snapToTargetRequested = false;
+	m_snapAndDisableRequested = false;
+	m_lastPosition = std::nullopt;
 }
 
 void ModMenuModule::CameraPosCheat::ApplyCoordinate(CameraPosCheatCoordinate& coord, Game::SCR_f& camCoord, Game::SCR_f& camCoordTarget2) const

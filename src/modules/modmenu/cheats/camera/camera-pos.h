@@ -3,6 +3,7 @@
 #include "../../cheat-base.h"
 #include "../../../../events/camera-pos-apply.h"
 #include "../../../../events/game-start.h"
+#include "../../../../events/game-end.h"
 
 namespace ModMenuModule {
 	enum class CameraPosCheatMode {
@@ -56,6 +57,7 @@ namespace ModMenuModule {
 
 		void OnCameraPosApply(CameraPosApplyEvent& event);
 		void OnGameStart(GameStartEvent& event);
+		void OnGameEnd(GameEndEvent& event);
 		void ApplyCoordinate(CameraPosCheatCoordinate& coord, Game::SCR_f& camCoord, Game::SCR_f& camCoordTarget2) const;
 		void ApplyReverseZMinLock(Game::Camera* camera) const;
 
