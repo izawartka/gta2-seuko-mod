@@ -29,6 +29,24 @@ void ModMenuModule::PlayerPosCheat::Teleport(Game::SCR_f x, Game::SCR_f y, Game:
 	m_teleportAutoZ = false;
 }
 
+void ModMenuModule::PlayerPosCheat::Teleport(const Game::SCR_Vector2& position)
+{
+	if (!IsEnabled()) {
+		spdlog::warn("PlayerPosCheat::Teleport: Cheat is not enabled, cannot teleport");
+	}
+	m_teleportPosition = { position.x, position.y, 0 };
+	m_teleportAutoZ = true;
+}
+
+void ModMenuModule::PlayerPosCheat::Teleport(const Game::SCR_Vector3& position)
+{
+	if (!IsEnabled()) {
+		spdlog::warn("PlayerPosCheat::Teleport: Cheat is not enabled, cannot teleport");
+	}
+	m_teleportPosition = position;
+	m_teleportAutoZ = false;
+}
+
 void ModMenuModule::PlayerPosCheat::OnFirstEnable()
 {
 
@@ -81,21 +99,13 @@ void ModMenuModule::PlayerPosCheat::OnPreGameTick(PreGameTickEvent& event)
 
 	Game::Ped* playerPed = Game::Memory::GetPlayerPed();
 
-	std::optional<PlayerPosCheatPos> lastPosition = m_position;
+	std::optional<Game::SCR_Vector3> lastPosition = m_position;
 
 	if(playerPed->gameObject && playerPed->gameObject->sprite) {
-		m_position = PlayerPosCheatPos{
-			playerPed->gameObject->sprite->position.x,
-			playerPed->gameObject->sprite->position.y,
-			playerPed->gameObject->sprite->position.z
-		};
+		m_position = playerPed->gameObject->sprite->position;
 	}
 	else if (playerPed->currentCar && playerPed->currentCar->sprite) {
-		m_position = PlayerPosCheatPos{
-			playerPed->currentCar->sprite->position.x,
-			playerPed->currentCar->sprite->position.y,
-			playerPed->currentCar->sprite->position.z
-		};
+		m_position = playerPed->currentCar->sprite->position;
 	}
 	else {
 		m_position = std::nullopt;

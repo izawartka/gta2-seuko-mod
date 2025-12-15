@@ -6,9 +6,7 @@
 
 namespace ModMenuModule {
 	struct PositionSegmentData {
-		Game::SCR_f x = Game::Utils::FromFloat(0.0f);
-		Game::SCR_f y = Game::Utils::FromFloat(0.0f);
-		Game::SCR_f z = Game::Utils::FromFloat(0.0f);
+		Game::SCR_Vector3 position;
 		bool autoZ = true;
 	};
 
@@ -30,8 +28,10 @@ namespace ModMenuModule {
 		virtual void OnShow() override;
 		virtual void OnHide() override;
 
+		void SetCoordControllerValues(const Game::SCR_Vector3& position);
+		std::optional<Game::SCR_Vector3> GetCoordControllerValues() const;
+
 		void OnPlayerPosUpdate(ModMenuModule::PlayerPosUpdateEvent& event);
-		void SetControllerValues(Game::SCR_f x, Game::SCR_f y, Game::SCR_f z);
 		void ApplyAutoZIfNeeded();
 		void ForceUpdateFromPlayer();
 		void OnCoordControllerSave(bool isZCoord);

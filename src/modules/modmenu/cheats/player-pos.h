@@ -5,24 +5,6 @@
 #include "../cheat-base.h"
 
 namespace ModMenuModule {
-	struct PlayerPosCheatPos {
-		Game::SCR_f x;
-		Game::SCR_f y;
-		Game::SCR_f z;
-
-		PlayerPosCheatPos(Game::SCR_f x, Game::SCR_f y, Game::SCR_f z)
-			: x(x), y(y), z(z) {
-		}
-
-		bool operator==(const PlayerPosCheatPos& other) const {
-			return x == other.x && y == other.y && z == other.z;
-		}
-
-		bool operator!=(const PlayerPosCheatPos& other) const {
-			return !(*this == other);
-		}
-	};
-
 	class PlayerPosCheat : public CheatBase, public Core::EventListenerSupport {
 	public:
 		PlayerPosCheat();
@@ -30,7 +12,10 @@ namespace ModMenuModule {
 
 		void Teleport(Game::SCR_f x, Game::SCR_f y);
 		void Teleport(Game::SCR_f x, Game::SCR_f y, Game::SCR_f z);
-		const std::optional<PlayerPosCheatPos>& GetLastPosition() const { return m_position; }
+		void Teleport(const Game::SCR_Vector2& position);
+		void Teleport(const Game::SCR_Vector3& position);
+
+		const std::optional<Game::SCR_Vector3>& GetLastPosition() const { return m_position; }
 
 	private:
 		virtual void OnFirstEnable() override;
@@ -43,8 +28,8 @@ namespace ModMenuModule {
 
 		void UpdateCameraSync();
 
-		std::optional<PlayerPosCheatPos> m_position = std::nullopt;
-		std::optional<PlayerPosCheatPos> m_teleportPosition = std::nullopt;
+		std::optional<Game::SCR_Vector3> m_position = std::nullopt;
+		std::optional<Game::SCR_Vector3> m_teleportPosition = std::nullopt;
 		bool m_teleportAutoZ = false;
 		int m_cameraSyncTimer = 0;
 	};

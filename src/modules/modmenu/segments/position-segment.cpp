@@ -1,6 +1,7 @@
 #include "position-segment.h"
 #include "../../../converters/scrf.h"
 #include "../../../converters/enabled-disabled.h"
+#include "../cheats/player-pos.h"
 #include "../root.h"
 
 ModMenuModule::PositionSegment::PositionSegment(const std::string& persistencePrefix)
@@ -20,11 +21,17 @@ std::optional<ModMenuModule::PositionSegmentData> ModMenuModule::PositionSegment
 		return std::nullopt;
 	}
 
+	const auto& positionOpt = GetCoordControllerValues();
+	const auto& autoZOpt = m_autoZController->GetValue();
+
+	if (!positionOpt.has_value() || !autoZOpt.has_value()) {
+		spdlog::error("Cannot get segment data: controllers have invalid values.");
+		return std::nullopt;
+	}
+
 	return PositionSegmentData{
-		m_xController->GetValue().value_or(Game::Utils::FromFloat(0.0f)),
-		m_yController->GetValue().value_or(Game::Utils::FromFloat(0.0f)),
-		m_zController->GetValue().value_or(Game::Utils::FromFloat(0.0f)),
-		m_autoZController->GetValue().value_or(true)
+		positionOpt.value(),
+		autoZOpt.value()
 	};
 }
 
@@ -35,9 +42,7 @@ bool ModMenuModule::PositionSegment::SetSegmentData(const PositionSegmentData& d
 		return false;
 	}
 
-	m_xController->SetValue(data.x);
-	m_yController->SetValue(data.y);
-	m_zController->SetValue(data.z);
+	SetCoordControllerValues(data.position);
 	m_autoZController->SetValue(data.autoZ);
 	return true;
 }
@@ -154,40 +159,58 @@ void ModMenuModule::PositionSegment::OnHide()
 	RemoveEventListener<ModMenuModule::PlayerPosUpdateEvent>();
 }
 
+void ModMenuModule::PositionSegment::SetCoordControllerValues(const Game::SCR_Vector3& position)
+{
+	if (!m_xController || !m_yController || !m_zController) return;
+
+	m_xController->SetValue(position.x);
+	m_yController->SetValue(position.y);
+	m_zController->SetValue(position.z);
+}
+
+std::optional<Game::SCR_Vector3> ModMenuModule::PositionSegment::GetCoordControllerValues() const
+{
+	if (!m_xController || !m_yController || !m_zController) return std::nullopt;
+
+	const auto& xOpt = m_xController->GetValue();
+	const auto& yOpt = m_yController->GetValue();
+	const auto& zOpt = m_zController->GetValue();
+
+	if (!xOpt.has_value() || !yOpt.has_value() || !zOpt.has_value()) {
+		return std::nullopt;
+	}
+
+	return Game::SCR_Vector3{
+		xOpt.value(),
+		yOpt.value(),
+		zOpt.value()
+	};
+}
+
 void ModMenuModule::PositionSegment::OnPlayerPosUpdate(ModMenuModule::PlayerPosUpdateEvent& event)
 {
 	if (!m_doUpdateFromPlayer) {
 		return;
 	}
 
-	auto position = event.GetPosition();
+	const auto& position = event.GetPosition();
 	if (!position.has_value()) {
 		return;
 	}
 
-	SetControllerValues(position->x, position->y, position->z);
-}
-
-void ModMenuModule::PositionSegment::SetControllerValues(Game::SCR_f x, Game::SCR_f y, Game::SCR_f z)
-{
-	if (!m_xController || !m_yController || !m_zController) return;
-
-	m_xController->SetValue(x);
-	m_yController->SetValue(y);
-	m_zController->SetValue(z);
+	SetCoordControllerValues(position.value());
 }
 
 void ModMenuModule::PositionSegment::ApplyAutoZIfNeeded()
 {
-	if (!m_autoZController || !m_autoZController->GetValue().has_value()) return;
-	if (!m_xController || !m_yController || !m_zController) return;
+	if (!m_autoZController) return;
+	if (!m_autoZController->GetValue().value_or(false)) return;
 
-	const auto& xOpt = m_xController->GetValue();
-	const auto& yOpt = m_yController->GetValue();
-	if (!xOpt.has_value() || !yOpt.has_value()) return;
-
-	bool autoZ = m_autoZController->GetValue().value();
-	if (!autoZ) return;
+	const auto& position = GetCoordControllerValues();
+	if (!position.has_value()) {
+		spdlog::warn("Cannot apply Auto Z: position controllers have invalid values");
+		return;
+	}
 
 	Game::MapBlocks* mapBlocks = Game::Memory::GetMapBlocks();
 	if (!mapBlocks) {
@@ -195,13 +218,11 @@ void ModMenuModule::PositionSegment::ApplyAutoZIfNeeded()
 		return;
 	}
 
-	Game::SCR_f x = xOpt.value();
-	Game::SCR_f y = yOpt.value();
 	Game::SCR_f z = 0;
-	Game::Functions::FindMaxZ(mapBlocks, 0, &z, x, y);
+	Game::Functions::FindMaxZ(mapBlocks, 0, &z, position->x, position->y);
 
 	if (z == 0) {
-		spdlog::warn("Cannot apply Auto Z: FindMaxZ returned Z=0 for position ({}, {})", Game::Utils::ToFloat(x), Game::Utils::ToFloat(y));
+		spdlog::warn("Cannot apply Auto Z: FindMaxZ returned Z=0 for position ({}, {})", Game::Utils::ToFloat(position->x), Game::Utils::ToFloat(position->y));
 		return;
 	}
 
@@ -210,11 +231,11 @@ void ModMenuModule::PositionSegment::ApplyAutoZIfNeeded()
 
 void ModMenuModule::PositionSegment::ForceUpdateFromPlayer()
 {
-	PlayerPosCheat* positionCtrlCheat = GetCheat<PlayerPosCheat>();
-	if (!positionCtrlCheat || !positionCtrlCheat->IsEnabled()) return;
-	const auto& position = positionCtrlCheat->GetLastPosition();
+	PlayerPosCheat* playerPosCheat = GetCheat<PlayerPosCheat>();
+	if (!playerPosCheat || !playerPosCheat->IsEnabled()) return;
+	const auto& position = playerPosCheat->GetLastPosition();
 	if (!position.has_value()) return;
-	SetControllerValues(position->x, position->y, position->z);
+	SetCoordControllerValues(position.value());
 }
 
 void ModMenuModule::PositionSegment::OnCoordControllerSave(bool isZCoord)

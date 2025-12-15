@@ -2,6 +2,7 @@
 #include "../root.h"
 #include "../../../converters/yes-no.h"
 #include "../segments/position-segment.h"
+#include "../cheats/player-pos.h"
 
 ModMenuModule::PlayerPosMenu::PlayerPosMenu()
 {
@@ -86,16 +87,12 @@ void ModMenuModule::PlayerPosMenu::OnMenuAction(UiModule::Selectable* item, UiMo
 void ModMenuModule::PlayerPosMenu::Teleport()
 {
 	auto segmentDataOpt = m_positionSegment->GetSegmentData();
-	if (!segmentDataOpt) return;
+	if (!segmentDataOpt.has_value()) return;
 
 	PlayerPosCheat* playerPosCheat = ModMenuModule::RootModule::GetInstance()->GetCheat<PlayerPosCheat>();
 	if (!playerPosCheat) return;
 
-	playerPosCheat->Teleport(
-		segmentDataOpt->x,
-		segmentDataOpt->y,
-		segmentDataOpt->z
-	);
+	playerPosCheat->Teleport(segmentDataOpt->position);
 
 	m_positionSegment->SetDoUpdateFromPlayer(true);
 }
