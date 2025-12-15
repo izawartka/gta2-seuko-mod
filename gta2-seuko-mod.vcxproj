@@ -246,6 +246,7 @@ exit /b 0
     <ClInclude Include="src\events\try-shoot-weapon.h" />
     <ClInclude Include="src\game\utils\angle-utils.h" />
     <ClInclude Include="src\game\utils\car-roof-utils.h" />
+    <ClInclude Include="src\game\utils\player-utils.h" />
     <ClInclude Include="src\game\utils\weapon-utils.h" />
     <ClInclude Include="src\game\utils\lists-utils.h" />
     <ClInclude Include="src\game\utils\scrf-utils.h" />
@@ -310,6 +311,7 @@ exit /b 0
     <ClInclude Include="src\modules\modmenu\segment-support.h" />
     <ClInclude Include="src\modules\modmenu\segments\camera-pos-cheat-coord-segment.h" />
     <ClInclude Include="src\modules\modmenu\segments\explode-all-vehicles-segment.h" />
+    <ClInclude Include="src\modules\modmenu\segments\position-segment.h" />
     <ClInclude Include="src\modules\modmenu\segments\segments.h" />
     <ClInclude Include="src\modules\modmenu\segments\spawn-vehicle-segment.h" />
     <ClInclude Include="src\modules\modmenu\toast-manager.h" />
@@ -417,7 +419,6 @@ exit /b 0
     <ClCompile Include="src\game\keycode.cpp" />
     <ClCompile Include="src\game\utils\car-roof-utils.cpp" />
     <ClCompile Include="src\game\utils\player-utils.cpp" />
-    <ClCompile Include="src\game\utils\player-utils.h" />
     <ClCompile Include="src\game\utils\lists-utils.cpp" />
     <ClCompile Include="src\logging.cpp" />
     <ClCompile Include="src\modules\keybinding\bind-manager.cpp" />
@@ -470,6 +471,7 @@ exit /b 0
     <ClCompile Include="src\modules\modmenu\segment-support.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\camera-pos-cheat-coord-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\explode-all-vehicles-segment.cpp" />
+    <ClCompile Include="src\modules\modmenu\segments\position-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\spawn-vehicle-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\toast-manager.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\angle-utils.cpp" />
