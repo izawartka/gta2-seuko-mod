@@ -125,12 +125,7 @@ void ModMenuModule::CameraPosCheat::OnCameraPosApply(CameraPosApplyEvent& event)
 
 	m_snapToTargetRequested = false;
 
-	m_lastPosition = {
-		camera->cameraPos.x,
-		camera->cameraPos.y,
-		camera->cameraPos.z,
-		camera->cameraPos.zoom
-	};
+	m_lastPosition = camera->cameraPos;
 }
 
 void ModMenuModule::CameraPosCheat::OnGameStart(GameStartEvent& event)

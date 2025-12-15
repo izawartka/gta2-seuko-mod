@@ -17,7 +17,7 @@ namespace ModMenuModule {
 		virtual void OnHide() override;
 
 		static const CameraPosCheatCoordinate* GetCoordinate(const CameraPosCheatOptions& cheatOptions, size_t coordIndex);
-		static Game::SCR_f GetPosCoordinate(const std::optional<CameraPosCheatPosition>& position, size_t coordIndex);
+		static Game::SCR_f GetPosCoordinate(const std::optional<Game::CameraPos>& position, size_t coordIndex);
 
 		CameraPosCheatCoordinate GetCurrentCoordinateOptions() const;
 		void OnModeChange(const std::optional<CameraPosCheatMode>& prevMode, const std::optional<CameraPosCheatMode>& newMode);

@@ -96,7 +96,7 @@ const ModMenuModule::CameraPosCheatCoordinate* ModMenuModule::CameraPosCheatCoor
 	}
 }
 
-Game::SCR_f ModMenuModule::CameraPosCheatCoordSegment::GetPosCoordinate(const std::optional<CameraPosCheatPosition>& position, size_t coordIndex)
+Game::SCR_f ModMenuModule::CameraPosCheatCoordSegment::GetPosCoordinate(const std::optional<Game::CameraPos>& position, size_t coordIndex)
 {
 	switch (coordIndex) {
 	case 0:
