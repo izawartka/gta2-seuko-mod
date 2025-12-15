@@ -170,7 +170,7 @@ void ModMenuModule::CameraPosCheat::ApplyReverseZMinLock(Game::Camera* camera) c
 	Game::Ped* playerPed = Game::Memory::GetPlayerPed();
 	if (!playerPed) return;
 
-	camera->cameraPosTarget2.z += std::min(Game::Utils::FromFloat(3.0f), playerPed->z) - Game::Utils::FromFloat(2.0f);
+	camera->cameraPosTarget2.z += std::min(Game::Utils::FromFloat(3.0f), playerPed->position.z) - Game::Utils::FromFloat(2.0f);
 }
 
 void ModMenuModule::CameraPosCheat::SaveToPersistence() const

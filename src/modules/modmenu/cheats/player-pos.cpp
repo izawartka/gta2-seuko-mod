@@ -85,16 +85,16 @@ void ModMenuModule::PlayerPosCheat::OnPreGameTick(PreGameTickEvent& event)
 
 	if(playerPed->gameObject && playerPed->gameObject->sprite) {
 		m_position = PlayerPosCheatPos{
-			playerPed->gameObject->sprite->x,
-			playerPed->gameObject->sprite->y,
-			playerPed->gameObject->sprite->z
+			playerPed->gameObject->sprite->position.x,
+			playerPed->gameObject->sprite->position.y,
+			playerPed->gameObject->sprite->position.z
 		};
 	}
 	else if (playerPed->currentCar && playerPed->currentCar->sprite) {
 		m_position = PlayerPosCheatPos{
-			playerPed->currentCar->sprite->x,
-			playerPed->currentCar->sprite->y,
-			playerPed->currentCar->sprite->z
+			playerPed->currentCar->sprite->position.x,
+			playerPed->currentCar->sprite->position.y,
+			playerPed->currentCar->sprite->position.z
 		};
 	}
 	else {

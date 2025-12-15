@@ -15,9 +15,9 @@ namespace ModMenuModule::Utils {
 		}
 
 		Game::Car* car = Game::Functions::SpawnCar(
-			ped->gameObject->sprite->x,
-			ped->gameObject->sprite->y,
-			ped->gameObject->sprite->z,
+			ped->gameObject->sprite->position.x,
+			ped->gameObject->sprite->position.y,
+			ped->gameObject->sprite->position.z,
 			ped->gameObject->spriteRotation,
 			model
 		);

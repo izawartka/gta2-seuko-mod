@@ -211,6 +211,33 @@ typedef int Sint32;
 
 typedef Sint32 SCR_f;
 
+struct SCR_Vector2 {
+	SCR_f x;
+	SCR_f y;
+
+	bool operator==(const SCR_Vector2& other) const {
+		return x == other.x && y == other.y;
+	}
+
+	bool operator!=(const SCR_Vector2& other) const {
+		return !(*this == other);
+	}
+};
+
+struct SCR_Vector3 {
+	SCR_f x;
+	SCR_f y;
+	SCR_f z;
+
+	bool operator==(const SCR_Vector3& other) const {
+		return x == other.x && y == other.y && z == other.z;
+	}
+
+	bool operator!=(const SCR_Vector3& other) const {
+		return !(*this == other);
+	}
+};
+
 typedef enum PED_BIT_STATE {
 	PED_BIT_STATE_INVISIBLE=33554432,
 	PED_BIT_STATE_ARMED=128,
@@ -746,14 +773,11 @@ struct CollisionBox {
 	uint xsize;
 	uint ysize;
 	uint zsize_maybe;
-	uint br_corner_x;
-	uint br_corner_y;
-	uint bl_corner_x;
-	uint bl_corner_y;
-	uint fl_corner_x;
-	uint fl_corner_y;
-	uint fr_corner_x;
-	uint fr_corner_y; /*there is more*/
+	SCR_Vector2 brCorner;
+	SCR_Vector2 blCorner;
+	SCR_Vector2 flCorner;
+	SCR_Vector2 frCorner;
+	/* maybe more data here */
 };
 
 struct Passenger {
@@ -769,9 +793,7 @@ struct Sprite {
 	struct GameObject * gameObject;
 	struct Sprite * next;
 	struct CollisionBox * collisionBox;
-	SCR_f x; /* Created by retype action */
-	SCR_f y; /* Created by retype action */
-	SCR_f z; /* Created by retype action */
+	SCR_Vector3 position;
 	short incFromS20;
 	short sprite; /*0x22*/
 	short carColor; /*0x24*/
@@ -870,22 +892,14 @@ struct CarPhysics {
 	int yVelocityReadOnly;
 	int totalDamageMaybe;
 	struct CarPhysics * next;
-	SCR_f RRskidX; /* 0x10 */
-	SCR_f RRskidY;
-	SCR_f RLskidX;
-	SCR_f RLskidY;
-	SCR_f FLskidX; /* 0x20 */
-	SCR_f FLskidY;
-	SCR_f FRskidX;
-	SCR_f FRskidY;
-	SCR_f xPos; /* 0x30 */
-	SCR_f yPos;
-	SCR_f xPosReadOnly;
-	SCR_f yPosReadOnly;
-	int xVelocity; /* 0x40 */
-	int yVelocity;
-	int xJumpFromEdgeForce; /* when you place your car on edge it sometimes slides down very fast; this var is related to this behavior */
-	int yJumpFromEdgeForce;
+	SCR_Vector2 rrSkid;
+	SCR_Vector2 rlSkid;
+	SCR_Vector2 frSkid;
+	SCR_Vector2 flSkid;
+	SCR_Vector2 position;
+	SCR_Vector2 positionReadOnly;
+	SCR_Vector2 velocity;
+	SCR_Vector2 jumpFromEdgeForce; /* when you place your car on edge it sometimes slides down very fast; this field is related to that behavior */
 	undefined4 field_0x50; /* 0x50 */
 	undefined4 field_0x54;
 	short rotation;
@@ -1203,6 +1217,14 @@ struct CameraPos {
 	SCR_f y;
 	SCR_f z;
 	int zoom;
+
+	bool operator==(const CameraPos& other) const {
+		return x == other.x && y == other.y && z == other.z && zoom == other.zoom;
+	}
+
+	bool operator!=(const CameraPos& other) const {
+		return !(*this == other);
+	}
 };
 
 struct WorldRect {
@@ -1222,8 +1244,7 @@ struct Camera {
 	enum CAMERA_FOLLOW_STATE followState;
 	int targetElevation;
 	int flyTimerMaybe;
-	SCR_f altMovingPosX;
-	SCR_f altMovingPosY;
+	SCR_Vector2 altMovingPosition;
 	SCR_f altMovingStateUp;
 	SCR_f altMovingStateDown;
 	SCR_f altMovingStateLeft;
@@ -1619,21 +1640,15 @@ struct Ped {
 	void* objectiveTargetObject;
 	int field_0x1a4;
 	struct Ped * elvisLeader;
-	SCR_f x;
-	SCR_f y;
-	int z;
-	SCR_f xxx;
-	SCR_f yyy;
-	SCR_f zzz;
+	SCR_Vector3 position; // ex: x, y, z
+	SCR_Vector3 position2; // ex: xxx, yyy, zzz
 	struct Ped * field_0x1c4;
 	struct Ped * field_0x1c8;
 	struct Ped * field_0x1cc;
 	int field_0x1d0;
 	int field_0x1d4;
 	int field_0x1d8;
-	SCR_f objectiveTargetX;
-	SCR_f objectiveTargetY;
-	SCR_f objectiveTargetZ;
+	SCR_Vector3 objectiveTargetPosition;
 	int field_0x1e8;
 	int field_0x1ec;
 	int field_0x1f0;
@@ -3923,13 +3938,9 @@ struct PedManager_S25 {
 typedef struct XYZ XYZ, *PXYZ;
 
 struct XYZ {
-	int x;
-	int y;
-	int z;
+	SCR_Vector3 position;
 	int field_0xc;
-	int x2;
-	int y2;
-	int z2;
+	SCR_Vector3 position2;
 	int field_0x1c;
 	undefined field_0x20;
 	undefined field_0x21;
@@ -4036,9 +4047,7 @@ struct XYZ {
 	undefined field_0x95;
 	undefined field_0x96;
 	undefined field_0x97;
-	int xx;
-	int yy;
-	int zz;
+	SCR_Vector3 position3;
 	int field_0xa4;
 	undefined field_0xa8;
 	undefined field_0xa9;
@@ -4544,7 +4553,7 @@ typedef struct SCR_CAR_DATA_DEC SCR_CAR_DATA_DEC, *PSCR_CAR_DATA_DEC;
 
 typedef struct SCR_CMD_HEADER SCR_CMD_HEADER, *PSCR_CMD_HEADER;
 
-typedef struct SCR_XYZ_f SCR_XYZ_f, *PSCR_XYZ_f;
+typedef struct SCR_Vector3 SCR_Vector3, *PSCR_Vector3;
 
 typedef ushort Uint16;
 
@@ -4791,17 +4800,11 @@ struct SCR_CMD_HEADER {
 	Uint16 return_value;
 };
 
-struct SCR_XYZ_f {
-	SCR_f x;
-	SCR_f y;
-	SCR_f z;
-};
-
 struct SCR_CAR_DATA_DEC {
 	struct SCR_CMD_HEADER head;
 	short varname;
 	short field_0xc;
-	struct SCR_XYZ_f pos;
+	struct SCR_Vector3 pos;
 	short rot;
 	short remap;
 	ushort carId;
@@ -4815,7 +4818,7 @@ typedef short Sint16;
 struct SCR_PLAYER_PED {
 	struct SCR_CMD_HEADER header;
 	struct Ped * ped;
-	struct SCR_XYZ_f pos;
+	struct SCR_Vector3 pos;
 	Uint16 rot;
 	Sint16 remap;
 };
@@ -6007,8 +6010,7 @@ struct S10 {
 };
 
 typedef struct RenderDistanceArrayItem {
-	int x;
-	int y;
+	SCR_Vector2 position;
 } RenderDistanceArrayItem;
 
 typedef struct S12 S12, *PS12;
@@ -6212,13 +6214,6 @@ typedef struct S16 S16, *PS16;
 
 typedef struct S16_sub1 S16_sub1, *PS16_sub1;
 
-typedef struct Vec2i Vec2i, *PVec2i;
-
-struct Vec2i {
-	int x;
-	int y;
-};
-
 struct S16_sub1 {
 	undefined4 field_0x0;
 	undefined2 field_0x4;
@@ -6233,7 +6228,7 @@ struct S16_sub1 {
 	undefined field_0x12;
 	undefined field_0x13;
 	int arr64i[64];
-	struct Vec2i * vec2i;
+	struct SCR_Vector2 * vec2i;
 	byte field_0x118;
 	undefined field_0x119;
 	short field_0x11a;
@@ -6254,17 +6249,9 @@ struct S16 {
 
 typedef struct S17_mission S17_mission, *PS17_mission;
 
-typedef struct Vec3i Vec3i, *PVec3i;
-
-struct Vec3i {
-	int x;
-	int y;
-	int z;
-};
-
 struct S17_mission {
 	int len;
-	struct Vec3i vec3i50[50];
+	struct SCR_Vector3 vec3[50];
 };
 
 typedef struct S18 S18, *PS18;
@@ -6557,8 +6544,7 @@ typedef struct S6 S6, *PS6;
 
 struct S6 {
 	undefined field_0x0[5224];
-	SCR_f gameCameraX; /* Created by retype action */
-	SCR_f gameCameraY; /* Created by retype action */
+	SCR_Vector2 gameCameraPos;
 	SCR_f pedZ;
 	ushort rotation; /* Created by retype action */
 	undefined field_0x1476;
@@ -8542,9 +8528,7 @@ typedef struct SLight SLight, *PSLight;
 
 struct SLight {
 	dword field_0x0;
-	float x;
-	float y;
-	float z;
+	SCR_Vector3 position;
 	DWORD rgba;
 };
 

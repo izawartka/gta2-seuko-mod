@@ -143,7 +143,7 @@ void ModMenuModule::CameraCheat::OnPreDrawFrame(PreDrawFrameEvent& event)
 		auto* cameraPosCheat = moduleRoot->GetCheat<ModMenuModule::CameraPosCheat>();
 		bool isZlocked = cameraPosCheat && cameraPosCheat->IsEnabled() && cameraPosCheat->GetOptions().z.mode == CameraPosCheatMode::LockTargetAt;
 		bool ignorePlayerPedZ = !playerPed || isZlocked;
-		Game::SCR_f playerPedZ = ignorePlayerPedZ ? Game::Utils::FromFloat(3.0f) : playerPed->z;
+		Game::SCR_f playerPedZ = ignorePlayerPedZ ? Game::Utils::FromFloat(3.0f) : playerPed->position.z;
 
 		m_cameraValues = Utils::Vertex::GetCameraValues(*mainCamera, playerPedZ);
 		m_customCameraPos = Utils::Vertex::GetCustomCameraPos(

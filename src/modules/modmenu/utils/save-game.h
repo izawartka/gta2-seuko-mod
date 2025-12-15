@@ -27,12 +27,12 @@ namespace ModMenuModule::Utils {
 			return;
 		}
 
-		playerPed->y -= Game::Utils::FromFloat(1.0f);
+		playerPed->position.y -= Game::Utils::FromFloat(1.0f);
 
 		Game::Menu* menu = Game::Memory::GetMenu();
 		Game::Functions::SaveGame(s15, 0, menu->saveFile);
 
-		playerPed->y += Game::Utils::FromFloat(1.0f);
+		playerPed->position.y += Game::Utils::FromFloat(1.0f);
 		spdlog::info("Game saved");
 	}
 }
