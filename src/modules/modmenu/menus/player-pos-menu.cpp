@@ -1,10 +1,12 @@
 #include "player-pos-menu.h"
 #include "../root.h"
-#include "../../../converters/scrf.h"
+#include "../../../converters/yes-no.h"
+#include "../segments/position-segment.h"
 
 ModMenuModule::PlayerPosMenu::PlayerPosMenu()
 {
-
+	m_positionSegment = CreateSegment<PositionSegment>("Segment_PlayerPosMenu_PositionSegment");
+	m_positionSegment->SetDoUpdateFromPlayer(true);
 }
 
 ModMenuModule::PlayerPosMenu::~PlayerPosMenu()
@@ -21,69 +23,53 @@ bool ModMenuModule::PlayerPosMenu::Attach()
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 
-	auto spriteResolver = Core::MakeResolver(
-		Game::Memory::GetPlayerPed,
-		mem(&Game::Ped::gameObject),
-		mem(&Game::GameObject::sprite)
+	// live update position
+	UiModule::Text* updatePosText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
+	m_updatePosController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<bool, bool>>(
+		updatePosText,
+		[this]() {
+			return m_positionSegment->GetDoUpdateFromPlayer();
+		},
+		std::vector<bool>{ false, true },
+		UiModule::VarTextSelectControllerOptions{L"Update position: #", L"#"}
 	);
+	m_updatePosController->SetConverter<YesNoConverter>();
+	m_updatePosController->SetCustomSaveCallback([this](bool newValue) {
+		m_positionSegment->SetDoUpdateFromPlayer(newValue);
+	});
 
-	// x position
-	UiModule::Text* xText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	auto xController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<Game::SCR_f>>(
-		xText,
-		Core::MakeResolver(spriteResolver, mem(&Game::Sprite::x)),
-		UiModule::VarTextEditableControllerOptions{ L"X: #", L"#" }
-	);
-	auto onXSave = [this, spriteResolver](Game::SCR_f newX) {
-		if (newX <= 0) return;
-		if (newX >= Game::Utils::FromFloat(256.0f)) return;
-		Game::Sprite* sprite = spriteResolver();
-		if (sprite) {
-			Game::Functions::SetSpritePosition(sprite, 0, newX, sprite->y, sprite->z);
-		}
-	};
-	xController->SetCustomSaveCallback(onXSave);
-	xController->SetConverter<ScrfConverter>();
+	// position segment
+	AttachSegment(m_positionSegment, this, vertCont);
 
-	// y position
-	UiModule::Text* yText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	auto yController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<Game::SCR_f>>(
-		yText,
-		Core::MakeResolver(spriteResolver, mem(&Game::Sprite::y)),
-		UiModule::VarTextEditableControllerOptions{ L"Y: #", L"#" }
+	// teleport btn
+	UiModule::Text* teleportText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"Teleport", options.textSize);
+	UiModule::ButtonController* teleportBtnController = m_menuController->CreateLatestItemController<UiModule::ButtonController>(
+		teleportText,
+		UiModule::ButtonControllerOptions{}
 	);
-	auto onYSave = [this, spriteResolver](Game::SCR_f newY) {
-		if (newY <= 0) return;
-		if (newY >= Game::Utils::FromFloat(256.0f)) return;
-		Game::Sprite* sprite = spriteResolver();
-		if (sprite) {
-			Game::Functions::SetSpritePosition(sprite, 0, sprite->x, newY, sprite->z);
-		}
-	};
-	yController->SetCustomSaveCallback(onYSave);
-	yController->SetConverter<ScrfConverter>();
-
-	// z position
-	UiModule::Text* zText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	auto zController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<Game::SCR_f>>(
-		zText,
-		Core::MakeResolver(spriteResolver, mem(&Game::Sprite::z)),
-		UiModule::VarTextEditableControllerOptions{ L"Z: #", L"#" }
-	);
-	auto onZSave = [this, spriteResolver](Game::SCR_f newZ) {
-		if (newZ <= 0) return;
-		if (newZ >= Game::Utils::FromFloat(8.0f)) return;
-		Game::Sprite* sprite = spriteResolver();
-		if (sprite) {
-			Game::Functions::SetSpritePosition(sprite, 0, sprite->x, sprite->y, newZ);
-		}
-	};
-	zController->SetCustomSaveCallback(onZSave);
-	zController->SetConverter<ScrfConverter>();
+	teleportBtnController->SetCallback([this]() {
+		Teleport();
+	});
 
 	SetPreviousSelectedIndex();
 
 	return true;
+}
+
+void ModMenuModule::PlayerPosMenu::Detach()
+{
+	DetachSegment(m_positionSegment);
+	DestroyMenu();
+}
+
+void ModMenuModule::PlayerPosMenu::OnShow()
+{
+	SetSegmentsVisible(true);
+}
+
+void ModMenuModule::PlayerPosMenu::OnHide()
+{
+	SetSegmentsVisible(false);
 }
 
 void ModMenuModule::PlayerPosMenu::OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
@@ -95,4 +81,21 @@ void ModMenuModule::PlayerPosMenu::OnMenuAction(UiModule::Selectable* item, UiMo
 	default:
 		break;
 	}
+}
+
+void ModMenuModule::PlayerPosMenu::Teleport()
+{
+	auto segmentDataOpt = m_positionSegment->GetSegmentData();
+	if (!segmentDataOpt) return;
+
+	PlayerPosCheat* playerPosCheat = ModMenuModule::RootModule::GetInstance()->GetCheat<PlayerPosCheat>();
+	if (!playerPosCheat) return;
+
+	playerPosCheat->Teleport(
+		segmentDataOpt->x,
+		segmentDataOpt->y,
+		segmentDataOpt->z
+	);
+
+	m_positionSegment->SetDoUpdateFromPlayer(true);
 }
