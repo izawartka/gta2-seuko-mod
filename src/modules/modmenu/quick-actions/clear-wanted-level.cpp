@@ -45,6 +45,7 @@ void ModMenuModule::ClearWantedLevelAction::Execute()
 		*copValue = 0;
 	}
 
+	spdlog::info("ClearWantedLevelAction::Execute: Wanted level cleared.");
 	ToastManager::GetInstance()->Show({ L"Wanted level cleared" });
 }
 

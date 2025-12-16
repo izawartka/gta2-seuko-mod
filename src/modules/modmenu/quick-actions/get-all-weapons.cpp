@@ -26,8 +26,11 @@ const std::wstring& ModMenuModule::GetAllWeaponsAction::GetTypeLabel()
 
 void ModMenuModule::GetAllWeaponsAction::Execute()
 {
-	ModMenuModule::Utils::GetAllWeapons();
-	ModMenuModule::ToastManager::GetInstance()->Show({ L"All weapons given" });
+	if (ModMenuModule::Utils::GetAllWeapons()) {
+		ModMenuModule::ToastManager::GetInstance()->Show({ L"All weapons given" });
+	} else {
+		ModMenuModule::ToastManager::GetInstance()->Show({ L"Failed to give all weapons", ToastType::Error });
+	}
 }
 
 const std::wstring& ModMenuModule::GetAllWeaponsAction::GetLabel() const

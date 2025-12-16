@@ -55,6 +55,10 @@ void ModMenuModule::MiscMenu::OnMenuAction(UiModule::Selectable* item, UiModule:
 
 void ModMenuModule::MiscMenu::QuickSave()
 {
-	ModMenuModule::Utils::SaveGame();
-	ModMenuModule::ToastManager::GetInstance()->Show({ L"Game saved" });
+	if (ModMenuModule::Utils::SaveGame()) {
+		ModMenuModule::ToastManager::GetInstance()->Show({ L"Game saved" });
+	}
+	else {
+		ModMenuModule::ToastManager::GetInstance()->Show({ L"Failed to save game", ToastType::Error });
+	}
 }

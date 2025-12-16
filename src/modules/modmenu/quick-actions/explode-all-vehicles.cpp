@@ -32,12 +32,14 @@ ModMenuModule::ExplodeAllVehiclesSegment* ModMenuModule::ExplodeAllVehiclesActio
 void ModMenuModule::ExplodeAllVehiclesAction::Execute()
 {
 	if (!m_data.has_value()) {
-		spdlog::error("SpawnVehicleAction::Execute: No data to execute action.");
+		spdlog::error("ExplodeAllVehiclesAction::Execute: No data to execute action.");
 		return;
 	}
 
 	ExplodeAllVehiclesSegmentData data = m_data.value();
 	ModMenuModule::Utils::ExplodeAllCars(data.excludePlayerVehicle, data.explosionSize);
+
+	spdlog::info("ExplodeAllVehiclesAction::Execute: All vehicles exploded.");
 	ModMenuModule::ToastManager::GetInstance()->Show({ L"All vehicles exploded" });
 }
 

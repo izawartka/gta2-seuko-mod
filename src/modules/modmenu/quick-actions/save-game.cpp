@@ -26,8 +26,12 @@ const std::wstring& ModMenuModule::SaveGameAction::GetTypeLabel()
 
 void ModMenuModule::SaveGameAction::Execute()
 {
-	ModMenuModule::Utils::SaveGame();
-	ModMenuModule::ToastManager::GetInstance()->Show({ L"Game saved" });
+	if (ModMenuModule::Utils::SaveGame()) {
+		ModMenuModule::ToastManager::GetInstance()->Show({ L"Game saved" });
+	}
+	else {
+		ModMenuModule::ToastManager::GetInstance()->Show({ L"Failed to save game", ToastType::Error });
+	}
 }
 
 const std::wstring& ModMenuModule::SaveGameAction::GetLabel() const

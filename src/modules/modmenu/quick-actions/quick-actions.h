@@ -4,6 +4,8 @@
 
 #include "clear-wanted-level.h"
 #include "explode-all-vehicles.h"
+#include "fix-vehicle.h"
 #include "get-all-weapons.h"
 #include "save-game.h"
 #include "spawn-vehicle.h"
+#include "teleport.h"

@@ -39,8 +39,14 @@ void ModMenuModule::SpawnVehicleAction::Execute()
 	}
 
 	SpawnVehicleSegmentData data = m_data.value();
-	ModMenuModule::Utils::SpawnCarAtPlayer(data.model, data.remap, data.palette);
-	ModMenuModule::ToastManager::GetInstance()->Show({ CarModelConverter::ConvertToString(data.model) + L" spawned" });
+	std::wstring modelStr = CarModelConverter::ConvertToString(data.model);
+
+	if (ModMenuModule::Utils::SpawnCarAtPlayer(data.model, data.remap, data.palette)) {
+		ModMenuModule::ToastManager::GetInstance()->Show({ modelStr + L" spawned" });
+	}
+	else {
+		ModMenuModule::ToastManager::GetInstance()->Show({ L"Failed to spawn " + modelStr, ToastType::Error });
+	}
 }
 
 const std::wstring& ModMenuModule::SpawnVehicleAction::GetLabel() const
