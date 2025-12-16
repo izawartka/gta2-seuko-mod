@@ -22,7 +22,6 @@ namespace ModMenuModule {
 
 		void Teleport();
 
-		UiModule::VarTextSelectController<bool, bool>* m_updatePosController = nullptr;
 		PositionSegment* m_positionSegment = nullptr;
 	};
 }

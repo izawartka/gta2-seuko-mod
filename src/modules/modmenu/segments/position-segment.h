@@ -6,6 +6,7 @@
 
 namespace ModMenuModule {
 	struct PositionSegmentData {
+		bool updateFromPlayer = true;
 		Game::SCR_Vector3 position;
 		bool autoZ = true;
 	};
@@ -34,15 +35,16 @@ namespace ModMenuModule {
 		void OnPlayerPosUpdate(ModMenuModule::PlayerPosUpdateEvent& event);
 		void ApplyAutoZIfNeeded();
 		void ForceUpdateFromPlayer();
+		void OnUpdateFromPlayerControllerSave(bool newValue);
 		void OnCoordControllerSave(bool isZCoord);
 		void OnAutoZControllerSave(bool newValue);
 
+		UiModule::SelectController<bool>* m_updateFromPlayerController = nullptr;
 		UiModule::EditableController<Game::SCR_f>* m_xController = nullptr;
 		UiModule::EditableController<Game::SCR_f>* m_yController = nullptr;
 		UiModule::EditableController<Game::SCR_f>* m_zController = nullptr;
 		UiModule::SelectController<bool>* m_autoZController = nullptr;
-		bool m_doUpdateFromPlayer = false;
-
+		bool m_doUpdateFromPlayer = true;
 		std::string m_persistencePrefix = "";
 	};
 }
