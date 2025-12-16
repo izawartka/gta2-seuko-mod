@@ -230,6 +230,7 @@ exit /b 0
     <ClInclude Include="src\converters\native-cheat-state.h" />
     <ClInclude Include="src\converters\quick-action-type.h" />
     <ClInclude Include="src\converters\radians.h" />
+    <ClInclude Include="src\converters\scr-vector3.h" />
     <ClInclude Include="src\converters\weapon.h" />
     <ClInclude Include="src\converters\yes-no.h" />
     <ClInclude Include="src\events\after-debug-flags.h" />
