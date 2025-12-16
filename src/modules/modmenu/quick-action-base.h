@@ -20,7 +20,7 @@ namespace ModMenuModule {
 		QuickActionBase& operator=(const QuickActionBase&) = delete;
 	};
 
-	template<typename DataT>
+	template<typename SegmentDataT, typename DataT = SegmentDataT>
 	class QuickActionWithSegment : public QuickActionBase {
 	public:
 		virtual const std::optional<DataT>& GetData() const final { return m_data; };
@@ -30,23 +30,28 @@ namespace ModMenuModule {
 		}
 
 		virtual bool SetDataFromSegmentData(SegmentBase* segment) override {
-			Segment<DataT>* typedSegment = dynamic_cast<Segment<DataT>*>(segment);
+			Segment<SegmentDataT>* typedSegment = dynamic_cast<Segment<SegmentDataT>*>(segment);
 			if (!typedSegment) {
 				spdlog::error("QuickActionWithSegment::SetDataFromSegmentData: Invalid segment type");
 				return false;
 			}
-			std::optional<DataT> segmentData = typedSegment->GetSegmentData();
+			std::optional<SegmentDataT> segmentData = typedSegment->GetSegmentData();
 			if (!segmentData.has_value()) {
 				spdlog::error("QuickActionWithSegment::SetDataFromSegmentData: Segment returned no data");
 				return false;
 			}
-			m_data = segmentData.value();
+			std::optional<DataT> data = SegmentDataToData(segmentData.value());
+			if (!data.has_value()) {
+				spdlog::error("QuickActionWithSegment::SetDataFromSegmentData: Failed to convert segment data to data");
+				return false;
+			}
+			m_data = data.value();
 			OnDataChange();
 			return true;
 		}
 
 		virtual bool SetSegmentDataFromData(SegmentBase* segment) override {
-			Segment<DataT>* typedSegment = dynamic_cast<Segment<DataT>*>(segment);
+			Segment<SegmentDataT>* typedSegment = dynamic_cast<Segment<SegmentDataT>*>(segment);
 			if (!typedSegment) {
 				spdlog::error("QuickActionWithSegment::SetSegmentDataFromData: Invalid segment type");
 				return false;
@@ -55,7 +60,30 @@ namespace ModMenuModule {
 				spdlog::error("QuickActionWithSegment::SetSegmentDataFromData: No data to set on segment");
 				return false;
 			}
-			return typedSegment->SetSegmentData(m_data.value());
+			std::optional<SegmentDataT> segmentData = DataToSegmentData(m_data.value());
+			if (!segmentData.has_value()) {
+				spdlog::error("QuickActionWithSegment::SetSegmentDataFromData: Failed to convert data to segment data");
+				return false;
+			}
+			return typedSegment->SetSegmentData(segmentData.value());
+		}
+
+		virtual std::optional<DataT> SegmentDataToData(const SegmentDataT& segmentData) {
+			if constexpr (std::is_convertible<SegmentDataT, DataT>::value) {
+				return static_cast<DataT>(segmentData);
+			}
+			else {
+				return std::nullopt;
+			}
+		}
+
+		virtual std::optional<SegmentDataT> DataToSegmentData(const DataT& data) {
+			if constexpr (std::is_convertible<DataT, SegmentDataT>::value) {
+				return static_cast<SegmentDataT>(data);
+			}
+			else {
+				return std::nullopt;
+			}
 		}
 
 		std::vector<uint8_t> SerializeData() const override {
