@@ -20,7 +20,25 @@ void ModMenuModule::CameraCheat::SetOptions(const CameraCheatOptions& options)
 	}
 
 	m_options = options;
+	if(!m_options.followPedRotation) {
+		m_snapVerticalRotation = false;
+	}
 	UpdatePreDrawMapLayerListener();
+}
+
+void ModMenuModule::CameraCheat::SnapVerticalRotation()
+{
+	if (!IsEnabled()) {
+		spdlog::warn("CameraCheat::SnapVerticalRotation: Cheat is not enabled, cannot snap vertical rotation");
+		return;
+	}
+
+	if (!m_options.followPedRotation) {
+		spdlog::warn("CameraCheat::SnapVerticalRotation: followPedRotation is disabled, cannot snap vertical rotation");
+		return;
+	}
+
+	m_snapVerticalRotation = true;
 }
 
 void ModMenuModule::CameraCheat::OnFirstEnable()
@@ -46,7 +64,9 @@ void ModMenuModule::CameraCheat::OnDisable()
 
 void ModMenuModule::CameraCheat::OnGameStart(GameStartEvent& event)
 {
-	if(IsEnabled())	m_snapVerticalRotation = true;
+	if(IsEnabled() && m_options.followPedRotation) {
+		m_snapVerticalRotation = true;
+	}
 }
 
 void ModMenuModule::CameraCheat::OnRendererLoad(RendererLoadEvent& event)

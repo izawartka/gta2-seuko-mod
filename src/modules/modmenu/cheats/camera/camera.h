@@ -53,6 +53,8 @@ namespace ModMenuModule {
 		void SetOptions(const CameraCheatOptions& options);
 		const CameraCheatOptions& GetOptions() const { return m_options; }
 
+		void SnapVerticalRotation();
+
 	private:
 		virtual void OnFirstEnable() override;
 		virtual void OnEnable() override;
