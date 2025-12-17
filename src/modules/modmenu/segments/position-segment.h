@@ -29,6 +29,8 @@ namespace ModMenuModule {
 		virtual void OnShow() override;
 		virtual void OnHide() override;
 
+		static bool ValidateCoord(Game::SCR_f value, bool isZCoord);
+
 		void SetCoordControllerValues(const Game::SCR_Vector3& position);
 		std::optional<Game::SCR_Vector3> GetCoordControllerValues() const;
 
