@@ -46,10 +46,15 @@ void ModMenuModule::TeleportAction::Execute()
 		return;
 	}
 
-	playerPosCheat->Teleport(data);
-
-	std::wstring positionStr = ScrVector3Converter::ConvertToString(data);
-	ModMenuModule::ToastManager::GetInstance()->Show({ L"Teleported to " + positionStr });
+	playerPosCheat->Teleport(data, [&data](bool success) {
+		if (success) {
+			std::wstring positionStr = ScrVector3Converter::ConvertToString(data);
+			ModMenuModule::ToastManager::GetInstance()->Show({ L"Teleported to " + positionStr });
+		}
+		else {
+			ModMenuModule::ToastManager::GetInstance()->Show({ L"Teleport failed", ToastType::Error });
+		}
+	});
 }
 
 const std::wstring& ModMenuModule::TeleportAction::GetLabel() const
