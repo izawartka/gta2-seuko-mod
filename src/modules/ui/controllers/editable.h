@@ -11,6 +11,9 @@ namespace UiModule {
 	template <typename T>
 	using EditableSaveCallback = std::function<void(const T& newValue)>;
 
+	template <typename T>
+	using EditableValidateCallback = std::function<bool(const T& newValue)>;
+
 	struct EditableControllerOptions {
 		std::wstring prefix = L"";
 		std::wstring suffix = L"";
@@ -82,7 +85,16 @@ namespace UiModule {
 			m_saveCallback = callback;
 		}
 
+		void SetValidateCallback(EditableValidateCallback<T> callback) {
+			m_validateCallback = callback;
+		}
+
 		void SetValue(const std::optional<T>& value) {
+			if(m_validateCallback && value.has_value() && !m_validateCallback(value.value())) {
+				spdlog::warn("UiModule::EditableController: Attempted to set invalid value");
+				return;
+			}
+
 			m_value = value;
 			if (m_editing) {
 				// do not update displayed/editing buffer while editing
@@ -125,6 +137,11 @@ namespace UiModule {
 			}
 			catch (const std::exception& e) {
 				spdlog::warn("UiModule::EditableController: Failed to parse input: {}", e.what());
+				return;
+			}
+
+			if (m_validateCallback && !m_validateCallback(newValue)) {
+				spdlog::warn("UiModule::EditableController: Input validation failed");
 				return;
 			}
 
@@ -200,6 +217,7 @@ namespace UiModule {
 		bool m_hasUpdateListener = false;
 		std::wstring m_textBuffer = L"";
 		EditableSaveCallback<T> m_saveCallback = nullptr;
+		EditableValidateCallback<T> m_validateCallback = nullptr;
 		int m_blinkCounter = 0;
 	};
 }

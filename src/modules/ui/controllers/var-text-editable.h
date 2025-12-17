@@ -11,6 +11,9 @@ namespace UiModule {
 	template <typename ValueT>
 	using VarTextEditableCustomSaveCallback = std::function<void(const ValueT& newValue)>;
 
+	template <typename ValueT>
+	using VarTextEditableValidateCallback = std::function<bool(const ValueT& newValue)>;
+
 	struct VarTextEditableControllerOptions {
 		std::wstring prefix = L"";
 		std::wstring suffix = L"";
@@ -117,6 +120,10 @@ namespace UiModule {
 			m_customSaveCallback = callback;
 		}
 
+		void SetValidateCallback(VarTextEditableValidateCallback<ValueT> callback) {
+			m_validateCallback = callback;
+		}
+
 	protected:
 		virtual void OnConverterChanged() override {
 			if (m_editing) return;
@@ -157,7 +164,10 @@ namespace UiModule {
 			ValueT newValue = m_pendingSaveValue.value();
 			m_pendingSaveValue = std::nullopt;
 
-			if (m_customSaveCallback) {
+			if (m_validateCallback && !m_validateCallback(newValue)) {
+				spdlog::warn("UiModule::VarTextEditableController: Input validation failed");
+			}
+			else if (m_customSaveCallback) {
 				m_customSaveCallback(newValue);
 			}
 			else {
@@ -257,6 +267,7 @@ namespace UiModule {
 		std::wstring m_textBuffer = L"";
 		std::optional<ValueT> m_pendingSaveValue = std::nullopt;
 		VarTextEditableCustomSaveCallback<ValueT> m_customSaveCallback = nullptr;
+		VarTextEditableValidateCallback<ValueT> m_validateCallback = nullptr;
 		int m_blinkCounter = 0;
 	};
 }
