@@ -16,6 +16,33 @@ namespace ModMenuModule {
 		bool followPedRotation = false;
 		float followPedRotationLerpFactor = 0.5f; // requires followPedRotation = true
 		size_t renderDistance = 20; // in map blocks, requires customRenderQueue = true
+
+		bool SmartEquals(const CameraCheatOptions& other) const {
+			bool cameraTransformCheck = followPedRotation ?
+				(cameraTransform.horizontalAngleRad == other.cameraTransform.horizontalAngleRad &&
+					cameraTransform.additionalZOffset == other.cameraTransform.additionalZOffset) :
+				(cameraTransform == other.cameraTransform);
+
+			return cameraTransformCheck &&
+				customCulling == other.customCulling &&
+				customRenderQueue == other.customRenderQueue &&
+				followPedRotation == other.followPedRotation &&
+				(!followPedRotation || followPedRotationLerpFactor == other.followPedRotationLerpFactor) &&
+				(!customRenderQueue || renderDistance == other.renderDistance);
+		}
+
+		bool operator==(const CameraCheatOptions& other) const {
+			return cameraTransform == other.cameraTransform &&
+				customCulling == other.customCulling &&
+				customRenderQueue == other.customRenderQueue &&
+				followPedRotation == other.followPedRotation &&
+				followPedRotationLerpFactor == other.followPedRotationLerpFactor &&
+				renderDistance == other.renderDistance;
+		}
+
+		bool operator!=(const CameraCheatOptions& other) const {
+			return !(*this == other);
+		}
 	};
 
 	class CameraCheat : public CheatBase, public Core::EventListenerSupport {

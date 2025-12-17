@@ -16,6 +16,18 @@ namespace ModMenuModule {
 		CameraPosCheatMode mode = CameraPosCheatMode::Unmodified;
 		Game::SCR_f value = Game::Utils::FromFloat(0.0f);
 		bool lockAtTarget = false;
+
+		bool SmartEquals(const CameraPosCheatCoordinate& other) const {
+			return mode == other.mode && (mode == CameraPosCheatMode::Unmodified || value == other.value) && lockAtTarget == other.lockAtTarget;
+		}
+
+		bool operator==(const CameraPosCheatCoordinate& other) const {
+			return mode == other.mode && value == other.value && lockAtTarget == other.lockAtTarget;
+		}
+
+		bool operator!=(const CameraPosCheatCoordinate& other) const {
+			return !(*this == other);
+		}
 	};
 
 	struct CameraPosCheatOptions {
@@ -24,6 +36,18 @@ namespace ModMenuModule {
 		CameraPosCheatCoordinate z;
 		CameraPosCheatCoordinate zoom;
 		bool reverseZMinLock = false;
+
+		bool SmartEquals(const CameraPosCheatOptions& other) const {
+			return x.SmartEquals(other.x) && y.SmartEquals(other.y) && z.SmartEquals(other.z) && zoom.SmartEquals(other.zoom) && reverseZMinLock == other.reverseZMinLock;
+		}
+
+		bool operator==(const CameraPosCheatOptions& other) const {
+			return x == other.x && y == other.y && z == other.z && zoom == other.zoom && reverseZMinLock == other.reverseZMinLock;
+		}
+
+		bool operator!=(const CameraPosCheatOptions& other) const {
+			return !(*this == other);
+		}
 	};
 
 	class CameraPosCheat : public CheatBase, public Core::EventListenerSupport {

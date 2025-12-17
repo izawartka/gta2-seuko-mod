@@ -25,6 +25,16 @@ namespace ModMenuModule::Utils::Vertex {
 		float horizontalAngleRad = 0.0f;
 		float verticalAngleRad = 0.0f;
 		float additionalZOffset = 0.0f;
+
+		bool operator==(const CameraTransform& other) const {
+			return horizontalAngleRad == other.horizontalAngleRad &&
+				verticalAngleRad == other.verticalAngleRad &&
+				additionalZOffset == other.additionalZOffset;
+		}
+
+		bool operator!=(const CameraTransform& other) const {
+			return !(*this == other);
+		}
 	};
 
 	void ToCenteredScreenSpaceVertex(Game::GTAVertex& vertex, const CameraValues& cameraValues);
