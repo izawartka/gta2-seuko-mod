@@ -9,40 +9,44 @@ ModMenuModule::PlayerPosCheat::~PlayerPosCheat()
 {
 }
 
-void ModMenuModule::PlayerPosCheat::Teleport(Game::SCR_f x, Game::SCR_f y)
+void ModMenuModule::PlayerPosCheat::Teleport(Game::SCR_f x, Game::SCR_f y, PlayerPosCheatTeleportCallback callback)
 {
-	if (!IsEnabled()) {
-		spdlog::warn("PlayerPosCheat::Teleport: Cheat is not enabled, cannot teleport");
-	}
-
-	m_teleportPosition = { x, y, 0 };
-	m_teleportAutoZ = true;
+	Teleport(Game::SCR_Vector2{x, y}, callback);
 }
 
-void ModMenuModule::PlayerPosCheat::Teleport(Game::SCR_f x, Game::SCR_f y, Game::SCR_f z)
+void ModMenuModule::PlayerPosCheat::Teleport(Game::SCR_f x, Game::SCR_f y, Game::SCR_f z, PlayerPosCheatTeleportCallback callback)
 {
-	if (!IsEnabled()) {
-		spdlog::warn("PlayerPosCheat::Teleport: Cheat is not enabled, cannot teleport");
-	}
-
-	m_teleportPosition = { x, y, z };
-	m_teleportAutoZ = false;
+	Teleport(Game::SCR_Vector3{ x, y, z }, callback);
 }
 
-void ModMenuModule::PlayerPosCheat::Teleport(const Game::SCR_Vector2& position)
+void ModMenuModule::PlayerPosCheat::Teleport(const Game::SCR_Vector2& position, PlayerPosCheatTeleportCallback callback)
 {
 	if (!IsEnabled()) {
 		spdlog::warn("PlayerPosCheat::Teleport: Cheat is not enabled, cannot teleport");
 	}
+	
+	if (m_teleportCallback) {
+		spdlog::warn("PlayerPosCheat::Teleport: Previous teleport is still pending, overwriting callback");
+		m_teleportCallback(false);
+	}
+
+	m_teleportCallback = callback;
 	m_teleportPosition = { position.x, position.y, 0 };
 	m_teleportAutoZ = true;
 }
 
-void ModMenuModule::PlayerPosCheat::Teleport(const Game::SCR_Vector3& position)
+void ModMenuModule::PlayerPosCheat::Teleport(const Game::SCR_Vector3& position, PlayerPosCheatTeleportCallback callback)
 {
 	if (!IsEnabled()) {
 		spdlog::warn("PlayerPosCheat::Teleport: Cheat is not enabled, cannot teleport");
 	}
+
+	if (m_teleportCallback) {
+		spdlog::warn("PlayerPosCheat::Teleport: Previous teleport is still pending, overwriting callback");
+		m_teleportCallback(false);
+	}
+	m_teleportCallback = callback;
+
 	m_teleportPosition = position;
 	m_teleportAutoZ = false;
 }
@@ -66,6 +70,11 @@ void ModMenuModule::PlayerPosCheat::OnDisable()
 	m_teleportPosition = std::nullopt;
 	m_teleportAutoZ = false;
 	m_cameraSyncTimer = 0;
+
+	if(m_teleportCallback) {
+		m_teleportCallback(false);
+		m_teleportCallback = nullptr;
+	}
 }
 
 void ModMenuModule::PlayerPosCheat::OnPreGameTick(PreGameTickEvent& event)
@@ -93,6 +102,11 @@ void ModMenuModule::PlayerPosCheat::OnPreGameTick(PreGameTickEvent& event)
 
 		m_teleportPosition = std::nullopt;
 		m_teleportAutoZ = false;
+
+		if (m_teleportCallback) {
+			m_teleportCallback(teleported);
+			m_teleportCallback = nullptr;
+		}
 	}
 
 	UpdateCameraSync();
@@ -123,6 +137,11 @@ void ModMenuModule::PlayerPosCheat::OnGameEnd(GameEndEvent& event)
 	m_teleportPosition = std::nullopt;
 	m_teleportAutoZ = false;
 	m_cameraSyncTimer = 0;
+
+	if (m_teleportCallback) {
+		m_teleportCallback(false);
+		m_teleportCallback = nullptr;
+	}
 }
 
 void ModMenuModule::PlayerPosCheat::UpdateCameraSync()

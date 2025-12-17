@@ -5,15 +5,17 @@
 #include "../cheat-base.h"
 
 namespace ModMenuModule {
+	using PlayerPosCheatTeleportCallback = std::function<void(bool success)>;
+
 	class PlayerPosCheat : public CheatBase, public Core::EventListenerSupport {
 	public:
 		PlayerPosCheat();
 		virtual ~PlayerPosCheat();
 
-		void Teleport(Game::SCR_f x, Game::SCR_f y);
-		void Teleport(Game::SCR_f x, Game::SCR_f y, Game::SCR_f z);
-		void Teleport(const Game::SCR_Vector2& position);
-		void Teleport(const Game::SCR_Vector3& position);
+		void Teleport(Game::SCR_f x, Game::SCR_f y, PlayerPosCheatTeleportCallback callback = nullptr);
+		void Teleport(Game::SCR_f x, Game::SCR_f y, Game::SCR_f z, PlayerPosCheatTeleportCallback callback = nullptr);
+		void Teleport(const Game::SCR_Vector2& position, PlayerPosCheatTeleportCallback callback = nullptr);
+		void Teleport(const Game::SCR_Vector3& position, PlayerPosCheatTeleportCallback callback = nullptr);
 
 		const std::optional<Game::SCR_Vector3>& GetLastPosition() const { return m_position; }
 
@@ -30,6 +32,7 @@ namespace ModMenuModule {
 
 		std::optional<Game::SCR_Vector3> m_position = std::nullopt;
 		std::optional<Game::SCR_Vector3> m_teleportPosition = std::nullopt;
+		PlayerPosCheatTeleportCallback m_teleportCallback = nullptr;
 		bool m_teleportAutoZ = false;
 		int m_cameraSyncTimer = 0;
 	};
