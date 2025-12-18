@@ -2,13 +2,23 @@
 #include "../../../events/game-tick.h"
 #include "../cheat-registry.h"
 
+ModMenuModule::FreezeCopValueCheat* ModMenuModule::FreezeCopValueCheat::m_instance = nullptr;
+
 ModMenuModule::FreezeCopValueCheat::FreezeCopValueCheat()
 	: ModMenuModule::CheatBase("Cheat_FreezeCopValue_IsEnabled") {
+	assert(m_instance == nullptr && "FreezeCopValueCheat instance already exists");
+	m_instance = this;
 }
 
 ModMenuModule::FreezeCopValueCheat::~FreezeCopValueCheat()
 {
+	m_instance = nullptr;
+}
 
+ModMenuModule::FreezeCopValueCheat* ModMenuModule::FreezeCopValueCheat::GetInstance()
+{
+	assert(m_instance && "FreezeCopValueCheat not initialized!");
+	return m_instance;
 }
 
 void ModMenuModule::FreezeCopValueCheat::SetCopValue(short copValue)

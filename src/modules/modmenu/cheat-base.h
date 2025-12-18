@@ -39,7 +39,7 @@ namespace ModMenuModule {
 		virtual void OnDisable() {}
 
 	private:
-		friend class RootModule;
+		friend class CheatManager;
 		virtual bool Attach() final {
 			if (AutoEnableOnAttach()) {
 				SetEnabled(true);

@@ -3,12 +3,23 @@
 #include "../../../events/game-tick.h"
 #include "native-cheats-data.cpp"
 
+ModMenuModule::NativeCheatsKeeperCheat* ModMenuModule::NativeCheatsKeeperCheat::m_instance = nullptr;
+
 ModMenuModule::NativeCheatsKeeperCheat::NativeCheatsKeeperCheat() : ModMenuModule::CheatBase("Cheat_NativeCheatsKeeper_IsEnabled")
 {
+	assert(m_instance == nullptr && "NativeCheatsKeeperCheat instance already exists");
+	m_instance = this;
 }
 
 ModMenuModule::NativeCheatsKeeperCheat::~NativeCheatsKeeperCheat()
 {
+	m_instance = nullptr;
+}
+
+ModMenuModule::NativeCheatsKeeperCheat* ModMenuModule::NativeCheatsKeeperCheat::GetInstance()
+{
+	assert(m_instance && "NativeCheatsKeeperCheat not initialized!");
+	return m_instance;
 }
 
 const std::vector<ModMenuModule::NativeCheatDef>& ModMenuModule::NativeCheatsKeeperCheat::GetAllNativeCheatsByCategory(NativeCheatCategory category)

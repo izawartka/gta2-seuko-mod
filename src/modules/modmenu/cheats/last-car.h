@@ -12,7 +12,8 @@ namespace ModMenuModule {
 	class LastCarCheat : public CheatBase {
 	public:
 		LastCarCheat();
-		virtual ~LastCarCheat();
+		virtual ~LastCarCheat() override;
+		static LastCarCheat* GetInstance();
 
 		void ResetLastCar();
 		Game::Car* GetLastCar() const { return m_lastCar; }
@@ -29,6 +30,7 @@ namespace ModMenuModule {
 		void OnLastCarIdUpdate(const std::optional<Game::uint>& oldValue, const std::optional<Game::uint>& newValue);
 		void SetState(LastCarState state);
 
+		static LastCarCheat* m_instance;
 		Core::Resolver<Game::Car*> m_currentCarResolver = nullptr;
 		Core::Watched<Game::Car*, Game::Car*>* m_watchedCurrentCar = nullptr;
 		Core::Resolver<Game::uint*> m_lastCarIdResolver = nullptr;

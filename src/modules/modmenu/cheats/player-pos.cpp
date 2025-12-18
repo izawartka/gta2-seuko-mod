@@ -2,11 +2,22 @@
 #include "../events/player-pos-update.h"
 #include "../cheat-registry.h"
 
+ModMenuModule::PlayerPosCheat* ModMenuModule::PlayerPosCheat::m_instance = nullptr;
+
 ModMenuModule::PlayerPosCheat::PlayerPosCheat() : ModMenuModule::CheatBase("") {
+	assert(m_instance == nullptr && "PlayerPosCheat instance already exists");
+	m_instance = this;
 }
 
 ModMenuModule::PlayerPosCheat::~PlayerPosCheat()
 {
+	m_instance = nullptr;
+}
+
+ModMenuModule::PlayerPosCheat* ModMenuModule::PlayerPosCheat::GetInstance()
+{
+	assert(m_instance && "PlayerPosCheat not initialized!");
+	return m_instance;
 }
 
 void ModMenuModule::PlayerPosCheat::Teleport(Game::SCR_f x, Game::SCR_f y, PlayerPosCheatTeleportCallback callback)

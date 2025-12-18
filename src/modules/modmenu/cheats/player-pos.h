@@ -10,7 +10,8 @@ namespace ModMenuModule {
 	class PlayerPosCheat : public CheatBase, public Core::EventListenerSupport {
 	public:
 		PlayerPosCheat();
-		virtual ~PlayerPosCheat();
+		virtual ~PlayerPosCheat() override;
+		static PlayerPosCheat* GetInstance();
 
 		void Teleport(Game::SCR_f x, Game::SCR_f y, PlayerPosCheatTeleportCallback callback = nullptr);
 		void Teleport(Game::SCR_f x, Game::SCR_f y, Game::SCR_f z, PlayerPosCheatTeleportCallback callback = nullptr);
@@ -30,6 +31,7 @@ namespace ModMenuModule {
 
 		void UpdateCameraSync();
 
+		static PlayerPosCheat* m_instance;
 		std::optional<Game::SCR_Vector3> m_position = std::nullopt;
 		std::optional<Game::SCR_Vector3> m_teleportPosition = std::nullopt;
 		PlayerPosCheatTeleportCallback m_teleportCallback = nullptr;

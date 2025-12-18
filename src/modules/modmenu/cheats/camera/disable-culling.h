@@ -7,7 +7,8 @@ namespace ModMenuModule {
 	class DisableCullingCheat : public CheatBase, public Core::EventListenerSupport {
 	public:
 		DisableCullingCheat();
-		virtual ~DisableCullingCheat();
+		virtual ~DisableCullingCheat() override;
+		static DisableCullingCheat* GetInstance();
 
 	private:
 		virtual void OnFirstEnable() override;
@@ -15,5 +16,7 @@ namespace ModMenuModule {
 		virtual void OnDisable() override;
 
 		void OnCullingCheck(CullingCheckEvent& event);
+
+		static DisableCullingCheat* m_instance;
 	};
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include "common.h"
 #include "toast-manager.h"
-#include "cheat-base.h"
+#include "cheat-manager.h"
 #include "menu-manager.h"
 #include "reset-binds-manager.h"
 #include "quick-action-manager.h"
@@ -36,27 +36,19 @@ namespace ModMenuModule {
 
 		template<typename CheatT>
 		CheatT* GetCheat() {
-			static_assert(std::is_base_of_v<CheatBase, CheatT>, "CheatT must be derived from CheatBase");
-			auto it = m_cheats.find(std::type_index(typeid(CheatT)));
-			if (it == m_cheats.end()) {
-				spdlog::error("Requested cheat {} is not registered", typeid(CheatT).name());
-				return nullptr;
-			}
-			return static_cast<CheatT*>(it->second.get());
+			return CheatT::GetInstance();
 		}
 
 		const ModMenuOptions& GetOptions() const { return m_options; }
 
 	private:
-		void InstantiateCheats();
-		void DestroyCheats();
 		static RootModule* m_instance;
 
 		ModMenuOptions m_options;
 		ToastManager m_toastManager;
+		CheatManager m_cheatManager;
 		MenuManager m_menuManager;
 		ResetBindsManager m_resetBindsManager;
 		QuickActionManager m_quickActionManager;
-		std::unordered_map<std::type_index, std::unique_ptr<CheatBase>> m_cheats;
 	};
 }

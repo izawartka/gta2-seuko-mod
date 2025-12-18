@@ -3,13 +3,25 @@
 #include "../../cheat-registry.h"
 #include "../../utils/angle-utils.h"
 #include "../../utils/custom-render-queue-utils.h"
+#include "../../../../events/culling-check.h"
 #include "../../root.h"
 
+ModMenuModule::CameraCheat* ModMenuModule::CameraCheat::m_instance = nullptr;
+
 ModMenuModule::CameraCheat::CameraCheat() : ModMenuModule::CheatBase("Cheat_Camera_IsEnabled") {
+	assert(m_instance == nullptr && "CameraCheat instance already exists");
+	m_instance = this;
 }
 
 ModMenuModule::CameraCheat::~CameraCheat()
 {
+	m_instance = nullptr;
+}
+
+ModMenuModule::CameraCheat* ModMenuModule::CameraCheat::GetInstance()
+{
+	assert(m_instance && "CameraCheat not initialized!");
+	return m_instance;
 }
 
 void ModMenuModule::CameraCheat::SetOptions(const CameraCheatOptions& options)

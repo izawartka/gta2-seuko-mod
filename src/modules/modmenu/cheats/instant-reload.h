@@ -7,7 +7,8 @@ namespace ModMenuModule {
 	class InstantReloadCheat : public CheatBase, public Core::EventListenerSupport {
 	public:
 		InstantReloadCheat();
-		virtual ~InstantReloadCheat();
+		virtual ~InstantReloadCheat() override;
+		static InstantReloadCheat* GetInstance();
 
 	private:
 		virtual void OnFirstEnable() override;
@@ -15,5 +16,7 @@ namespace ModMenuModule {
 		virtual void OnDisable() override;
 
 		void OnTryShootWeapon(TryShootWeaponEvent& event);
+
+		static InstantReloadCheat* m_instance;
 	};
 }

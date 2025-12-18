@@ -7,7 +7,8 @@ namespace ModMenuModule {
 	class ClearScreenCheat : public CheatBase, public Core::EventListenerSupport {
 	public:
 		ClearScreenCheat();
-		virtual ~ClearScreenCheat();
+		virtual ~ClearScreenCheat() override;
+		static ClearScreenCheat* GetInstance();
 
 	private:
 		virtual void OnFirstEnable() override;
@@ -15,5 +16,7 @@ namespace ModMenuModule {
 		virtual void OnDisable() override;
 
 		void OnClearScreen(ClearScreenEvent& event);
+
+		static ClearScreenCheat* m_instance;
 	};
 }

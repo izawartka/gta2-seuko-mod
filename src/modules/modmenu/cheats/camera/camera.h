@@ -4,7 +4,6 @@
 #include "../../../../events/game-start.h"
 #include "../../../../events/draw-frame.h"
 #include "../../../../events/renderer.h"
-#include "../../../../events/culling-check.h"
 #include "../../../../events/draw-map-layer.h"
 #include "../../utils/vertex-utils.h"
 
@@ -48,7 +47,8 @@ namespace ModMenuModule {
 	class CameraCheat : public CheatBase, public Core::EventListenerSupport {
 	public:
 		CameraCheat();
-		virtual ~CameraCheat();
+		virtual ~CameraCheat() override;
+		static CameraCheat* GetInstance();
 
 		void SetOptions(const CameraCheatOptions& options);
 		const CameraCheatOptions& GetOptions() const { return m_options; }
@@ -76,6 +76,7 @@ namespace ModMenuModule {
 		void SaveToPersistence() const;
 		void LoadFromPersistence();
 
+		static CameraCheat* m_instance;
 		CameraCheatOptions m_options;
 		bool m_hasRendererListeners = false;
 		bool m_snapVerticalRotation = false;

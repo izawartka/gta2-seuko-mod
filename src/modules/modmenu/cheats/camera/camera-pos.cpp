@@ -1,11 +1,22 @@
 #include "camera-pos.h"
 #include "../../cheat-registry.h"
 
+ModMenuModule::CameraPosCheat* ModMenuModule::CameraPosCheat::m_instance = nullptr;
+
 ModMenuModule::CameraPosCheat::CameraPosCheat() : ModMenuModule::CheatBase("Cheat_CameraPos_IsEnabled") {
+	assert(m_instance == nullptr && "CameraPosCheat instance already exists");
+	m_instance = this;
 }
 
 ModMenuModule::CameraPosCheat::~CameraPosCheat()
 {
+	m_instance = nullptr;
+}
+
+ModMenuModule::CameraPosCheat* ModMenuModule::CameraPosCheat::GetInstance()
+{
+	assert(m_instance && "CameraPosCheat not initialized!");
+	return m_instance;
 }
 
 const std::vector<ModMenuModule::CameraPosCheatMode> ModMenuModule::CameraPosCheat::GetAllCameraPosCheatModes()

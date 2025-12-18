@@ -7,7 +7,8 @@ namespace ModMenuModule {
 	class ShadowsFixCheat : public CheatBase, public Core::EventListenerSupport {
 	public:
 		ShadowsFixCheat();
-		virtual ~ShadowsFixCheat();
+		virtual ~ShadowsFixCheat() override;
+		static ShadowsFixCheat* GetInstance();
 
 	private:
 		virtual void OnFirstEnable() override;
@@ -15,5 +16,7 @@ namespace ModMenuModule {
 		virtual void OnDisable() override;
 
 		void OnScaleShadow(ScaleShadowEvent& event);
+
+		static ShadowsFixCheat* m_instance;
 	};
 }

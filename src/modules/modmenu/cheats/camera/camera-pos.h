@@ -53,7 +53,8 @@ namespace ModMenuModule {
 	class CameraPosCheat : public CheatBase, public Core::EventListenerSupport {
 	public:
 		CameraPosCheat();
-		virtual ~CameraPosCheat();
+		virtual ~CameraPosCheat() override;
+		static CameraPosCheat* GetInstance();
 
 		static const std::vector<CameraPosCheatMode> GetAllCameraPosCheatModes();
 
@@ -81,6 +82,7 @@ namespace ModMenuModule {
 		void SaveToPersistence() const;
 		void LoadFromPersistence();
 
+		static CameraPosCheat* m_instance;
 		CameraPosCheatOptions m_options;
 		bool m_lockAtCurrentRequested = false;
 		bool m_snapToTargetRequested = false;

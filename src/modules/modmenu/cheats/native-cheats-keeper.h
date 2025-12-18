@@ -36,7 +36,8 @@ namespace ModMenuModule {
 	class NativeCheatsKeeperCheat : public CheatBase, public Core::EventListenerSupport {
 	public:
 		NativeCheatsKeeperCheat();
-		virtual ~NativeCheatsKeeperCheat();
+		virtual ~NativeCheatsKeeperCheat() override;
+		static NativeCheatsKeeperCheat* GetInstance();
 
 		static const std::vector<NativeCheatDef>& GetAllNativeCheats();
 		static const std::vector<NativeCheatDef>& GetAllNativeCheatsByCategory(NativeCheatCategory category);
@@ -70,6 +71,7 @@ namespace ModMenuModule {
 		void LoadFromPersistence();
 		void SetCheatStateInternal(size_t cheatAddress, NativeCheatState state);
 
+		static NativeCheatsKeeperCheat* m_instance;
 		NativeCheatsKeeperEntry m_cheatEntries[sizeof(Game::Cheats)] = {};
 	};
 }

@@ -1,5 +1,4 @@
 #pragma once
-#include "cheat-base.h"
 
 namespace ModMenuModule {
 	class CheatRegistry {

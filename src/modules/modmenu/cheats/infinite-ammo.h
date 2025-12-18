@@ -7,7 +7,8 @@ namespace ModMenuModule {
 	class InfiniteAmmoCheat : public CheatBase, public Core::EventListenerSupport {
 	public:
 		InfiniteAmmoCheat();
-		virtual ~InfiniteAmmoCheat();
+		virtual ~InfiniteAmmoCheat() override;
+		static InfiniteAmmoCheat* GetInstance();
 
 	private:
 		virtual void OnFirstEnable() override;
@@ -15,5 +16,7 @@ namespace ModMenuModule {
 		virtual void OnDisable() override;
 
 		void OnIsAmmoKfCall(IsAmmoKfCallEvent& event);
+
+		static InfiniteAmmoCheat* m_instance;
 	};
 }

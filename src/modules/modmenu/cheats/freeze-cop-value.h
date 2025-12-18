@@ -7,7 +7,8 @@ namespace ModMenuModule {
 	class FreezeCopValueCheat : public CheatBase, public Core::EventListenerSupport {
 	public:
 		FreezeCopValueCheat();
-		virtual ~FreezeCopValueCheat();
+		virtual ~FreezeCopValueCheat() override;
+		static FreezeCopValueCheat* GetInstance();
 
 		void SetCopValue(short copValue);
 
@@ -19,6 +20,7 @@ namespace ModMenuModule {
 		void OnValueUpdate(const std::optional<short>& oldValue, const std::optional<short>& newValue);
 		void OnCopValueChange(CopValueChangeEvent& event);
 
+		static FreezeCopValueCheat* m_instance;
 		Core::Resolver<short*> m_copValueResolver = nullptr;
 		Core::Watched<short>* m_watchedCopValue = nullptr;
 		short m_copValue = 0;

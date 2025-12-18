@@ -3,11 +3,22 @@
 #include "../events/last-car-state.h"
 #include "../cheat-registry.h"
 
+ModMenuModule::LastCarCheat* ModMenuModule::LastCarCheat::m_instance = nullptr;
+
 ModMenuModule::LastCarCheat::LastCarCheat(): ModMenuModule::CheatBase("") {
+	assert(m_instance == nullptr && "LastCarCheat instance already exists");
+	m_instance = this;
 }
 
 ModMenuModule::LastCarCheat::~LastCarCheat()
 {
+	m_instance = nullptr;
+}
+
+ModMenuModule::LastCarCheat* ModMenuModule::LastCarCheat::GetInstance()
+{
+	assert(m_instance && "LastCarCheat not initialized!");
+	return m_instance;
 }
 
 void ModMenuModule::LastCarCheat::ResetLastCar()
