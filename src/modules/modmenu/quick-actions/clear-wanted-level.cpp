@@ -1,5 +1,5 @@
 #include "clear-wanted-level.h"
-#include "../cheats/freeze-cop-value.h"
+#include "../cheats/set-cop-value.h"
 #include "../toast-manager.h"
 #include "../quick-action-registry.h"
 
@@ -26,25 +26,10 @@ const std::wstring& ModMenuModule::ClearWantedLevelAction::GetTypeLabel()
 
 void ModMenuModule::ClearWantedLevelAction::Execute()
 {
-	auto* freezeCopValueCheat = FreezeCopValueCheat::GetInstance();
-	freezeCopValueCheat->SetCopValue(0);
+	auto* cheat = SetCopValueCheat::GetInstance();
+	cheat->SetEnabled(true);
+	cheat->SetCopValueAndDisable(0);
 
-	if (!freezeCopValueCheat->IsEnabled()) {
-		auto wantedLevelResolver = Core::MakeResolver(
-			Game::Memory::GetPlayerPed,
-			mem(&Game::Ped::copValue)
-		);
-
-		short* copValue = wantedLevelResolver();
-		if (!copValue) {
-			spdlog::error("ClearWantedLevelAction::Execute: Unable to resolve cop value.");
-			return;
-		}
-
-		*copValue = 0;
-	}
-
-	spdlog::info("ClearWantedLevelAction::Execute: Wanted level cleared.");
 	ToastManager::GetInstance()->Show({ L"Wanted level cleared" });
 }
 

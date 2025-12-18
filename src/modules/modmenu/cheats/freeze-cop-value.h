@@ -10,7 +10,8 @@ namespace ModMenuModule {
 		virtual ~FreezeCopValueCheat() override;
 		static FreezeCopValueCheat* GetInstance();
 
-		void SetCopValue(short copValue);
+		void SetFrozenCopValue(short copValue);
+		const std::optional<short>& GetFrozenCopValue() const { return m_copValue; }
 
 	private:
 		virtual void OnFirstEnable() override;
@@ -23,7 +24,6 @@ namespace ModMenuModule {
 		static FreezeCopValueCheat* m_instance;
 		Core::Resolver<short*> m_copValueResolver = nullptr;
 		Core::Watched<short>* m_watchedCopValue = nullptr;
-		short m_copValue = 0;
-		bool m_justEnabled = false;
+		std::optional<short> m_copValue = std::nullopt;
 	};
 }

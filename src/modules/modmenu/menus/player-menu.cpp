@@ -3,6 +3,7 @@
 #include "player-stats-menu.h"
 #include "../../../converters/cop-value.h"
 #include "../../../converters/yes-no.h"
+#include "../cheats/set-cop-value.h"
 #include "../cheats/freeze-cop-value.h"
 #include "../cheats/invulnerability.h"
 #include "../root.h"
@@ -47,21 +48,10 @@ bool ModMenuModule::PlayerMenu::Attach()
 		UiModule::VarTextSelectControllerOptions{ L"Wanted level: #", L"#" }
 	);
 	wantedLevelController->SetConverter<CopValueConverter>();
-	wantedLevelController->SetCustomSaveCallback([wantedLevelResolver](short newWantedLevel) {
-		auto* cheat = FreezeCopValueCheat::GetInstance();
-		cheat->SetCopValue(newWantedLevel);
-
-		if (!cheat->IsEnabled()) {
-			short* copValue = wantedLevelResolver();
-			if (!copValue) {
-				spdlog::error("Unable to resolve cop value");
-				return;
-			}
-
-			*copValue = newWantedLevel;
-		}
-
-		spdlog::info("Set wanted level to {}", newWantedLevel);
+	wantedLevelController->SetCustomSaveCallback([](short newWantedLevel) {
+		auto* cheat = SetCopValueCheat::GetInstance();
+		cheat->SetEnabled(true);
+		cheat->SetCopValueAndDisable(newWantedLevel);
 	});
 
 	// freeze wanted level
