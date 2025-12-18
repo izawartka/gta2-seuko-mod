@@ -38,8 +38,8 @@ bool ModMenuModule::WeaponsMenu::Attach()
 		UiModule::SelectControllerOptions{ L"Infinite ammo: #", L"#" }
 	);
 	m_infiniteAmmoController->SetConverter<YesNoConverter>();
-	m_infiniteAmmoController->SetSaveCallback([this](bool newValue) {
-		SetCheatEnabled<ModMenuModule::InfiniteAmmoCheat>(newValue);
+	m_infiniteAmmoController->SetSaveCallback([](bool newValue) {
+		InfiniteAmmoCheat::GetInstance()->SetEnabled(newValue);
 	});
 
 	// instant reload
@@ -51,8 +51,8 @@ bool ModMenuModule::WeaponsMenu::Attach()
 		UiModule::SelectControllerOptions{ L"Instant reload: #", L"#" }
 	);
 	m_instantReloadController->SetConverter<YesNoConverter>();
-	m_instantReloadController->SetSaveCallback([this](bool newValue) {
-		SetCheatEnabled<ModMenuModule::InstantReloadCheat>(newValue);
+	m_instantReloadController->SetSaveCallback([](bool newValue) {
+		InstantReloadCheat::GetInstance()->SetEnabled(newValue);
 	});
 
 	// current weapon
@@ -134,15 +134,15 @@ void ModMenuModule::WeaponsMenu::OnMenuAction(UiModule::Selectable* item, UiModu
 
 void ModMenuModule::WeaponsMenu::OnCheatStateChange(CheatStateEvent& event)
 {
-	if (event.GetCheatType() == typeid(ModMenuModule::InfiniteAmmoCheat)) {
+	if (event.GetCheatType() == typeid(InfiniteAmmoCheat)) {
 		m_infiniteAmmoController->SetValue(event.IsEnabled());
-	} else if (event.GetCheatType() == typeid(ModMenuModule::InstantReloadCheat)) {
+	} else if (event.GetCheatType() == typeid(InstantReloadCheat)) {
 		m_instantReloadController->SetValue(event.IsEnabled());
 	}
 }
 
 void ModMenuModule::WeaponsMenu::UpdateCheatStates()
 {
-	m_infiniteAmmoController->SetValue(IsCheatEnabled<ModMenuModule::InfiniteAmmoCheat>());
-	m_instantReloadController->SetValue(IsCheatEnabled<ModMenuModule::InstantReloadCheat>());
+	m_infiniteAmmoController->SetValue(InfiniteAmmoCheat::GetInstance()->IsEnabled());
+	m_instantReloadController->SetValue(InstantReloadCheat::GetInstance()->IsEnabled());
 }

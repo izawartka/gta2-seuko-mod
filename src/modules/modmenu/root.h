@@ -34,11 +34,6 @@ namespace ModMenuModule {
 		bool Attach();
 		void Detach();
 
-		template<typename CheatT>
-		CheatT* GetCheat() {
-			return CheatT::GetInstance();
-		}
-
 		const ModMenuOptions& GetOptions() const { return m_options; }
 
 	private:

@@ -26,7 +26,7 @@ bool ModMenuModule::CameraPosMenu::Attach()
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 
-	CameraPosCheat* cameraPosCheat = GetCheat<CameraPosCheat>();
+	CameraPosCheat* cameraPosCheat = CameraPosCheat::GetInstance();
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 
@@ -88,7 +88,7 @@ void ModMenuModule::CameraPosMenu::AttachCheatMenuItems()
 	if (m_cheatItemsAttached) return;
 
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
-	CameraPosCheat* cameraPosCheat = GetCheat<CameraPosCheat>();
+	CameraPosCheat* cameraPosCheat = CameraPosCheat::GetInstance();
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	UiModule::VertCont* container = m_cheatItemsCont;
 
@@ -157,7 +157,7 @@ void ModMenuModule::CameraPosMenu::DetachCheatMenuItems()
 
 void ModMenuModule::CameraPosMenu::OnCheatStateChange(CheatStateEvent& event)
 {
-	if (event.GetCheatType() == typeid(ModMenuModule::CameraPosCheat)) {
+	if (event.GetCheatType() == typeid(CameraPosCheat)) {
 		m_cameraPosCheatController->SetValue(event.IsEnabled());
 		if (event.IsEnabled()) AttachCheatMenuItems();
 		else DetachCheatMenuItems();
@@ -166,7 +166,7 @@ void ModMenuModule::CameraPosMenu::OnCheatStateChange(CheatStateEvent& event)
 
 void ModMenuModule::CameraPosMenu::UpdateCheatStates()
 {
-	bool cheatEnabled = IsCheatEnabled<ModMenuModule::CameraPosCheat>();
+	bool cheatEnabled = CameraPosCheat::GetInstance()->IsEnabled();
 
 	m_cameraPosCheatController->SetValue(cheatEnabled);
 	if (cheatEnabled) AttachCheatMenuItems();

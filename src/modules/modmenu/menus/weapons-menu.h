@@ -1,10 +1,10 @@
 #pragma once
 #include "../common.h"
 #include "../menu-base.h"
-#include "../cheat-support.h"
+#include "../events/cheat-state.h"
 
 namespace ModMenuModule {
-	class WeaponsMenu : public MenuBase, public CheatSupport, public Core::EventListenerSupport {
+	class WeaponsMenu : public MenuBase, public Core::EventListenerSupport {
 	public:
 		WeaponsMenu();
 		virtual ~WeaponsMenu();

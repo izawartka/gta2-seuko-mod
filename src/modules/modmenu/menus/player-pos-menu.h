@@ -2,12 +2,11 @@
 #include "../common.h"
 #include "../menu-base.h"
 #include "../segment-support.h"
-#include "../cheat-support.h"
 
 namespace ModMenuModule {
 	class PositionSegment;
 
-	class PlayerPosMenu : public MenuBase, public SegmentSupport, public CheatSupport {
+	class PlayerPosMenu : public MenuBase, public SegmentSupport {
 	public:
 		PlayerPosMenu();
 		virtual ~PlayerPosMenu();

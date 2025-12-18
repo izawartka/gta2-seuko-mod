@@ -1,11 +1,10 @@
 #pragma once
 #include "../common.h"
 #include "../quick-action-base.h"
-#include "../cheat-support.h"
 #include "../segments/position-segment.h"
 
 namespace ModMenuModule {
-	class TeleportAction : public QuickActionWithSegment<PositionSegmentData, Game::SCR_Vector3>, public CheatSupport {
+	class TeleportAction : public QuickActionWithSegment<PositionSegmentData, Game::SCR_Vector3> {
 	public:
 		TeleportAction();
 		virtual ~TeleportAction();

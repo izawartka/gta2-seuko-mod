@@ -72,8 +72,11 @@ void ModMenuModule::PlayerPosMenu::Teleport()
 	auto segmentDataOpt = m_positionSegment->GetSegmentData();
 	if (!segmentDataOpt.has_value()) return;
 
-	PlayerPosCheat* playerPosCheat = ModMenuModule::RootModule::GetInstance()->GetCheat<PlayerPosCheat>();
-	if (!playerPosCheat) return;
+	PlayerPosCheat* playerPosCheat = PlayerPosCheat::GetInstance();
+	if (!playerPosCheat->IsEnabled()) {
+		spdlog::error("PlayerPosMenu::Teleport: PlayerPosCheat is not enabled");
+		return;
+	}
 
 	playerPosCheat->Teleport(segmentDataOpt->position);
 

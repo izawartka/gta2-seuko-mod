@@ -1,10 +1,9 @@
 #pragma once
 #include "../common.h"
 #include "../quick-action-base.h"
-#include "../cheat-support.h"
 
 namespace ModMenuModule {
-	class ClearWantedLevelAction : public QuickActionBase, public CheatSupport, public Core::EventListenerSupport {
+	class ClearWantedLevelAction : public QuickActionBase, public Core::EventListenerSupport {
 	public:
 		ClearWantedLevelAction();
 		virtual ~ClearWantedLevelAction();

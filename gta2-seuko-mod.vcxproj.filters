@@ -207,9 +207,6 @@
     <ClInclude Include="src\modules\modmenu\cheat-registry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\modules\modmenu\cheat-support.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\modules\modmenu\events\cheat-state.h">
       <Filter>Header Files</Filter>
     </ClInclude>

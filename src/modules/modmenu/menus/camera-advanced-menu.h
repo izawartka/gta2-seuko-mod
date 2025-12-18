@@ -1,11 +1,10 @@
 #pragma once
 #include "../common.h"
 #include "../menu-base.h"
-#include "../cheat-support.h"
 #include "../events/cheat-state.h"
 
 namespace ModMenuModule {
-	class CameraAdvancedMenu : public MenuBase, public Core::EventListenerSupport, public CheatSupport {
+	class CameraAdvancedMenu : public MenuBase, public Core::EventListenerSupport {
 	public:
 		CameraAdvancedMenu();
 		virtual ~CameraAdvancedMenu();

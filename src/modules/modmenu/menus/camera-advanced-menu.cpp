@@ -25,10 +25,10 @@ bool ModMenuModule::CameraAdvancedMenu::Attach()
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 
-	CameraCheat* cameraCheat = GetCheat<CameraCheat>();
-	ClearScreenCheat* clearScreenCheat = GetCheat<ClearScreenCheat>();
-	DisableCullingCheat* disableCullingCheat = GetCheat<DisableCullingCheat>();
-	ShadowsFixCheat* shadowsFixCheat = GetCheat<ShadowsFixCheat>();
+	CameraCheat* cameraCheat = CameraCheat::GetInstance();
+	ClearScreenCheat* clearScreenCheat = ClearScreenCheat::GetInstance();
+	DisableCullingCheat* disableCullingCheat = DisableCullingCheat::GetInstance();
+	ShadowsFixCheat* shadowsFixCheat = ShadowsFixCheat::GetInstance();
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 
@@ -126,7 +126,7 @@ void ModMenuModule::CameraAdvancedMenu::AttachCheatMenuItems()
 	if (m_cheatItemsAttached) return;
 
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
-	CameraCheat* cameraCheat = GetCheat<CameraCheat>();
+	CameraCheat* cameraCheat = CameraCheat::GetInstance();
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	UiModule::VertCont* container = m_cheatItemsCont;
 
@@ -258,16 +258,16 @@ void ModMenuModule::CameraAdvancedMenu::DetachCheatMenuItems()
 
 void ModMenuModule::CameraAdvancedMenu::OnCheatStateChange(CheatStateEvent& event)
 {
-	if (event.GetCheatType() == typeid(ModMenuModule::ClearScreenCheat)) {
+	if (event.GetCheatType() == typeid(ClearScreenCheat)) {
 		m_clearScreenCheatController->SetValue(event.IsEnabled());
 	}
-	else if (event.GetCheatType() == typeid(ModMenuModule::DisableCullingCheat)) {
+	else if (event.GetCheatType() == typeid(DisableCullingCheat)) {
 		m_disableCullingCheatController->SetValue(event.IsEnabled());
 	}
-	else if (event.GetCheatType() == typeid(ModMenuModule::ShadowsFixCheat)) {
+	else if (event.GetCheatType() == typeid(ShadowsFixCheat)) {
 		m_shadowsFixCheatController->SetValue(event.IsEnabled());
 	}
-	else if (event.GetCheatType() == typeid(ModMenuModule::CameraCheat)) {
+	else if (event.GetCheatType() == typeid(CameraCheat)) {
 		m_cameraCheatController->SetValue(event.IsEnabled());
 
 		if(event.IsEnabled()) AttachCheatMenuItems();
@@ -277,11 +277,11 @@ void ModMenuModule::CameraAdvancedMenu::OnCheatStateChange(CheatStateEvent& even
 
 void ModMenuModule::CameraAdvancedMenu::UpdateCheatStates()
 {
-	m_clearScreenCheatController->SetValue(IsCheatEnabled<ModMenuModule::ClearScreenCheat>());
-	m_disableCullingCheatController->SetValue(IsCheatEnabled<ModMenuModule::DisableCullingCheat>());
-	m_shadowsFixCheatController->SetValue(IsCheatEnabled<ModMenuModule::ShadowsFixCheat>());
+	m_clearScreenCheatController->SetValue(ClearScreenCheat::GetInstance()->IsEnabled());
+	m_disableCullingCheatController->SetValue(DisableCullingCheat::GetInstance()->IsEnabled());
+	m_shadowsFixCheatController->SetValue(ShadowsFixCheat::GetInstance()->IsEnabled());
 
-	bool cameraCheatEnabled = IsCheatEnabled<ModMenuModule::CameraCheat>();
+	bool cameraCheatEnabled = CameraCheat::GetInstance()->IsEnabled();
 	m_cameraCheatController->SetValue(cameraCheatEnabled);
 
 	if (cameraCheatEnabled) AttachCheatMenuItems();

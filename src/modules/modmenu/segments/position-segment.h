@@ -1,7 +1,6 @@
 #pragma once
 #include "../common.h"
 #include "../segment-base.h"
-#include "../cheat-support.h"
 #include "../events/player-pos-update.h"
 
 namespace ModMenuModule {
@@ -11,7 +10,7 @@ namespace ModMenuModule {
 		bool autoZ = true;
 	};
 
-	class PositionSegment : public Segment<PositionSegmentData>, public Core::EventListenerSupport, public CheatSupport {
+	class PositionSegment : public Segment<PositionSegmentData>, public Core::EventListenerSupport {
 	public:
 		PositionSegment() = default;
 		PositionSegment(const std::string& persistencePrefix);

@@ -43,7 +43,7 @@ bool ModMenuModule::NativeCheatsCategoryMenu::Attach()
 		NativeCheatState::ForceEnabled
 	};
 
-	auto* nativeCheatsKeeper = this->GetCheat<NativeCheatsKeeperCheat>();
+	auto* nativeCheatsKeeper = NativeCheatsKeeperCheat::GetInstance();
 
 	for (size_t i = m_page * CHEATS_PER_PAGE; i < std::min(m_cheats.size(), (m_page + 1) * CHEATS_PER_PAGE); i++) {
 		const NativeCheatDef& cheat = m_cheats[i];

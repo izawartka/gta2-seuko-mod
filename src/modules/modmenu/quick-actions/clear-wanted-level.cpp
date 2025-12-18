@@ -26,11 +26,10 @@ const std::wstring& ModMenuModule::ClearWantedLevelAction::GetTypeLabel()
 
 void ModMenuModule::ClearWantedLevelAction::Execute()
 {
-	auto freezeCheat = GetCheat<ModMenuModule::FreezeCopValueCheat>();
-	if (freezeCheat && freezeCheat->IsEnabled()) {
-		freezeCheat->SetCopValue(0);
-	}
-	else {
+	auto* freezeCopValueCheat = FreezeCopValueCheat::GetInstance();
+	freezeCopValueCheat->SetCopValue(0);
+
+	if (!freezeCopValueCheat->IsEnabled()) {
 		auto wantedLevelResolver = Core::MakeResolver(
 			Game::Memory::GetPlayerPed,
 			mem(&Game::Ped::copValue)
@@ -38,7 +37,7 @@ void ModMenuModule::ClearWantedLevelAction::Execute()
 
 		short* copValue = wantedLevelResolver();
 		if (!copValue) {
-			spdlog::warn("ClearWantedLevelAction::Execute: Unable to resolve cop value.");
+			spdlog::error("ClearWantedLevelAction::Execute: Unable to resolve cop value.");
 			return;
 		}
 

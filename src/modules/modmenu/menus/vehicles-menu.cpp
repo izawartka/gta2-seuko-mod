@@ -53,7 +53,7 @@ void ModMenuModule::VehiclesMenu::OnMenuAction(UiModule::Selectable* item, UiMod
 		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::SpawnVehicleMenu>();
 		break;
 	case 2: // Last vehicle
-		lastCarCheat = GetCheat<LastCarCheat>();
+		lastCarCheat = LastCarCheat::GetInstance();
 		if (!lastCarCheat || lastCarCheat->GetLastCarState() == LastCarState::NoCar) {
 			spdlog::warn("No last vehicle to show in Last Vehicle menu");
 			return;
@@ -74,8 +74,8 @@ void ModMenuModule::VehiclesMenu::UpdateLastCarState()
 {
 	if (!m_lastCarText) return;
 
-	LastCarCheat* lastCarCheat = GetCheat<LastCarCheat>();
-	if (!lastCarCheat) return;
+	LastCarCheat* lastCarCheat = LastCarCheat::GetInstance();
+	if (!lastCarCheat->IsEnabled()) return;
 
 	std::wstring stateText = lastCarCheat->GetLastCarStateMenuName();
 	m_lastCarText->SetText(stateText);

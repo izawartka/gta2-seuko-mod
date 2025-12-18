@@ -26,8 +26,8 @@ const std::wstring& ModMenuModule::FixVehicleAction::GetTypeLabel()
 
 void ModMenuModule::FixVehicleAction::Execute()
 {
-	LastCarCheat* lastCarCheat = GetCheat<LastCarCheat>();
-	if (!lastCarCheat || !lastCarCheat->IsEnabled()) {
+	LastCarCheat* lastCarCheat = LastCarCheat::GetInstance();
+	if (!lastCarCheat->IsEnabled()) {
 		spdlog::error("FixVehicleAction::Execute: LastCarCheat is not enabled.");
 		return;
 	}

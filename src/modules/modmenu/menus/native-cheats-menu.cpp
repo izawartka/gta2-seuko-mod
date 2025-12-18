@@ -25,8 +25,8 @@ bool ModMenuModule::NativeCheatsMenu::Attach()
 	// reset all cheats
 	auto resetAllText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"Reset all cheats", options.textSize);
 	auto resetAllBtn = m_menuController->CreateLatestItemController<UiModule::ButtonController>(resetAllText);
-	resetAllBtn->SetCallback([this]() {
-		auto nativeCheatsKeeper = this->GetCheat<NativeCheatsKeeperCheat>();
+	resetAllBtn->SetCallback([]() {
+		auto* nativeCheatsKeeper = NativeCheatsKeeperCheat::GetInstance();
 		nativeCheatsKeeper->ResetAll();
 		nativeCheatsKeeper->SetEnabled(false);
 	});

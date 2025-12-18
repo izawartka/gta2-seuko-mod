@@ -1,10 +1,10 @@
 #pragma once
 #include "../common.h"
-#include "../cheat-support.h"
 #include "../menu-base.h"
+#include "../events/cheat-state.h"
 
 namespace ModMenuModule {
-	class PlayerMenu : public MenuBase, public CheatSupport, public Core::EventListenerSupport {
+	class PlayerMenu : public MenuBase, public Core::EventListenerSupport {
 	public:
 		PlayerMenu();
 		virtual ~PlayerMenu();

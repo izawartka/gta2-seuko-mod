@@ -47,16 +47,21 @@ bool ModMenuModule::PlayerMenu::Attach()
 		UiModule::VarTextSelectControllerOptions{ L"Wanted level: #", L"#" }
 	);
 	wantedLevelController->SetConverter<CopValueConverter>();
-	wantedLevelController->SetCustomSaveCallback([wantedLevelResolver, this](short newWantedLevel) {
-		ModMenuModule::FreezeCopValueCheat* cheat = GetCheat<ModMenuModule::FreezeCopValueCheat>();
-		if (cheat) {
-			cheat->SetCopValue(newWantedLevel);
-		}
+	wantedLevelController->SetCustomSaveCallback([wantedLevelResolver](short newWantedLevel) {
+		auto* cheat = FreezeCopValueCheat::GetInstance();
+		cheat->SetCopValue(newWantedLevel);
 
-		short* copValue = wantedLevelResolver();
-		if (copValue) {
+		if (!cheat->IsEnabled()) {
+			short* copValue = wantedLevelResolver();
+			if (!copValue) {
+				spdlog::error("Unable to resolve cop value");
+				return;
+			}
+
 			*copValue = newWantedLevel;
 		}
+
+		spdlog::info("Set wanted level to {}", newWantedLevel);
 	});
 
 	// freeze wanted level
@@ -68,8 +73,8 @@ bool ModMenuModule::PlayerMenu::Attach()
 		UiModule::SelectControllerOptions{ L"Freeze wanted level: #", L"#" }
 	);
 	m_freezeCopValueController->SetConverter<YesNoConverter>();
-	m_freezeCopValueController->SetSaveCallback([this](bool newValue) {
-		SetCheatEnabled<ModMenuModule::FreezeCopValueCheat>(newValue);
+	m_freezeCopValueController->SetSaveCallback([](bool newValue) {
+		FreezeCopValueCheat::GetInstance()->SetEnabled(newValue);
 	});
 
 	// health
@@ -104,8 +109,8 @@ bool ModMenuModule::PlayerMenu::Attach()
 		UiModule::SelectControllerOptions{ L"Invulnerability: #", L"#" }
 	);
 	m_invulnerabilityController->SetConverter<YesNoConverter>();
-	m_invulnerabilityController->SetSaveCallback([this](bool newValue) {
-		SetCheatEnabled<ModMenuModule::InvulnerabilityCheat>(newValue);
+	m_invulnerabilityController->SetSaveCallback([](bool newValue) {
+		InvulnerabilityCheat::GetInstance()->SetEnabled(newValue);
 	});
 
 	SetPreviousSelectedIndex();
@@ -143,16 +148,16 @@ void ModMenuModule::PlayerMenu::OnMenuAction(UiModule::Selectable* item, UiModul
 
 void ModMenuModule::PlayerMenu::OnCheatStateChange(CheatStateEvent& event)
 {
-	if (event.GetCheatType() == typeid(ModMenuModule::FreezeCopValueCheat)) {
+	if (event.GetCheatType() == typeid(FreezeCopValueCheat)) {
 		m_freezeCopValueController->SetValue(event.IsEnabled());
 	}
-	else if (event.GetCheatType() == typeid(ModMenuModule::InvulnerabilityCheat)) {
+	else if (event.GetCheatType() == typeid(InvulnerabilityCheat)) {
 		m_invulnerabilityController->SetValue(event.IsEnabled());
 	}
 }
 
 void ModMenuModule::PlayerMenu::UpdateCheatStates()
 {
-	m_freezeCopValueController->SetValue(IsCheatEnabled<ModMenuModule::FreezeCopValueCheat>());
-	m_invulnerabilityController->SetValue(IsCheatEnabled<ModMenuModule::InvulnerabilityCheat>());
+	m_freezeCopValueController->SetValue(FreezeCopValueCheat::GetInstance()->IsEnabled());
+	m_invulnerabilityController->SetValue(InvulnerabilityCheat::GetInstance()->IsEnabled());
 }

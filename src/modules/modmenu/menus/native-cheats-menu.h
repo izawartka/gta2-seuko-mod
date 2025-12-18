@@ -1,11 +1,10 @@
 #pragma once
 #include "../common.h"
-#include "../cheat-support.h"
 #include "../menu-base.h"
 #include "../cheats/native-cheats-keeper.h"
 
 namespace ModMenuModule {
-	class NativeCheatsMenu : public MenuBase, public CheatSupport {
+	class NativeCheatsMenu : public MenuBase {
 	public:
 		NativeCheatsMenu();
 		virtual ~NativeCheatsMenu();

@@ -1,10 +1,9 @@
 #pragma once
 #include "../common.h"
 #include "../quick-action-base.h"
-#include "../cheat-support.h"
 
 namespace ModMenuModule {
-	class FixVehicleAction : public QuickActionBase, public CheatSupport {
+	class FixVehicleAction : public QuickActionBase {
 	public:
 		FixVehicleAction();
 		virtual ~FixVehicleAction();

@@ -2,11 +2,10 @@
 #include "../common.h"
 #include "../menu-base.h"
 #include "../segment-support.h"
-#include "../cheat-support.h"
 #include "../events/cheat-state.h"
 
 namespace ModMenuModule {
-	class CameraPosMenu : public MenuBase, public Core::EventListenerSupport, public SegmentSupport, public CheatSupport {
+	class CameraPosMenu : public MenuBase, public Core::EventListenerSupport, public SegmentSupport {
 	public:
 		CameraPosMenu();
 		virtual ~CameraPosMenu();

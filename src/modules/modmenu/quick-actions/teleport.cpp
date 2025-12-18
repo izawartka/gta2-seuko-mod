@@ -40,8 +40,8 @@ void ModMenuModule::TeleportAction::Execute()
 
 	Game::SCR_Vector3 data = m_data.value();
 
-	PlayerPosCheat* playerPosCheat = GetCheat<PlayerPosCheat>();
-	if(!playerPosCheat || !playerPosCheat->IsEnabled()) {
+	PlayerPosCheat* playerPosCheat = PlayerPosCheat::GetInstance();
+	if(!playerPosCheat->IsEnabled()) {
 		spdlog::error("TeleportAction::Execute: PlayerPosCheat is not enabled.");
 		return;
 	}

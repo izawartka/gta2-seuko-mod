@@ -147,16 +147,16 @@ void ModMenuModule::LastVehiclePhysicsMenu::OnLastCarStateChange(ModMenuModule::
 
 void ModMenuModule::LastVehiclePhysicsMenu::UpdateLastCarState()
 {
-	LastCarCheat* lastCarCheat = GetCheat<LastCarCheat>();
-	if (!lastCarCheat || lastCarCheat->GetLastCarState() == LastCarState::NoCar) {
+	LastCarCheat* lastCarCheat = LastCarCheat::GetInstance();
+	if (!lastCarCheat->IsEnabled() || lastCarCheat->GetLastCarState() == LastCarState::NoCar) {
 		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
 	}
 }
 
 Game::Car* ModMenuModule::LastVehiclePhysicsMenu::GetLastCar()
 {
-	LastCarCheat* lastCarCheat = GetCheat<LastCarCheat>();
-	if (!lastCarCheat) {
+	LastCarCheat* lastCarCheat = LastCarCheat::GetInstance();
+	if (!lastCarCheat->IsEnabled()) {
 		return nullptr;
 	}
 	return lastCarCheat->GetLastCar();

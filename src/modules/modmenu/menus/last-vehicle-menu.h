@@ -1,11 +1,10 @@
 #pragma once
 #include "../common.h"
 #include "../menu-base.h"
-#include "../cheat-support.h"
 #include "../events/last-car-state.h"
 
 namespace ModMenuModule {
-	class LastVehicleMenu : public MenuBase, public Core::EventListenerSupport, public CheatSupport {
+	class LastVehicleMenu : public MenuBase, public Core::EventListenerSupport {
 	public:
 		LastVehicleMenu();
 		virtual ~LastVehicleMenu();

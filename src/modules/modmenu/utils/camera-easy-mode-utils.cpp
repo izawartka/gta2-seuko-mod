@@ -1,5 +1,4 @@
 #include "camera-easy-mode-utils.h"
-#include "../root.h"
 #include "../cheats/camera/camera.h"
 #include "../cheats/camera/camera-pos.h"
 #include "../cheats/camera/clear-screen.h"
@@ -56,18 +55,17 @@ static void EnableCameraCheatKeepVerticalAngle(ModMenuModule::CameraCheat& cheat
 
 ModMenuModule::Utils::CameraEasyMode::CameraEasyMode ModMenuModule::Utils::CameraEasyMode::GetCurrentMode()
 {
-	RootModule* root = RootModule::GetInstance();
-	CameraCheat* cameraCheat = root->GetCheat<CameraCheat>();
-	CameraPosCheat* cameraPosCheat = root->GetCheat<CameraPosCheat>();
-	ClearScreenCheat* clearScreenCheat = root->GetCheat<ClearScreenCheat>();
-	DisableCullingCheat* disableCullingCheat = root->GetCheat<DisableCullingCheat>();
-	ShadowsFixCheat* shadowsFixCheat = root->GetCheat<ShadowsFixCheat>();
+	CameraCheat* cameraCheat = CameraCheat::GetInstance();
+	CameraPosCheat* cameraPosCheat = CameraPosCheat::GetInstance();
+	ClearScreenCheat* clearScreenCheat = ClearScreenCheat::GetInstance();
+	DisableCullingCheat* disableCullingCheat = DisableCullingCheat::GetInstance();
+	ShadowsFixCheat* shadowsFixCheat = ShadowsFixCheat::GetInstance();
 
-	bool cameraCheatEnabled = cameraCheat && cameraCheat->IsEnabled();
-	bool cameraPosCheatEnabled = cameraPosCheat && cameraPosCheat->IsEnabled();
-	bool clearScreenCheatEnabled = clearScreenCheat && clearScreenCheat->IsEnabled();
-	bool disableCullingCheatEnabled = disableCullingCheat && disableCullingCheat->IsEnabled();
-	bool shadowsFixCheatEnabled = shadowsFixCheat && shadowsFixCheat->IsEnabled();
+	bool cameraCheatEnabled = cameraCheat->IsEnabled();
+	bool cameraPosCheatEnabled = cameraPosCheat->IsEnabled();
+	bool clearScreenCheatEnabled = clearScreenCheat->IsEnabled();
+	bool disableCullingCheatEnabled = disableCullingCheat->IsEnabled();
+	bool shadowsFixCheatEnabled = shadowsFixCheat->IsEnabled();
 
 	bool allDisabled = 
 		!cameraCheatEnabled &&
@@ -137,17 +135,11 @@ ModMenuModule::Utils::CameraEasyMode::CameraEasyMode ModMenuModule::Utils::Camer
 
 bool ModMenuModule::Utils::CameraEasyMode::SetCurrentMode(CameraEasyMode newMode)
 {
-	RootModule* root = RootModule::GetInstance();
-	CameraCheat* cameraCheat = root->GetCheat<CameraCheat>();
-	CameraPosCheat* cameraPosCheat = root->GetCheat<CameraPosCheat>();
-	ClearScreenCheat* clearScreenCheat = root->GetCheat<ClearScreenCheat>();
-	DisableCullingCheat* disableCullingCheat = root->GetCheat<DisableCullingCheat>();
-	ShadowsFixCheat* shadowsFixCheat = root->GetCheat<ShadowsFixCheat>();
-
-	if( !cameraCheat || !cameraPosCheat || !clearScreenCheat || !disableCullingCheat || !shadowsFixCheat) {
-		spdlog::warn("CameraEasyMode::SetCurrentMode: One or more required cheats are not available");
-		return false;
-	}
+	CameraCheat* cameraCheat = CameraCheat::GetInstance();
+	CameraPosCheat* cameraPosCheat = CameraPosCheat::GetInstance();
+	ClearScreenCheat* clearScreenCheat = ClearScreenCheat::GetInstance();
+	DisableCullingCheat* disableCullingCheat = DisableCullingCheat::GetInstance();
+	ShadowsFixCheat* shadowsFixCheat = ShadowsFixCheat::GetInstance();
 
 	switch (newMode) {
 	case CameraEasyMode::Unmodified:

@@ -255,8 +255,8 @@ void ModMenuModule::PositionSegment::ApplyAutoZIfNeeded()
 
 void ModMenuModule::PositionSegment::ForceUpdateFromPlayer()
 {
-	PlayerPosCheat* playerPosCheat = GetCheat<PlayerPosCheat>();
-	if (!playerPosCheat || !playerPosCheat->IsEnabled()) return;
+	PlayerPosCheat* playerPosCheat = PlayerPosCheat::GetInstance();
+	if (!playerPosCheat->IsEnabled()) return;
 	const auto& position = playerPosCheat->GetLastPosition();
 	if (!position.has_value()) return;
 	SetCoordControllerValues(position.value());

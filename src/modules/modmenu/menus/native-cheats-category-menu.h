@@ -1,13 +1,12 @@
 #pragma once
 #include "../common.h"
-#include "../cheat-support.h"
 #include "../menu-base.h"
 #include "../cheats/native-cheats-keeper.h"
 
 static constexpr size_t CHEATS_PER_PAGE = 9;
 
 namespace ModMenuModule {
-	class NativeCheatsCategoryMenu : public MenuBase, public CheatSupport {
+	class NativeCheatsCategoryMenu : public MenuBase {
 	public:
 		NativeCheatsCategoryMenu(const NativeCheatCategoryDef& categoryDef, size_t page = 0);
 		virtual ~NativeCheatsCategoryMenu();

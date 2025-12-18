@@ -21,12 +21,11 @@ bool ModMenuModule::CameraPosCheatCoordSegment::Attach(ModMenuModule::MenuBase* 
 {
 	CreateSegment(menu, parent);
 
-	ModMenuModule::RootModule* root = ModMenuModule::RootModule::GetInstance();
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 
-	CameraPosCheat* cameraPosCheat = root->GetCheat<CameraPosCheat>();
+	CameraPosCheat* cameraPosCheat = CameraPosCheat::GetInstance();
 
 	m_horCont = uiRoot->AddComponent<UiModule::HorCont>(m_vertCont);
 
@@ -114,8 +113,7 @@ Game::SCR_f ModMenuModule::CameraPosCheatCoordSegment::GetPosCoordinate(const st
 
 ModMenuModule::CameraPosCheatCoordinate ModMenuModule::CameraPosCheatCoordSegment::GetCurrentCoordinateOptions() const
 {
-	ModMenuModule::RootModule* root = ModMenuModule::RootModule::GetInstance();
-	CameraPosCheat* cameraPosCheat = root->GetCheat<CameraPosCheat>();
+	CameraPosCheat* cameraPosCheat = CameraPosCheat::GetInstance();
 	const CameraPosCheatOptions& cheatOptions = cameraPosCheat->GetOptions();
 	return *GetCoordinate(cheatOptions, m_coordIndex);
 }
@@ -133,8 +131,7 @@ void ModMenuModule::CameraPosCheatCoordSegment::SetValueVisible(bool visible)
 
 	if (visible) {
 		UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
-		ModMenuModule::RootModule* root = ModMenuModule::RootModule::GetInstance();
-		CameraPosCheat* cameraPosCheat = root->GetCheat<CameraPosCheat>();
+		CameraPosCheat* cameraPosCheat = CameraPosCheat::GetInstance();
 		const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 
 		// value
