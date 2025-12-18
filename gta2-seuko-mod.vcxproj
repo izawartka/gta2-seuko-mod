@@ -215,6 +215,7 @@ exit /b 0
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
     <ClInclude Include="src\converters\bit-yes-no.h" />
+    <ClInclude Include="src\converters\camera-easy-mode.h" />
     <ClInclude Include="src\converters\camera-pos-cheat-mode.h" />
     <ClInclude Include="src\converters\car-damage.h" />
     <ClInclude Include="src\converters\car-model.h" />
@@ -318,6 +319,7 @@ exit /b 0
     <ClInclude Include="src\modules\modmenu\segments\segments.h" />
     <ClInclude Include="src\modules\modmenu\segments\spawn-vehicle-segment.h" />
     <ClInclude Include="src\modules\modmenu\toast-manager.h" />
+    <ClInclude Include="src\modules\modmenu\utils\camera-easy-mode-utils.h" />
     <ClInclude Include="src\modules\modmenu\utils\custom-render-queue-utils.h" />
     <ClInclude Include="src\modules\modmenu\utils\explode-all-cars.h" />
     <ClInclude Include="src\modules\modmenu\utils\get-all-weapons.h" />
@@ -480,6 +482,7 @@ exit /b 0
     <ClCompile Include="src\modules\modmenu\segments\spawn-vehicle-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\toast-manager.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\angle-utils.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\camera-easy-mode-utils.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\custom-render-queue-utils.cpp" />
     <ClCompile Include="src\game\utils\teleport-utils.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\vertex-utils.cpp" />

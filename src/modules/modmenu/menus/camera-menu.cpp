@@ -1,4 +1,6 @@
 #include "camera-menu.h"
+#include "../../../converters/camera-easy-mode.h"
+#include "../utils/camera-easy-mode-utils.h"
 #include "camera-pos-menu.h"
 #include "camera-advanced-menu.h"
 #include "../root.h"
@@ -23,6 +25,22 @@ bool ModMenuModule::CameraMenu::Attach()
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Camera position", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Advanced camera options", options.textSize);
+
+	// easy mode
+	UiModule::Text* modeText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
+	auto modeController = m_menuController->CreateLatestItemController<
+		UiModule::VarTextSelectController<
+			Utils::CameraEasyMode::CameraEasyMode, 
+			Utils::CameraEasyMode::CameraEasyMode
+		>
+	>(
+		modeText,
+		Utils::CameraEasyMode::GetCurrentMode,
+		Utils::CameraEasyMode::GetSelectableModes(),
+		UiModule::VarTextSelectControllerOptions{ L"Camera Mode: #", L"#" }
+	);
+	modeController->SetConverter<CameraEasyModeConverter>();
+	modeController->SetCustomSaveCallback(Utils::CameraEasyMode::SetCurrentMode);
 	
 	SetPreviousSelectedIndex();
 
