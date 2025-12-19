@@ -167,6 +167,7 @@ void ModMenuModule::PositionSegment::OnShow()
 {
 	SetEventListener<ModMenuModule::PlayerPosUpdateEvent>(&PositionSegment::OnPlayerPosUpdate, m_doUpdateFromPlayer);
 	if (m_doUpdateFromPlayer) ForceUpdateFromPlayer();
+	else ApplyAutoZIfNeeded();
 }
 
 void ModMenuModule::PositionSegment::OnHide()
