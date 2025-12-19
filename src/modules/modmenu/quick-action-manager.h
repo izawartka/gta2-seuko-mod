@@ -49,6 +49,45 @@ namespace ModMenuModule {
 		void Update(QuickActionId actionId, const QuickActionInfo& info);
 		void Remove(QuickActionId actionId);
 
+		template<typename QuickActionWithSegmentT, typename DataT = typename QuickActionWithSegmentT::DataT>
+		const DataT* GetData(QuickActionId actionId) const {
+			QuickActionEntry* entry = const_cast<QuickActionManager*>(this)->GetQuickActionEntry(actionId);
+			if (!entry) {
+				spdlog::error("GetData: No quick action found for ID {}", actionId);
+				return nullptr;
+			}
+			if (entry->typeIndex != typeid(QuickActionWithSegmentT)) {
+				spdlog::error("GetData: Quick action ID {} is not of requested type", actionId);
+				return nullptr;
+			}
+
+			QuickActionWithSegmentT* action = dynamic_cast<QuickActionWithSegmentT*>(entry->action.get());
+
+			if (!action->GetData().has_value()) {
+				spdlog::error("GetData: Quick action ID {} has no data", actionId);
+				return nullptr;
+			}
+
+			return &action->GetData().value();
+		}
+
+		template<typename QuickActionWithSegmentT, typename DataT = typename QuickActionWithSegmentT::DataT>
+		bool SetData(QuickActionId actionId, const DataT& data) {
+			spdlog::debug("SetData: Setting data for quick action ID {}", actionId);
+			QuickActionEntry* entry = GetQuickActionEntry(actionId);
+			if (!entry) {
+				spdlog::error("SetData: No quick action found for ID {}", actionId);
+				return false;
+			}
+			if (entry->typeIndex != typeid(QuickActionWithSegmentT)) {
+				spdlog::error("SetData: Quick action ID {} is not of requested type", actionId);
+				return false;
+			}
+			QuickActionWithSegmentT* action = dynamic_cast<QuickActionWithSegmentT*>(entry->action.get());
+			action->SetData(data);
+			return true;
+		}
+
 	private:
 		friend class RootModule;
 		QuickActionManager();
