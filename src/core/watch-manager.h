@@ -42,32 +42,8 @@ namespace Core
 			return Watch<EventT, ValueT, ResRetT>(std::move(resolver), std::move(listener));
 		}
 
-		void Unwatch(WatchedId id) {
-			spdlog::debug("Removing watched with id: {}", id);
-
-			auto it = std::find_if(m_idToEventType.begin(), m_idToEventType.end(),
-				[id](const auto& pair) { return pair.first == id; });
-
-			if (it == m_idToEventType.end()) {
-				spdlog::warn("No watched found with id: {}", id);
-				return;
-			}
-
-			auto eventTypeIdx = it->second;
-			
-			if (m_updating) {
-				PendingChange change(ChangeType::Remove, id, eventTypeIdx, nullptr);
-				m_pendingChanges.push(change);
-			}
-			else {
-				RemoveEntry(id, eventTypeIdx);
-			}
-		}
-
-		void Unwatch(WatchedBase* watched) {
-			if (watched == nullptr) return;
-			Unwatch(watched->GetId());
-		}
+		void Unwatch(WatchedId id);
+		void Unwatch(WatchedBase* watched);
 
 	private:
 		friend class Core;
@@ -98,19 +74,6 @@ namespace Core
 			auto eventTypeIdx = std::type_index(typeid(EventT));
 			m_entries[eventTypeIdx].push_back(std::unique_ptr<WatchedBase>(entry));
 			m_idToEventType.push_back({ id, eventTypeIdx });
-		}
-
-		void RemoveEntry(WatchedId id, std::type_index eventTypeIdx) {
-			auto idIt = std::find_if(m_idToEventType.begin(), m_idToEventType.end(),
-				[id](const auto& pair) { return pair.first == id; });
-
-			if (idIt != m_idToEventType.end()) {
-				m_idToEventType.erase(idIt);
-			}
-
-			auto& vec = m_entries[eventTypeIdx];
-			vec.erase(std::remove_if(vec.begin(), vec.end(),
-				[id](const auto& entry) { return entry->m_id == id; }), vec.end());
 		}
 
 		template<typename EventT>
@@ -144,65 +107,12 @@ namespace Core
 			spdlog::debug("First watched of type void, no event listener needed");
 		}
 
-		void RemoveEventType(std::type_index eventType) {
-			// Note: m_entries entry is not being removed
-			spdlog::debug("No more watched for event type: {}, removing listener", eventType.name());
-
-			auto it = m_typeToListenerId.find(eventType);
-			if (it == m_typeToListenerId.end()) return;
-			EventManager::GetInstance()->RemoveListener(eventType, it->second);
-			m_typeToListenerId.erase(it);
-		}
-
-		void ProcessPendingChanges() {
-			while (!m_pendingChanges.empty()) {
-				PendingChange change = m_pendingChanges.front();
-				m_pendingChanges.pop();
-
-				if (change.type == ChangeType::Add) {
-					ApplyAdd(change);
-				}
-				else if (change.type == ChangeType::Remove) {
-					ApplyRemove(change);
-				}
-			}
-		}
-
-		void ApplyAdd(PendingChange& change) {
-			WatchedBase* entry = change.entry;
-			WatchedId id = entry->m_id;
-			std::type_index eventTypeIdx = change.eventType;
-
-			spdlog::debug("Applying queued add for watched: {} with id: {} (Event: {})", 
-				typeid(*entry).name(), id, eventTypeIdx.name());
-
-			m_entries[eventTypeIdx].push_back(std::unique_ptr<WatchedBase>(entry));
-			m_idToEventType.push_back({ id, eventTypeIdx });
-		}
-
-		void ApplyRemove(PendingChange& change) {
-			spdlog::debug("Applying queued remove for watched with id: {}", change.id);
-			RemoveEntry(change.id, change.eventType);
-		}
-
-		void Update(std::type_index eventType) {
-			auto it = m_entries.find(eventType);
-			if (it == m_entries.end()) return;
-
-			if (it->second.empty()) {
-				RemoveEventType(eventType);
-				return;
-			}
-
-			m_updating = true;
-
-			for (auto& entry : it->second) {
-				entry->Update();
-			}
-
-			m_updating = false;
-			ProcessPendingChanges();
-		}
+		void RemoveEntry(WatchedId id, std::type_index eventTypeIdx);
+		void RemoveEventType(std::type_index eventType);
+		void ProcessPendingChanges();
+		void ApplyAdd(PendingChange& change);
+		void ApplyRemove(PendingChange& change);
+		void Update(std::type_index eventType);
 
 		static WatchManager* m_instance;
 		std::unordered_map<std::type_index, std::vector<std::unique_ptr<WatchedBase>>> m_entries;
