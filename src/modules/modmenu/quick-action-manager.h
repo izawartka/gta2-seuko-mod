@@ -5,6 +5,9 @@
 
 namespace ModMenuModule {
 	using QuickActionId = size_t;
+
+	static constexpr uint16_t CURRENT_QUICK_ACTIONS_VERSION = 1;
+	static constexpr uint16_t CURRENT_QUICK_ACTION_DEFAULTS_VERSION = 1;
 	
 	struct QuickActionInfo {
 		KeyBindingModule::Key key = {};
@@ -127,5 +130,6 @@ namespace ModMenuModule {
 
 		QuickActionId m_nextQuickActionId = 1;
 		std::unordered_map<QuickActionId, QuickActionEntry> m_quickActions = {};
+		uint16_t m_loadedDefaultsVersion = 0;
 	};
 }

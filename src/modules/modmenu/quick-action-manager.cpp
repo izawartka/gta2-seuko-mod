@@ -1,4 +1,5 @@
 #include "quick-action-manager.h"
+#include "utils/add-default-actions.h"
 
 static const std::wstring emptyLabel = L"";
 
@@ -175,6 +176,9 @@ std::string ModMenuModule::QuickActionManager::GetKeyBindName(QuickActionId acti
 void ModMenuModule::QuickActionManager::Attach() 
 {
 	LoadFromPersistence();
+	Utils::AddDefaultActions(m_loadedDefaultsVersion);
+	m_loadedDefaultsVersion = CURRENT_QUICK_ACTION_DEFAULTS_VERSION;
+
 	AddEventListener<KeyDownEvent>(&QuickActionManager::OnKeyDown);
 }
 
@@ -245,7 +249,7 @@ void ModMenuModule::QuickActionManager::SaveToPersistence() const
 		size_t labelLength = entry.customLabel.size();
 
 		totalSize += sizeof(QuickActionId);
-		totalSize += sizeof(size_t);
+		totalSize += 4;
 		totalSize += typeIdLength;
 		totalSize += sizeof(size_t);
 		totalSize += labelLength * sizeof(wchar_t);
@@ -270,9 +274,11 @@ void ModMenuModule::QuickActionManager::SaveToPersistence() const
 	// next action ID
 	write(&m_nextQuickActionId, sizeof(QuickActionId));
 
-	// reserved for future use
-	size_t reserved = 0;
-	write(&reserved, sizeof(size_t));
+	uint16_t version = CURRENT_QUICK_ACTIONS_VERSION;
+	write(&version, sizeof(uint16_t));
+
+	uint16_t defaultsVersion = CURRENT_QUICK_ACTION_DEFAULTS_VERSION;
+	write(&defaultsVersion, sizeof(uint16_t));
 
 	// number of quick actions
 	size_t actionCount = m_quickActions.size();
@@ -327,6 +333,13 @@ void ModMenuModule::QuickActionManager::LoadFromPersistence()
 	uint8_t* data = dataPtr.get();
 
 	size_t offset = 0;
+	auto readUint16 = [&data, &offset, size]() -> std::optional<uint16_t> {
+		if (offset + sizeof(uint16_t) > size) return std::nullopt;
+		uint16_t value;
+		std::memcpy(&value, data + offset, sizeof(uint16_t));
+		offset += sizeof(uint16_t);
+		return value;
+	};
 	auto readSizeT = [&data, &offset, size]() -> std::optional<size_t> {
 		if (offset + sizeof(size_t) > size) return std::nullopt;
 		size_t value;
@@ -363,12 +376,23 @@ void ModMenuModule::QuickActionManager::LoadFromPersistence()
 		return;
 	}
 
-	// reserved for future use
-	auto reservedOpt = readSizeT();
-	if (!reservedOpt.has_value()) {
-		spdlog::error("Failed to read reserved data from persistence data");
+	auto versionOpt = readUint16();
+	if (!versionOpt.has_value()) {
+		spdlog::error("Failed to read version from persistence data");
 		return;
 	}
+
+	if (versionOpt.value() != 1) {
+		spdlog::warn("Unsupported quick action data version: {}", versionOpt.value());
+		return;
+	}
+
+	auto defaultsVersionOpt = readUint16();
+	if (!defaultsVersionOpt.has_value()) {
+		spdlog::error("Failed to read defaults version from persistence data");
+		return;
+	}
+	m_loadedDefaultsVersion = defaultsVersionOpt.value();
 
 	// number of quick actions
 	auto actionCountOpt = readSizeT();
