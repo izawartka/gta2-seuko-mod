@@ -490,6 +490,10 @@ exit /b 0
     <ClCompile Include="src\modules\modmenu\utils\camera-easy-mode-utils.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\custom-render-queue-utils.cpp" />
     <ClCompile Include="src\game\utils\teleport-utils.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\explode-all-cars.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\get-all-weapons.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\save-game.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\spawn-car-at-player.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\vertex-utils.cpp" />
     <ClCompile Include="src\modules\persistence\persistence-manager.cpp" />
     <ClCompile Include="src\modules\persistence\root.cpp" />
