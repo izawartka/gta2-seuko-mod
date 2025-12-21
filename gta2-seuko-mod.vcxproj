@@ -108,6 +108,27 @@ if exist "$(TargetDir)$(TargetName).pdb" copy /Y "$(TargetDir)$(TargetName).pdb"
 exit /b 0
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>set GIT_HASH=unknown
+set GIT_DIRTY=false
+
+for /f %%i in ('git rev-parse --short HEAD 2^&gt;nul') do set GIT_HASH=%%i
+
+for /f %%i in ('git status --porcelain 2^&gt;nul') do (
+    set GIT_DIRTY=true
+    goto :dirty_done
+)
+:dirty_done
+
+echo #pragma once&gt; "$(ProjectDir)src\git.h"
+echo // Auto-generated. Do not edit.&gt;&gt; "$(ProjectDir)src\git.h"
+echo.&gt;&gt; "$(ProjectDir)src\git.h"
+echo #define GIT_COMMIT_HASH "%GIT_HASH%"&gt;&gt; "$(ProjectDir)src\git.h"
+echo #define GIT_IS_DIRTY %GIT_DIRTY%&gt;&gt; "$(ProjectDir)src\git.h"
+
+echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
+</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -159,6 +180,27 @@ if exist "$(TargetDir)$(TargetName).pdb" copy /Y "$(TargetDir)$(TargetName).pdb"
 exit /b 0
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>set GIT_HASH=unknown
+set GIT_DIRTY=false
+
+for /f %%i in ('git rev-parse --short HEAD 2^&gt;nul') do set GIT_HASH=%%i
+
+for /f %%i in ('git status --porcelain 2^&gt;nul') do (
+    set GIT_DIRTY=true
+    goto :dirty_done
+)
+:dirty_done
+
+echo #pragma once&gt; "$(ProjectDir)src\git.h"
+echo // Auto-generated. Do not edit.&gt;&gt; "$(ProjectDir)src\git.h"
+echo.&gt;&gt; "$(ProjectDir)src\git.h"
+echo #define GIT_COMMIT_HASH "%GIT_HASH%"&gt;&gt; "$(ProjectDir)src\git.h"
+echo #define GIT_IS_DIRTY %GIT_DIRTY%&gt;&gt; "$(ProjectDir)src\git.h"
+
+echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
+</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithLogging|Win32'">
     <ClCompile>
@@ -211,6 +253,27 @@ if exist "$(TargetDir)$(TargetName).pdb" copy /Y "$(TargetDir)$(TargetName).pdb"
 exit /b 0
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>set GIT_HASH=unknown
+set GIT_DIRTY=false
+
+for /f %%i in ('git rev-parse --short HEAD 2^&gt;nul') do set GIT_HASH=%%i
+
+for /f %%i in ('git status --porcelain 2^&gt;nul') do (
+    set GIT_DIRTY=true
+    goto :dirty_done
+)
+:dirty_done
+
+echo #pragma once&gt; "$(ProjectDir)src\git.h"
+echo // Auto-generated. Do not edit.&gt;&gt; "$(ProjectDir)src\git.h"
+echo.&gt;&gt; "$(ProjectDir)src\git.h"
+echo #define GIT_COMMIT_HASH "%GIT_HASH%"&gt;&gt; "$(ProjectDir)src\git.h"
+echo #define GIT_IS_DIRTY %GIT_DIRTY%&gt;&gt; "$(ProjectDir)src\git.h"
+
+echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
+</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -253,6 +316,7 @@ exit /b 0
     <ClInclude Include="src\game\utils\lists-utils.h" />
     <ClInclude Include="src\game\utils\scrf-utils.h" />
     <ClInclude Include="src\game\utils\utils.h" />
+    <ClInclude Include="src\git.h" />
     <ClInclude Include="src\hook-types\jump-hook.h" />
     <ClInclude Include="src\hook-types\function-ptr-hook.h" />
     <ClInclude Include="src\hook-types\multi-jump-hook.h" />
@@ -398,6 +462,7 @@ exit /b 0
     <ClInclude Include="src\modules\ui\root.h" />
     <ClInclude Include="src\modules\ui\ui.h" />
     <ClInclude Include="src\modules\ui\controllers\menu-item.h" />
+    <ClInclude Include="src\version.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\converters\scrf.h" />

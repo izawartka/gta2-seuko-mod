@@ -1,6 +1,7 @@
 #define NOMINMAX
 #include <windows.h>
 #include "logging.cpp"
+#include "version.h"
 #include "core/core.h"
 #include "modules/persistence/persistence.h"
 #include "modules/keybinding/keybinding.h"
@@ -12,6 +13,7 @@ Core::Core* coreInstance = nullptr;
 static void Init()
 {
 	InitLogging();
+	spdlog::info("Seuko mod version {} {}", SEUKOMOD_VERSION_STR, SEUKOMOD_GIT_STR);
 	coreInstance = new Core::Core();
 	Core::ModuleManager* moduleManager = Core::ModuleManager::GetInstance();
 	PersistenceModule::RootModule* persistenceModule = moduleManager->AddModule<PersistenceModule::RootModule>();
