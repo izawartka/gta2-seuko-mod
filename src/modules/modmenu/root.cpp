@@ -1,5 +1,4 @@
 #include "root.h"
-#include "cheat-registry.h"
 
 ModMenuModule::RootModule* ModMenuModule::RootModule::m_instance = nullptr;
 
