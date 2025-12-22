@@ -20,7 +20,7 @@ namespace ModMenuModule {
 		{ NativeCheatCategory::SkipThings, L"Skip buses", 0x3},
 		{ NativeCheatCategory::DebugInfo, L"Show counters", 0x4},
 		{ NativeCheatCategory::SkipThings, L"Skip particles", 0x5},
-		{ NativeCheatCategory::SkipThings, L"Skip trains", 0x6},
+		{ NativeCheatCategory::UnstableOrUnused, L"Skip trains", 0x6},
 		{ NativeCheatCategory::DebugInfo, L"Show input", 0x7},
 		{ NativeCheatCategory::TilesRelated, L"Skip right tiles", 0x8},
 		{ NativeCheatCategory::TilesRelated, L"Show hidden faces", 0x9},

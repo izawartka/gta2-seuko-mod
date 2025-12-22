@@ -145,6 +145,7 @@ void ModMenuModule::CameraAdvancedMenu::AttachCheatMenuItems()
 	vertAngleController->SetCustomSaveCallback([cameraCheat](float newValue) {
 		CameraCheatOptions options = cameraCheat->GetOptions();
 		options.cameraTransform.verticalAngleRad = newValue;
+		options.followPedRotation = false;
 		cameraCheat->SetOptions(options);
 	});
 
