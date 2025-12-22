@@ -3,8 +3,7 @@
 #include "player-stats-menu.h"
 #include "../../../converters/cop-value.h"
 #include "../../../converters/yes-no.h"
-#include "../cheats/set-cop-value.h"
-#include "../cheats/freeze-cop-value.h"
+#include "../cheats/cop-value.h"
 #include "../cheats/invulnerability.h"
 #include "../root.h"
 
@@ -30,41 +29,39 @@ bool ModMenuModule::PlayerMenu::Attach()
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Position", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Stats", options.textSize);
 
-	// wanted level
-	auto wantedLevelResolver = Core::MakeResolver(
-		Game::Memory::GetPlayerPed,
-		mem(&Game::Ped::copValue)
-	);
+	CopValueCheat* copValueCheat = CopValueCheat::GetInstance();
+	if (!copValueCheat->IsEnabled()) {
+		spdlog::error("PlayerMenu::Attach: CopValueCheat is not enabled");
+	}
 
 	UiModule::VarTextSelectOptionList<short> wantedLevelOptionList = { 0, 600, 1600, 3000, 5000, 8000, 12000 };
 	UiModule::Text* wantedLevelText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	auto wantedLevelController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<short>>(
+	auto wantedLevelController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<short, short>>(
 		wantedLevelText,
-		Core::MakeResolver(
-			Game::Memory::GetPlayerPed,
-			mem(&Game::Ped::copValue)
-		),
+		[copValueCheat]() {
+			return copValueCheat->GetCopValue().value_or(0);
+		},
 		wantedLevelOptionList,
 		UiModule::VarTextSelectControllerOptions{ L"Wanted level: #", L"#" }
 	);
 	wantedLevelController->SetConverter<CopValueConverter>();
-	wantedLevelController->SetCustomSaveCallback([](short newWantedLevel) {
-		auto* cheat = SetCopValueCheat::GetInstance();
-		cheat->SetEnabled(true);
-		cheat->SetCopValueAndDisable(newWantedLevel);
+	wantedLevelController->SetCustomSaveCallback([copValueCheat](short newWantedLevel) {
+		copValueCheat->SetCopValue(newWantedLevel);
 	});
 
 	// freeze wanted level
 	UiModule::Text* freezeCopValueText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	m_freezeCopValueController = m_menuController->CreateLatestItemController<UiModule::SelectController<bool>>(
+	auto freezeCopValueController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<bool, bool>>(
 		freezeCopValueText,
-		UiModule::SelectOptionList<bool>{ false, true },
-		std::nullopt,
-		UiModule::SelectControllerOptions{ L"Freeze wanted level: #", L"#" }
+		[copValueCheat]() {
+			return copValueCheat->IsEnabled() && copValueCheat->IsCopValueFrozen();
+		},
+		UiModule::VarTextSelectOptionList<bool>{ false, true },
+		UiModule::VarTextSelectControllerOptions{ L"Freeze wanted level: #", L"#" }
 	);
-	m_freezeCopValueController->SetConverter<YesNoConverter>();
-	m_freezeCopValueController->SetSaveCallback([](bool newValue) {
-		FreezeCopValueCheat::GetInstance()->SetEnabled(newValue);
+	freezeCopValueController->SetConverter<YesNoConverter>();
+	freezeCopValueController->SetCustomSaveCallback([copValueCheat](bool newValue) {
+		copValueCheat->SetCopValueFrozen(newValue);
 	});
 
 	// health
@@ -138,16 +135,12 @@ void ModMenuModule::PlayerMenu::OnMenuAction(UiModule::Selectable* item, UiModul
 
 void ModMenuModule::PlayerMenu::OnCheatStateChange(CheatStateEvent& event)
 {
-	if (event.GetCheatType() == typeid(FreezeCopValueCheat)) {
-		m_freezeCopValueController->SetValue(event.IsEnabled());
-	}
-	else if (event.GetCheatType() == typeid(InvulnerabilityCheat)) {
+	if (event.GetCheatType() == typeid(InvulnerabilityCheat)) {
 		m_invulnerabilityController->SetValue(event.IsEnabled());
 	}
 }
 
 void ModMenuModule::PlayerMenu::UpdateCheatStates()
 {
-	m_freezeCopValueController->SetValue(FreezeCopValueCheat::GetInstance()->IsEnabled());
 	m_invulnerabilityController->SetValue(InvulnerabilityCheat::GetInstance()->IsEnabled());
 }

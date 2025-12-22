@@ -1,5 +1,5 @@
 #include "clear-wanted-level.h"
-#include "../cheats/set-cop-value.h"
+#include "../cheats/cop-value.h"
 #include "../toast-manager.h"
 #include "../quick-action-registry.h"
 
@@ -26,10 +26,14 @@ const std::wstring& ModMenuModule::ClearWantedLevelAction::GetTypeLabel()
 
 void ModMenuModule::ClearWantedLevelAction::Execute()
 {
-	auto* cheat = SetCopValueCheat::GetInstance();
-	cheat->SetEnabled(true);
-	cheat->SetCopValueAndDisable(0);
+	auto* cheat = CopValueCheat::GetInstance();
+	if (!cheat->IsEnabled()) {
+		spdlog::error("ClearWantedLevelAction::Execute: CopValueCheat is not enabled");
+		ToastManager::GetInstance()->Show({ L"Failed to clear wanted level", ToastType::Error });
+		return;
+	}
 
+	cheat->SetCopValue(0);
 	ToastManager::GetInstance()->Show({ L"Wanted level cleared" });
 }
 

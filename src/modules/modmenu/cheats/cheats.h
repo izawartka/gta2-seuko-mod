@@ -1,5 +1,5 @@
 #pragma once
-#include "freeze-cop-value.h"
+#include "cop-value.h"
 #include "invulnerability.h"
 #include "infinite-ammo.h"
 #include "instant-reload.h"
@@ -11,4 +11,3 @@
 #include "camera/camera-pos.h"
 #include "camera/shadows-fix.h"
 #include "player-pos.h"
-#include "set-cop-value.h"
