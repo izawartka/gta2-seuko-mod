@@ -2,6 +2,6 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <GTA2_DIR>D:\GTA2</GTA2_DIR>
-    <GTA2_EXE>gta2-seuko-mod.exe</GTA2_EXE>
+    <GTA2_EXE>gta2.exe</GTA2_EXE>
   </PropertyGroup>
 </Project>

@@ -902,8 +902,14 @@
     <ClCompile Include="src\modules\modmenu\menus\version-menu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\dinput8_proxy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
+    <None Include="src\dinput8.def">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

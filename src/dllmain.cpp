@@ -9,9 +9,15 @@
 #include "modules/modmenu/modmenu.h"
 
 Core::Core* coreInstance = nullptr;
+static bool initialized = false;
+
+extern void UnloadOriginalDll();
 
 static void Init()
 {
+	if (initialized) return;
+	initialized = true;
+	
 	InitLogging();
 	spdlog::info("Seuko mod version {} {}", SEUKOMOD_VERSION_STR, SEUKOMOD_GIT_STR);
 	coreInstance = new Core::Core();
@@ -26,6 +32,8 @@ static void Init()
 
 static void Deinit()
 {
+	if (!initialized) return;
+	
 	Core::ModuleManager* moduleManager = Core::ModuleManager::GetInstance();
 	moduleManager->RemoveModule<ModMenuModule::RootModule>();
 	moduleManager->RemoveModule<UiModule::RootModule>();
@@ -33,6 +41,10 @@ static void Deinit()
 	moduleManager->RemoveModule<PersistenceModule::RootModule>();
 	delete coreInstance;
 	coreInstance = nullptr;
+	
+	UnloadOriginalDll();
+	
+	initialized = false;
 }
 
 BOOL APIENTRY DllMain( HMODULE hModule,
@@ -43,6 +55,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
+		DisableThreadLibraryCalls(hModule);
 		Init();
 		break;
 	case DLL_THREAD_ATTACH:

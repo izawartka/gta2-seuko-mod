@@ -61,6 +61,15 @@
     <Import Project="GTA2.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithLogging|Win32'">
+    <TargetName>dinput8</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetName>dinput8</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>dinput8</TargetName>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -80,6 +89,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <ModuleDefinitionFile>src\dinput8.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
       <Command>if "$(GTA2_DIR)"=="" (
@@ -152,6 +162,7 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <ModuleDefinitionFile>src\dinput8.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
       <Command>if "$(GTA2_DIR)"=="" (
@@ -225,6 +236,7 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <ModuleDefinitionFile>src\dinput8.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
       <Command>if "$(GTA2_DIR)"=="" (
@@ -573,9 +585,11 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
     <ClCompile Include="src\modules\ui\components\text.cpp" />
     <ClCompile Include="src\modules\ui\controllers\menu.cpp" />
     <ClCompile Include="src\modules\ui\root.cpp" />
+    <ClCompile Include="src\dinput8_proxy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
+    <None Include="src\dinput8.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
