@@ -195,9 +195,6 @@
     <ClInclude Include="src\converters\yes-no.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\modules\modmenu\cheats\freeze-cop-value.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\modules\modmenu\cheat-base.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -564,9 +561,6 @@
     <ClInclude Include="src\modules\modmenu\cheat-manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\modules\modmenu\cheats\set-cop-value.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\modules\modmenu\utils\add-default-actions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -577,6 +571,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\git.h">
+    <ClInclude Include="src\modules\modmenu\cheats\cop-value.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -654,9 +649,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\ui\components\sprite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\cheats\freeze-cop-value.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\modules\modmenu\cheats\invulnerability.cpp">
@@ -881,9 +873,6 @@
     <ClCompile Include="src\modules\modmenu\cheat-manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\modules\modmenu\cheats\set-cop-value.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\modules\modmenu\utils\add-default-actions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -903,6 +892,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\dinput8_proxy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modules\modmenu\cheats\cop-value.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
