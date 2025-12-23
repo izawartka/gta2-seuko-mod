@@ -89,6 +89,10 @@ namespace Core
 			return m_savedValue;
 		}
 
+		const std::optional<T>& GetNextValue() const {
+			return m_nextValue;
+		}
+
 		void SetValue(const T& newValue, bool notify = false) {
 			if (m_nextValue) {
 				spdlog::warn("Watched::SetValue: Overwriting previously scheduled value change");
@@ -219,6 +223,10 @@ namespace Core
 
 		const std::optional<Tuple>& GetSavedValue() const {
 			return m_savedValue;
+		}
+
+		const std::optional<Tuple>& GetNextValue() const {
+			return m_nextValue;
 		}
 
 		void SetValue(const Tuple& newValue, bool notify = false) {
