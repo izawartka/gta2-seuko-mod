@@ -21,11 +21,17 @@ An ultimate mod menu (aka. trainer) for Grand Theft Auto 2.
 
 more features coming soon...
 
+## Compatibility
+
+- This mod is intended for [GTA2 PC version 11.44](https://gtamp.com/GTA2/gta2-installer.exe) only
+- Widescreenfix is not supported at the moment, i'm planning to include by own version of it in the future
+
 ## Installation
 
-1. Download the [latest release](https://github.com/izawartka/gta2-seuko-mod/releases/latest)
-2. Extract the contents of the downloaded archive to your GTA2 installation folder
-3. Launch the game
+1. Make sure you have [VC++ Redistributables](https://www.techpowerup.com/download/visual-c-redistributable-runtime-package-all-in-one/) installed
+2. Download the [latest release](https://github.com/izawartka/gta2-seuko-mod/releases/latest)
+3. Extract the contents of the downloaded archive to your GTA2 installation folder
+4. Launch the game
 
 ## Basic controls
 
@@ -39,12 +45,16 @@ Customizable quick actions can be found in `Mod menu` > `Misc` > `Quick actions`
 
 ## Contact & Support
 
-- [Seuko mod project discord server](https://discord.gg/crwjQCXRCA) (for support and discussions regarding this mod)
+- [seuko mod project discord server](https://discord.gg/crwjQCXRCA) (for support and discussions regarding this mod)
 - [h0x91b's discord server](https://discord.gg/7y2Y4Z3) (for general GTA2 modding discussions)
 
 ## Building
 
 Coming soon...
+
+## Support
+
+If you like this mod and want to support its development, you can donate via [PayPal](https://www.paypal.me/maseuko) :)
 
 ## Credits
 
