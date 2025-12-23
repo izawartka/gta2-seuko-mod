@@ -48,10 +48,15 @@ void ModMenuModule::CopValueCheat::SetCopValue(short copValue)
 
 const std::optional<short>& ModMenuModule::CopValueCheat::GetCopValue() const
 {
+	static const std::optional<short> emptyValue = std::nullopt;
 	if (!IsEnabled()) {
 		spdlog::error("CopValueCheat::GetCopValue: Cheat is not enabled, cannot get cop value");
-		static const std::optional<short> emptyValue = std::nullopt;
 		return emptyValue;
+	}
+
+	const auto& nextValue = m_watchedCopValue->GetNextValue();
+	if (nextValue.has_value()) {
+		return nextValue;
 	}
 
 	return m_watchedCopValue->GetSavedValue();
