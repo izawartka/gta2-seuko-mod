@@ -109,6 +109,9 @@
     <ClCompile Include="src\modules\ui\controllers\menu.cpp" />
     <ClCompile Include="src\modules\ui\root.cpp" />
     <ClCompile Include="src\dinput8_proxy.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\last-vehicle-save-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\saved-vehicles-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\saved-vehicle-options-menu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -299,7 +302,10 @@
     <ClInclude Include="src\modules\ui\ui.h" />
     <ClInclude Include="src\modules\ui\controllers\menu-item.h" />
     <ClInclude Include="src\version.h" />
+    <ClInclude Include="src\modules\modmenu\menus\last-vehicle-save-menu.h" />
     <ClInclude Include="src\converters\gta-font-safe.h" />
+    <ClInclude Include="src\modules\modmenu\menus\saved-vehicles-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\saved-vehicle-options-menu.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

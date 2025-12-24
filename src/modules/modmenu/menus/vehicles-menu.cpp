@@ -1,6 +1,7 @@
 #include "vehicles-menu.h"
 #include "spawn-vehicle-menu.h"
 #include "last-vehicle-menu.h"
+#include "saved-vehicles-menu.h"
 #include "../root.h"
 #include "../cheats/last-car.h"
 
@@ -24,6 +25,7 @@ bool ModMenuModule::VehiclesMenu::Attach()
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Spawn vehicle", options.textSize);
 	m_lastCarText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"No last vehicle", options.textSize);
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Saved vehicles", options.textSize);
 
 	SetPreviousSelectedIndex();
 
@@ -59,6 +61,9 @@ void ModMenuModule::VehiclesMenu::OnMenuAction(UiModule::Selectable* item, UiMod
 			return;
 		}
 		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::LastVehicleMenu>();
+		break;
+	case 3: // Saved vehicles
+		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::SavedVehiclesMenu>();
 		break;
 	default:
 		break;
