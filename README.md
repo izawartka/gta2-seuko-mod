@@ -37,7 +37,7 @@ more features coming soon...
 
 - Open/close menu: `F11`
 - Navigate menu: `[` (Left bracket) and `]` (Right bracket) keys
-- Select menu item / toggle option: `Enter`
+- Select menu item / toggle option: `\` (Backslash)
 
 You can modify the controls in `Mod menu` > `Misc` > `Menu controls` section of the menu or reset them by holding `F11` for 5 seconds.
 
