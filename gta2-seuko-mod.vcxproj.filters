@@ -1,907 +1,306 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="src\converters\scrf.h" />
+    <ClCompile Include="src\core\core.cpp" />
+    <ClCompile Include="src\core\event-listener-support.h" />
+    <ClCompile Include="src\core\event-manager.cpp" />
+    <ClCompile Include="src\core\hook-manager.cpp" />
+    <ClCompile Include="src\core\module-manager.cpp" />
+    <ClCompile Include="src\core\watch-manager.cpp" />
+    <ClCompile Include="src\dllmain.cpp" />
+    <ClCompile Include="src\events\after-debug-flags.cpp" />
+    <ClCompile Include="src\events\camera-pos-apply.cpp" />
+    <ClCompile Include="src\events\cop-value-change.cpp" />
+    <ClCompile Include="src\events\culling-check.cpp" />
+    <ClCompile Include="src\events\draw-frame.cpp" />
+    <ClCompile Include="src\events\draw-map-layer.cpp" />
+    <ClCompile Include="src\events\draw-ui.cpp" />
+    <ClCompile Include="src\events\renderer.cpp" />
+    <ClCompile Include="src\events\game-end.cpp" />
+    <ClCompile Include="src\events\game-start.cpp" />
+    <ClCompile Include="src\events\game-tick.cpp" />
+    <ClCompile Include="src\events\is-ammo-kf-call.cpp" />
+    <ClCompile Include="src\events\scale-shadow.cpp" />
+    <ClCompile Include="src\events\try-shoot-weapon.cpp" />
+    <ClCompile Include="src\events\keyboard.cpp" />
+    <ClCompile Include="src\game\keycode.cpp" />
+    <ClCompile Include="src\game\utils\car-roof-utils.cpp" />
+    <ClCompile Include="src\game\utils\player-utils.cpp" />
+    <ClCompile Include="src\game\utils\lists-utils.cpp" />
+    <ClCompile Include="src\logging.cpp" />
+    <ClCompile Include="src\modules\keybinding\bind-manager.cpp" />
+    <ClCompile Include="src\modules\keybinding\root.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheat-manager.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\camera\camera-pos.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\camera\camera.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\camera\clear-screen.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\camera\disable-culling.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\camera\shadows-fix.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\cop-value.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\infinite-ammo.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\instant-reload.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\invulnerability.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\last-car.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\native-cheats-data.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\native-cheats-keeper.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\player-pos.cpp" />
+    <ClCompile Include="src\modules\modmenu\menu-base.cpp" />
+    <ClCompile Include="src\modules\modmenu\menu-manager.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\add-quick-action-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\camera-advanced-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\camera-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\camera-pos-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\quick-action-options-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\quick-actions-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\last-vehicle-physics-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\last-vehicle-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\get-weapon-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\main-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\menu-controls-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\misc-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\native-cheats-category-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\native-cheats-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\player-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\player-pos-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\player-stats-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\spawn-vehicle-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\vehicles-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\version-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\weapons-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\world-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-action-manager.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-actions\clear-wanted-level.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-actions\explode-all-vehicles.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-actions\fix-vehicle.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-actions\get-all-weapons.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-actions\save-game.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-actions\spawn-vehicle.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-actions\teleport.cpp" />
+    <ClCompile Include="src\modules\modmenu\reset-binds-manager.cpp" />
+    <ClCompile Include="src\modules\modmenu\root.cpp" />
+    <ClCompile Include="src\modules\modmenu\segment-base.cpp" />
+    <ClCompile Include="src\modules\modmenu\segment-support.cpp" />
+    <ClCompile Include="src\modules\modmenu\segments\camera-pos-cheat-coord-segment.cpp" />
+    <ClCompile Include="src\modules\modmenu\segments\explode-all-vehicles-segment.cpp" />
+    <ClCompile Include="src\modules\modmenu\segments\position-segment.cpp" />
+    <ClCompile Include="src\modules\modmenu\segments\spawn-vehicle-segment.cpp" />
+    <ClCompile Include="src\modules\modmenu\toast-manager.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\add-default-actions.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\angle-utils.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\camera-easy-mode-utils.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\custom-render-queue-utils.cpp" />
+    <ClCompile Include="src\game\utils\teleport-utils.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\explode-all-cars.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\get-all-weapons.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\save-game.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\spawn-car-at-player.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\vertex-utils.cpp" />
+    <ClCompile Include="src\modules\persistence\persistence-manager.cpp" />
+    <ClCompile Include="src\modules\persistence\root.cpp" />
+    <ClCompile Include="src\modules\ui\component.cpp" />
+    <ClCompile Include="src\modules\ui\components\background.cpp" />
+    <ClCompile Include="src\modules\ui\components\horcentered.cpp" />
+    <ClCompile Include="src\modules\ui\components\overridepos.cpp" />
+    <ClCompile Include="src\modules\ui\components\selectable.cpp" />
+    <ClCompile Include="src\modules\ui\components\sprite.cpp" />
+    <ClCompile Include="src\modules\ui\components\text.cpp" />
+    <ClCompile Include="src\modules\ui\controllers\menu.cpp" />
+    <ClCompile Include="src\modules\ui\root.cpp" />
+    <ClCompile Include="src\dinput8_proxy.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\core\common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\gta2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\memory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\event-manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\event-base.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\core.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\hook-manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\events\draw-ui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\hook-base.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\functions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\module-manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\module-base.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\hook-types\function-call-hook.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\modmenu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\gta2_wrapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\watch-manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\watched-base.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\make-resolver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\events\game-tick.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\hook-types\function-multi-call-hook.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\types.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\events\keyboard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\ui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\keycode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\root.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\component.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\components\text.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\rect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\components\components.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\components\vertcont.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\components\horcont.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\components\spacer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\components\margin.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\components\selectable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\controllers\menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\controllers\controllers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\controller.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menu-base.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\menus.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\main-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\root.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\player-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\player-pos-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\controllers\var-text.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\controllers\var-text-editable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\controllers\var-text-select.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\cop-value.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\converter-support.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\default.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\vehicles-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\controllers\menu-item.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\car-model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\spawn-vehicle-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\components\sprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\car-remap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\yes-no.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\cheat-base.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\cheats\cheats.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\cheat-registry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\events\cheat-state.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\cheats\invulnerability.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\events\after-debug-flags.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\hook-types\jump-hook.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\weapons-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\cheats\infinite-ammo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\ammo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\weapon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\get-weapon-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\events\is-ammo-kf-call.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\player-stats-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\controllers\select.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\last-vehicle-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\cheats\last-car.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\events\last-car-state.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\car-damage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\float.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menu-manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\controllers\button.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\last-vehicle-physics-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\bit-yes-no.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\hook-types\multi-jump-hook.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\cheats\instant-reload.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\events\try-shoot-weapon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\events\game-start.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\events\game-end.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\misc-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\quick-actions-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\keybinding\keybinding.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\keybinding\root.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\keybinding\common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\persistence\persistence.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\persistence\common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\persistence\root.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\persistence\persistence-manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\keybinding\key.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\keybinding\bind-manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\standard-binds-support.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\key-code.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\menu-controls-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\controllers\key-bind-change.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\key.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\reset-binds-manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\controllers\editable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\cheats\native-cheats-keeper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\native-cheats-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\native-cheats-category-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\native-cheat-state.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\enabled-disabled.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\in-brackets.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\components\background.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\quick-action-base.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\quick-action-manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\quick-actions\quick-actions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\events\cop-value-change.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\quick-actions\clear-wanted-level.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\quick-action-registry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\add-quick-action-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\controllers\key-change.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\quick-action-type.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\quick-actions\get-all-weapons.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\quick-action-options-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\quick-actions\save-game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\utils\get-all-weapons.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\utils\utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\utils\save-game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\world-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\quick-actions\explode-all-vehicles.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\utils\explode-all-cars.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\segments\spawn-vehicle-segment.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\segment-base.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\segments\segments.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\quick-actions\spawn-vehicle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\utils\spawn-car-at-player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\explosion-size.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\segments\explode-all-vehicles-segment.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\events\update-ui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\toast-manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\components\horcentered.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\ui\components\overridepos.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\cheats\camera\camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\hook-types\function-ptr-hook.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\events\renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\utils\vertex-utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\camera-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\events\draw-frame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\radians.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\events\culling-check.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\utils\angle-utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\events\draw-map-layer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\cheats\camera\clear-screen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\cheats\camera\disable-culling.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\utils\custom-render-queue-utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\cheats\camera\camera-pos.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\events\camera-pos-apply.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\camera-pos-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\camera-pos-cheat-mode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\segments\camera-pos-cheat-coord-segment.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\events\scale-shadow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\cheats\camera\shadows-fix.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\camera-advanced-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\segment-support.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\cheats\player-pos.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\events\player-pos-update.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\segments\position-segment.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\utils\angle-utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\utils\car-roof-utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\utils\weapon-utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\utils\lists-utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\utils\scrf-utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\utils\utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\utils\teleport-utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game\utils\player-utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\quick-actions\teleport.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\scr-vector3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\quick-actions\fix-vehicle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\converters\camera-easy-mode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\utils\camera-easy-mode-utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\cheat-manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\utils\add-default-actions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modmenu\menus\version-menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\version.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\git.h">
-    <ClInclude Include="src\modules\modmenu\cheats\cop-value.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\dllmain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\hook-manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\event-manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\module-manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\events\draw-ui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\core.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\watch-manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\events\game-tick.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\events\keyboard.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\ui\root.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\ui\component.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\ui\components\text.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\ui\components\selectable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\ui\controllers\menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\event-listener-support.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\root.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\main-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\player-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menu-base.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\player-pos-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\keycode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\converters\scrf.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\vehicles-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\spawn-vehicle-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\ui\components\sprite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\cheats\invulnerability.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\events\after-debug-flags.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\weapons-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\cheats\infinite-ammo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\get-weapon-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\events\is-ammo-kf-call.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\player-stats-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\last-vehicle-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\cheats\last-car.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menu-manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\last-vehicle-physics-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\cheats\instant-reload.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\events\try-shoot-weapon.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\events\game-start.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\events\game-end.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\misc-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\quick-actions-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\keybinding\root.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\persistence\root.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\persistence\persistence-manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\keybinding\bind-manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\menu-controls-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\reset-binds-manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\cheats\native-cheats-keeper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\cheats\native-cheats-data.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\native-cheats-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\native-cheats-category-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\ui\components\background.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\quick-action-manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\events\cop-value-change.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\logging.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\quick-actions\clear-wanted-level.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\add-quick-action-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\quick-actions\get-all-weapons.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\quick-action-options-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\quick-actions\save-game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\world-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\quick-actions\explode-all-vehicles.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\segments\spawn-vehicle-segment.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\segment-base.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\quick-actions\spawn-vehicle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\segments\explode-all-vehicles-segment.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\toast-manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\ui\components\overridepos.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\ui\components\horcentered.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\cheats\camera\camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\events\renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\utils\vertex-utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\camera-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\events\draw-frame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\events\culling-check.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\events\draw-map-layer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\utils\angle-utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\cheats\camera\clear-screen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\cheats\camera\disable-culling.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\utils\custom-render-queue-utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\cheats\camera\camera-pos.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\events\camera-pos-apply.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\camera-pos-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\segments\camera-pos-cheat-coord-segment.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\events\scale-shadow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\cheats\camera\shadows-fix.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\camera-advanced-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\segment-support.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\cheats\player-pos.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\segments\position-segment.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\utils\car-roof-utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\utils\player-utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\utils\lists-utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game\utils\teleport-utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\quick-actions\teleport.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\quick-actions\fix-vehicle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\utils\camera-easy-mode-utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\cheat-manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\utils\add-default-actions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\utils\explode-all-cars.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\utils\get-all-weapons.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\utils\save-game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\utils\spawn-car-at-player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\menus\version-menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\dinput8_proxy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modules\modmenu\cheats\cop-value.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="src\converters\ammo.h" />
+    <ClInclude Include="src\converters\bit-yes-no.h" />
+    <ClInclude Include="src\converters\camera-easy-mode.h" />
+    <ClInclude Include="src\converters\camera-pos-cheat-mode.h" />
+    <ClInclude Include="src\converters\car-damage.h" />
+    <ClInclude Include="src\converters\car-model.h" />
+    <ClInclude Include="src\converters\car-remap.h" />
+    <ClInclude Include="src\converters\cop-value.h" />
+    <ClInclude Include="src\converters\default.h" />
+    <ClInclude Include="src\converters\enabled-disabled.h" />
+    <ClInclude Include="src\converters\explosion-size.h" />
+    <ClInclude Include="src\converters\float.h" />
+    <ClInclude Include="src\converters\in-brackets.h" />
+    <ClInclude Include="src\converters\key-code.h" />
+    <ClInclude Include="src\converters\key.h" />
+    <ClInclude Include="src\converters\native-cheat-state.h" />
+    <ClInclude Include="src\converters\quick-action-type.h" />
+    <ClInclude Include="src\converters\radians.h" />
+    <ClInclude Include="src\converters\scr-vector3.h" />
+    <ClInclude Include="src\converters\weapon.h" />
+    <ClInclude Include="src\converters\yes-no.h" />
+    <ClInclude Include="src\events\after-debug-flags.h" />
+    <ClInclude Include="src\events\camera-pos-apply.h" />
+    <ClInclude Include="src\events\cop-value-change.h" />
+    <ClInclude Include="src\events\culling-check.h" />
+    <ClInclude Include="src\events\draw-frame.h" />
+    <ClInclude Include="src\events\draw-map-layer.h" />
+    <ClInclude Include="src\events\renderer.h" />
+    <ClInclude Include="src\events\game-end.h" />
+    <ClInclude Include="src\events\game-start.h" />
+    <ClInclude Include="src\events\is-ammo-kf-call.h" />
+    <ClInclude Include="src\events\scale-shadow.h" />
+    <ClInclude Include="src\events\try-shoot-weapon.h" />
+    <ClInclude Include="src\game\utils\angle-utils.h" />
+    <ClInclude Include="src\game\utils\car-roof-utils.h" />
+    <ClInclude Include="src\game\utils\player-utils.h" />
+    <ClInclude Include="src\game\utils\weapon-utils.h" />
+    <ClInclude Include="src\game\utils\lists-utils.h" />
+    <ClInclude Include="src\game\utils\scrf-utils.h" />
+    <ClInclude Include="src\game\utils\utils.h" />
+    <ClInclude Include="src\git.h" />
+    <ClInclude Include="src\hook-types\jump-hook.h" />
+    <ClInclude Include="src\hook-types\function-ptr-hook.h" />
+    <ClInclude Include="src\hook-types\multi-jump-hook.h" />
+    <ClInclude Include="src\modules\keybinding\common.h" />
+    <ClInclude Include="src\modules\keybinding\key.h" />
+    <ClInclude Include="src\modules\keybinding\bind-manager.h" />
+    <ClInclude Include="src\modules\keybinding\keybinding.h" />
+    <ClInclude Include="src\modules\keybinding\root.h" />
+    <ClInclude Include="src\modules\modmenu\cheat-base.h" />
+    <ClInclude Include="src\modules\modmenu\cheat-manager.h" />
+    <ClInclude Include="src\modules\modmenu\cheat-registry.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\camera\camera-pos.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\camera\camera.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\camera\clear-screen.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\camera\disable-culling.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\camera\shadows-fix.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\cheats.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\cop-value.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\infinite-ammo.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\instant-reload.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\invulnerability.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\last-car.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\native-cheats-keeper.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\player-pos.h" />
+    <ClInclude Include="src\modules\modmenu\events\cheat-state.h" />
+    <ClInclude Include="src\modules\modmenu\events\last-car-state.h" />
+    <ClInclude Include="src\modules\modmenu\events\player-pos-update.h" />
+    <ClInclude Include="src\modules\modmenu\menu-manager.h" />
+    <ClInclude Include="src\modules\modmenu\menus\add-quick-action-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\camera-advanced-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\camera-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\camera-pos-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\quick-action-options-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\quick-actions-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\last-vehicle-physics-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\last-vehicle-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\get-weapon-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\menu-controls-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\misc-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\native-cheats-category-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\native-cheats-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\player-stats-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\spawn-vehicle-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\vehicles-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\version-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\weapons-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\world-menu.h" />
+    <ClInclude Include="src\modules\modmenu\quick-action-base.h" />
+    <ClInclude Include="src\modules\modmenu\quick-action-manager.h" />
+    <ClInclude Include="src\modules\modmenu\quick-action-registry.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\clear-wanted-level.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\explode-all-vehicles.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\fix-vehicle.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\get-all-weapons.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\quick-actions.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\save-game.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\spawn-vehicle.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\teleport.h" />
+    <ClInclude Include="src\modules\modmenu\reset-binds-manager.h" />
+    <ClInclude Include="src\modules\modmenu\segment-base.h" />
+    <ClInclude Include="src\modules\modmenu\segment-support.h" />
+    <ClInclude Include="src\modules\modmenu\segments\camera-pos-cheat-coord-segment.h" />
+    <ClInclude Include="src\modules\modmenu\segments\explode-all-vehicles-segment.h" />
+    <ClInclude Include="src\modules\modmenu\segments\position-segment.h" />
+    <ClInclude Include="src\modules\modmenu\segments\segments.h" />
+    <ClInclude Include="src\modules\modmenu\segments\spawn-vehicle-segment.h" />
+    <ClInclude Include="src\modules\modmenu\toast-manager.h" />
+    <ClInclude Include="src\modules\modmenu\utils\add-default-actions.h" />
+    <ClInclude Include="src\modules\modmenu\utils\camera-easy-mode-utils.h" />
+    <ClInclude Include="src\modules\modmenu\utils\custom-render-queue-utils.h" />
+    <ClInclude Include="src\modules\modmenu\utils\explode-all-cars.h" />
+    <ClInclude Include="src\modules\modmenu\utils\get-all-weapons.h" />
+    <ClInclude Include="src\modules\modmenu\utils\angle-utils.h" />
+    <ClInclude Include="src\modules\modmenu\utils\save-game.h" />
+    <ClInclude Include="src\modules\modmenu\utils\spawn-car-at-player.h" />
+    <ClInclude Include="src\game\utils\teleport-utils.h" />
+    <ClInclude Include="src\modules\modmenu\utils\utils.h" />
+    <ClInclude Include="src\modules\modmenu\utils\vertex-utils.h" />
+    <ClInclude Include="src\modules\persistence\common.h" />
+    <ClInclude Include="src\modules\persistence\persistence-manager.h" />
+    <ClInclude Include="src\modules\persistence\persistence.h" />
+    <ClInclude Include="src\modules\persistence\root.h" />
+    <ClInclude Include="src\modules\ui\components\background.h" />
+    <ClInclude Include="src\modules\ui\components\horcentered.h" />
+    <ClInclude Include="src\modules\ui\components\overridepos.h" />
+    <ClInclude Include="src\modules\ui\components\sprite.h" />
+    <ClInclude Include="src\modules\ui\controllers\button.h" />
+    <ClInclude Include="src\modules\ui\controllers\editable.h" />
+    <ClInclude Include="src\modules\ui\controllers\key-bind-change.h" />
+    <ClInclude Include="src\modules\ui\controllers\key-change.h" />
+    <ClInclude Include="src\modules\ui\controllers\select.h" />
+    <ClInclude Include="src\modules\ui\converter-support.h" />
+    <ClInclude Include="src\core\core.h" />
+    <ClInclude Include="src\core\make-resolver.h" />
+    <ClInclude Include="src\core\types.h" />
+    <ClInclude Include="src\core\watch-manager.h" />
+    <ClInclude Include="src\core\watched-base.h" />
+    <ClInclude Include="src\events\game-tick.h" />
+    <ClInclude Include="src\events\keyboard.h" />
+    <ClInclude Include="src\game\common.h" />
+    <ClInclude Include="src\game\keycode.h" />
+    <ClInclude Include="src\game\functions.h" />
+    <ClInclude Include="src\game\game.h" />
+    <ClInclude Include="src\game\gta2.h" />
+    <ClInclude Include="src\core\event-manager.h" />
+    <ClInclude Include="src\core\event-base.h" />
+    <ClInclude Include="src\core\hook-manager.h" />
+    <ClInclude Include="src\game\gta2_wrapper.h" />
+    <ClInclude Include="src\hook-types\function-call-hook.h" />
+    <ClInclude Include="src\core\hook-base.h" />
+    <ClInclude Include="src\core\module-manager.h" />
+    <ClInclude Include="src\core\module-base.h" />
+    <ClInclude Include="src\game\memory.h" />
+    <ClInclude Include="src\core\common.h" />
+    <ClInclude Include="src\events\draw-ui.h" />
+    <ClInclude Include="src\hook-types\function-multi-call-hook.h" />
+    <ClInclude Include="src\modules\modmenu\common.h" />
+    <ClInclude Include="src\modules\modmenu\menu-base.h" />
+    <ClInclude Include="src\modules\modmenu\menus\main-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\menus.h" />
+    <ClInclude Include="src\modules\modmenu\menus\player-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\player-pos-menu.h" />
+    <ClInclude Include="src\modules\modmenu\modmenu.h" />
+    <ClInclude Include="src\modules\modmenu\root.h" />
+    <ClInclude Include="src\modules\ui\common.h" />
+    <ClInclude Include="src\modules\ui\component.h" />
+    <ClInclude Include="src\modules\ui\components\components.h" />
+    <ClInclude Include="src\modules\ui\components\horcont.h" />
+    <ClInclude Include="src\modules\ui\components\margin.h" />
+    <ClInclude Include="src\modules\ui\components\selectable.h" />
+    <ClInclude Include="src\modules\ui\components\spacer.h" />
+    <ClInclude Include="src\modules\ui\components\text.h" />
+    <ClInclude Include="src\modules\ui\components\vertcont.h" />
+    <ClInclude Include="src\modules\ui\controller.h" />
+    <ClInclude Include="src\modules\ui\controllers\controllers.h" />
+    <ClInclude Include="src\modules\ui\controllers\var-text-editable.h" />
+    <ClInclude Include="src\modules\ui\controllers\menu.h" />
+    <ClInclude Include="src\modules\ui\controllers\var-text-select.h" />
+    <ClInclude Include="src\modules\ui\controllers\var-text.h" />
+    <ClInclude Include="src\modules\ui\events\update-ui.h" />
+    <ClInclude Include="src\modules\ui\standard-binds-support.h" />
+    <ClInclude Include="src\modules\ui\rect.h" />
+    <ClInclude Include="src\modules\ui\root.h" />
+    <ClInclude Include="src\modules\ui\ui.h" />
+    <ClInclude Include="src\modules\ui\controllers\menu-item.h" />
+    <ClInclude Include="src\version.h" />
+    <ClInclude Include="src\converters\gta-font-safe.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
-    <None Include="src\dinput8.def">
-      <Filter>Source Files</Filter>
-    </None>
+    <None Include="src\dinput8.def" />
   </ItemGroup>
 </Project>

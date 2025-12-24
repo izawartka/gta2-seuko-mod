@@ -300,6 +300,7 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
     <ClInclude Include="src\converters\enabled-disabled.h" />
     <ClInclude Include="src\converters\explosion-size.h" />
     <ClInclude Include="src\converters\float.h" />
+    <ClInclude Include="src\converters\gta-font-safe.h" />
     <ClInclude Include="src\converters\in-brackets.h" />
     <ClInclude Include="src\converters\key-code.h" />
     <ClInclude Include="src\converters\key.h" />
