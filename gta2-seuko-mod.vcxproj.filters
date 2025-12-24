@@ -45,6 +45,7 @@
     <ClCompile Include="src\modules\modmenu\cheats\native-cheats-data.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\native-cheats-keeper.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\player-pos.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\saved-cars.cpp" />
     <ClCompile Include="src\modules\modmenu\menu-base.cpp" />
     <ClCompile Include="src\modules\modmenu\menu-manager.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\add-quick-action-menu.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="src\modules\modmenu\cheats\last-car.h" />
     <ClInclude Include="src\modules\modmenu\cheats\native-cheats-keeper.h" />
     <ClInclude Include="src\modules\modmenu\cheats\player-pos.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\saved-cars.h" />
     <ClInclude Include="src\modules\modmenu\events\cheat-state.h" />
     <ClInclude Include="src\modules\modmenu\events\last-car-state.h" />
     <ClInclude Include="src\modules\modmenu\events\player-pos-update.h" />
