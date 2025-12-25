@@ -11,13 +11,9 @@ ModMenuModule::QuickActionManager* ModMenuModule::QuickActionManager::GetInstanc
 	return m_instance;
 }
 
-std::vector<ModMenuModule::QuickActionTypeIndex> ModMenuModule::QuickActionManager::GetAllTypes()
+const std::vector<ModMenuModule::QuickActionTypeIndex>& ModMenuModule::QuickActionManager::GetAllTypes()
 {
-	std::vector<QuickActionTypeIndex> typeIndices;
-	for (const auto& pair : QuickActionRegistry::Actions()) {
-		typeIndices.push_back(pair.first);
-	}
-	return typeIndices;
+	return QuickActionRegistry::GetAllTypeIndiciesSorted();
 }
 
 const std::wstring& ModMenuModule::QuickActionManager::GetTypeLabel(QuickActionTypeIndex typeIndex)

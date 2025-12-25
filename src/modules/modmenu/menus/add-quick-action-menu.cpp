@@ -18,7 +18,7 @@ bool ModMenuModule::AddQuickActionMenu::Attach()
 	CreateMenu(L"#Add quick action#", vertCont);
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
-	ModMenuModule::QuickActionManager* quickActionManager = ModMenuModule::QuickActionManager::GetInstance();
+	QuickActionManager* quickActionManager = QuickActionManager::GetInstance();
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 	
@@ -32,7 +32,7 @@ bool ModMenuModule::AddQuickActionMenu::Attach()
 
 	// action type
 	auto typeText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	auto typesList = quickActionManager->GetAllTypes();
+	auto& typesList = QuickActionManager::GetAllTypes();
 	if (typesList.empty()) {
 		spdlog::error("No quick action types registered!");
 		return false;

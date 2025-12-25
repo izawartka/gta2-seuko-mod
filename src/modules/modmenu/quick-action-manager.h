@@ -37,7 +37,7 @@ namespace ModMenuModule {
 	class QuickActionManager : public Core::EventListenerSupport {
 	public:
 		static QuickActionManager* GetInstance();
-		static std::vector<QuickActionTypeIndex> GetAllTypes();
+		static const std::vector<QuickActionTypeIndex>& GetAllTypes();
 		static const std::wstring& GetTypeLabel(QuickActionTypeIndex typeIndex);
 		
 		static bool HasSegmentFactory(QuickActionTypeIndex typeIndex);

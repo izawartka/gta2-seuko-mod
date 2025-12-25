@@ -14,6 +14,8 @@ namespace ModMenuModule {
 		std::wstring typeLabel;
 		SegmentFactory segmentFactory;
 
+		QuickActionRegistryItem() = default;
+
 		QuickActionRegistryItem(
 			QuickActionFactory factory,
 			std::string typeId,
@@ -36,7 +38,37 @@ namespace ModMenuModule {
 			return actions;
 		}
 
+		static std::vector<QuickActionTypeIndex>& SortedIndiciesCache() {
+			static std::vector<QuickActionTypeIndex> cache;
+			return cache;
+		}
+
+		static bool& IsSorted() {
+			static bool sorted = false;
+			return sorted;
+		}
+
 	public:
+		static const std::vector<QuickActionTypeIndex>& GetAllTypeIndiciesSorted() {
+			if (!IsSorted()) {
+				auto& actions = Actions();
+				auto& cache = SortedIndiciesCache();
+				cache.clear();
+				for (const auto& pair : actions) {
+					cache.push_back(pair.first);
+				}
+				std::sort(
+					cache.begin(),
+					cache.end(),
+					[&actions](QuickActionTypeIndex a, QuickActionTypeIndex b) {
+						return actions[a].typeLabel < actions[b].typeLabel;
+					}
+				);
+				IsSorted() = true;
+			}
+			return SortedIndiciesCache();
+		}
+
 		static std::pair<QuickActionTypeIndex, const QuickActionRegistryItem*> GetByTypeId(const std::string& typeId) {
 			auto& actions = Actions();
 			auto it = std::find_if(
