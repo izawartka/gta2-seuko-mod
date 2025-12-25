@@ -42,7 +42,7 @@ void ModMenuModule::SpawnVehicleAction::Execute()
 	std::wstring modelStr = CarModelConverter::ConvertToString(data.model);
 
 	if (ModMenuModule::Utils::SpawnCarAtPlayer(data.model, data.remap, data.palette)) {
-		ModMenuModule::ToastManager::GetInstance()->Show({ modelStr + L" spawned" });
+		ModMenuModule::ToastManager::GetInstance()->Show({ L"Spawned " + modelStr});
 	}
 	else {
 		ModMenuModule::ToastManager::GetInstance()->Show({ L"Failed to spawn " + modelStr, ToastType::Error });
