@@ -112,6 +112,7 @@
     <ClCompile Include="src\modules\modmenu\menus\last-vehicle-save-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\saved-vehicles-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\saved-vehicle-options-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\segments\spawn-saved-vehicle-segment.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -306,6 +307,7 @@
     <ClInclude Include="src\converters\gta-font-safe.h" />
     <ClInclude Include="src\modules\modmenu\menus\saved-vehicles-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\saved-vehicle-options-menu.h" />
+    <ClInclude Include="src\modules\modmenu\segments\spawn-saved-vehicle-segment.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
