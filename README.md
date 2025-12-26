@@ -5,6 +5,7 @@ An ultimate mod menu (aka. trainer) for Grand Theft Auto 2.
 [![gta2-seuko-mod](https://maseuko.pl/soft/gta2-seuko-mod/seuko-mod.png)](https://maseuko.pl/soft/gta2-seuko-mod/seuko-mod.png)
 
 ## Features
+
 - Player control (respect, multiplier, lives, money, health, armor, wanted level, invulnerability, wanted level lock)
 - Teleport
 - Vehicle spawning (selectable model and remap)
@@ -15,6 +16,7 @@ An ultimate mod menu (aka. trainer) for Grand Theft Auto 2.
 - Weapon control (ammo count, infinite ammo, fast reload)
 - Quicksaving
 - Custom quick actions on key press
+- Saving and spawning saved vehicles
 - Native cheats (each cheat can be force disabled, force enabled or unmodified to not interfere with cheat codes and registry flags)
 - Configurable menu controls
 - Shadows distance fix
@@ -50,7 +52,21 @@ Customizable quick actions can be found in `Mod menu` > `Misc` > `Quick actions`
 
 ## Building
 
-Coming soon...
+### Requirements:
+- Git
+- Microsoft Visual Studio 2022 or newer
+- GTA2 PC version 11.44
+
+### Build steps
+1. Clone the repository
+
+   ```git clone https://github.com/izawartka/gta2-seuko-mod --recurse-submodules```
+
+2. Open `GTA2.props` in any text editor and set `GTA2_DIR` and `GTA2_EXE` variables to point to your GTA2 installation folder and gta2.exe file respectively.
+3. Open `gta2-seuko-mod.sln` in Visual Studio.
+4. Select one of the build configurations - Debug, Release or ReleaseWithLogging.
+5. Build the solution.
+6. After the build, output files will be automatically copied to your GTA2 installation folder and the game will be launched.
 
 ## Support
 
