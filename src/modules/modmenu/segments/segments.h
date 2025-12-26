@@ -5,3 +5,4 @@
 #include "camera-pos-cheat-coord-segment.h"
 #include "position-segment.h"
 #include "spawn-saved-vehicle-segment.h"
+#include "toggle-native-cheat-segment.h"

@@ -113,6 +113,9 @@
     <ClCompile Include="src\modules\modmenu\menus\saved-vehicles-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\saved-vehicle-options-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\spawn-saved-vehicle-segment.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-actions\spawn-saved-vehicle.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-actions\toggle-native-cheat.cpp" />
+    <ClCompile Include="src\modules\modmenu\segments\toggle-native-cheat-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\toggle-native-cheat-utils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -312,6 +315,9 @@
     <ClInclude Include="src\converters\native-cheat-category.h" />
     <ClInclude Include="src\converters\native-cheat.h" />
     <ClInclude Include="src\converters\toggle-native-cheat-mode.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\spawn-saved-vehicle.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\toggle-native-cheat.h" />
+    <ClInclude Include="src\modules\modmenu\segments\toggle-native-cheat-segment.h" />
     <ClInclude Include="src\modules\modmenu\utils\toggle-native-cheat-utils.h" />
   </ItemGroup>
   <ItemGroup>
