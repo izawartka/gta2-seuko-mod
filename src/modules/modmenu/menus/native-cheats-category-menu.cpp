@@ -7,7 +7,7 @@
 
 ModMenuModule::NativeCheatsCategoryMenu::NativeCheatsCategoryMenu(const NativeCheatCategoryDef& categoryDef, size_t page) :
 	m_categoryDef(categoryDef),
-	m_cheats(NativeCheatsKeeperCheat::GetAllNativeCheatsByCategory(categoryDef.category))
+	m_cheats(NativeCheatsKeeperCheat::GetAllNativeCheatDefsByCategory(categoryDef.category))
 {
 	m_page = page;
 	m_pageCount = (m_cheats.size() + CHEATS_PER_PAGE - 1) / CHEATS_PER_PAGE;
@@ -46,24 +46,25 @@ bool ModMenuModule::NativeCheatsCategoryMenu::Attach()
 	auto* nativeCheatsKeeper = NativeCheatsKeeperCheat::GetInstance();
 
 	for (size_t i = m_page * CHEATS_PER_PAGE; i < std::min(m_cheats.size(), (m_page + 1) * CHEATS_PER_PAGE); i++) {
-		const NativeCheatDef& cheat = m_cheats[i];
+		const NativeCheatDef* cheat = m_cheats.at(i);
+		if (cheat == nullptr) continue;
 
 		auto cheatCont = m_menuController->CreateItem<UiModule::HorCont>(vertCont);
 		auto cheatValueText = uiRoot->AddComponent<UiModule::Text>(cheatCont, L"", options.textSize);
 		auto cheatValueResolver = [nativeCheatsKeeper, cheat]() {
-			return nativeCheatsKeeper->IsCheatEnabled(cheat);
+			return nativeCheatsKeeper->IsCheatEnabled(*cheat);
 		};
 		auto cheatValueController = uiRoot->AddController<UiModule::VarTextController<bool, bool>>(
 			cheatValueText, 
 			cheatValueResolver,
-			UiModule::VarTextControllerOptions{ cheat.name + L": #", L"#" }
+			UiModule::VarTextControllerOptions{ cheat->name + L": #", L"#" }
 		);
 		cheatValueController->SetConverter<EnabledDisabledConverter>();
 		m_cheatValueControllers.push_back(cheatValueController);
 
 		auto cheatStateText = uiRoot->AddComponent<UiModule::Text>(cheatCont, L"", options.textSize);
 		auto cheatStateResolver = [nativeCheatsKeeper, cheat]() {
-			return nativeCheatsKeeper->GetCheatState(cheat);
+			return nativeCheatsKeeper->GetCheatState(*cheat);
 		};
 		auto cheatStateController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<NativeCheatState, NativeCheatState>>(
 			cheatStateText,
@@ -74,7 +75,7 @@ bool ModMenuModule::NativeCheatsCategoryMenu::Attach()
 		cheatStateController->SetConverter<InBracketsConverter<NativeCheatState, NativeCheatStateConverter<false>>>();
 		cheatStateController->SetCustomSaveCallback([nativeCheatsKeeper, cheat](NativeCheatState newValue) {
 			nativeCheatsKeeper->SetEnabled(true);
-			nativeCheatsKeeper->SetCheat(cheat, newValue);
+			nativeCheatsKeeper->SetCheat(*cheat, newValue);
 		});
 	}
 

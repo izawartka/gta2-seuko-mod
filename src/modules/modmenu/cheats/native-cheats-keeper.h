@@ -39,11 +39,18 @@ namespace ModMenuModule {
 		virtual ~NativeCheatsKeeperCheat() override;
 		static NativeCheatsKeeperCheat* GetInstance();
 
-		static const std::vector<NativeCheatDef>& GetAllNativeCheats();
-		static const std::vector<NativeCheatDef>& GetAllNativeCheatsByCategory(NativeCheatCategory category);
-		static const std::vector<NativeCheatCategoryDef>& GetAllNativeCheatCategories();
+		static const std::vector<NativeCheatCategory>& GetAllNativeCheatCategories();
+		static const std::vector<NativeCheatCategoryDef>& GetAllNativeCheatCategoryDefs();
+		static const std::vector<NativeCheatDef>& GetAllNativeCheatDefs();
 
-		void SetCheat(const NativeCheatDef& cheat, NativeCheatState state);
+		static const std::vector<const NativeCheatDef*>& GetAllNativeCheatDefsByCategory(NativeCheatCategory category);
+		static const std::vector<size_t>& GetAllNativeCheatsByCategory(NativeCheatCategory category);
+
+		static const NativeCheatCategoryDef* GetNativeCheatCategoryDef(NativeCheatCategory category);
+		static const NativeCheatDef* GetNativeCheatDef(size_t address);
+
+		bool SetCheat(const NativeCheatDef& cheat, NativeCheatState state);
+		bool SetCheat(size_t cheatAddress, NativeCheatState state);
 		NativeCheatState GetCheatState(const NativeCheatDef& cheat) const;
 		bool IsCheatEnabled(const NativeCheatDef& cheat) const;
 		void ResetAll();

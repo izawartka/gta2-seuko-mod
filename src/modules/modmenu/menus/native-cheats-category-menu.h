@@ -22,7 +22,7 @@ namespace ModMenuModule {
 		std::wstring GetPageTitle() const;
 
 		const NativeCheatCategoryDef& m_categoryDef;
-		const std::vector<NativeCheatDef>& m_cheats;
+		const std::vector<const NativeCheatDef*>& m_cheats;
 		size_t m_page;
 		size_t m_pageCount;
 		std::vector<UiModule::VarTextController<bool, bool>*> m_cheatValueControllers = {};

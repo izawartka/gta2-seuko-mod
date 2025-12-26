@@ -22,34 +22,67 @@ ModMenuModule::NativeCheatsKeeperCheat* ModMenuModule::NativeCheatsKeeperCheat::
 	return m_instance;
 }
 
-const std::vector<ModMenuModule::NativeCheatDef>& ModMenuModule::NativeCheatsKeeperCheat::GetAllNativeCheatsByCategory(NativeCheatCategory category)
-{
-	return nativeCheatsByCategoryMap.at(category);
-}
-
-const std::vector<ModMenuModule::NativeCheatDef>& ModMenuModule::NativeCheatsKeeperCheat::GetAllNativeCheats()
-{
-	return nativeCheats;
-}
-
-const std::vector<ModMenuModule::NativeCheatCategoryDef>& ModMenuModule::NativeCheatsKeeperCheat::GetAllNativeCheatCategories()
+const std::vector<ModMenuModule::NativeCheatCategory>& ModMenuModule::NativeCheatsKeeperCheat::GetAllNativeCheatCategories()
 {
 	return nativeCheatCategories;
 }
 
-void ModMenuModule::NativeCheatsKeeperCheat::SetCheat(const NativeCheatDef& cheat, NativeCheatState state)
+const std::vector<ModMenuModule::NativeCheatCategoryDef>& ModMenuModule::NativeCheatsKeeperCheat::GetAllNativeCheatCategoryDefs()
+{
+	return nativeCheatCategoryDefs;
+}
+
+const std::vector<ModMenuModule::NativeCheatDef>& ModMenuModule::NativeCheatsKeeperCheat::GetAllNativeCheatDefs()
+{
+	return nativeCheatDefs;
+}
+
+const std::vector<const ModMenuModule::NativeCheatDef*>& ModMenuModule::NativeCheatsKeeperCheat::GetAllNativeCheatDefsByCategory(NativeCheatCategory category)
+{
+	return nativeCheatDefsByCategoryMap.at(category);
+}
+
+const std::vector<size_t>& ModMenuModule::NativeCheatsKeeperCheat::GetAllNativeCheatsByCategory(NativeCheatCategory category)
+{
+	return nativeCheatsByCategoryMap.at(category);
+}
+
+const ModMenuModule::NativeCheatCategoryDef* ModMenuModule::NativeCheatsKeeperCheat::GetNativeCheatCategoryDef(NativeCheatCategory category)
+{
+	auto it = nativeCheatCategoryDefMap.find(category);
+	if (it != nativeCheatCategoryDefMap.end()) {
+		return it->second;
+	}
+	return nullptr;
+}
+
+const ModMenuModule::NativeCheatDef* ModMenuModule::NativeCheatsKeeperCheat::GetNativeCheatDef(size_t address)
+{
+	auto it = nativeCheatDefMap.find(address);
+	if (it != nativeCheatDefMap.end()) {
+		return it->second;
+	}
+	return nullptr;
+}
+
+bool ModMenuModule::NativeCheatsKeeperCheat::SetCheat(const NativeCheatDef& cheat, NativeCheatState state)
+{
+	return SetCheat(cheat.address, state);
+}
+
+bool ModMenuModule::NativeCheatsKeeperCheat::SetCheat(size_t cheatAddress, NativeCheatState state)
 {
 	if (!IsEnabled()) {
 		spdlog::warn("NativeCheatsKeeperCheat::SetCheat: Cheat keeper is not enabled, cannot set cheat state");
-		return;
+		return false;
 	}
-	if (cheat.address >= sizeof(Game::Cheats)) {
-		spdlog::error("NativeCheatsKeeperCheat::SetCheat: Invalid cheat address: {}", cheat.address);
-		return;
+	if (cheatAddress >= sizeof(Game::Cheats)) {
+		spdlog::error("NativeCheatsKeeperCheat::SetCheat: Invalid cheat address: {}", cheatAddress);
+		return false;
 	}
-
-	spdlog::debug("Setting cheat {} state to {}", static_cast<size_t>(cheat.address), static_cast<int>(state));
-	SetCheatStateInternal(cheat.address, state);
+	spdlog::debug("Setting cheat {} state to {}", static_cast<size_t>(cheatAddress), static_cast<int>(state));
+	SetCheatStateInternal(cheatAddress, state);
+	return true;
 }
 
 ModMenuModule::NativeCheatState ModMenuModule::NativeCheatsKeeperCheat::GetCheatState(const NativeCheatDef& cheat) const

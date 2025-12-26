@@ -1,7 +1,19 @@
 #include "native-cheats-keeper.h"
 
 namespace ModMenuModule {
-	static const std::vector<NativeCheatCategoryDef> nativeCheatCategories = {
+	static const std::vector<NativeCheatCategory> nativeCheatCategories = {
+		NativeCheatCategory::Standard,
+		NativeCheatCategory::SkipThings,
+		NativeCheatCategory::DebugInfo,
+		NativeCheatCategory::TilesRelated,
+		NativeCheatCategory::RequiringRestart,
+		NativeCheatCategory::ReplayRelated,
+		NativeCheatCategory::UnstableOrUnused,
+		NativeCheatCategory::Logging,
+		NativeCheatCategory::OtherDebug
+	};
+
+	static const std::vector<NativeCheatCategoryDef> nativeCheatCategoryDefs = {
 		{ NativeCheatCategory::Standard, L"Standard" },
 		{ NativeCheatCategory::SkipThings, L"Skip Things" },
 		{ NativeCheatCategory::DebugInfo, L"Debug Info" },
@@ -13,7 +25,7 @@ namespace ModMenuModule {
 		{ NativeCheatCategory::OtherDebug, L"Other Debug" }
 	};
 
-	static const std::vector<NativeCheatDef> nativeCheats = {
+	static const std::vector<NativeCheatDef> nativeCheatDefs = {
 		{ NativeCheatCategory::Standard, L"Do blood", 0x0},
 		{ NativeCheatCategory::DebugInfo, L"Show objects IDs", 0x1},
 		{ NativeCheatCategory::SkipThings, L"Skip traffic lights", 0x2},
@@ -115,10 +127,34 @@ namespace ModMenuModule {
 		{ NativeCheatCategory::OtherDebug, L"Kill phones on answer", 0x62},
 	};
 
-	static const std::unordered_map<NativeCheatCategory, std::vector<NativeCheatDef>> nativeCheatsByCategoryMap = []() {
-		std::unordered_map<NativeCheatCategory, std::vector<NativeCheatDef>> map;
-		for (const auto& cheat : nativeCheats) {
-			map[cheat.category].push_back(cheat);
+	static const std::unordered_map<NativeCheatCategory, const NativeCheatCategoryDef*> nativeCheatCategoryDefMap = []() {
+		std::unordered_map<NativeCheatCategory, const NativeCheatCategoryDef*> map;
+		for (const auto& categoryDef : nativeCheatCategoryDefs) {
+			map.insert({ categoryDef.category, &categoryDef });
+		}
+		return map;
+	}();
+
+	static const std::unordered_map<size_t, const NativeCheatDef*> nativeCheatDefMap = []() {
+		std::unordered_map<size_t, const NativeCheatDef*> map;
+		for (const auto& cheat : nativeCheatDefs) {
+			map.insert({ cheat.address, &cheat });
+		}
+		return map;
+	}();
+
+	static const std::unordered_map<NativeCheatCategory, std::vector<const NativeCheatDef*>> nativeCheatDefsByCategoryMap = []() {
+		std::unordered_map<NativeCheatCategory, std::vector<const NativeCheatDef*>> map;
+		for (const auto& cheat : nativeCheatDefs) {
+			map[cheat.category].push_back(&cheat);
+		}
+		return map;
+	}();
+
+	static const std::unordered_map<NativeCheatCategory, std::vector<size_t>> nativeCheatsByCategoryMap = []() {
+		std::unordered_map<NativeCheatCategory, std::vector<size_t>> map;
+		for (const auto& cheat : nativeCheatDefs) {
+			map[cheat.category].push_back(cheat.address);
 		}
 		return map;
 	}();

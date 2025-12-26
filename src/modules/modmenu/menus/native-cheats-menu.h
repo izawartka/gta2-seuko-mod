@@ -14,7 +14,7 @@ namespace ModMenuModule {
 
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 
-		const std::vector<NativeCheatCategoryDef>& m_categories = NativeCheatsKeeperCheat::GetAllNativeCheatCategories();
+		const std::vector<NativeCheatCategoryDef>& m_categories = NativeCheatsKeeperCheat::GetAllNativeCheatCategoryDefs();
 		UiModule::MenuItemId m_firstCategoryItemId = -1;
 	};
 }
