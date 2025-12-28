@@ -70,10 +70,17 @@ namespace Game {
 		typedef Car*(__stdcall SpawnCarType)(int x, int y, int z, short rot, CAR_MODEL4 model);
 		static constexpr SpawnCarType* SpawnCar = (SpawnCarType*)0x00426e10;
 
+		typedef WEAPON_STRUCT*(__stdcall GetCarWeaponStructType)(Car* car, CAR_WEAPON_INDEX weapon);
+		static constexpr GetCarWeaponStructType* GetCarWeaponStruct = (GetCarWeaponStructType*)0x004cd7f0;
+
+		// also requires calling some player weapon list related functions if there is a ped inside, check 0x004cd820 for details
+		typedef WEAPON_STRUCT* (__stdcall CreateCarWeaponStructType)(CAR_WEAPON_INDEX type, Car* car, short ammo);
+		static constexpr CreateCarWeaponStructType* CreateCarWeaponStruct = (CreateCarWeaponStructType*)0x004cd7b0;
+
 		typedef uint(__fastcall AddWeaponType)(Ped* ped, DWORD edx, WEAPON_INDEX weapon, uint ammo);
 		static constexpr AddWeaponType* AddWeapon = (AddWeaponType*)0x0043e4b0;
 
-		typedef uint(__stdcall CarAddWeaponType)(CAR_WEAPON type, uint ammo, Car* car);
+		typedef void(__stdcall CarAddWeaponType)(CAR_WEAPON_INDEX type, uint ammo, Car* car);
 		static constexpr CarAddWeaponType* CarAddWeapon = (CarAddWeaponType*)0x004cd820;
 
 		typedef void(__fastcall CarAddRoofGunType)(Car* car);

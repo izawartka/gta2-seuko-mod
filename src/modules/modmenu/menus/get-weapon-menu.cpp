@@ -85,7 +85,7 @@ void ModMenuModule::GetWeaponMenu::GetWeapon()
 		return;
 	}
 
-	if(Game::Utils::IsWeaponVehicleWeapon(selectedWeapon) && playerPed->currentCar == nullptr) {
+	if(Game::Utils::IsWeaponCarWeapon(selectedWeapon) && playerPed->currentCar == nullptr) {
 		spdlog::warn("Could not give weapon: player is not in a vehicle to receive vehicle weapon.");
 		return;
 	}
