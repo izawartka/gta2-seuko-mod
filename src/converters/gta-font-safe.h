@@ -18,7 +18,7 @@ public:
 			c == L'!' || c == L'"' || c == L'$' || c == L'%' || c == L'\'' ||
 			c == L'(' || c == L')' || c == L'*' || c == L',' || c == L'-' ||
 			c == L'.' || c == L'/' || c == L':' || c == L';' || c == L'?' ||
-			c == L'`' || c == L'~');
+			c == L'`' || c == L'~' || c == L' ');
 	}
 
 	static bool AreEqual(std::wstring a, std::wstring b) {
