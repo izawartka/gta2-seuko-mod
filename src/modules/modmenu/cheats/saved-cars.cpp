@@ -116,6 +116,17 @@ ModMenuModule::SavedCarsCheatEntry ModMenuModule::SavedCarsCheat::CreateEntry(Ga
 	entry.hasWaterCannon = Game::Utils::GetCarRoofWithSprite(car->roof, 278) != nullptr;
 	entry.hasJeepTurret = Game::Utils::GetCarRoofWithSprite(car->roof, 285) != nullptr;
 
+	for (int i = 0; i < 13; i++) {
+		Game::CAR_WEAPON_INDEX weaponType = static_cast<Game::CAR_WEAPON_INDEX>(15 + i);
+		Game::WEAPON_STRUCT* weaponStruct = Game::Functions::GetCarWeaponStruct(car, weaponType);
+		if (weaponStruct) {
+			entry.carWeaponsAmmo[i] = weaponStruct->ammo;
+		}
+		else {
+			entry.carWeaponsAmmo[i] = 0;
+		}
+	}
+
 	return entry;
 }
 
@@ -141,6 +152,17 @@ bool ModMenuModule::SavedCarsCheat::SpawnEntry(const SavedCarsCheatEntry& entry)
 		Game::Utils::AddCarRoofForWeapon(car, Game::WEAPON_VEHICLE_JEEP_TURRET);
 	}
 
+	for (int i = 0; i < 13; i++) {
+		short ammo = entry.carWeaponsAmmo[i];
+		Game::CAR_WEAPON_INDEX weaponType = static_cast<Game::CAR_WEAPON_INDEX>(15 + i);
+		if(ammo != 0) Game::Functions::CarAddWeapon(weaponType, 1, car); // a bit hacky way to safely create weapon struct
+		Game::WEAPON_STRUCT* weaponStruct = Game::Functions::GetCarWeaponStruct(car, weaponType);
+
+		if(weaponStruct) {
+			weaponStruct->ammo = ammo;
+		}
+	}
+
 	return true;
 }
 
@@ -163,7 +185,7 @@ void ModMenuModule::SavedCarsCheat::SaveToPersistence() const
 		offset += size;
 	};
 
-	size_t version = 0;
+	size_t version = 1;
 	write(&version, sizeof(size_t));
 
 	size_t entryCount = m_entries.size();
@@ -208,7 +230,7 @@ void ModMenuModule::SavedCarsCheat::LoadFromPersistence()
 		return;
 	}
 
-	if (*versionOpt != 0) {
+	if (*versionOpt != 1) {
 		spdlog::error("SavedCarsCheat: Unsupported version {} in persistence", *versionOpt);
 		return;
 	}

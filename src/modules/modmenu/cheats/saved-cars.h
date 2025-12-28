@@ -13,6 +13,7 @@ namespace ModMenuModule {
 		bool hasTankCannon;
 		bool hasWaterCannon;
 		bool hasJeepTurret;
+		short carWeaponsAmmo[13];
 	};
 
 	class SavedCarsCheat : public CheatBase {
