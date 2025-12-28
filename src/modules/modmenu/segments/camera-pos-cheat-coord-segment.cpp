@@ -23,7 +23,6 @@ bool ModMenuModule::CameraPosCheatCoordSegment::Attach(ModMenuModule::MenuBase* 
 
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
-	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 
 	CameraPosCheat* cameraPosCheat = CameraPosCheat::GetInstance();
 
