@@ -35,5 +35,9 @@ namespace Game {
 		static int* GetScreenHeight() { return (int*)0x00673474; }
 		static int* GetCurrentlyDrawnMapLayerIndex() { return (int*)0x006633a0; }
 		static MapBlocks* GetMapBlocks() { return (MapBlocks*)*(DWORD*)0x00662c08; }
+		static int* GetTankCannonRoofOffsetY() { return (int*)0x005e4d64; }
+		static int* GetJeepGunRoofOffsetY() { return (int*)0x005e500c; }
+		static int* GetAntennaRoofOffsetY() { return (int*)0x005e5014; }
+		static int* GetWaterCannonRoofOffsetY() { return (int*)0x005e4eb8; }
 	};
 }
