@@ -10,3 +10,4 @@
 #include "./background.h"
 #include "./overridepos.h"
 #include "./horcentered.h"
+#include "./car-sprite.h"
