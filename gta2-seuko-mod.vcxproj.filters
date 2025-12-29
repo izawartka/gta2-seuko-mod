@@ -324,6 +324,7 @@
     <ClInclude Include="src\modules\ui\components\car-sprite.h" />
     <ClInclude Include="src\modules\ui\utils\utils.h" />
     <ClInclude Include="src\modules\ui\utils\draw-sprite.h" />
+    <ClInclude Include="src\converters\object-type.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
