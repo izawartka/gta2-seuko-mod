@@ -25,14 +25,12 @@ namespace ModMenuModule {
 		virtual void Detach() override;
 
 		void UpdateSpritePreview();
-		void UpdateSpritePreviewMargin();
 
 		UiModule::SelectController<Game::CAR_MODEL4>* m_modelController = nullptr;
 		UiModule::SelectController<std::tuple<short, Game::PALETTE_BASE>>* m_remapController = nullptr;
 
-		UiModule::Margin* m_spritePreviewMargin = nullptr;
-		UiModule::Sprite* m_spritePreview = nullptr;
-		UiModule::SpriteOptions m_spritePreviewOptions;
+		UiModule::CarSprite* m_spritePreview = nullptr;
+		UiModule::CarSpriteOptions m_spritePreviewOptions;
 		std::string m_persistencePrefix = "";
 	};
 }

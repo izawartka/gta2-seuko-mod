@@ -1,6 +1,5 @@
 #include "spawn-vehicle-segment.h"
 #include "../../../converters/car-model.h"
-#include "../../../converters/yes-no.h"
 #include "../../../converters/car-remap.h"
 #include "../root.h"
 
@@ -70,7 +69,6 @@ bool ModMenuModule::SpawnVehicleSegment::Attach(ModMenuModule::MenuBase* menu, U
 	m_modelController->SetConverter<CarModelConverter>();
 	m_modelController->SetSaveCallback([this](Game::CAR_MODEL4 newModel) {
 		UpdateSpritePreview();
-		UpdateSpritePreviewMargin();
 	});
 
 	// remap
@@ -88,9 +86,12 @@ bool ModMenuModule::SpawnVehicleSegment::Attach(ModMenuModule::MenuBase* menu, U
 
 	// sprite preview
 	UpdateSpritePreview();
-	m_spritePreviewMargin = uiRoot->AddComponent<UiModule::Margin>(m_vertCont, 0, 0);
-	m_spritePreview = uiRoot->AddComponent<UiModule::Sprite>(m_spritePreviewMargin, m_spritePreviewOptions);
-	UpdateSpritePreviewMargin();
+	auto* spritePreviewMargin = uiRoot->AddComponent<UiModule::Margin>(
+		m_vertCont, 
+		options.menuControllerOptions.createdSelectableOptions.markerOffsetX, 
+		options.menuSpacerHeight
+	);
+	m_spritePreview = uiRoot->AddComponent<UiModule::CarSprite>(spritePreviewMargin, m_spritePreviewOptions);
 
 	return true;
 }
@@ -112,54 +113,16 @@ void ModMenuModule::SpawnVehicleSegment::UpdateSpritePreview()
 	Game::CAR_MODEL4 selectedModel = m_modelController->GetValue().value();
 	auto selectedRemapTuple = m_remapController->GetValue().value();
 
-	UiModule::SpriteOptions options = {};
+	UiModule::CarSpriteOptions options = {};
+	options.carModel = selectedModel;
 	options.rotation = (float)M_PI / 2.0f;
 	options.scale = SPAWN_VEHICLE_SPRITE_PREVIEW_SCALE;
-	options.spriteType = Game::SPRITE_TYPE::SPRITE_TYPE_CAR;
 	options.remap = std::get<0>(selectedRemapTuple);
 	options.palette = std::get<1>(selectedRemapTuple);
-
-	Game::Style_S3* styleS3 = Game::Memory::GetStyleS3();
-	Game::CarInfo* carInfo = styleS3->allCarsInfo->cars[selectedModel];
-	if (!carInfo) {
-		spdlog::error("Could not find vehicle info for the model #{}.", static_cast<uint32_t>(selectedModel));
-		return;
-	}
-	uint16_t spriteId = static_cast<uint16_t>(carInfo->sprite);
-	options.spriteId = spriteId;
 
 	if (m_spritePreview) {
 		m_spritePreview->SetOptions(options);
 	}
 
 	m_spritePreviewOptions = options;
-}
-
-void ModMenuModule::SpawnVehicleSegment::UpdateSpritePreviewMargin()
-{
-	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
-	Game::CAR_MODEL4 selectedModel = m_modelController->GetValue().value();
-
-	Game::Style_S3* styleS3 = Game::Memory::GetStyleS3();
-	Game::CarInfo* carInfo = styleS3->allCarsInfo->cars[selectedModel];
-	if (!carInfo) {
-		spdlog::error("Could not find vehicle info for the model #{}.", static_cast<uint32_t>(selectedModel));
-		return;
-	}
-
-	uint16_t carWidth = carInfo->w;
-	uint16_t carHeight = carInfo->h;
-	int spriteWidth = m_spritePreview->GetSpriteWidth();
-	int spriteHeight = m_spritePreview->GetSpriteHeight();
-	float offsetX = (float)(spriteHeight - carHeight) / 2.0f;
-	if (offsetX < 0) offsetX = 0;
-	float offsetY = (float)(spriteWidth - carWidth) / 2.0f;
-	if (offsetY < 0) offsetY = 0;
-
-	Game::SCR_f scaledOffsetX = Game::Utils::Multiply(Game::Utils::FromFloat(offsetX), SPAWN_VEHICLE_SPRITE_PREVIEW_SCALE);
-	Game::SCR_f marginX = options.menuControllerOptions.createdSelectableOptions.markerOffsetX - scaledOffsetX;
-	Game::SCR_f scaledOffsetY = Game::Utils::Multiply(Game::Utils::FromFloat(offsetY), SPAWN_VEHICLE_SPRITE_PREVIEW_SCALE);
-	Game::SCR_f marginY = options.menuSpacerHeight * 2 - scaledOffsetY;
-
-	m_spritePreviewMargin->SetMargin(marginX, marginY);
 }
