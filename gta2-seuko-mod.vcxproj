@@ -487,6 +487,8 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
     <ClInclude Include="src\modules\ui\root.h" />
     <ClInclude Include="src\modules\ui\ui.h" />
     <ClInclude Include="src\modules\ui\controllers\menu-item.h" />
+    <ClInclude Include="src\modules\ui\utils\draw-sprite.h" />
+    <ClInclude Include="src\modules\ui\utils\utils.h" />
     <ClInclude Include="src\version.h" />
   </ItemGroup>
   <ItemGroup>
@@ -606,6 +608,7 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
     <ClCompile Include="src\modules\ui\controllers\menu.cpp" />
     <ClCompile Include="src\modules\ui\root.cpp" />
     <ClCompile Include="src\dinput8_proxy.cpp" />
+    <ClCompile Include="src\modules\ui\utils\draw-sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

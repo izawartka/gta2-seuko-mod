@@ -4,6 +4,7 @@
 #include "events/update-ui.h"
 #include "rect.h"
 #include "root.h"
+#include "utils/utils.h"
 #include "component.h"
 #include "components/components.h"
 #include "converter-support.h"

@@ -117,6 +117,7 @@
     <ClCompile Include="src\modules\modmenu\quick-actions\toggle-native-cheat.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\toggle-native-cheat-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\toggle-native-cheat-utils.cpp" />
+    <ClCompile Include="src\modules\ui\utils\draw-sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -319,6 +320,8 @@
     <ClInclude Include="src\modules\modmenu\quick-actions\toggle-native-cheat.h" />
     <ClInclude Include="src\modules\modmenu\segments\toggle-native-cheat-segment.h" />
     <ClInclude Include="src\modules\modmenu\utils\toggle-native-cheat-utils.h" />
+    <ClInclude Include="src\modules\ui\utils\utils.h" />
+    <ClInclude Include="src\modules\ui\utils\draw-sprite.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
