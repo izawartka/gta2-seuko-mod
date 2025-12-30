@@ -19,8 +19,8 @@ namespace ModMenuModule {
 		virtual std::optional<PositionSegmentData> GetSegmentData() const override;
 		virtual bool SetSegmentData(const PositionSegmentData& data) override;
 
-		void SetDoUpdateFromPlayer(bool doUpdateFromPlayer);
-		bool GetDoUpdateFromPlayer() const { return m_doUpdateFromPlayer; }
+		void SetDoUpdatePosition(bool doUpdateFromPlayer);
+		bool GetDoUpdatePosition() const { return m_doUpdatePosition; }
 
 	private:
 		virtual bool Attach(ModMenuModule::MenuBase* menu, UiModule::Component* parent) override;
@@ -35,17 +35,17 @@ namespace ModMenuModule {
 
 		void OnPlayerPosUpdate(ModMenuModule::PlayerPosUpdateEvent& event);
 		void ApplyAutoZIfNeeded();
-		void ForceUpdateFromPlayer();
-		void OnUpdateFromPlayerControllerSave(bool newValue);
+		void ForceUpdatePosition();
+		void OnDoUpdatePositionControllerSave(bool newValue);
 		void OnCoordControllerSave(bool isZCoord);
 		void OnAutoZControllerSave(bool newValue);
 
-		UiModule::SelectController<bool>* m_updateFromPlayerController = nullptr;
+		UiModule::SelectController<bool>* m_doUpdatePositionController = nullptr;
 		UiModule::EditableController<Game::SCR_f>* m_xController = nullptr;
 		UiModule::EditableController<Game::SCR_f>* m_yController = nullptr;
 		UiModule::EditableController<Game::SCR_f>* m_zController = nullptr;
 		UiModule::SelectController<bool>* m_autoZController = nullptr;
-		bool m_doUpdateFromPlayer = true;
+		bool m_doUpdatePosition = true;
 		std::string m_persistencePrefix = "";
 	};
 }

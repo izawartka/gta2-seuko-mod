@@ -31,7 +31,7 @@ std::optional<ModMenuModule::PositionSegmentData> ModMenuModule::PositionSegment
 	}
 
 	return PositionSegmentData{
-		m_doUpdateFromPlayer,
+		m_doUpdatePosition,
 		positionOpt.value(),
 		autoZOpt.value()
 	};
@@ -44,20 +44,20 @@ bool ModMenuModule::PositionSegment::SetSegmentData(const PositionSegmentData& d
 		return false;
 	}
 
-	SetDoUpdateFromPlayer(data.updateFromPlayer);
-	if (!m_doUpdateFromPlayer) {
+	SetDoUpdatePosition(data.updateFromPlayer);
+	if (!m_doUpdatePosition) {
 		SetCoordControllerValues(data.position);
 	}
 	m_autoZController->SetValue(data.autoZ);
 	return true;
 }
 
-void ModMenuModule::PositionSegment::SetDoUpdateFromPlayer(bool doUpdateFromPlayer)
+void ModMenuModule::PositionSegment::SetDoUpdatePosition(bool doUpdateFromPlayer)
 {
-	OnUpdateFromPlayerControllerSave(doUpdateFromPlayer);
+	OnDoUpdatePositionControllerSave(doUpdateFromPlayer);
 
 	if (!IsAttached()) return;
-	m_updateFromPlayerController->SetValue(doUpdateFromPlayer);
+	m_doUpdatePositionController->SetValue(doUpdateFromPlayer);
 }
 
 bool ModMenuModule::PositionSegment::Attach(ModMenuModule::MenuBase* menu, UiModule::Component* parent)
@@ -74,23 +74,23 @@ bool ModMenuModule::PositionSegment::Attach(ModMenuModule::MenuBase* menu, UiMod
 	bool selectedAutoZ = true;
 
 	if (m_persistencePrefix.size()) {
-		m_doUpdateFromPlayer = persistence->Load(m_persistencePrefix + "_SelectedDoUpdateFromPlayer", true);
+		m_doUpdatePosition = persistence->Load(m_persistencePrefix + "_SelectedDoUpdatePosition", true);
 		selectedX = persistence->Load(m_persistencePrefix + "_SelectedX", Game::Utils::FromFloat(0.0f));
 		selectedY = persistence->Load(m_persistencePrefix + "_SelectedY", Game::Utils::FromFloat(0.0f));
 		selectedZ = persistence->Load(m_persistencePrefix + "_SelectedZ", Game::Utils::FromFloat(0.0f));
 		selectedAutoZ = persistence->Load(m_persistencePrefix + "_SelectedAutoZ", true);
 	}
 
-	// Update from player
-	UiModule::Text* updateFromPlayerText = m_menuController->CreateItem<UiModule::Text>(m_vertCont, L"", options.textSize);
-	m_updateFromPlayerController = m_menuController->CreateLatestItemController<UiModule::SelectController<bool>>(
-		updateFromPlayerText,
+	// Update position
+	UiModule::Text* doUpdatePositionText = m_menuController->CreateItem<UiModule::Text>(m_vertCont, L"", options.textSize);
+	m_doUpdatePositionController = m_menuController->CreateLatestItemController<UiModule::SelectController<bool>>(
+		doUpdatePositionText,
 		std::vector<bool>{ false, true },
-		m_doUpdateFromPlayer,
-		UiModule::SelectControllerOptions{ L"Update from player: #", L"#" }
+		m_doUpdatePosition,
+		UiModule::SelectControllerOptions{ L"Update position: #", L"#" }
 	);
-	m_updateFromPlayerController->SetConverter<YesNoConverter>();
-	m_updateFromPlayerController->SetSaveCallback(std::bind(&PositionSegment::OnUpdateFromPlayerControllerSave, this, std::placeholders::_1));
+	m_doUpdatePositionController->SetConverter<YesNoConverter>();
+	m_doUpdatePositionController->SetSaveCallback(std::bind(&PositionSegment::OnDoUpdatePositionControllerSave, this, std::placeholders::_1));
 
 	// X position
 	UiModule::Text* xText = m_menuController->CreateItem<UiModule::Text>(m_vertCont, L"", options.textSize);
@@ -144,7 +144,7 @@ void ModMenuModule::PositionSegment::Detach()
 	if (m_persistencePrefix.size()) {
 		PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 		
-		persistence->Save(m_persistencePrefix + "_SelectedDoUpdateFromPlayer", m_updateFromPlayerController->GetValue().value());
+		persistence->Save(m_persistencePrefix + "_SelectedDoUpdatePosition", m_doUpdatePositionController->GetValue().value());
 
 		if (m_xController && m_xController->GetValue().has_value()) {
 			persistence->Save(m_persistencePrefix + "_SelectedX", m_xController->GetValue().value());
@@ -165,8 +165,8 @@ void ModMenuModule::PositionSegment::Detach()
 
 void ModMenuModule::PositionSegment::OnShow()
 {
-	SetEventListener<ModMenuModule::PlayerPosUpdateEvent>(&PositionSegment::OnPlayerPosUpdate, m_doUpdateFromPlayer);
-	if (m_doUpdateFromPlayer) ForceUpdateFromPlayer();
+	SetEventListener<ModMenuModule::PlayerPosUpdateEvent>(&PositionSegment::OnPlayerPosUpdate, m_doUpdatePosition);
+	if (m_doUpdatePosition) ForceUpdatePosition();
 	else ApplyAutoZIfNeeded();
 }
 
@@ -214,7 +214,7 @@ std::optional<Game::SCR_Vector3> ModMenuModule::PositionSegment::GetCoordControl
 
 void ModMenuModule::PositionSegment::OnPlayerPosUpdate(ModMenuModule::PlayerPosUpdateEvent& event)
 {
-	if (!m_doUpdateFromPlayer) {
+	if (!m_doUpdatePosition) {
 		return;
 	}
 
@@ -254,7 +254,7 @@ void ModMenuModule::PositionSegment::ApplyAutoZIfNeeded()
 	m_zController->SetValue(z);
 }
 
-void ModMenuModule::PositionSegment::ForceUpdateFromPlayer()
+void ModMenuModule::PositionSegment::ForceUpdatePosition()
 {
 	PlayerPosCheat* playerPosCheat = PlayerPosCheat::GetInstance();
 	if (!playerPosCheat->IsEnabled()) return;
@@ -263,16 +263,16 @@ void ModMenuModule::PositionSegment::ForceUpdateFromPlayer()
 	SetCoordControllerValues(position.value());
 }
 
-void ModMenuModule::PositionSegment::OnUpdateFromPlayerControllerSave(bool newValue)
+void ModMenuModule::PositionSegment::OnDoUpdatePositionControllerSave(bool newValue)
 {
-	if (m_doUpdateFromPlayer == newValue) return;
-	m_doUpdateFromPlayer = newValue;
+	if (m_doUpdatePosition == newValue) return;
+	m_doUpdatePosition = newValue;
 
 	if (!IsVisible()) return;
 
 	if (newValue) {
 		AddEventListener<ModMenuModule::PlayerPosUpdateEvent>(&PositionSegment::OnPlayerPosUpdate);
-		ForceUpdateFromPlayer();
+		ForceUpdatePosition();
 	}
 	else {
 		RemoveEventListener<ModMenuModule::PlayerPosUpdateEvent>();
@@ -281,7 +281,7 @@ void ModMenuModule::PositionSegment::OnUpdateFromPlayerControllerSave(bool newVa
 
 void ModMenuModule::PositionSegment::OnCoordControllerSave(bool isZCoord)
 {
-	SetDoUpdateFromPlayer(false);
+	SetDoUpdatePosition(false);
 
 	if (isZCoord) {
 		m_autoZController->SetValue(false);

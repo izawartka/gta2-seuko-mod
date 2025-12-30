@@ -80,5 +80,5 @@ void ModMenuModule::PlayerPosMenu::Teleport()
 
 	playerPosCheat->Teleport(segmentDataOpt->position);
 
-	m_positionSegment->SetDoUpdateFromPlayer(true);
+	m_positionSegment->SetDoUpdatePosition(true);
 }
