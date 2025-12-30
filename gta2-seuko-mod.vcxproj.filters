@@ -120,6 +120,8 @@
     <ClCompile Include="src\modules\ui\components\car-sprite.cpp" />
     <ClCompile Include="src\modules\ui\utils\draw-sprite.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\spawn-object.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\categorized-objects-utils.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\categorized-objects-data.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -327,6 +329,7 @@
     <ClInclude Include="src\modules\ui\utils\draw-sprite.h" />
     <ClInclude Include="src\modules\modmenu\utils\spawn-object.h" />
     <ClInclude Include="src\converters\object-type.h" />
+    <ClInclude Include="src\modules\modmenu\utils\categorized-objects-utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

@@ -3,6 +3,7 @@
 #include "add-default-actions.h"
 #include "angle-utils.h"
 #include "camera-easy-mode-utils.h"
+#include "categorized-objects-utils.h"
 #include "custom-render-queue-utils.h"
 #include "explode-all-cars.h"
 #include "get-all-weapons.h"
