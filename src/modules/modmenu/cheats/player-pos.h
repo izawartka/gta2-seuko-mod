@@ -19,6 +19,7 @@ namespace ModMenuModule {
 		void Teleport(const Game::SCR_Vector3& position, PlayerPosCheatTeleportCallback callback = nullptr);
 
 		const std::optional<Game::SCR_Vector3>& GetLastPosition() const { return m_position; }
+		const std::optional<short>& GetLastRotation() const { return m_rotation; }
 
 	private:
 		virtual void OnFirstEnable() override;
@@ -33,6 +34,7 @@ namespace ModMenuModule {
 
 		static PlayerPosCheat* m_instance;
 		std::optional<Game::SCR_Vector3> m_position = std::nullopt;
+		std::optional<short> m_rotation = std::nullopt;
 		std::optional<Game::SCR_Vector3> m_teleportPosition = std::nullopt;
 		PlayerPosCheatTeleportCallback m_teleportCallback = nullptr;
 		bool m_teleportAutoZ = false;

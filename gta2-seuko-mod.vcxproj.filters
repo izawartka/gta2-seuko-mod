@@ -333,6 +333,7 @@
     <ClInclude Include="src\converters\categorized-object-category.h" />
     <ClInclude Include="src\converters\categorized-object-def.h" />
     <ClInclude Include="src\converters\categorized-object-variant.h" />
+    <ClInclude Include="src\modules\modmenu\events\player-rot-update.h" />
     <ClInclude Include="src\converters\gta-angle.h" />
   </ItemGroup>
   <ItemGroup>

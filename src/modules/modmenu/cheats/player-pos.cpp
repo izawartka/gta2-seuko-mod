@@ -1,5 +1,6 @@
 #include "player-pos.h"
 #include "../events/player-pos-update.h"
+#include "../events/player-rot-update.h"
 #include "../cheat-registry.h"
 
 ModMenuModule::PlayerPosCheat* ModMenuModule::PlayerPosCheat::m_instance = nullptr;
@@ -125,19 +126,28 @@ void ModMenuModule::PlayerPosCheat::OnPreGameTick(PreGameTickEvent& event)
 	Game::Ped* playerPed = Game::Memory::GetPlayerPed();
 
 	std::optional<Game::SCR_Vector3> lastPosition = m_position;
+	std::optional<short> lastRotation = m_rotation;
 
 	if(playerPed->gameObject && playerPed->gameObject->sprite) {
 		m_position = playerPed->gameObject->sprite->position;
+		m_rotation = playerPed->gameObject->sprite->rotation;
 	}
 	else if (playerPed->currentCar && playerPed->currentCar->sprite) {
 		m_position = playerPed->currentCar->sprite->position;
+		m_rotation = playerPed->currentCar->sprite->rotation;
 	}
 	else {
 		m_position = std::nullopt;
+		m_rotation = std::nullopt;
 	}
 
 	if (lastPosition != m_position) {
 		PlayerPosUpdateEvent event(m_position);
+		Core::EventManager::GetInstance()->Dispatch(event);
+	}
+
+	if (lastRotation != m_rotation) {
+		PlayerRotUpdateEvent event(m_rotation);
 		Core::EventManager::GetInstance()->Dispatch(event);
 	}
 }
