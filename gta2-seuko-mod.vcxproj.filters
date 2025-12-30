@@ -333,6 +333,7 @@
     <ClInclude Include="src\converters\categorized-object-category.h" />
     <ClInclude Include="src\converters\categorized-object-def.h" />
     <ClInclude Include="src\converters\categorized-object-variant.h" />
+    <ClInclude Include="src\converters\gta-angle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
