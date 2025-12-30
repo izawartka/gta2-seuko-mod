@@ -119,6 +119,7 @@
     <ClCompile Include="src\modules\modmenu\utils\toggle-native-cheat-utils.cpp" />
     <ClCompile Include="src\modules\ui\components\car-sprite.cpp" />
     <ClCompile Include="src\modules\ui\utils\draw-sprite.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\spawn-object.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -324,6 +325,7 @@
     <ClInclude Include="src\modules\ui\components\car-sprite.h" />
     <ClInclude Include="src\modules\ui\utils\utils.h" />
     <ClInclude Include="src\modules\ui\utils\draw-sprite.h" />
+    <ClInclude Include="src\modules\modmenu\utils\spawn-object.h" />
     <ClInclude Include="src\converters\object-type.h" />
   </ItemGroup>
   <ItemGroup>
