@@ -17,6 +17,7 @@
 #include "camera-pos-menu.h"
 #include "camera-advanced-menu.h"
 #include "world-menu.h"
+#include "spawn-object-menu.h"
 #include "native-cheats-menu.h"
 #include "native-cheats-category-menu.h"
 #include "misc-menu.h"
