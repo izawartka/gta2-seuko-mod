@@ -122,6 +122,7 @@
     <ClCompile Include="src\modules\modmenu\utils\spawn-object.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\categorized-objects-utils.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\categorized-objects-data.cpp" />
+    <ClCompile Include="src\modules\modmenu\segments\position-rotation-segment.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -334,6 +335,7 @@
     <ClInclude Include="src\converters\categorized-object-def.h" />
     <ClInclude Include="src\converters\categorized-object-variant.h" />
     <ClInclude Include="src\modules\modmenu\events\player-rot-update.h" />
+    <ClInclude Include="src\modules\modmenu\segments\position-rotation-segment.h" />
     <ClInclude Include="src\converters\gta-angle.h" />
     <ClInclude Include="src\converters\ped-remap.h" />
   </ItemGroup>
