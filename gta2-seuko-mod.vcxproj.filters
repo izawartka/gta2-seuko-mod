@@ -335,6 +335,7 @@
     <ClInclude Include="src\converters\categorized-object-variant.h" />
     <ClInclude Include="src\modules\modmenu\events\player-rot-update.h" />
     <ClInclude Include="src\converters\gta-angle.h" />
+    <ClInclude Include="src\converters\ped-remap.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
