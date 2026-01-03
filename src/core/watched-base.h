@@ -102,6 +102,11 @@ namespace Core
 			m_nextValueNotify = notify;
 		}
 
+		void CancelSetValue() {
+			m_nextValue = std::nullopt;
+			m_nextValueNotify = false;
+		}
+
 		bool SetValueNow(const T& newValue, bool notify = false) {
 			T* valuePtr = m_resolver();
 			if (valuePtr == nullptr) return false;
@@ -236,6 +241,11 @@ namespace Core
 
 			m_nextValue = newValue;
 			m_nextValueNotify = notify;
+		}
+
+		void CancelSetValue() {
+			m_nextValue = std::nullopt;
+			m_nextValueNotify = false;
 		}
 
 		bool SetValueNow(const Tuple& newValue, bool notify = false) {
