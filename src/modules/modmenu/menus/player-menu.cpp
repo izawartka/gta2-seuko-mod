@@ -1,6 +1,7 @@
 #include "player-menu.h"
 #include "player-pos-menu.h"
 #include "player-stats-menu.h"
+#include "player-appearance-menu.h"
 #include "../../../converters/cop-value.h"
 #include "../../../converters/yes-no.h"
 #include "../cheats/cop-value.h"
@@ -28,6 +29,7 @@ bool ModMenuModule::PlayerMenu::Attach()
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Position", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Stats", options.textSize);
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Appearance", options.textSize);
 
 	CopValueCheat* copValueCheat = CopValueCheat::GetInstance();
 	if (!copValueCheat->IsEnabled()) {
@@ -127,6 +129,9 @@ void ModMenuModule::PlayerMenu::OnMenuAction(UiModule::Selectable* item, UiModul
 		break;
 	case 2: // Stats
 		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::PlayerStatsMenu>();
+		break;
+	case 3: // Appearance
+		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::PlayerAppearanceMenu>();
 		break;
 	default:
 		break;
