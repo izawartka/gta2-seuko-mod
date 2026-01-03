@@ -62,3 +62,30 @@ const std::vector<Game::EXPLOSION_SIZE>& Game::Utils::GetAvailableExplosionSizes
 	});
 	return explosionSizes;
 }
+
+const std::vector<Game::PED_REMAP>& Game::Utils::GetAvailablePedRemaps()
+{
+	static constexpr unsigned char ids[] = {
+		0,1,2,3,4,5,6,7,8,9,
+		10,11,12,13,14,15,16,17,18,19,
+		20,21,22,23,24,25,26,27,28,29,
+		30,31,32,33,34,35,36,37,38,39,
+		40,41,42,43,44,45,46,47,48,49,
+		50,51,52
+	};
+	static const std::vector<PED_REMAP> remaps(
+		reinterpret_cast<const PED_REMAP*>(std::begin(ids)),
+		reinterpret_cast<const PED_REMAP*>(std::end(ids))
+	);
+	return remaps;
+}
+
+const std::vector<Game::PED_GRAPHIC_TYPE>& Game::Utils::GetAvailablePedGraphicTypes()
+{
+	static const std::vector<PED_GRAPHIC_TYPE> graphicTypes({
+		PED_GRAPHIC_TYPE_DUMMY,
+		PED_GRAPHIC_TYPE_EMERG,
+		PED_GRAPHIC_TYPE_GANG
+	});
+	return graphicTypes;
+}
