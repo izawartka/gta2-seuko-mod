@@ -40,7 +40,6 @@ std::optional<ModMenuModule::NativeCheatState> ModMenuModule::Utils::ToggleNativ
 	NativeCheatsKeeperCheat* nativeCheatsKeeper = NativeCheatsKeeperCheat::GetInstance();
 	if (!nativeCheatsKeeper->IsEnabled()) {
 		nativeCheatsKeeper->SetEnabled(true);
-		return std::nullopt;
 	}
 
 	const auto* cheatDef = NativeCheatsKeeperCheat::GetNativeCheatDef(cheatAddress);
