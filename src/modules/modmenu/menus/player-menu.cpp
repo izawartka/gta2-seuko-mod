@@ -33,9 +33,10 @@ bool ModMenuModule::PlayerMenu::Attach()
 
 	CopValueCheat* copValueCheat = CopValueCheat::GetInstance();
 	if (!copValueCheat->IsEnabled()) {
-		spdlog::error("PlayerMenu::Attach: CopValueCheat is not enabled");
+		copValueCheat->SetEnabled(true);
 	}
 
+	// wanted level
 	UiModule::VarTextSelectOptionList<short> wantedLevelOptionList = { 0, 600, 1600, 3000, 5000, 8000, 12000 };
 	UiModule::Text* wantedLevelText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	auto wantedLevelController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<short, short>>(
@@ -56,14 +57,14 @@ bool ModMenuModule::PlayerMenu::Attach()
 	auto freezeCopValueController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<bool, bool>>(
 		freezeCopValueText,
 		[copValueCheat]() {
-			return copValueCheat->IsEnabled() && copValueCheat->IsCopValueFrozen();
+			return copValueCheat->IsCopValueLocked();
 		},
 		UiModule::VarTextSelectOptionList<bool>{ false, true },
 		UiModule::VarTextSelectControllerOptions{ L"Freeze wanted level: #", L"#" }
 	);
 	freezeCopValueController->SetConverter<YesNoConverter>();
 	freezeCopValueController->SetCustomSaveCallback([copValueCheat](bool newValue) {
-		copValueCheat->SetCopValueFrozen(newValue);
+		copValueCheat->SetCopValueLocked(newValue);
 	});
 
 	// health
