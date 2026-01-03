@@ -312,6 +312,7 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
     <ClInclude Include="src\converters\native-cheat-state.h" />
     <ClInclude Include="src\converters\native-cheat.h" />
     <ClInclude Include="src\converters\object-type.h" />
+    <ClInclude Include="src\converters\ped-graphic-type.h" />
     <ClInclude Include="src\converters\ped-remap.h" />
     <ClInclude Include="src\converters\quick-action-type.h" />
     <ClInclude Include="src\converters\radians.h" />

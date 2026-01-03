@@ -342,6 +342,7 @@
     <ClInclude Include="src\modules\modmenu\segments\position-rotation-segment.h" />
     <ClInclude Include="src\converters\gta-angle.h" />
     <ClInclude Include="src\converters\ped-remap.h" />
+    <ClInclude Include="src\converters\ped-graphic-type.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
