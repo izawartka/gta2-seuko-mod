@@ -129,6 +129,7 @@
     <ClCompile Include="src\modules\modmenu\menus\player-appearance-menu.cpp" />
     <ClCompile Include="src\game-version-check.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\spawn-car.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\spawn-object-at-player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -351,6 +352,7 @@
     <ClInclude Include="src\converters\ped-graphic-type.h" />
     <ClInclude Include="src\modules\modmenu\events\player-appearance-update.h" />
     <ClInclude Include="src\modules\modmenu\utils\spawn-car.h" />
+    <ClInclude Include="src\modules\modmenu\utils\spawn-object-at-player.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

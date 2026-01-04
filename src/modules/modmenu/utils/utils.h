@@ -11,5 +11,6 @@
 #include "spawn-car.h"
 #include "spawn-car-at-player.h"
 #include "spawn-object.h"
+#include "spawn-object-at-player.h"
 #include "toggle-native-cheat-utils.h"
 #include "vertex-utils.h"
