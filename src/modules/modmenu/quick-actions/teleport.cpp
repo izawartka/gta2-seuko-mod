@@ -46,7 +46,7 @@ void ModMenuModule::TeleportAction::Execute()
 		return;
 	}
 
-	playerPosCheat->Teleport(data, [&data](bool success) {
+	playerPosCheat->Teleport(data, [data](bool success) {
 		if (success) {
 			std::wstring positionStr = ScrVector3Converter::ConvertToString(data);
 			ModMenuModule::ToastManager::GetInstance()->Show({ L"Teleported to " + positionStr });

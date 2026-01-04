@@ -103,7 +103,6 @@ void ModMenuModule::ToggleNativeCheatSegment::CreateCheatController(NativeCheatC
 	if (m_cheatMenuItemId == -1 || !m_cheatText) return;
 	if (m_cheatController) return;
 
-	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	NativeCheatsKeeperCheat* nativeCheatsKeeper = NativeCheatsKeeperCheat::GetInstance();
 	const auto& cheatsInCategory = NativeCheatsKeeperCheat::GetAllNativeCheatsByCategory(category);
 	if (cheatsInCategory.size() == 0) {
