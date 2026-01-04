@@ -5,6 +5,7 @@
 #include "fix-vehicle.h"
 #include "get-all-weapons.h"
 #include "save-game.h"
+#include "spawn-object.h"
 #include "spawn-saved-vehicle.h"
 #include "spawn-vehicle.h"
 #include "teleport.h"
