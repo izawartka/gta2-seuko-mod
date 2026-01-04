@@ -532,6 +532,7 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
     <ClCompile Include="src\events\scale-shadow.cpp" />
     <ClCompile Include="src\events\try-shoot-weapon.cpp" />
     <ClCompile Include="src\events\keyboard.cpp" />
+    <ClCompile Include="src\game-version-check.cpp" />
     <ClCompile Include="src\game\keycode.cpp" />
     <ClCompile Include="src\game\utils\car-roof-utils.cpp" />
     <ClCompile Include="src\game\utils\player-utils.cpp" />

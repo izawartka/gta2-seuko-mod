@@ -3,6 +3,7 @@
 #include <windows.h>
 #include "logging.cpp"
 #include "version.h"
+#include "game-version-check.cpp"
 #include "core/core.h"
 #include "modules/persistence/persistence.h"
 #include "modules/keybinding/keybinding.h"
@@ -21,6 +22,8 @@ static void Init()
 	
 	InitLogging();
 	spdlog::info("Seuko mod version {} {}", SEUKOMOD_VERSION_STR, SEUKOMOD_GIT_STR);
+	if (!GameVersionCheck()) return;
+
 	coreInstance = new Core::Core();
 	Core::ModuleManager* moduleManager = Core::ModuleManager::GetInstance();
 	PersistenceModule::RootModule* persistenceModule = moduleManager->AddModule<PersistenceModule::RootModule>();
@@ -35,13 +38,15 @@ static void Deinit()
 {
 	if (!initialized) return;
 	
-	Core::ModuleManager* moduleManager = Core::ModuleManager::GetInstance();
-	moduleManager->RemoveModule<ModMenuModule::RootModule>();
-	moduleManager->RemoveModule<UiModule::RootModule>();
-	moduleManager->RemoveModule<KeyBindingModule::RootModule>();
-	moduleManager->RemoveModule<PersistenceModule::RootModule>();
-	delete coreInstance;
-	coreInstance = nullptr;
+	if (coreInstance != nullptr) {
+		Core::ModuleManager* moduleManager = Core::ModuleManager::GetInstance();
+		moduleManager->RemoveModule<ModMenuModule::RootModule>();
+		moduleManager->RemoveModule<UiModule::RootModule>();
+		moduleManager->RemoveModule<KeyBindingModule::RootModule>();
+		moduleManager->RemoveModule<PersistenceModule::RootModule>();
+		delete coreInstance;
+		coreInstance = nullptr;
+	}
 	
 	UnloadOriginalDll();
 	

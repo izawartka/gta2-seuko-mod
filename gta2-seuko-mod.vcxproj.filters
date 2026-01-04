@@ -127,6 +127,7 @@
     <ClCompile Include="src\modules\modmenu\segments\position-rotation-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\player-appearance.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\player-appearance-menu.cpp" />
+    <ClCompile Include="src\game-version-check.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
