@@ -29,9 +29,9 @@ public:
 		case 21: return L"GTRUCK";
 		case 22: return L"GUNJEEP";
 		case 23: return L"HOTDOG";
-		case 24: return L"HOTDOG_D1";
-		case 25: return L"HOTDOG_D2";
-		case 26: return L"HOTDOG_D3";
+		case 24: return L"HOTDOG D1";
+		case 25: return L"HOTDOG D2";
+		case 26: return L"HOTDOG D3";
 		case 27: return L"ICECREAM";
 		case 28: return L"ISETLIMO";
 		case 29: return L"ISETTA";
@@ -89,7 +89,7 @@ public:
 		case 82: return L"XK120";
 		case 83: return L"ZCX5";
 		case 84: return L"EDSELFBI";
-		case 85: return L"HOTDOG_D4";
+		case 85: return L"HOTDOG D4";
 		case 86: return L"KRSNABUS";
 		default: return L"???";
 		}
