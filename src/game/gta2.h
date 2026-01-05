@@ -30,7 +30,7 @@ typedef struct Car Car, *PCar;
 
 typedef struct Roof Roof, *PRoof;
 
-typedef enum CAR_LIGHTS_AND_DOORS_BITSTATE {
+typedef enum CAR_DELTAS_BITSTATE {
 	BAGAGE_DOORS_OPEN1=2048,
 	BAGAGE_DOORS_OPEN2=4096,
 	BAGAGE_DOORS_OPEN3=8192,
@@ -64,7 +64,7 @@ typedef enum CAR_LIGHTS_AND_DOORS_BITSTATE {
 	UNK_100000=1048576,
 	UNK_200000=2097152,
 	UNK_80000=524288
-} CAR_LIGHTS_AND_DOORS_BITSTATE;
+} CAR_DELTAS_BITSTATE;
 
 typedef struct CarEntering CarEntering, *PCarEntering;
 
@@ -844,7 +844,7 @@ struct Sprite {
 struct Car {
 	struct Roof* roof; /* turret */
 	struct Passenger* lastPassenger;
-	enum CAR_LIGHTS_AND_DOORS_BITSTATE carLights;
+	enum CAR_DELTAS_BITSTATE deltasBitstate;
 	struct CarDoor carDoor[4];
 	struct Car * lastCar;
 	struct Sprite * sprite;

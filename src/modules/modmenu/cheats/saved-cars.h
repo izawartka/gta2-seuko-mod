@@ -7,7 +7,7 @@ namespace ModMenuModule {
 		Game::CAR_MODEL4 model;
 		short remap;
 		Game::PALETTE_BASE palette;
-		enum Game::CAR_LIGHTS_AND_DOORS_BITSTATE carLights;
+		enum Game::CAR_DELTAS_BITSTATE deltasBitstate;
 		short carDamage;
 		short physicsBitmask;
 		bool hasTankCannon;

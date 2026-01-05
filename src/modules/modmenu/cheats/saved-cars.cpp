@@ -108,7 +108,7 @@ ModMenuModule::SavedCarsCheatEntry ModMenuModule::SavedCarsCheat::CreateEntry(Ga
 	entry.model = car->carModel;
 	entry.remap = car->sprite ? car->sprite->carColor : 0;
 	entry.palette = car->sprite ? car->sprite->paletteBase : Game::PALETTE_BASE::PALETTE_BASE_SPRITE;
-	entry.carLights = car->carLights;
+	entry.deltasBitstate = car->deltasBitstate;
 	entry.carDamage = car->carDamage;
 	entry.physicsBitmask = car->physicsBitmask;
 
@@ -138,7 +138,7 @@ bool ModMenuModule::SavedCarsCheat::SpawnEntry(const SavedCarsCheatEntry& entry)
 		return false;
 	}
 
-	car->carLights = entry.carLights;
+	car->deltasBitstate = entry.deltasBitstate;
 	car->carDamage = entry.carDamage;
 	car->physicsBitmask = entry.physicsBitmask;
 
