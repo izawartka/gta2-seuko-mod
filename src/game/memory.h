@@ -40,5 +40,7 @@ namespace Game {
 		static int* GetAntennaRoofOffsetY() { return (int*)0x005e5014; }
 		static int* GetWaterCannonRoofOffsetY() { return (int*)0x005e4eb8; }
 		static S33* GetS33() { return (S33*)*(DWORD*)0x00665788; }
+		static TrafficManager* GetTrafficManager() { return (TrafficManager*)*(DWORD*)0x005e4ca4; }
+		static int* GetCarsScale() { return (int*)0x005e4d4c; }
 	};
 }
