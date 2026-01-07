@@ -1,10 +1,11 @@
 #include "fix-vehicle.h"
 #include "../cheats/last-car.h"
+#include "../utils/fix-car-engine-damage.h"
 #include "../toast-manager.h"
 #include "../quick-action-registry.h"
 
 static const std::string typeId = "ModMenu_FixVehicle";
-static const std::wstring typeLabel = L"Fix last vehicle damage";
+static const std::wstring typeLabel = L"Fix last vehicle engine damage";
 
 ModMenuModule::FixVehicleAction::FixVehicleAction()
 {
@@ -39,13 +40,9 @@ void ModMenuModule::FixVehicleAction::Execute()
 		return;
 	}
 
-	lastCar->carDamage = 0;
-	lastCar->fireState = 0;
-	Game::Functions::ExtinguishCar(lastCar);
-	Game::Functions::FixCarBrokenEngine(lastCar);
+	Utils::FixCarEngineDamage(lastCar);
 
-	spdlog::info("FixVehicleAction::Execute: Fixed damage for last car.");
-	ModMenuModule::ToastManager::GetInstance()->Show({ L"Vehicle damage fixed" });
+	ModMenuModule::ToastManager::GetInstance()->Show({ L"Fixed vehicle engine damage" });
 }
 
 const std::wstring& ModMenuModule::FixVehicleAction::GetLabel() const

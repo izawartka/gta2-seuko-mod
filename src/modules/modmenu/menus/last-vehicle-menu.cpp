@@ -4,6 +4,7 @@
 #include "../../../converters/car-model.h"
 #include "../../../converters/car-remap.h"
 #include "../../../converters/car-damage.h"
+#include "../utils/fix-car-engine-damage.h"
 #include "last-vehicle-physics-menu.h"
 #include "last-vehicle-save-menu.h"
 
@@ -73,10 +74,10 @@ bool ModMenuModule::LastVehicleMenu::Attach()
 	);
 	engineDamageController->SetConverter<CarDamageConverter>();
 
-	// fix damage button
-	auto fixDamageText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"Fix damage", options.textSize);
-	auto fixDamageBtn = m_menuController->CreateLatestItemController<UiModule::ButtonController>(fixDamageText);
-	fixDamageBtn->SetCallback(this, &LastVehicleMenu::FixCarDamage);
+	// fix engine damage button
+	auto fixEngineDamageText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"Fix engine damage", options.textSize);
+	auto fixEngineDamageBtn = m_menuController->CreateLatestItemController<UiModule::ButtonController>(fixEngineDamageText);
+	fixEngineDamageBtn->SetCallback(this, &LastVehicleMenu::FixCarEngineDamage);
 
 	// turn engine off button
 	auto engineOffText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"Turn engine off", options.textSize);
@@ -158,17 +159,13 @@ Game::Car* ModMenuModule::LastVehicleMenu::GetLastCar()
 	return lastCarCheat->GetLastCar();
 }
 
-void ModMenuModule::LastVehicleMenu::FixCarDamage()
+void ModMenuModule::LastVehicleMenu::FixCarEngineDamage()
 {
 	Game::Car* lastCar = GetLastCar();
-	if (!lastCar) {
-		return;
-	}
+	if (!lastCar) return;
 
-	lastCar->carDamage = 0;
-	lastCar->fireState = 0;
-	Game::Functions::ExtinguishCar(lastCar);
-	Game::Functions::FixCarBrokenEngine(lastCar);
+	Utils::FixCarEngineDamage(lastCar);
+
 }
 
 void ModMenuModule::LastVehicleMenu::TurnEngineOff()
