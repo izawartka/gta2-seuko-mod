@@ -41,8 +41,8 @@ void ModMenuModule::FixVehicleAction::Execute()
 
 	lastCar->carDamage = 0;
 	lastCar->fireState = 0;
-	Game::Functions::ExtinguishCar(lastCar, 0);
-	Game::Functions::FixCarBrokenEngine(lastCar, 0);
+	Game::Functions::ExtinguishCar(lastCar);
+	Game::Functions::FixCarBrokenEngine(lastCar);
 
 	spdlog::info("FixVehicleAction::Execute: Fixed damage for last car.");
 	ModMenuModule::ToastManager::GetInstance()->Show({ L"Vehicle damage fixed" });

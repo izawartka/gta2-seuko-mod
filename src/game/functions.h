@@ -76,8 +76,8 @@ namespace Game {
 		typedef WEAPON_STRUCT* (__stdcall GetCarWeaponStructType)(Car* car, CAR_WEAPON_INDEX weapon);
 		static constexpr GetCarWeaponStructType* GetCarWeaponStruct = (GetCarWeaponStructType*)0x004cd7f0;
 
-		// also requires calling some player weapon list related functions if there is a ped inside, check 0x004cd820 for details
 		typedef WEAPON_STRUCT* (__stdcall CreateCarWeaponStructType)(CAR_WEAPON_INDEX type, Car* car, short ammo);
+		// also requires calling some player weapon list related functions if there is a ped inside, check 0x004cd820 for details
 		static constexpr CreateCarWeaponStructType* CreateCarWeaponStruct = (CreateCarWeaponStructType*)0x004cd7b0;
 
 		typedef uint(__fastcall AddWeaponType)(Ped* ped, DWORD edx, WEAPON_INDEX weapon, uint ammo);
@@ -98,13 +98,19 @@ namespace Game {
 		typedef void(__fastcall CarAddRoofAntennaType)(Car* car);
 		static constexpr CarAddRoofAntennaType* CarAddRoofAntenna = (CarAddRoofAntennaType*)0x00425fd0;
 
-		typedef void(__fastcall ExtinguishCarType)(Car* car, DWORD edx);
+		typedef void(__fastcall ExtinguishCarType)(Car* car);
 		// also set car->fireState to 0 to fully extinguish
 		static constexpr ExtinguishCarType* ExtinguishCar = (ExtinguishCarType*)0x004bf070;
 
-		typedef void(__fastcall FixCarBrokenEngineType)(Car* car, DWORD edx);
+		typedef void(__fastcall FixCarBrokenEngineType)(Car* car);
 		// allows to run the engine even after the car exploded
 		static constexpr FixCarBrokenEngineType* FixCarBrokenEngine = (FixCarBrokenEngineType*)0x00421570;
+
+		typedef void(__fastcall TurnOnCarBrakeLightsType)(Car* car);
+		static constexpr TurnOnCarBrakeLightsType* TurnOnCarBrakeLights = (TurnOnCarBrakeLightsType*)0x004213d0;
+
+		typedef void(__fastcall TurnOnCarLightsType)(Car* car);
+		static constexpr TurnOnCarLightsType* TurnOnCarLights = (TurnOnCarLightsType*)0x00425590;
 
 		typedef void(__fastcall ExplodeCarType)(Car* car, DWORD edx, EXPLOSION_SIZE explosionSize);
 		static constexpr ExplodeCarType* ExplodeCar = (ExplodeCarType*)0x00426fa0;

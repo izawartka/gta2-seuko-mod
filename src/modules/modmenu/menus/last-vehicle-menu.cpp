@@ -167,8 +167,8 @@ void ModMenuModule::LastVehicleMenu::FixCarDamage()
 
 	lastCar->carDamage = 0;
 	lastCar->fireState = 0;
-	Game::Functions::ExtinguishCar(lastCar, 0);
-	Game::Functions::FixCarBrokenEngine(lastCar, 0);
+	Game::Functions::ExtinguishCar(lastCar);
+	Game::Functions::FixCarBrokenEngine(lastCar);
 }
 
 void ModMenuModule::LastVehicleMenu::TurnEngineOff()
