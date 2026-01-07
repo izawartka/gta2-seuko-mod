@@ -22,6 +22,7 @@ namespace ModMenuModule {
 		void UpdateLastCarState();
 		Game::Car* GetLastCar();
 		void FixCarEngineDamage();
+		void FixCarVisualDamage();
 		void TurnEngineOff();
 		void ExplodeCar();
 

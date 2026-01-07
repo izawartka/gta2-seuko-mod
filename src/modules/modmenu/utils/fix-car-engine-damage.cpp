@@ -22,4 +22,6 @@ void ModMenuModule::Utils::FixCarEngineDamage(Game::Car* car)
 
 	Game::Functions::ExtinguishCar(car);
 	Game::Functions::FixCarBrokenEngine(car);
+
+	spdlog::info("Fixed car engine damage.");
 }

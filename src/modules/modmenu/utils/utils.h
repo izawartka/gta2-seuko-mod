@@ -7,6 +7,7 @@
 #include "custom-render-queue-utils.h"
 #include "explode-all-cars.h"
 #include "fix-car-engine-damage.h"
+#include "fix-car-visual-damage.h"
 #include "get-all-weapons.h"
 #include "save-game.h"
 #include "spawn-car.h"
