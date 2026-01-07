@@ -64,4 +64,4 @@ void ModMenuModule::SpawnObjectAction::OnDataChange()
 	}
 }
 
-REGISTER_QUICK_ACTION_WITH_SEGMENT(SpawnObjectAction)
+REGISTER_QUICK_ACTION(SpawnObjectAction)

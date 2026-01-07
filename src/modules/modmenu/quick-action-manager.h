@@ -2,6 +2,7 @@
 #include "common.h"
 #include "quick-action-base.h"
 #include "quick-action-registry.h"
+#include <vector>
 
 namespace ModMenuModule {
 	using QuickActionId = size_t;
@@ -37,7 +38,7 @@ namespace ModMenuModule {
 	class QuickActionManager : public Core::EventListenerSupport {
 	public:
 		static QuickActionManager* GetInstance();
-		static const std::vector<QuickActionTypeIndex>& GetAllTypes();
+		static const std::vector<QuickActionTypeIndex>& GetAllTypes(bool excludeDeprecated);
 		static const std::wstring& GetTypeLabel(QuickActionTypeIndex typeIndex);
 		
 		static bool HasSegmentFactory(QuickActionTypeIndex typeIndex);
@@ -114,7 +115,7 @@ namespace ModMenuModule {
 			QuickActionId actionId = 0;
 			KeyBindingModule::Key key; // not used by persistence
 			QuickActionTypeIndex typeIndex = std::type_index(typeid(void)); 
-			const QuickActionRegistryItem* actionItem = nullptr; 
+			const QuickActionRegistry::RegistryItem* actionItem = nullptr; 
 			std::wstring customLabel = L"";
 			std::vector<uint8_t> serializedData = {}; // only used for persistence
 		};

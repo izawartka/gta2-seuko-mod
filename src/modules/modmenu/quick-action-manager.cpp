@@ -11,9 +11,9 @@ ModMenuModule::QuickActionManager* ModMenuModule::QuickActionManager::GetInstanc
 	return m_instance;
 }
 
-const std::vector<ModMenuModule::QuickActionTypeIndex>& ModMenuModule::QuickActionManager::GetAllTypes()
+const std::vector<ModMenuModule::QuickActionTypeIndex>& ModMenuModule::QuickActionManager::GetAllTypes(bool excludeDeprecated)
 {
-	return QuickActionRegistry::GetAllTypeIndiciesSorted();
+	return QuickActionRegistry::GetAllTypeIndiciesSorted(excludeDeprecated);
 }
 
 const std::wstring& ModMenuModule::QuickActionManager::GetTypeLabel(QuickActionTypeIndex typeIndex)
@@ -240,7 +240,7 @@ void ModMenuModule::QuickActionManager::SaveToPersistence() const
 
 	for (const auto& pair : m_quickActions) {
 		const QuickActionEntry& entry = pair.second;
-		const QuickActionRegistryItem* actionItem = QuickActionRegistry::GetByTypeIndex(entry.typeIndex);
+		const QuickActionRegistry::RegistryItem* actionItem = QuickActionRegistry::GetByTypeIndex(entry.typeIndex);
 		size_t typeIdLength = actionItem->typeId.size();
 		size_t labelLength = entry.customLabel.size();
 
@@ -289,7 +289,7 @@ void ModMenuModule::QuickActionManager::SaveToPersistence() const
 		write(&actionId, sizeof(QuickActionId));
 
 		// action type id length and data
-		const QuickActionRegistryItem* actionItem = QuickActionRegistry::GetByTypeIndex(entry.typeIndex);
+		const QuickActionRegistry::RegistryItem* actionItem = QuickActionRegistry::GetByTypeIndex(entry.typeIndex);
 		size_t typeIdLength = actionItem->typeId.size();
 		write(&typeIdLength, sizeof(size_t));
 		if (typeIdLength > 0) {

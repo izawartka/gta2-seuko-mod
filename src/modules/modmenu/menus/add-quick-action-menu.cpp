@@ -32,7 +32,7 @@ bool ModMenuModule::AddQuickActionMenu::Attach()
 
 	// action type
 	auto typeText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	auto& typesList = QuickActionManager::GetAllTypes();
+	auto& typesList = QuickActionManager::GetAllTypes(true);
 	if (typesList.empty()) {
 		spdlog::error("No quick action types registered!");
 		return false;

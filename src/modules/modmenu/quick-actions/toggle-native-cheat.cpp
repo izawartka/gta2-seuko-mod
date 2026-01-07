@@ -69,4 +69,4 @@ void ModMenuModule::ToggleNativeCheatAction::OnDataChange()
 	}
 }
 
-REGISTER_QUICK_ACTION_WITH_SEGMENT(ToggleNativeCheatAction)
+REGISTER_QUICK_ACTION(ToggleNativeCheatAction)

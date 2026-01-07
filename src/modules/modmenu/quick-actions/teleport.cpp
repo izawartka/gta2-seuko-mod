@@ -86,4 +86,4 @@ void ModMenuModule::TeleportAction::OnDataChange()
 	}
 }
 
-REGISTER_QUICK_ACTION_WITH_SEGMENT(TeleportAction)
+REGISTER_QUICK_ACTION(TeleportAction)

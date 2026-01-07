@@ -2,43 +2,114 @@
 #include "quick-action-base.h"
 
 namespace ModMenuModule {
-	class SegmentBase;
-
 	using QuickActionTypeIndex = std::type_index;
 	using QuickActionFactory = std::function<QuickActionBase* ()>;
 	using SegmentFactory = std::function<SegmentBase* ()>;
-	
-	struct QuickActionRegistryItem {
-		QuickActionFactory factory;
-		std::string typeId;
-		std::wstring typeLabel;
-		SegmentFactory segmentFactory;
+}
 
-		QuickActionRegistryItem() = default;
+namespace {
+	template<typename QuickActionT>
+	ModMenuModule::QuickActionBase* QuickActionFactoryFunc() {
+		return new QuickActionT();
+	}
 
-		QuickActionRegistryItem(
-			QuickActionFactory factory,
-			std::string typeId,
-			std::wstring typeLabel,
-			SegmentFactory segmentFactory = nullptr
-		)
-			: factory(std::move(factory))
-			, typeId(std::move(typeId))
-			, typeLabel(std::move(typeLabel))
-			, segmentFactory(std::move(segmentFactory))
-		{}
-	};
+	template<typename QuickActionT>
+	const std::string& GetQuickActionTypeId() {
+		return QuickActionT::GetTypeId();
+	}
+
+	template<typename QuickActionT>
+	const std::wstring& GetQuickActionTypeLabel() {
+		return QuickActionT::GetTypeLabel();
+	}
+
+	template<typename QuickActionT, typename = void>
+	struct HasQuickActionCreateSegmentInstance : std::false_type {};
+
+	template<typename QuickActionT>
+	struct HasQuickActionCreateSegmentInstance<QuickActionT, std::void_t<decltype(QuickActionT::CreateSegmentInstance())>> : std::true_type {};
+
+	template<typename QuickActionT>
+	ModMenuModule::SegmentBase* SegmentFactoryFunc() {
+		if constexpr (HasQuickActionCreateSegmentInstance<QuickActionT>::value) {
+			return QuickActionT::CreateSegmentInstance();
+		}
+		else {
+			return nullptr;
+		}
+	}
+
+	template<typename QuickActionT, typename = void>
+	struct HasQuickActionIsDeprecated : std::false_type {};
+
+	template<typename QuickActionT>
+	struct HasQuickActionIsDeprecated<QuickActionT, std::void_t<decltype(QuickActionT::IsDeprecated())>> : std::true_type {};
+
+	template<typename QuickActionT>
+	constexpr ModMenuModule::SegmentFactory GetSegmentFactory() {
+		if constexpr (HasQuickActionCreateSegmentInstance<QuickActionT>::value) {
+			return SegmentFactoryFunc<QuickActionT>;
+		}
+		else {
+			return nullptr;
+		}
+	}
+
+	template<typename QuickActionT>
+	constexpr bool IsQuickActionDeprecated() {
+
+		if constexpr (HasQuickActionIsDeprecated<QuickActionT>::value) {
+			return QuickActionT::IsDeprecated();
+		}
+		else {
+			return false;
+		}
+	}
+}
+
+namespace ModMenuModule {
+	class SegmentBase;
 
 	class QuickActionRegistry {
 	private:
 		friend class QuickActionManager;
 
-		static std::unordered_map<QuickActionTypeIndex, QuickActionRegistryItem>& Actions() {
-			static std::unordered_map<QuickActionTypeIndex, QuickActionRegistryItem> actions;
+		struct RegistryItem {
+			QuickActionFactory factory;
+			std::string typeId;
+			std::wstring typeLabel;
+			SegmentFactory segmentFactory = nullptr;
+			bool deprecated = false;
+
+			RegistryItem() = default;
+
+			RegistryItem(
+				QuickActionFactory factory,
+				std::string typeId,
+				std::wstring typeLabel,
+				SegmentFactory segmentFactory = nullptr,
+				bool deprecated = false
+			)
+				: factory(std::move(factory))
+				, typeId(std::move(typeId))
+				, typeLabel(std::move(typeLabel))
+				, segmentFactory(std::move(segmentFactory))
+				, deprecated(deprecated)
+			{
+			}
+		};
+
+		static std::unordered_map<QuickActionTypeIndex, RegistryItem>& Actions() {
+			static std::unordered_map<QuickActionTypeIndex, RegistryItem> actions;
 			return actions;
 		}
 
 		static std::vector<QuickActionTypeIndex>& SortedIndiciesCache() {
+			static std::vector<QuickActionTypeIndex> cache;
+			return cache;
+		}
+
+		static std::vector<QuickActionTypeIndex>& SortedNonDeprecatedIndiciesCache() {
 			static std::vector<QuickActionTypeIndex> cache;
 			return cache;
 		}
@@ -48,14 +119,17 @@ namespace ModMenuModule {
 			return sorted;
 		}
 
-	public:
-		static const std::vector<QuickActionTypeIndex>& GetAllTypeIndiciesSorted() {
+		static const std::vector<QuickActionTypeIndex>& GetAllTypeIndiciesSorted(bool excludeDeprecated) {
 			if (!IsSorted()) {
 				auto& actions = Actions();
 				auto& cache = SortedIndiciesCache();
+				auto& nonDeprecatedCache = SortedNonDeprecatedIndiciesCache();
 				cache.clear();
 				for (const auto& pair : actions) {
 					cache.push_back(pair.first);
+					if (!pair.second.deprecated) {
+						nonDeprecatedCache.push_back(pair.first);
+					}
 				}
 				std::sort(
 					cache.begin(),
@@ -64,12 +138,24 @@ namespace ModMenuModule {
 						return actions[a].typeLabel < actions[b].typeLabel;
 					}
 				);
+				std::sort(
+					nonDeprecatedCache.begin(),
+					nonDeprecatedCache.end(),
+					[&actions](QuickActionTypeIndex a, QuickActionTypeIndex b) {
+						return actions[a].typeLabel < actions[b].typeLabel;
+					}
+				);
 				IsSorted() = true;
 			}
+
+			if (excludeDeprecated) {
+				return SortedNonDeprecatedIndiciesCache();
+			}
+
 			return SortedIndiciesCache();
 		}
 
-		static std::pair<QuickActionTypeIndex, const QuickActionRegistryItem*> GetByTypeId(const std::string& typeId) {
+		static std::pair<QuickActionTypeIndex, const RegistryItem*> GetByTypeId(const std::string& typeId) {
 			auto& actions = Actions();
 			auto it = std::find_if(
 				actions.begin(),
@@ -84,7 +170,7 @@ namespace ModMenuModule {
 			return { std::type_index(typeid(void)), nullptr };
 		}
 
-		static const QuickActionRegistryItem* GetByTypeIndex(QuickActionTypeIndex typeIndex) {
+		static const RegistryItem* GetByTypeIndex(QuickActionTypeIndex typeIndex) {
 			auto& actions = Actions();
 			auto it = actions.find(typeIndex);
 			if (it == actions.end()) {
@@ -93,46 +179,33 @@ namespace ModMenuModule {
 			return &(it->second);
 		}
 
-		template<typename T>
-		static void Register(QuickActionRegistryItem quickAction) {
+	public:
+		template<typename QuickActionT>
+		static void Register() {
+			static_assert(std::is_base_of<QuickActionBase, QuickActionT>::value, "QuickActionT must derive from QuickActionBase");
+
 			auto& actions = Actions();
-			QuickActionTypeIndex type = QuickActionTypeIndex(typeid(T));
+			QuickActionTypeIndex type = QuickActionTypeIndex(typeid(QuickActionT));
 			if (actions.find(type) != actions.end()) return;
-			actions.insert({ type, std::move(quickAction) });
+
+			RegistryItem item(
+				QuickActionFactoryFunc<QuickActionT>,
+				GetQuickActionTypeId<QuickActionT>(),
+				GetQuickActionTypeLabel<QuickActionT>(),
+				GetSegmentFactory<QuickActionT>(),
+				IsQuickActionDeprecated<QuickActionT>()
+			);
+
+			actions.insert({ type, item });
 		}
 	};
 }
 
-// Macro for actions without segment factory (simple actions)
 #define REGISTER_QUICK_ACTION(CLASSNAME) \
 namespace { \
 	struct CLASSNAME##_QuickActionReg { \
 		CLASSNAME##_QuickActionReg() { \
-			ModMenuModule::QuickActionRegistry::Register<ModMenuModule::CLASSNAME>( \
-				ModMenuModule::QuickActionRegistryItem( \
-					[]() { return new ModMenuModule::CLASSNAME(); }, \
-					ModMenuModule::CLASSNAME::GetTypeId(), \
-					ModMenuModule::CLASSNAME::GetTypeLabel() \
-				) \
-			); \
-		} \
-	}; \
-	static CLASSNAME##_QuickActionReg s_##CLASSNAME##_QuickActionReg; \
-}
-
-// Macro for actions with segment factory (actions that need configuration UI)
-#define REGISTER_QUICK_ACTION_WITH_SEGMENT(CLASSNAME) \
-namespace { \
-	struct CLASSNAME##_QuickActionReg { \
-		CLASSNAME##_QuickActionReg() { \
-			ModMenuModule::QuickActionRegistry::Register<ModMenuModule::CLASSNAME>( \
-				ModMenuModule::QuickActionRegistryItem( \
-					[]() { return new ModMenuModule::CLASSNAME(); }, \
-					ModMenuModule::CLASSNAME::GetTypeId(), \
-					ModMenuModule::CLASSNAME::GetTypeLabel(), \
-					[]() { return ModMenuModule::CLASSNAME::CreateSegmentInstance(); } \
-				) \
-			); \
+			ModMenuModule::QuickActionRegistry::Register<ModMenuModule::CLASSNAME>(); \
 		} \
 	}; \
 	static CLASSNAME##_QuickActionReg s_##CLASSNAME##_QuickActionReg; \

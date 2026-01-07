@@ -48,4 +48,4 @@ const std::wstring& ModMenuModule::ExplodeAllVehiclesAction::GetLabel() const
 	return typeLabel;
 }
 
-REGISTER_QUICK_ACTION_WITH_SEGMENT(ExplodeAllVehiclesAction)
+REGISTER_QUICK_ACTION(ExplodeAllVehiclesAction)

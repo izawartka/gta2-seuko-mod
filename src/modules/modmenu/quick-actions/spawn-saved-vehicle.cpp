@@ -97,4 +97,4 @@ void ModMenuModule::SpawnSavedVehicleAction::OnDataChange()
 	}
 }
 
-REGISTER_QUICK_ACTION_WITH_SEGMENT(SpawnSavedVehicleAction)
+REGISTER_QUICK_ACTION(SpawnSavedVehicleAction)
