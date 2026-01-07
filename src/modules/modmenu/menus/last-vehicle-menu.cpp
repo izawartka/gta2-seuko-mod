@@ -178,12 +178,12 @@ void ModMenuModule::LastVehicleMenu::TurnEngineOff()
 		return;
 	}
 
-	if (lastCar->engineState != Game::ENGINE_ON) {
+	if (lastCar->engineState != Game::CAR_ENGINE_STATE_ON) {
 		spdlog::warn("The engine is already off or broken.");
 		return;
 	}
 
-	lastCar->engineState = Game::TURNING_OFF;
+	lastCar->engineState = Game::CAR_ENGINE_STATE_TURNING_OFF;
 }
 
 void ModMenuModule::LastVehicleMenu::ExplodeCar()
