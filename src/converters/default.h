@@ -1,11 +1,14 @@
 #pragma once
 #include "float.h"
+#include "integer.h"
 #include <limits>
+#include <type_traits>
 
 template <typename T,
 	bool Supported = (std::is_same_v<std::remove_cv_t<T>, std::wstring> ||
 		std::is_floating_point_v<std::remove_cv_t<T>> ||
-		std::is_integral_v<std::remove_cv_t<T>>)
+		std::is_integral_v<std::remove_cv_t<T>> ||
+		std::is_enum_v<std::remove_cv_t<T>>)
 >
 class DefaultConverter;
 
@@ -20,11 +23,15 @@ public:
 		if constexpr (std::is_same_v<BaseT, std::wstring>) {
 			return value;
 		}
+		else if constexpr (std::is_enum_v<BaseT>) {
+			using UnderlyingT = std::underlying_type_t<BaseT>;
+			return IntegerConverter<UnderlyingT>::ConvertToString(static_cast<UnderlyingT>(value));
+		}
 		else if constexpr (std::is_floating_point_v<BaseT>) {
 			return FloatConverter<BaseT>::ConvertToString(value);
 		}
 		else if constexpr (std::is_integral_v<BaseT>) {
-			return std::to_wstring(value);
+			return IntegerConverter<BaseT>::ConvertToString(value);
 		}
 	}
 
@@ -35,24 +42,16 @@ public:
 		if constexpr (std::is_same_v<BaseT, std::wstring>) {
 			return text;
 		}
+		else if constexpr (std::is_enum_v<BaseT>) {
+			using UnderlyingT = std::underlying_type_t<BaseT>;
+			UnderlyingT value = IntegerConverter<UnderlyingT>::ConvertFromString(text);
+			return static_cast<BaseT>(value);
+		}
 		else if constexpr (std::is_floating_point_v<BaseT>) {
 			return FloatConverter<BaseT>::ConvertFromString(text);
 		}
 		else if constexpr (std::is_integral_v<BaseT>) {
-			if (text.empty()) return static_cast<BaseT>(0);
-
-			using longT = std::conditional_t<std::is_signed_v<BaseT>, long long, unsigned long long>;
-			longT value = 0;
-			if constexpr (std::is_signed_v<BaseT>) {
-				value = std::stoll(text);
-			}
-			else {
-				value = std::stoull(text);
-			}
-
-			value = std::min(value, static_cast<longT>(std::numeric_limits<BaseT>::max()));
-			value = std::max(value, static_cast<longT>(std::numeric_limits<BaseT>::min()));
-			return static_cast<BaseT>(value);
+			return IntegerConverter<BaseT>::ConvertFromString(text);
 		}
 	}
 
@@ -62,16 +61,15 @@ public:
 		if constexpr (std::is_same_v<BaseT, std::wstring>) {
 			return c >= 32 && c <= 126;
 		}
+		else if constexpr (std::is_enum_v<BaseT>) {
+			using UnderlyingT = std::underlying_type_t<BaseT>;
+			return IntegerConverter<UnderlyingT>::IsValidChar(text, c);
+		}
 		else if constexpr (std::is_floating_point_v<BaseT>) {
 			return FloatConverter<BaseT>::IsValidChar(text, c);
 		}
 		else if constexpr (std::is_integral_v<BaseT>) {
-			if constexpr (std::is_signed_v<BaseT>) {
-				bool hasLength = text.length() > 0;
-				if (c == L'-') return !hasLength;
-			}
-
-			return (c >= L'0' && c <= L'9');
+			return IntegerConverter<BaseT>::IsValidChar(text, c);
 		}
 	}
 
@@ -98,11 +96,7 @@ template <typename T>
 class DefaultConverter<T, false> {
 public:
 	static std::wstring ConvertToString(T value) {
-#ifdef DEBUG
-			return L"<Unsupported value>";
-#else
-			return L"";
-#endif // DEBUG
+		return L"<Unsupported value>";
 	}
 
 protected:

@@ -355,6 +355,7 @@
     <ClInclude Include="src\modules\modmenu\quick-actions\spawn-object.h" />
     <ClInclude Include="src\modules\modmenu\utils\spawn-car.h" />
     <ClInclude Include="src\modules\modmenu\utils\spawn-object-at-player.h" />
+    <ClInclude Include="src\converters\integer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
