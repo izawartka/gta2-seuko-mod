@@ -4,8 +4,7 @@
 #include "../../../converters/car-model.h"
 #include "../../../converters/car-remap.h"
 #include "../../../converters/car-damage.h"
-#include "../utils/fix-car-engine-damage.h"
-#include "../utils/fix-car-visual-damage.h"
+#include "../utils/fix-car-utils.h"
 #include "last-vehicle-physics-menu.h"
 #include "last-vehicle-save-menu.h"
 
@@ -170,7 +169,8 @@ void ModMenuModule::LastVehicleMenu::FixCarEngineDamage()
 	Game::Car* lastCar = GetLastCar();
 	if (!lastCar) return;
 
-	Utils::FixCarEngineDamage(lastCar);
+	Utils::FixCar::ExtinguishCar(lastCar);
+	Utils::FixCar::FixCarEngineDamage(lastCar);
 }
 
 void ModMenuModule::LastVehicleMenu::FixCarVisualDamage()
@@ -178,7 +178,7 @@ void ModMenuModule::LastVehicleMenu::FixCarVisualDamage()
 	Game::Car* lastCar = GetLastCar();
 	if (!lastCar) return;
 
-	Utils::FixCarVisualDamage(lastCar);
+	Utils::FixCar::FixCarVisualDamage(lastCar);
 }
 
 void ModMenuModule::LastVehicleMenu::TurnEngineOff()

@@ -1,6 +1,6 @@
 #include "fix-vehicle.h"
 #include "../cheats/last-car.h"
-#include "../utils/fix-car-engine-damage.h"
+#include "../utils/fix-car-utils.h"
 #include "../toast-manager.h"
 #include "../quick-action-registry.h"
 
@@ -40,7 +40,8 @@ void ModMenuModule::FixVehicleAction::Execute()
 		return;
 	}
 
-	Utils::FixCarEngineDamage(lastCar);
+	Utils::FixCar::ExtinguishCar(lastCar);
+	Utils::FixCar::FixCarEngineDamage(lastCar);
 
 	ModMenuModule::ToastManager::GetInstance()->Show({ L"Fixed vehicle engine damage" });
 }
