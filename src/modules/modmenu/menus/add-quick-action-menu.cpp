@@ -139,6 +139,11 @@ void ModMenuModule::AddQuickActionMenu::OnSave()
 	}
 	QuickActionTypeIndex actionType = actionTypeOpt.value();
 
+	if (m_segmentInstance && !m_segmentInstance->ValidateSegment()) {
+		spdlog::warn("Cannot add quick action: segment validation failed");
+		return;
+	}
+
 	QuickActionId actionId = quickActionManager->Add(key, actionType);
 	if(m_segmentInstance) quickActionManager->SetDataFromSegmentData(actionId, m_segmentInstance);
 	ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();

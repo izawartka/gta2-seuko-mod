@@ -11,6 +11,7 @@ namespace ModMenuModule {
 
 		virtual bool IsAttached() const final { return m_attached; }
 		virtual bool IsVisible() const final { return m_visible; }
+		virtual bool ValidateSegment() const { return true; }
 
 	protected:
 		friend class SegmentSupport;
