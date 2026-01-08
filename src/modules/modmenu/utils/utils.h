@@ -8,6 +8,7 @@
 #include "explode-all-cars.h"
 #include "fix-car-utils.h"
 #include "get-all-weapons.h"
+#include "get-cars-sorted-by-distance.h"
 #include "save-game.h"
 #include "spawn-car.h"
 #include "spawn-car-at-player.h"

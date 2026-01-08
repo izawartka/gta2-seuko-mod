@@ -132,6 +132,7 @@
     <ClCompile Include="src\modules\modmenu\utils\spawn-car.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\spawn-object-at-player.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\fix-car-utils.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\get-cars-sorted-by-distance.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -358,6 +359,7 @@
     <ClInclude Include="src\modules\modmenu\utils\spawn-object-at-player.h" />
     <ClInclude Include="src\modules\modmenu\utils\fix-car-utils.h" />
     <ClInclude Include="src\converters\integer.h" />
+    <ClInclude Include="src\modules\modmenu\utils\get-cars-sorted-by-distance.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
