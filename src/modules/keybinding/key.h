@@ -15,11 +15,7 @@ namespace KeyBindingModule {
 			: keyCode(keyCode), shift(shift), ctrl(ctrl), alt(alt) {
 		}
 
-		static Key FromKeyDownEvent(const KeyDownEvent& event) {
-			return Key(event.GetKeyCode(), event.IsShiftPressed(), event.IsCtrlPressed(), event.IsAltPressed());
-		}
-
-		static Key FromKeyUpEvent(const KeyUpEvent& event) {
+		static Key FromKeyboardEvent(const KeyboardEvent& event) {
 			return Key(event.GetKeyCode(), event.IsShiftPressed(), event.IsCtrlPressed(), event.IsAltPressed());
 		}
 

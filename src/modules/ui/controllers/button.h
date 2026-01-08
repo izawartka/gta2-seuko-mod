@@ -71,7 +71,7 @@ namespace UiModule {
 		void OnKeyDown(KeyDownEvent& event) {
 			if (!m_active) return;
 
-			KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyDownEvent(event);
+			KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyboardEvent(event);
 			if (IsActionKey(key)) {
 				Action();
 				return;

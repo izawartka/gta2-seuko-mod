@@ -217,7 +217,7 @@ namespace UiModule {
 			if (!m_active) return;
 
 			bool isShiftPressed = event.IsShiftPressed();
-			KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyDownEvent(event);
+			KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyboardEvent(event);
 
 			if (!m_editing) {
 				if (IsActionKey(key)) {

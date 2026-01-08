@@ -77,7 +77,7 @@ void ModMenuModule::MenuManager::SetVisible(bool visible)
 
 void ModMenuModule::MenuManager::OnKeyDown(KeyDownEvent& event)
 {
-	if (!m_keyBindToggle || *m_keyBindToggle != KeyBindingModule::Key::FromKeyDownEvent(event)) {
+	if (!m_keyBindToggle || *m_keyBindToggle != KeyBindingModule::Key::FromKeyboardEvent(event)) {
 		return;
 	}
 

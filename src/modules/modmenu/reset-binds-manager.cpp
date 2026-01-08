@@ -45,7 +45,7 @@ void ModMenuModule::ResetBindsManager::Detach() {
 
 void ModMenuModule::ResetBindsManager::OnKeyDown(KeyDownEvent& event) {
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
-	KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyDownEvent(event);
+	KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyboardEvent(event);
 	if (key == options.keyBindToggleMenuDefault) {
 		m_resetKeyHoldFrames++;
 	}

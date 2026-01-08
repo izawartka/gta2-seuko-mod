@@ -283,7 +283,7 @@ void UiModule::MenuController::OnKeyDown(KeyDownEvent& event)
 		return;
 	}
 
-	KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyDownEvent(event);
+	KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyboardEvent(event);
 
 	if (IsPrevKey(key)) {
 		Previous();

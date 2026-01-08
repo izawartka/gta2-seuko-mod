@@ -186,7 +186,7 @@ void ModMenuModule::QuickActionManager::Detach()
 
 void ModMenuModule::QuickActionManager::OnKeyDown(KeyDownEvent& event) 
 {
-	KeyBindingModule::Key pressedKey = KeyBindingModule::Key::FromKeyDownEvent(event);
+	KeyBindingModule::Key pressedKey = KeyBindingModule::Key::FromKeyboardEvent(event);
 	for (auto& pair : m_quickActions) {
 		QuickActionEntry& entry = pair.second;
 		if (!entry.keyBind || *entry.keyBind != pressedKey) continue;
