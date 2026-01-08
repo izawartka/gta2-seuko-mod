@@ -5,7 +5,7 @@
 #include "../quick-action-registry.h"
 
 static const std::string typeId = "ModMenu_FixVehicle";
-static const std::wstring typeLabel = L"Fix last vehicle engine damage";
+static const std::wstring typeLabel = L"Fix last vehicle";
 
 ModMenuModule::FixVehicleAction::FixVehicleAction()
 {
@@ -25,6 +25,22 @@ const std::wstring& ModMenuModule::FixVehicleAction::GetTypeLabel()
 	return typeLabel;
 }
 
+ModMenuModule::FixVehicleSegment* ModMenuModule::FixVehicleAction::CreateSegmentInstance()
+{
+	return new FixVehicleSegment();
+}
+
+bool ModMenuModule::FixVehicleAction::ValidateSegmentData(const FixVehicleSegmentData& data)
+{
+	if (!data.doExtinguish && !data.doFixEngineDamage && !data.doFixVisualDamage) {
+		spdlog::warn("At least one fix option must be selected.");
+		ToastManager::GetInstance()->Show({ L"At least one fix option must be selected", ToastType::Warning });
+		return false;
+	}
+
+	return true;
+}
+
 void ModMenuModule::FixVehicleAction::Execute()
 {
 	LastCarCheat* lastCarCheat = LastCarCheat::GetInstance();
@@ -36,14 +52,17 @@ void ModMenuModule::FixVehicleAction::Execute()
 	Game::Car* lastCar = lastCarCheat->GetLastCar();
 	if (!lastCar) {
 		spdlog::warn("FixVehicleAction::Execute: No last car to fix.");
-		ModMenuModule::ToastManager::GetInstance()->Show({ L"No last vehicle to fix", ToastType::Warning });
+		ToastManager::GetInstance()->Show({ L"No last vehicle to fix", ToastType::Warning });
 		return;
 	}
 
-	Utils::FixCar::ExtinguishCar(lastCar);
-	Utils::FixCar::FixCarEngineDamage(lastCar);
+	const auto& data = m_data.has_value() ? m_data.value() : FixVehicleSegmentData{ true, true, true }; // backward compatibility
 
-	ModMenuModule::ToastManager::GetInstance()->Show({ L"Fixed vehicle engine damage" });
+	if (data.doExtinguish) Utils::FixCar::ExtinguishCar(lastCar);
+	if (data.doFixEngineDamage) Utils::FixCar::FixCarEngineDamage(lastCar);
+	if (data.doFixVisualDamage) Utils::FixCar::FixCarVisualDamage(lastCar);
+
+	ToastManager::GetInstance()->Show({ L"Fixed the vehicle" });
 }
 
 const std::wstring& ModMenuModule::FixVehicleAction::GetLabel() const
