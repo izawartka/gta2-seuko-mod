@@ -4,7 +4,7 @@
 #include "event-base.h"
 
 namespace Core {
-    class EventManager;
+	class EventManager;
 
 	template<typename EventT>
 	class EventSpecificManager
@@ -39,6 +39,7 @@ namespace Core {
 				m_pendingChanges.push(std::move(change));
 				return;
 			}
+			CallInitIfNeeded();
 			AddListenerEntry(std::move(change));
 		}
 
@@ -49,6 +50,7 @@ namespace Core {
 				return;
 			}
 			RemoveListenerEntry(change);
+			CallDeinitIfNeeded();
 		}
 
 		struct ListenerWrapper {
@@ -84,6 +86,7 @@ namespace Core {
 		}
 
 		void ProcessPendingChanges() {
+			CallInitIfNeeded();
 			while (!m_pendingChanges.empty()) {
 				auto change = std::move(m_pendingChanges.front());
 				m_pendingChanges.pop();
@@ -95,19 +98,34 @@ namespace Core {
 					RemoveListenerEntry(change);
 				}
 			}
+			CallDeinitIfNeeded();
 		}
 
 		bool CallInitIfNeeded() {
-			if (!m_initialized) {
-				if constexpr (EventHasInit_v<EventT>) {
-					spdlog::debug("Calling Init for event type: {}", typeid(EventT).name());
-					m_initialized = EventT::Init();
-				}
-				else {
-					m_initialized = true;
+			if (m_initialized) return true;
+
+			if constexpr (EventHasInit_v<EventT>) {
+				spdlog::debug("Calling Init for event type: {}", typeid(EventT).name());
+				m_initialized = EventT::Init();
+				if (!m_initialized) {
+					spdlog::error("Event Init failed for event type: {}", typeid(EventT).name());
 				}
 			}
+			else {
+				m_initialized = true;
+			}
+
 			return m_initialized;
+		}
+
+		void CallDeinitIfNeeded() {
+			if (!m_initialized || !m_listeners.empty()) return;
+
+			if constexpr (EventHasDeinit_v<EventT>) {
+				spdlog::debug("Calling Deinit for event type: {}", typeid(EventT).name());
+				EventT::Deinit();
+				m_initialized = false;
+			}
 		}
 
 		std::vector<ListenerWrapper> m_listeners = {};
@@ -135,10 +153,6 @@ namespace Core {
 			if(specificManager->m_hasRemoveLink == false) {
 				m_removalMap[typeid(EventT)] = std::bind(&EventSpecificManager<EventT>::RemoveListener, specificManager, std::placeholders::_1);
 				specificManager->m_hasRemoveLink = true;
-			}
-			if(!specificManager->CallInitIfNeeded()) {
-				spdlog::error("Failed to initialize event type: {}", typeid(EventT).name());
-				return 0;
 			}
 			EventListenerId id = m_nextListenerId++;
 			specificManager->AddListener(listener, id, oneTime);

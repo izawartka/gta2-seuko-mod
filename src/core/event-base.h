@@ -11,6 +11,15 @@ namespace Core
 	template<typename EventT>
 	static constexpr bool EventHasInit_v = EventHasInit<EventT>::value;
 
+	template<typename EventT, typename = void>
+	struct EventHasDeinit : std::false_type {};
+
+	template<typename EventT>
+	struct EventHasDeinit<EventT, std::void_t<decltype(EventT::Deinit())>> : std::true_type {};
+
+	template<typename EventT>
+	static constexpr bool EventHasDeinit_v = EventHasDeinit<EventT>::value;
+
 	class EventBase
 	{
 	protected:
