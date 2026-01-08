@@ -22,11 +22,11 @@ namespace ModMenuModule {
 		virtual ~SavedCarsCheat() override;
 		static SavedCarsCheat* GetInstance();
 
-		bool SaveCar(std::wstring name, Game::Car* car);
-		std::optional<SavedCarsCheatEntry> GetCar(std::wstring name);
-		bool SpawnCar(std::wstring name);
-		bool DeleteCar(std::wstring name);
-		std::vector<std::wstring> GetSavedCarsList();
+		bool SaveCar(const std::wstring& name, Game::Car* car);
+		std::optional<SavedCarsCheatEntry> GetCar(const std::wstring& name) const;
+		bool SpawnCar(const std::wstring& name) const;
+		bool DeleteCar(const std::wstring& name);
+		const std::vector<std::wstring>& GetSavedCarsList();
 
 	private:
 		virtual void OnFirstEnable() override;
@@ -39,8 +39,11 @@ namespace ModMenuModule {
 
 		void SaveToPersistence() const;
 		void LoadFromPersistence();
+		void RefreshSortedCache();
 
 		static SavedCarsCheat* m_instance;
 		std::unordered_map<std::wstring, SavedCarsCheatEntry> m_entries = {};
+		std::vector<std::wstring> m_sortedCache = {};
+		bool m_cacheDirty = true;
 	};
 }

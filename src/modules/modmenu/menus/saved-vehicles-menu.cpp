@@ -16,7 +16,7 @@ ModMenuModule::SavedVehiclesMenu::~SavedVehiclesMenu()
 bool ModMenuModule::SavedVehiclesMenu::Attach()
 {
 	SavedCarsCheat* savedCarsCheat = SavedCarsCheat::GetInstance();
-	auto savedCarNames = savedCarsCheat->GetSavedCarsList();
+	const auto& savedCarNames = savedCarsCheat->GetSavedCarsList();
 	size_t pageCount = std::max((savedCarNames.size() + SAVED_CARS_PER_PAGE - 1) / SAVED_CARS_PER_PAGE, 1U);
 	if (m_page >= pageCount && pageCount > 0) {
 		m_page = pageCount - 1;

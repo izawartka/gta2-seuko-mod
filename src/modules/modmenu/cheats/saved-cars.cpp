@@ -22,7 +22,7 @@ ModMenuModule::SavedCarsCheat* ModMenuModule::SavedCarsCheat::GetInstance()
 	return m_instance;
 }
 
-bool ModMenuModule::SavedCarsCheat::SaveCar(std::wstring name, Game::Car* car)
+bool ModMenuModule::SavedCarsCheat::SaveCar(const std::wstring& name, Game::Car* car)
 {
 	if (!car) {
 		spdlog::error("SavedCarsCheat::SaveCar: Car pointer is null");
@@ -40,13 +40,14 @@ bool ModMenuModule::SavedCarsCheat::SaveCar(std::wstring name, Game::Car* car)
 	}
 
 	SavedCarsCheatEntry entry = CreateEntry(car);
-	m_entries[name] = entry;
+	m_entries.insert({ name, entry });
+	m_cacheDirty = true;
 
 	spdlog::info("SavedCarsCheat::SaveCar: Car saved");
 	return true;
 }
 
-std::optional<ModMenuModule::SavedCarsCheatEntry> ModMenuModule::SavedCarsCheat::GetCar(std::wstring name)
+std::optional<ModMenuModule::SavedCarsCheatEntry> ModMenuModule::SavedCarsCheat::GetCar(const std::wstring& name) const
 {
 	auto it = m_entries.find(name);
 	if (it == m_entries.end()) {
@@ -55,7 +56,7 @@ std::optional<ModMenuModule::SavedCarsCheatEntry> ModMenuModule::SavedCarsCheat:
 	return it->second;
 }
 
-bool ModMenuModule::SavedCarsCheat::SpawnCar(std::wstring name)
+bool ModMenuModule::SavedCarsCheat::SpawnCar(const std::wstring& name) const
 {
 	auto entryOpt = GetCar(name);
 	if (!entryOpt.has_value()) {
@@ -66,7 +67,7 @@ bool ModMenuModule::SavedCarsCheat::SpawnCar(std::wstring name)
 	return SpawnEntry(entryOpt.value());
 }
 
-bool ModMenuModule::SavedCarsCheat::DeleteCar(std::wstring name)
+bool ModMenuModule::SavedCarsCheat::DeleteCar(const std::wstring& name)
 {
 	auto it = m_entries.find(name);
 	if (it == m_entries.end()) {
@@ -74,18 +75,15 @@ bool ModMenuModule::SavedCarsCheat::DeleteCar(std::wstring name)
 		return false;
 	}
 	m_entries.erase(it);
+	m_cacheDirty = true;
 	spdlog::info("SavedCarsCheat::DeleteCar: Car deleted");
 	return true;
 }
 
-std::vector<std::wstring> ModMenuModule::SavedCarsCheat::GetSavedCarsList()
+const std::vector<std::wstring>& ModMenuModule::SavedCarsCheat::GetSavedCarsList()
 {
-	std::vector<std::wstring> list;
-	list.reserve(m_entries.size());
-	for (const auto& pair : m_entries) {
-		list.push_back(pair.first);
-	}
-	return list;
+	RefreshSortedCache();
+	return m_sortedCache;
 }
 
 void ModMenuModule::SavedCarsCheat::OnFirstEnable()
@@ -284,7 +282,20 @@ void ModMenuModule::SavedCarsCheat::LoadFromPersistence()
 	}
 
 	m_entries = std::move(loadedEntries);
+	m_cacheDirty = true;
 	spdlog::info("SavedCarsCheat: Loaded {} car entries from persistence", entryCount);
+}
+
+void ModMenuModule::SavedCarsCheat::RefreshSortedCache()
+{
+	if (!m_cacheDirty) return;
+	m_sortedCache.clear();
+	m_sortedCache.reserve(m_entries.size());
+	for (const auto& pair : m_entries) {
+		m_sortedCache.push_back(pair.first);
+	}
+	std::sort(m_sortedCache.begin(), m_sortedCache.end());
+	m_cacheDirty = false;
 }
 
 REGISTER_CHEAT(SavedCarsCheat)

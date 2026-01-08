@@ -48,7 +48,7 @@ bool ModMenuModule::SpawnSavedVehicleSegment::Attach(ModMenuModule::MenuBase* me
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 
 	SavedCarsCheat* savedCarsCheat = SavedCarsCheat::GetInstance();
-	auto savedCarNames = savedCarsCheat->GetSavedCarsList();
+	const auto& savedCarNames = savedCarsCheat->GetSavedCarsList();
 
 	std::wstring selectedSavedCarName = savedCarNames.size() > 0 ? savedCarNames[0] : L"";
 
