@@ -35,7 +35,7 @@ bool ModMenuModule::LastVehicleSaveMenu::Attach()
 	m_nameController->SetConverter<GtaFontSafeConverter>();
 
 	// save button
-	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Save Vehicle", options.textSize);
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Save vehicle", options.textSize);
 
 	SetPreviousSelectedIndex();
 
@@ -92,13 +92,13 @@ bool ModMenuModule::LastVehicleSaveMenu::SaveCar()
 	}
 	const auto& nameOpt = m_nameController->GetValue();
 	if (!nameOpt.has_value() || nameOpt.value().size() == 0) {
-		ToastManager::GetInstance()->Show({ L"Please provide a name", ToastType::Error });
+		ToastManager::GetInstance()->Show({ L"Please provide a name", ToastType::Warning });
 		return false;
 	}
 
 	SavedCarsCheat* savedCarsCheat = SavedCarsCheat::GetInstance();
 	if (savedCarsCheat->GetCar(nameOpt.value()) != std::nullopt) {
-		ToastManager::GetInstance()->Show({ L"Vehicle with this name already exists", ToastType::Error });
+		ToastManager::GetInstance()->Show({ L"Vehicle with this name already exists", ToastType::Warning });
 		return false;
 	}
 

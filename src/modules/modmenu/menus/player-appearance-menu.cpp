@@ -101,11 +101,6 @@ void ModMenuModule::PlayerAppearanceMenu::OnMenuAction(UiModule::Selectable* ite
 
 void ModMenuModule::PlayerAppearanceMenu::OnPlayerAppearanceUpdate(ModMenuModule::PlayerAppearanceUpdateEvent& event)
 {
-	spdlog::debug("PlayerAppearanceMenu::OnPlayerAppearanceUpdate: Received PlayerAppearanceUpdateEvent, remap: {}, graphicType: {}",
-		event.GetRemap().has_value() ? std::to_string(static_cast<int>(event.GetRemap().value())) : "null",
-		event.GetGraphicType().has_value() ? std::to_string(static_cast<int>(event.GetGraphicType().value())) : "null"
-	);
-
 	if (m_remapController) {
 		m_remapController->SetValue(event.GetRemap());
 	}
