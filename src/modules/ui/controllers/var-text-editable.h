@@ -5,6 +5,7 @@
 #include "../standard-binds-support.h"
 #include "../components/text.h"
 #include "../events/update-ui.h"
+#include "../events/key-down-repeat.h"
 #include "../../../events/keyboard.h"
 
 namespace UiModule {
@@ -72,9 +73,11 @@ namespace UiModule {
 
 			if (active) {
 				AddEventListener<KeyDownEvent>(&VarTextEditableController<ValueT, ResRetT>::OnKeyDown);
+				AddEventListener<KeyDownRepeatEvent>(&VarTextEditableController<ValueT, ResRetT>::OnKeyDownRepeat);
 			}
 			else {
 				RemoveEventListener<KeyDownEvent>();
+				RemoveEventListener<KeyDownRepeatEvent>();
 			}
 		}
 
@@ -216,23 +219,25 @@ namespace UiModule {
 		void OnKeyDown(KeyDownEvent& event) {
 			if (!m_active) return;
 
-			Game::KeyCode keyCode = event.GetKeyCode();
-			bool isShiftPressed = event.IsShiftPressed();
 			KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyboardEvent(event);
+			if (!IsActionKey(key)) return;
 
 			if (!m_editing) {
-				if (IsActionKey(key)) {
-					SetEditing(true);
-				}
+				SetEditing(true);
 				return;
 			}
 
-			if (IsActionKey(key)) {
-				Save();
-				SetEditing(!m_editing);
-				return;
-			}
-			else if (keyCode == Game::KeyCode::DIK_BACK) {
+			Save();
+			SetEditing(!m_editing);
+		}
+
+		void OnKeyDownRepeat(KeyDownRepeatEvent& event) {
+			if (!m_active) return;
+
+			Game::KeyCode keyCode = event.GetKeyCode();
+			bool isShiftPressed = event.IsShiftPressed();
+			
+			if (keyCode == Game::KeyCode::DIK_BACK) {
 				if (!m_textBuffer.empty()) {
 					m_textBuffer.pop_back();
 				}

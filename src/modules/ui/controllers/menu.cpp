@@ -1,5 +1,4 @@
 #include "menu.h"
-#include "var-text.h"
 
 UiModule::MenuController::MenuController(const MenuControllerOptions& options)
 	: StandardBindsSupport::StandardBindsSupport(options.keyBindOptions)
@@ -279,21 +278,21 @@ void UiModule::MenuController::OnItemEditStop()
 
 void UiModule::MenuController::OnKeyDown(KeyDownEvent& event)
 {
-	if (!m_activeMenuControl) {
-		return;
-	}
+	if (!m_activeMenuControl) return;
 
 	KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyboardEvent(event);
 
-	if (IsPrevKey(key)) {
-		Previous();
-	}
-	else if (IsNextKey(key)) {
-		Next();
-	}
-	else if (IsActionKey(key)) {
-		Action();
-	}
+	if (IsActionKey(key)) Action();
+}
+
+void UiModule::MenuController::OnKeyDownRepeat(KeyDownRepeatEvent& event)
+{
+	if (!m_activeMenuControl) return;
+
+	KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyboardEvent(event);
+
+	if (IsPrevKey(key)) Previous();
+	else if (IsNextKey(key)) Next();
 }
 
 UiModule::MenuController::MenuItem* UiModule::MenuController::GetItemById(MenuItemId id)
@@ -320,8 +319,14 @@ void UiModule::MenuController::SetActiveMenuControl(bool active)
 	if (m_activeMenuControl == active) return;
 	m_activeMenuControl = active;
 
-	if(active) AddEventListener<KeyDownEvent>(&MenuController::OnKeyDown);
-	else RemoveEventListener<KeyDownEvent>();
+	if (active) {
+		AddEventListener<KeyDownEvent>(&MenuController::OnKeyDown);
+		AddEventListener<KeyDownRepeatEvent>(&MenuController::OnKeyDownRepeat);
+	}
+	else {
+		RemoveEventListener<KeyDownEvent>();
+		RemoveEventListener<KeyDownRepeatEvent>();
+	}
 
 	if (m_options.hideMarkerNonActive) {
 		UpdateIndex();

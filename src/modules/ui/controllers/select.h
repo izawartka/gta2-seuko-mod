@@ -4,6 +4,7 @@
 #include "../converter-support.h"
 #include "../standard-binds-support.h"
 #include "../components/text.h"
+#include "../events/key-down-repeat.h"
 #include "../../../events/keyboard.h"
 
 namespace UiModule {
@@ -54,9 +55,11 @@ namespace UiModule {
 
 			if (active) {
 				AddEventListener<KeyDownEvent>(&SelectController<T>::OnKeyDown);
+				AddEventListener<KeyDownRepeatEvent>(&SelectController<T>::OnKeyDownRepeat);
 			}
 			else {
 				RemoveEventListener<KeyDownEvent>();
+				RemoveEventListener<KeyDownRepeatEvent>();
 			}
 		}
 
@@ -158,15 +161,23 @@ namespace UiModule {
 		void OnKeyDown(KeyDownEvent& event) {
 			if (!m_active) return;
 
-			bool isShiftPressed = event.IsShiftPressed();
 			KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyboardEvent(event);
+			if (!IsActionKey(key)) return;
 
 			if (!m_editing) {
-				if (IsActionKey(key)) {
-					SetEditing(true);
-				}
+				SetEditing(true);
 				return;
 			}
+
+			if (!m_options.liveMode) Save();
+			SetEditing(false);
+		}
+
+		void OnKeyDownRepeat(KeyDownRepeatEvent& event) {
+			if (!m_active) return;
+
+			bool isShiftPressed = event.IsShiftPressed();
+			KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyboardEvent(event);
 
 			int newIndex = m_currentIndex;
 			int optionCount = static_cast<int>(m_optionList.size());
@@ -175,12 +186,7 @@ namespace UiModule {
 				return;
 			}
 
-			if (IsActionKey(key)) {
-				if(!m_options.liveMode)	Save();
-				SetEditing(false);
-				return;
-			}
-			else if (IsNextKey(key)) {
+			if (IsNextKey(key)) {
 				newIndex++;
 				if (isShiftPressed) newIndex = optionCount - 1;
 				if (newIndex >= optionCount) {
