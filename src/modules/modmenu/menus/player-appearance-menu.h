@@ -17,6 +17,7 @@ namespace ModMenuModule {
 
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 		void OnPlayerAppearanceUpdate(ModMenuModule::PlayerAppearanceUpdateEvent& event);
+		void ResetAppearance();
 		void ForceUpdateControllers();
 
 		UiModule::SelectController<Game::PED_GRAPHIC_TYPE>* m_graphicTypeController = nullptr;

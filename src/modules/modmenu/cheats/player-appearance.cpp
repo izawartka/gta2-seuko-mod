@@ -43,10 +43,12 @@ void ModMenuModule::PlayerAppearanceCheat::SetRemap(Game::PED_REMAP remap)
 		return;
 	}
 
-	m_watchedPedRemap->SetValue(remap, true);
+	m_watchedPedRemap->SetValue(remap, false);
 	if (m_lockedRemap.has_value()) {
 		m_lockedRemap = remap;
 	}
+
+	DispatchUpdateEvent();
 }
 
 std::optional<Game::PED_REMAP> ModMenuModule::PlayerAppearanceCheat::GetRemap() const
@@ -61,6 +63,26 @@ std::optional<Game::PED_REMAP> ModMenuModule::PlayerAppearanceCheat::GetRemap() 
 	}
 
 	return m_watchedPedRemap->GetSavedValue();
+}
+
+void ModMenuModule::PlayerAppearanceCheat::ResetRemap()
+{
+	if (!IsEnabled()) {
+		spdlog::error("PlayerAppearanceCheat::ResetRemap: Cheat is not enabled, cannot reset remap");
+		return;
+	}
+
+	if (!m_originalRemap.has_value()) {
+		spdlog::warn("PlayerAppearanceCheat::ResetRemap: No original remap stored, cannot reset");
+		return;
+	}
+
+	m_watchedPedRemap->SetValue(m_originalRemap.value(), false);
+	if (m_lockedRemap.has_value()) {
+		m_lockedRemap = m_originalRemap;
+	}
+
+	DispatchUpdateEvent();
 }
 
 void ModMenuModule::PlayerAppearanceCheat::SetGraphicTypeLocked(bool locked)
@@ -85,10 +107,12 @@ void ModMenuModule::PlayerAppearanceCheat::SetGraphicType(Game::PED_GRAPHIC_TYPE
 		return;
 	}
 
-	m_watchedPedGraphicType->SetValue(graphicType, true);
+	m_watchedPedGraphicType->SetValue(graphicType, false);
 	if (m_lockedGraphicType.has_value()) {
 		m_lockedGraphicType = graphicType;
 	}
+
+	DispatchUpdateEvent();
 }
 
 std::optional<Game::PED_GRAPHIC_TYPE> ModMenuModule::PlayerAppearanceCheat::GetGraphicType() const
@@ -103,6 +127,41 @@ std::optional<Game::PED_GRAPHIC_TYPE> ModMenuModule::PlayerAppearanceCheat::GetG
 	}
 
 	return m_watchedPedGraphicType->GetSavedValue();
+}
+
+void ModMenuModule::PlayerAppearanceCheat::ResetGraphicType()
+{
+	if (!IsEnabled()) {
+		spdlog::error("PlayerAppearanceCheat::ResetGraphicType: Cheat is not enabled, cannot reset graphic type");
+		return;
+	}
+	if (!m_originalGraphicType.has_value()) {
+		spdlog::warn("PlayerAppearanceCheat::ResetGraphicType: No original graphic type stored, cannot reset");
+		return;
+	}
+	m_watchedPedGraphicType->SetValue(m_originalGraphicType.value(), false);
+	if (m_lockedGraphicType.has_value()) {
+		m_lockedGraphicType = m_originalGraphicType;
+	}
+
+	DispatchUpdateEvent();
+}
+
+void ModMenuModule::PlayerAppearanceCheat::ResetAndDisable()
+{
+	if (!IsEnabled()) {
+		spdlog::error("PlayerAppearanceCheat::ResetAndDisable: Cheat is not enabled, cannot reset and disable");
+		return;
+	}
+
+	m_lockedRemap = std::nullopt;
+	m_lockedGraphicType = std::nullopt;
+
+	ResetRemap();
+	ResetGraphicType();
+	m_watchedPedRemap->RequestUpdate();
+	m_watchedPedGraphicType->RequestUpdate();
+	m_isDisabling = true;
 }
 
 void ModMenuModule::PlayerAppearanceCheat::OnFirstEnable()
@@ -140,34 +199,58 @@ void ModMenuModule::PlayerAppearanceCheat::OnDisable()
 
 	watchManager->Unwatch(m_watchedPedRemap);
 	m_watchedPedRemap = nullptr;
+	m_originalRemap = std::nullopt;
+	m_resetAndDisableRemapDone = false;
 
 	watchManager->Unwatch(m_watchedPedGraphicType);
 	m_watchedPedGraphicType = nullptr;
+	m_originalGraphicType = std::nullopt;
+	m_resetAndDisableGraphicTypeDone = false;
+
+	m_isDisabling = false;
 }
 
 void ModMenuModule::PlayerAppearanceCheat::OnPedRemapUpdate(const std::optional<Game::PED_REMAP>& oldValue, const std::optional<Game::PED_REMAP>& newValue)
 {
+	if (m_isDisabling && m_originalRemap.has_value()) {
+		if (m_originalRemap.has_value()) {
+			m_watchedPedRemap->SetValueNow(m_originalRemap.value(), false);
+		}
+		m_resetAndDisableRemapDone = true;
+		ResetAndDisableCheckAndProceed();
+	}
+
+	m_originalRemap = newValue;
+
 	if (m_lockedRemap.has_value()) {
 		if (newValue.has_value()) {
 			m_watchedPedRemap->SetValueNow(m_lockedRemap.value(), false);
 		}
 	}
 	else {
-		PlayerAppearanceUpdateEvent event(newValue, m_watchedPedGraphicType->GetSavedValue());
-		Core::EventManager::GetInstance()->Dispatch(event);
+		DispatchUpdateEvent();
 	}
 }
 
 void ModMenuModule::PlayerAppearanceCheat::OnPedGraphicTypeUpdate(const std::optional<Game::PED_GRAPHIC_TYPE>& oldValue, const std::optional<Game::PED_GRAPHIC_TYPE>& newValue)
 {
+	if (m_isDisabling) {
+		if (m_originalGraphicType.has_value()) {
+			m_watchedPedGraphicType->SetValueNow(m_originalGraphicType.value(), false);
+		}
+		m_resetAndDisableGraphicTypeDone = true;
+		ResetAndDisableCheckAndProceed();
+	}
+
+	m_originalGraphicType = newValue;
+
 	if (m_lockedGraphicType.has_value()) {
 		if (newValue.has_value()) {
 			m_watchedPedGraphicType->SetValueNow(m_lockedGraphicType.value(), false);
 		}
 	}
 	else {
-		PlayerAppearanceUpdateEvent event(m_watchedPedRemap->GetSavedValue(), newValue);
-		Core::EventManager::GetInstance()->Dispatch(event);
+		DispatchUpdateEvent();
 	}
 }
 
@@ -178,6 +261,10 @@ void ModMenuModule::PlayerAppearanceCheat::OnGameEnd(GameEndEvent& event)
 	}
 	if (!m_lockedGraphicType.has_value()) {
 		m_watchedPedGraphicType->CancelSetValue();
+	}
+
+	if (m_isDisabling) {
+		SetEnabled(false);
 	}
 }
 
@@ -193,6 +280,21 @@ void ModMenuModule::PlayerAppearanceCheat::LoadFromPersistence()
 	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 	m_lockedRemap = persistence->Load<std::optional<Game::PED_REMAP>>("Cheat_PlayerAppearance_LockedRemap", std::nullopt);
 	m_lockedGraphicType = persistence->Load<std::optional<Game::PED_GRAPHIC_TYPE>>("Cheat_PlayerAppearance_LockedGraphicType", std::nullopt);
+}
+
+void ModMenuModule::PlayerAppearanceCheat::ResetAndDisableCheckAndProceed()
+{
+	if(!m_isDisabling || !m_resetAndDisableGraphicTypeDone || !m_resetAndDisableRemapDone) {
+		return;
+	}
+
+	SetEnabled(false);
+}
+
+void ModMenuModule::PlayerAppearanceCheat::DispatchUpdateEvent() const
+{
+	PlayerAppearanceUpdateEvent event(GetRemap(), GetGraphicType());
+	Core::EventManager::GetInstance()->Dispatch(event);
 }
 
 REGISTER_CHEAT(PlayerAppearanceCheat)

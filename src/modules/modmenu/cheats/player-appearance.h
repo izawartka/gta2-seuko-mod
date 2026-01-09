@@ -14,11 +14,15 @@ namespace ModMenuModule {
 		bool IsRemapLocked() const;
 		void SetRemap(Game::PED_REMAP remap);
 		std::optional<Game::PED_REMAP> GetRemap() const;
+		void ResetRemap();
 
 		void SetGraphicTypeLocked(bool locked);
 		bool IsGraphicTypeLocked() const;
 		void SetGraphicType(Game::PED_GRAPHIC_TYPE graphicType);
 		std::optional<Game::PED_GRAPHIC_TYPE> GetGraphicType() const;
+		void ResetGraphicType();
+
+		void ResetAndDisable();
 
 	private:
 		virtual void OnFirstEnable() override;
@@ -31,15 +35,23 @@ namespace ModMenuModule {
 
 		void SaveToPersistence() const;
 		void LoadFromPersistence();
+		void ResetAndDisableCheckAndProceed();
+		void DispatchUpdateEvent() const;
 
 		static PlayerAppearanceCheat* m_instance;
 
 		Core::Resolver<Game::PED_REMAP*> m_pedRemapResolver = nullptr;
 		Core::Resolver<Game::PED_GRAPHIC_TYPE*> m_pedGraphicTypeResolver = nullptr;
 		std::optional<Game::PED_REMAP> m_lockedRemap = std::nullopt;
+		std::optional<Game::PED_REMAP> m_originalRemap = std::nullopt;
 
 		Core::Watched<Game::PED_REMAP>* m_watchedPedRemap = nullptr;
 		Core::Watched<Game::PED_GRAPHIC_TYPE>* m_watchedPedGraphicType = nullptr;
 		std::optional<Game::PED_GRAPHIC_TYPE> m_lockedGraphicType = std::nullopt;
+		std::optional<Game::PED_GRAPHIC_TYPE> m_originalGraphicType = std::nullopt;
+
+		bool m_isDisabling = false;
+		bool m_resetAndDisableRemapDone = false;
+		bool m_resetAndDisableGraphicTypeDone = false;
 	};
 }

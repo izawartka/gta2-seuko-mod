@@ -24,6 +24,7 @@ bool ModMenuModule::PlayerAppearanceMenu::Attach()
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Reset", options.textSize);
 
 	PlayerAppearanceCheat* playerAppearanceCheat = PlayerAppearanceCheat::GetInstance();
 	if (!playerAppearanceCheat->IsEnabled()) {
@@ -94,6 +95,9 @@ void ModMenuModule::PlayerAppearanceMenu::OnMenuAction(UiModule::Selectable* ite
 	case 0: // Go back
 		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
 		break;
+	case 1: // Reset
+		ResetAppearance();
+		break;
 	default:
 		break;
 	}
@@ -108,6 +112,15 @@ void ModMenuModule::PlayerAppearanceMenu::OnPlayerAppearanceUpdate(ModMenuModule
 	if (m_graphicTypeController) {
 		m_graphicTypeController->SetValue(event.GetGraphicType());
 	}
+}
+
+void ModMenuModule::PlayerAppearanceMenu::ResetAppearance()
+{
+	PlayerAppearanceCheat* playerAppearanceCheat = PlayerAppearanceCheat::GetInstance();
+
+	playerAppearanceCheat->ResetRemap();
+	playerAppearanceCheat->ResetGraphicType();
+	ForceUpdateControllers();
 }
 
 void ModMenuModule::PlayerAppearanceMenu::ForceUpdateControllers()
