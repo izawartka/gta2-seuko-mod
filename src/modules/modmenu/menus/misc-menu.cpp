@@ -26,7 +26,7 @@ bool ModMenuModule::MiscMenu::Attach()
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Menu controls", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Quick actions", options.textSize);
-	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Version info", options.textSize);
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Version details", options.textSize);
 
 	// quick save button
 	auto quickSaveText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"Quick save", options.textSize);

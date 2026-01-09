@@ -19,12 +19,23 @@ bool ModMenuModule::VersionMenu::Attach()
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 
+
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
+
 	uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, options.menuSpacerHeight);
+	auto* infoMargin = uiRoot->AddComponent<UiModule::Margin>(
+		vertCont, 
+		options.menuControllerOptions.createdSelectableOptions.markerOffsetX, 
+		0
+	);
+	auto* infoContainer = uiRoot->AddComponent<UiModule::VertCont>(infoMargin);
+
 	std::wstring versionStr = L"Version: #" SEUKOMOD_VERSION_WSTR L"#";
-	m_menuController->CreateItem<UiModule::Text>(vertCont, versionStr, options.textSize);
+	uiRoot->AddComponent<UiModule::Text>(infoContainer, versionStr, options.textSize);
 	std::wstring gitHashStr = L"Git commit: #" SEUKOMOD_GIT_WSTR L"#";
-	m_menuController->CreateItem<UiModule::Text>(vertCont, gitHashStr, options.textSize);
+	uiRoot->AddComponent<UiModule::Text>(infoContainer, gitHashStr, options.textSize);
+	std::wstring configTypeStr = L"Build type: #" SEUKOMOD_CONFIGURATION_NAME_WSTR L"#";
+	uiRoot->AddComponent<UiModule::Text>(infoContainer, configTypeStr, options.textSize);
 
 	SetPreviousSelectedIndex();
 
