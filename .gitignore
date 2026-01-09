@@ -5,3 +5,4 @@ desktop.ini
 /Release
 /ReleaseWithLogging
 src/git.h
+src/version.aps

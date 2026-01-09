@@ -1,20 +1,16 @@
 #pragma once
+#ifndef RC_INVOKED
 #if __has_include("git.h")
 #include "git.h"
 #endif
+#endif
 
+// version
 #define SEUKOMOD_VERSION_MAJOR 1
 #define SEUKOMOD_VERSION_MINOR 0
 #define SEUKOMOD_VERSION_PATCH 0
 
-#ifndef GIT_COMMIT_HASH
-#define GIT_COMMIT_HASH "unknown"
-#endif
-
-#ifndef GIT_IS_DIRTY
-#define GIT_IS_DIRTY false
-#endif
-
+// stringification helpers
 #define STRINGIFY2(X) #X
 #define STRINGIFY(X) STRINGIFY2(X)
 
@@ -24,6 +20,7 @@
 #define ADDWSTRINGL2(X) L##X
 #define ADDWSTRINGL(X) ADDWSTRINGL2(X)
 
+// version strings
 #define SEUKOMOD_VERSION_STR \
     STRINGIFY(SEUKOMOD_VERSION_MAJOR) "." \
     STRINGIFY(SEUKOMOD_VERSION_MINOR) "." \
@@ -33,6 +30,25 @@
     WSTRINGIFY(SEUKOMOD_VERSION_MAJOR) L"." \
     WSTRINGIFY(SEUKOMOD_VERSION_MINOR) L"." \
     WSTRINGIFY(SEUKOMOD_VERSION_PATCH)
+
+// configuration name strings
+#ifdef CONFIG_NAME
+#define SEUKOMOD_CONFIGURATION_NAME_STR CONFIG_NAME
+#else
+#define SEUKOMOD_CONFIGURATION_NAME_STR "unknown"
+#endif
+
+#define SEUKOMOD_CONFIGURATION_NAME_WSTR \
+    WSTRINGIFY(SEUKOMOD_CONFIGURATION_NAME_STR)
+
+// git strings
+#ifndef GIT_COMMIT_HASH
+#define GIT_COMMIT_HASH "unknown"
+#endif
+
+#ifndef GIT_IS_DIRTY
+#define GIT_IS_DIRTY false
+#endif
 
 #define GIT_DIRTY_SUFFIX_true  "-dirty"
 #define GIT_DIRTY_SUFFIX_false ""
