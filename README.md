@@ -2,14 +2,16 @@
 
 An ultimate mod menu (aka. trainer) for Grand Theft Auto 2.
 
+[Video showcase](https://www.youtube.com/watch?v=5gCCe0UtBl4)
+
 [![gta2-seuko-mod](https://maseuko.pl/soft/gta2-seuko-mod/seuko-mod.png)](https://maseuko.pl/soft/gta2-seuko-mod/seuko-mod.png)
 
 ## Features
 
-- Player control (respect, multiplier, lives, money, health, armor, wanted level, invulnerability, wanted level lock)
+- Player control (money, health, armor, wanted level, wanted level lock, appearance, invulnerability, respect, multiplier, lives)
 - Teleport
-- Vehicle spawning (selectable model and remap)
-- Current/last vehicle control (physics aka. invulnerability, remap, engine damage, turning the engine off, exploding)
+- Spawning vehicles (selectable model and remap)
+- Current/last vehicle control (physics aka. invulnerability, remap, fixing damage, turning the engine off, exploding)
 - Advanced game camera position control and 3D mode
 - Obtaining weapons (selectable ammo count, including vehicle weapons)
 - Obtaining all (handheld) weapons at one key press
@@ -17,6 +19,7 @@ An ultimate mod menu (aka. trainer) for Grand Theft Auto 2.
 - Quicksaving
 - Custom quick actions on key press
 - Saving and spawning saved vehicles
+- Spawning objects (including power-ups and secret objects cut out from the game)
 - Native cheats (each cheat can be force disabled, force enabled or unmodified to not interfere with cheat codes and registry flags)
 - Configurable menu controls
 - Shadows distance fix
@@ -75,7 +78,7 @@ If you like this mod and want to support its development, you can donate via [Pa
 ## Credits
 
 - Original GTA2 game by DMA Design / Rockstar Games (none of original game files are included in this project)
-- Mod menu by [izawartka / masuo](https://github.com/izawartka)
+- Mod by [izawartka](https://github.com/izawartka)
 - Research support by [h0x91b](https://github.com/h0x91b)
 
 ## References
