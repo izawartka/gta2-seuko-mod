@@ -366,6 +366,7 @@
     <ClInclude Include="src\modules\ui\events\events.h" />
     <ClInclude Include="src\modules\ui\events\key-down-repeat.h" />
     <ClInclude Include="src\modules\modmenu\events\events.h" />
+    <ClInclude Include="src\converters\powerup.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
