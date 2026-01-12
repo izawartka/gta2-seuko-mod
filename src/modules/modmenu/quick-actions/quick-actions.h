@@ -4,6 +4,7 @@
 #include "explode-all-vehicles.h"
 #include "fix-vehicle.h"
 #include "get-all-weapons.h"
+#include "get-powerup.h"
 #include "save-game.h"
 #include "spawn-object.h"
 #include "spawn-saved-vehicle.h"
