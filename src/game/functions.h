@@ -136,5 +136,8 @@ namespace Game {
 		typedef void(__fastcall TeleportPedType)(Ped* ped, DWORD edx, SCR_f x, SCR_f y);
 		// z is auto-calculated based on the ground level
 		static constexpr TeleportPedType* TeleportPed = (TeleportPedType*)0x00435c80;
+
+		typedef uint(__fastcall GivePowerUpType)(Player* player, DWORD edx, POWERUP_TYPE type);
+		static constexpr GivePowerUpType* GivePowerUp = (GivePowerUpType*)0x004a5780;
 	};  
 }

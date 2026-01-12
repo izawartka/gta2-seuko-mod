@@ -89,3 +89,15 @@ const std::vector<Game::PED_GRAPHIC_TYPE>& Game::Utils::GetAvailablePedGraphicTy
 	});
 	return graphicTypes;
 }
+
+const std::vector<Game::POWERUP_TYPE>& Game::Utils::GetAvailablePowerupTypes() {
+	static constexpr int32_t ids[] = {
+		0,1,2,3,4,5,6,7,8,9,
+		10,11,12,13,14,15,16
+	};
+	static const std::vector<POWERUP_TYPE> powerupTypes(
+		reinterpret_cast<const POWERUP_TYPE*>(std::begin(ids)),
+		reinterpret_cast<const POWERUP_TYPE*>(std::end(ids))
+	);
+	return powerupTypes;
+}

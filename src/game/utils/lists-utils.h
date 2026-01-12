@@ -10,4 +10,5 @@ namespace Game::Utils {
 	const std::vector<EXPLOSION_SIZE>& GetAvailableExplosionSizes();
 	const std::vector<PED_REMAP>& GetAvailablePedRemaps();
 	const std::vector<PED_GRAPHIC_TYPE>& GetAvailablePedGraphicTypes();
+	const std::vector<POWERUP_TYPE>& GetAvailablePowerupTypes();
 }
