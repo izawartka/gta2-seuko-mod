@@ -5,6 +5,7 @@
 #include "player-pos-menu.h"
 #include "player-stats-menu.h"
 #include "player-appearance-menu.h"
+#include "get-powerup-menu.h"
 #include "vehicles-menu.h"
 #include "spawn-vehicle-menu.h"
 #include "last-vehicle-menu.h"

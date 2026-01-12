@@ -2,6 +2,7 @@
 #include "player-pos-menu.h"
 #include "player-stats-menu.h"
 #include "player-appearance-menu.h"
+#include "get-powerup-menu.h"
 #include "../../../converters/cop-value.h"
 #include "../../../converters/yes-no.h"
 #include "../cheats/cop-value.h"
@@ -30,6 +31,7 @@ bool ModMenuModule::PlayerMenu::Attach()
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Position", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Stats", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Appearance", options.textSize);
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Get power-up", options.textSize);
 
 	CopValueCheat* copValueCheat = CopValueCheat::GetInstance();
 	if (!copValueCheat->IsEnabled()) {
@@ -133,6 +135,9 @@ void ModMenuModule::PlayerMenu::OnMenuAction(UiModule::Selectable* item, UiModul
 		break;
 	case 3: // Appearance
 		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::PlayerAppearanceMenu>();
+		break;
+	case 4: // Get power-up
+		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::GetPowerupMenu>();
 		break;
 	default:
 		break;
