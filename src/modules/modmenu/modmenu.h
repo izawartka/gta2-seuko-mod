@@ -7,6 +7,7 @@
 #include "cheat-registry.h"
 #include "cheat-manager.h"
 #include "cheats/cheats.h"
+#include "events/events.h"
 #include "segment-base.h"
 #include "segment-support.h"
 #include "segments/segments.h"
