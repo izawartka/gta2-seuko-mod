@@ -21,6 +21,7 @@ PersistenceModule::RootModule* PersistenceModule::RootModule::GetInstance()
 
 bool PersistenceModule::RootModule::Attach()
 {
+	m_persistenceManager.UpdatePersistenceFilePath();
 	m_persistenceManager.LoadFromFile();
 	spdlog::info("PersistenceModule::RootModule module attached.");
 

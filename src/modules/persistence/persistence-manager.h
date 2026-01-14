@@ -52,15 +52,16 @@ namespace PersistenceModule {
 			return true;
 		}
 
-		void SaveToFile();
-		void LoadFromFile();
-
 	private:
 		friend class RootModule;
 		PersistenceManager();
 		~PersistenceManager();
 		PersistenceManager(const PersistenceManager&) = delete;
 		PersistenceManager& operator=(const PersistenceManager&) = delete;
+
+		void SaveToFile();
+		void LoadFromFile();
+		void UpdatePersistenceFilePath();
 
 		static PersistenceManager* m_instance;
 
@@ -142,5 +143,6 @@ namespace PersistenceModule {
 		}
 
 		std::unordered_map<std::string, std::unique_ptr<SavedValue>> m_savedValues;
+		std::string m_persistenceFilePath;
 	};
 }

@@ -17,9 +17,9 @@ PersistenceModule::PersistenceManager* PersistenceModule::PersistenceManager::Ge
 }
 
 void PersistenceModule::PersistenceManager::SaveToFile() {
-	std::ofstream ofs(PERSISTENCE_FILE, std::ios::binary | std::ios::trunc);
+	std::ofstream ofs(m_persistenceFilePath, std::ios::binary | std::ios::trunc);
 	if (!ofs) {
-		spdlog::error("Failed to open persistence file for saving: {}", PERSISTENCE_FILE);
+		spdlog::error("Failed to open persistence file for saving: {}", m_persistenceFilePath);
 		return;
 	}
 
@@ -36,15 +36,19 @@ void PersistenceModule::PersistenceManager::SaveToFile() {
 		if (dataLength > 0)
 			ofs.write(reinterpret_cast<const char*>(value->data.data()), dataLength);
 	}
+
 	if (!ofs.good()) {
 		spdlog::error("Error occurred while saving persistence data");
+	}
+	else {
+		spdlog::info("Saved {} entries to persistence file", entriesCount);
 	}
 }
 
 void PersistenceModule::PersistenceManager::LoadFromFile() {
-	std::ifstream ifs(PERSISTENCE_FILE, std::ios::binary);
+	std::ifstream ifs(m_persistenceFilePath, std::ios::binary);
 	if (!ifs) {
-		spdlog::warn("Persistence file not found: {}", PERSISTENCE_FILE);
+		spdlog::warn("Persistence file not found: {}", m_persistenceFilePath);
 		return;
 	}
 
@@ -90,4 +94,16 @@ void PersistenceModule::PersistenceManager::LoadFromFile() {
 	else {
 		spdlog::info("Loaded {} entries from persistence file", entriesCount);
 	}
+}
+
+void PersistenceModule::PersistenceManager::UpdatePersistenceFilePath()
+{
+	char buffer[MAX_PATH];
+	if (GetCurrentDirectoryA(MAX_PATH, buffer) == 0) {
+		spdlog::error("PersistenceManager: Failed to get current directory");
+		return;
+	}
+
+	std::string workingDir(buffer);
+	m_persistenceFilePath = workingDir + "\\" + PERSISTENCE_FILE;
 }
