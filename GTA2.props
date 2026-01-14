@@ -3,5 +3,7 @@
   <PropertyGroup>
     <GTA2_DIR>D:\GTA2</GTA2_DIR>
     <GTA2_EXE>gta2.exe</GTA2_EXE>
+    <GTA2_ASI_DIR>$(GTA2_DIR)\scripts</GTA2_ASI_DIR>
+    <GTA2_ASI_FILENAME>gta2-seuko-mod.asi</GTA2_ASI_FILENAME>
   </PropertyGroup>
 </Project>

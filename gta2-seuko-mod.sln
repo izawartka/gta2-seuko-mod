@@ -8,14 +8,20 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
+		DebugAsi|x86 = DebugAsi|x86
 		Release|x86 = Release|x86
+		ReleaseAsi|x86 = ReleaseAsi|x86
 		ReleaseWithLogging|x86 = ReleaseWithLogging|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E36BE4A1-BF14-45D3-94FB-73C0BC74A114}.Debug|x86.ActiveCfg = Debug|Win32
 		{E36BE4A1-BF14-45D3-94FB-73C0BC74A114}.Debug|x86.Build.0 = Debug|Win32
+		{E36BE4A1-BF14-45D3-94FB-73C0BC74A114}.DebugAsi|x86.ActiveCfg = DebugAsi|Win32
+		{E36BE4A1-BF14-45D3-94FB-73C0BC74A114}.DebugAsi|x86.Build.0 = DebugAsi|Win32
 		{E36BE4A1-BF14-45D3-94FB-73C0BC74A114}.Release|x86.ActiveCfg = Release|Win32
 		{E36BE4A1-BF14-45D3-94FB-73C0BC74A114}.Release|x86.Build.0 = Release|Win32
+		{E36BE4A1-BF14-45D3-94FB-73C0BC74A114}.ReleaseAsi|x86.ActiveCfg = ReleaseAsi|Win32
+		{E36BE4A1-BF14-45D3-94FB-73C0BC74A114}.ReleaseAsi|x86.Build.0 = ReleaseAsi|Win32
 		{E36BE4A1-BF14-45D3-94FB-73C0BC74A114}.ReleaseWithLogging|x86.ActiveCfg = ReleaseWithLogging|Win32
 		{E36BE4A1-BF14-45D3-94FB-73C0BC74A114}.ReleaseWithLogging|x86.Build.0 = ReleaseWithLogging|Win32
 	EndGlobalSection

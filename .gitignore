@@ -6,3 +6,5 @@ desktop.ini
 /ReleaseWithLogging
 src/git.h
 src/version.aps
+/DebugAsi
+/ReleaseAsi

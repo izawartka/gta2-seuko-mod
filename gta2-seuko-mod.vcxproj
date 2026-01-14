@@ -1,8 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugAsi|Win32">
+      <Configuration>DebugAsi</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseAsi|Win32">
+      <Configuration>ReleaseAsi</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="ReleaseWithLogging|Win32">
@@ -29,7 +37,20 @@
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugAsi|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseAsi|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
@@ -52,7 +73,15 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="GTA2.props" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugAsi|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="GTA2.props" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="GTA2.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseAsi|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="GTA2.props" />
   </ImportGroup>
@@ -67,7 +96,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetName>dinput8</TargetName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseAsi|Win32'">
+    <TargetName>dinput8</TargetName>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>dinput8</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugAsi|Win32'">
     <TargetName>dinput8</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -92,13 +127,17 @@
       <ModuleDefinitionFile>src\dinput8.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>if "$(GTA2_DIR)"=="" (
-  echo ERROR: GTA2_DIR is not set. Make sure to set in in GTA2.props file.
+      <Command>@echo off
+
+echo Dinput8 proxy mode enabled
+
+if "$(GTA2_DIR)"=="" (
+  echo ERROR: GTA2_DIR is not set. Make sure to set it in GTA2.props file.
   exit /b 1
 )
 
 if "$(GTA2_EXE)"=="" (
-  echo ERROR: GTA2_EXE is not set. Make sure to set in in GTA2.props file.
+  echo ERROR: GTA2_EXE is not set. Make sure to set it in GTA2.props file.
   exit /b 1
 )
 
@@ -112,8 +151,107 @@ if not exist "$(GTA2_DIR)\$(GTA2_EXE)" (
   exit /b 1
 )
 
+echo Copying "$(TargetPath)" to "$(GTA2_DIR)"
+
 copy /Y "$(TargetPath)" "$(GTA2_DIR)\"
-if exist "$(TargetDir)$(TargetName).pdb" copy /Y "$(TargetDir)$(TargetName).pdb" "$(GTA2_DIR)\"
+if errorlevel 1 exit /b 1
+
+if exist "$(TargetDir)$(TargetName).pdb" (
+  copy /Y "$(TargetDir)$(TargetName).pdb" "$(GTA2_DIR)\"
+)
+
+exit /b 0
+</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>set GIT_HASH=unknown
+set GIT_DIRTY=false
+
+for /f %%i in ('git rev-parse --short HEAD 2^&gt;nul') do set GIT_HASH=%%i
+
+for /f %%i in ('git status --porcelain 2^&gt;nul') do (
+    set GIT_DIRTY=true
+    goto :dirty_done
+)
+:dirty_done
+
+echo #pragma once&gt; "$(ProjectDir)src\git.h"
+echo // Auto-generated. Do not edit.&gt;&gt; "$(ProjectDir)src\git.h"
+echo.&gt;&gt; "$(ProjectDir)src\git.h"
+echo #define GIT_COMMIT_HASH "%GIT_HASH%"&gt;&gt; "$(ProjectDir)src\git.h"
+echo #define GIT_IS_DIRTY %GIT_DIRTY%&gt;&gt; "$(ProjectDir)src\git.h"
+
+echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
+</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugAsi|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;CONFIG_NAME=$(Configuration);SEUKOMOD_ASI;_DEBUG;SEUKOMOD_DISABLE_CRASH_DUMPS;GTA2SEUKOMOD_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>
+      </PrecompiledHeaderOutputFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)third_party\spdlog\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+    </Link>
+    <PostBuildEvent>
+      <Command>@echo off
+
+echo ASI mode enabled
+
+if "$(GTA2_DIR)"=="" (
+  echo ERROR: GTA2_DIR is not set. Make sure to set it in GTA2.props file.
+  exit /b 1
+)
+
+if "$(GTA2_EXE)"=="" (
+  echo ERROR: GTA2_EXE is not set. Make sure to set it in GTA2.props file.
+  exit /b 1
+)
+
+if not exist "$(GTA2_DIR)\" (
+  echo ERROR: GTA2_DIR "$(GTA2_DIR)" specified in GTA2.props does not exist.
+  exit /b 1
+)
+
+if not exist "$(GTA2_DIR)\$(GTA2_EXE)" (
+  echo ERROR: "$(GTA2_EXE)" not found in "$(GTA2_DIR)". Check GTA2.props file.
+  exit /b 1
+)
+
+if "$(GTA2_ASI_DIR)"=="" (
+  echo ERROR: GTA2_ASI_DIR is not set. To build in ASI mode, make sure to set it in GTA2.props file.
+  exit /b 1
+)
+
+if "$(GTA2_ASI_FILENAME)"=="" (
+  echo ERROR: GTA2_ASI_FILENAME is not set. To build in ASI mode, make sure to set it in GTA2.props file.
+  exit /b 1
+)
+
+if not exist "$(GTA2_ASI_DIR)\" (
+  echo ERROR: GTA2_ASI_DIR "$(GTA2_ASI_DIR)" does not exist. Check GTA2.props file.
+  exit /b 1
+)
+
+echo Copying "$(TargetPath)" to "$(GTA2_ASI_DIR)\$(GTA2_ASI_FILENAME)"
+
+copy /Y "$(TargetPath)" "$(GTA2_ASI_DIR)\$(GTA2_ASI_FILENAME)"
+if errorlevel 1 exit /b 1
 
 exit /b 0
 </Command>
@@ -165,13 +303,17 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
       <ModuleDefinitionFile>src\dinput8.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>if "$(GTA2_DIR)"=="" (
-  echo ERROR: GTA2_DIR is not set. Make sure to set in in GTA2.props file.
+      <Command>@echo off
+
+echo Dinput8 proxy mode enabled
+
+if "$(GTA2_DIR)"=="" (
+  echo ERROR: GTA2_DIR is not set. Make sure to set it in GTA2.props file.
   exit /b 1
 )
 
 if "$(GTA2_EXE)"=="" (
-  echo ERROR: GTA2_EXE is not set. Make sure to set in in GTA2.props file.
+  echo ERROR: GTA2_EXE is not set. Make sure to set it in GTA2.props file.
   exit /b 1
 )
 
@@ -185,8 +327,110 @@ if not exist "$(GTA2_DIR)\$(GTA2_EXE)" (
   exit /b 1
 )
 
+echo Copying "$(TargetPath)" to "$(GTA2_DIR)"
+
 copy /Y "$(TargetPath)" "$(GTA2_DIR)\"
-if exist "$(TargetDir)$(TargetName).pdb" copy /Y "$(TargetDir)$(TargetName).pdb" "$(GTA2_DIR)\"
+if errorlevel 1 exit /b 1
+
+if exist "$(TargetDir)$(TargetName).pdb" (
+  copy /Y "$(TargetDir)$(TargetName).pdb" "$(GTA2_DIR)\"
+)
+
+exit /b 0
+</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>set GIT_HASH=unknown
+set GIT_DIRTY=false
+
+for /f %%i in ('git rev-parse --short HEAD 2^&gt;nul') do set GIT_HASH=%%i
+
+for /f %%i in ('git status --porcelain 2^&gt;nul') do (
+    set GIT_DIRTY=true
+    goto :dirty_done
+)
+:dirty_done
+
+echo #pragma once&gt; "$(ProjectDir)src\git.h"
+echo // Auto-generated. Do not edit.&gt;&gt; "$(ProjectDir)src\git.h"
+echo.&gt;&gt; "$(ProjectDir)src\git.h"
+echo #define GIT_COMMIT_HASH "%GIT_HASH%"&gt;&gt; "$(ProjectDir)src\git.h"
+echo #define GIT_IS_DIRTY %GIT_DIRTY%&gt;&gt; "$(ProjectDir)src\git.h"
+
+echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
+</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseAsi|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;CONFIG_NAME=$(Configuration);SEUKOMOD_ASI;NDEBUG;GTA2SEUKOMOD_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>
+      </PrecompiledHeaderOutputFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)third_party\spdlog\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+    </Link>
+    <PostBuildEvent>
+      <Command>@echo off
+
+echo ASI mode enabled
+
+if "$(GTA2_DIR)"=="" (
+  echo ERROR: GTA2_DIR is not set. Make sure to set it in GTA2.props file.
+  exit /b 1
+)
+
+if "$(GTA2_EXE)"=="" (
+  echo ERROR: GTA2_EXE is not set. Make sure to set it in GTA2.props file.
+  exit /b 1
+)
+
+if not exist "$(GTA2_DIR)\" (
+  echo ERROR: GTA2_DIR "$(GTA2_DIR)" specified in GTA2.props does not exist.
+  exit /b 1
+)
+
+if not exist "$(GTA2_DIR)\$(GTA2_EXE)" (
+  echo ERROR: "$(GTA2_EXE)" not found in "$(GTA2_DIR)". Check GTA2.props file.
+  exit /b 1
+)
+
+if "$(GTA2_ASI_DIR)"=="" (
+  echo ERROR: GTA2_ASI_DIR is not set. To build in ASI mode, make sure to set it in GTA2.props file.
+  exit /b 1
+)
+
+if "$(GTA2_ASI_FILENAME)"=="" (
+  echo ERROR: GTA2_ASI_FILENAME is not set. To build in ASI mode, make sure to set it in GTA2.props file.
+  exit /b 1
+)
+
+if not exist "$(GTA2_ASI_DIR)\" (
+  echo ERROR: GTA2_ASI_DIR "$(GTA2_ASI_DIR)" does not exist. Check GTA2.props file.
+  exit /b 1
+)
+
+echo Copying "$(TargetPath)" to "$(GTA2_ASI_DIR)\$(GTA2_ASI_FILENAME)"
+
+copy /Y "$(TargetPath)" "$(GTA2_ASI_DIR)\$(GTA2_ASI_FILENAME)"
+if errorlevel 1 exit /b 1
 
 exit /b 0
 </Command>
@@ -239,13 +483,17 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
       <ModuleDefinitionFile>src\dinput8.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>if "$(GTA2_DIR)"=="" (
-  echo ERROR: GTA2_DIR is not set. Make sure to set in in GTA2.props file.
+      <Command>@echo off
+
+echo Dinput8 proxy mode enabled
+
+if "$(GTA2_DIR)"=="" (
+  echo ERROR: GTA2_DIR is not set. Make sure to set it in GTA2.props file.
   exit /b 1
 )
 
 if "$(GTA2_EXE)"=="" (
-  echo ERROR: GTA2_EXE is not set. Make sure to set in in GTA2.props file.
+  echo ERROR: GTA2_EXE is not set. Make sure to set it in GTA2.props file.
   exit /b 1
 )
 
@@ -259,8 +507,14 @@ if not exist "$(GTA2_DIR)\$(GTA2_EXE)" (
   exit /b 1
 )
 
+echo Copying "$(TargetPath)" to "$(GTA2_DIR)"
+
 copy /Y "$(TargetPath)" "$(GTA2_DIR)\"
-if exist "$(TargetDir)$(TargetName).pdb" copy /Y "$(TargetDir)$(TargetName).pdb" "$(GTA2_DIR)\"
+if errorlevel 1 exit /b 1
+
+if exist "$(TargetDir)$(TargetName).pdb" (
+  copy /Y "$(TargetDir)$(TargetName).pdb" "$(GTA2_DIR)\"
+)
 
 exit /b 0
 </Command>

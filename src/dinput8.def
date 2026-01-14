@@ -1,3 +1,5 @@
+; This file is used only when building in Dinput8 proxy mode (not ASI mode)
+
 LIBRARY "dinput8"
 EXPORTS
     DirectInput8Create

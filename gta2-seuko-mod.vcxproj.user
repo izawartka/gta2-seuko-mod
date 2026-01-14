@@ -8,7 +8,17 @@
     <LocalDebuggerWorkingDirectory>$(GTA2_DIR)</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugAsi|Win32'">
+    <LocalDebuggerCommand>$(GTA2_DIR)\$(GTA2_EXE)</LocalDebuggerCommand>
+    <LocalDebuggerWorkingDirectory>$(GTA2_DIR)</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LocalDebuggerCommand>$(GTA2_DIR)\$(GTA2_EXE)</LocalDebuggerCommand>
+    <LocalDebuggerWorkingDirectory>$(GTA2_DIR)</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseAsi|Win32'">
     <LocalDebuggerCommand>$(GTA2_DIR)\$(GTA2_EXE)</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(GTA2_DIR)</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>

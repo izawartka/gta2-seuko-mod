@@ -1,3 +1,4 @@
+#ifndef SEUKOMOD_ASI
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 #include <windows.h>
 #include <unknwn.h>
@@ -24,7 +25,7 @@ extern "C" __declspec(dllexport) HRESULT WINAPI DirectInput8Create(
         
         if (!hOriginalDll)
         {
-            MessageBoxA(nullptr, "Failed to load original dinput8.dll from System32", "Seukomod proxy error", MB_ICONERROR);
+            MessageBoxA(nullptr, "Failed to load original dinput8.dll from System32", "Seuko mod proxy error", MB_ICONERROR);
             return E_FAIL;
         }
         
@@ -32,7 +33,7 @@ extern "C" __declspec(dllexport) HRESULT WINAPI DirectInput8Create(
         
         if (!pDirectInput8Create)
         {
-            MessageBoxA(nullptr, "Failed to get DirectInput8Create from original dinput8.dll", "Seukomod proxy error", MB_ICONERROR);
+            MessageBoxA(nullptr, "Failed to get DirectInput8Create from original dinput8.dll", "Seuko mod proxy error", MB_ICONERROR);
             return E_FAIL;
         }
     }
@@ -49,3 +50,12 @@ void UnloadOriginalDll()
         pDirectInput8Create = nullptr;
     }
 }
+
+#else // SEUKOMOD_ASI
+
+void UnloadOriginalDll()
+{
+
+}
+
+#endif // SEUKOMOD_ASI
