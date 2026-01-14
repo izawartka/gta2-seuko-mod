@@ -5,7 +5,6 @@
 
 #include <windows.h>
 #include <math.h>
-#include <atlstr.h>
 #include <vector>
 #include <functional>
 #include <unordered_set>
