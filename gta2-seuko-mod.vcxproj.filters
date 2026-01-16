@@ -139,6 +139,7 @@
     <ClCompile Include="src\modules\modmenu\segments\get-powerup-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\give-player-powerup.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\get-powerup.cpp" />
+    <ClCompile Include="src\events\camera-follow-update.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -375,6 +376,7 @@
     <ClInclude Include="src\modules\modmenu\events\events.h" />
     <ClInclude Include="src\converters\powerup.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\get-powerup.h" />
+    <ClInclude Include="src\events\camera-follow-update.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
