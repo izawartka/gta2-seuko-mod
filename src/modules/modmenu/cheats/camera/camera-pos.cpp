@@ -148,8 +148,11 @@ void ModMenuModule::CameraPosCheat::OnGameEnd(GameEndEvent& event)
 {
 	m_lockAtCurrentRequested = false;
 	m_snapToTargetRequested = false;
-	m_snapAndDisableRequested = false;
 	m_lastPosition = std::nullopt;
+
+	if (m_snapAndDisableRequested) {
+		SetEnabled(false);
+	}
 }
 
 void ModMenuModule::CameraPosCheat::ApplyCoordinate(CameraPosCheatCoordinate& coord, Game::SCR_f& camCoord, Game::SCR_f& camCoordTarget2) const
