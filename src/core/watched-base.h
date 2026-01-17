@@ -16,11 +16,13 @@ namespace Core
 		virtual void Update() = 0;
 		virtual WatchedId GetId() const final { return m_id; }
 		virtual void RequestUpdate() final { m_needsUpdate = true; }
+		virtual bool GetWillDestroy() final { return m_willDestroy; }
 	protected:
 		friend class WatchManager;
 		WatchedBase() = default;
 		WatchedId m_id = 0;
 		bool m_needsUpdate = true;
+		bool m_willDestroy = false; // set by WatchManager if it is marked for removal
 	};
 
 	template <typename ValueT, typename ResRetT = typename DefaultResRetT<ValueT>::type>

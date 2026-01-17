@@ -9,33 +9,19 @@ Core::WatchManager* Core::WatchManager::GetInstance()
 	return m_instance;
 }
 
-void Core::WatchManager::Unwatch(WatchedId id)
-{
-	spdlog::debug("Removing watched with id: {}", id);
-
-	auto it = std::find_if(m_idToEventType.begin(), m_idToEventType.end(),
-		[id](const auto& pair) { return pair.first == id; });
-
-	if (it == m_idToEventType.end()) {
-		spdlog::warn("No watched found with id: {}", id);
-		return;
-	}
-
-	auto eventTypeIdx = it->second;
-
-	if (m_updating) {
-		PendingChange change(ChangeType::Remove, id, eventTypeIdx, nullptr);
-		m_pendingChanges.push(change);
-	}
-	else {
-		RemoveEntry(id, eventTypeIdx);
-	}
-}
-
 void Core::WatchManager::Unwatch(WatchedBase* watched)
 {
 	if (watched == nullptr) return;
-	Unwatch(watched->GetId());
+
+	watched->m_willDestroy = true;
+
+	if (m_updating) {
+		PendingChange change(ChangeType::Remove, watched->GetId(), typeid(void), nullptr);
+		m_pendingChanges.push(change);
+	}
+	else {
+		RemoveEntry(watched->GetId());
+	}
 }
 
 Core::WatchManager::WatchManager()
@@ -54,27 +40,50 @@ Core::WatchManager::~WatchManager()
 	m_instance = nullptr;
 }
 
-void Core::WatchManager::RemoveEntry(WatchedId id, std::type_index eventTypeIdx)
+void Core::WatchManager::AddEntry(WatchedBase* entry, std::type_index eventType)
 {
-	auto idIt = std::find_if(m_idToEventType.begin(), m_idToEventType.end(),
-		[id](const auto& pair) { return pair.first == id; });
+	spdlog::debug("Adding watched: {} with id: {}", typeid(*entry).name(), entry->GetId());
 
-	if (idIt != m_idToEventType.end()) {
-		m_idToEventType.erase(idIt);
+	m_entries[eventType].push_back(std::unique_ptr<WatchedBase>(entry));
+	m_idToEventType.insert({ entry->GetId(), eventType});
+}
+
+void Core::WatchManager::RemoveEntry(WatchedId id)
+{
+	spdlog::debug("Removing watched with id: {}", id);
+
+	auto it = m_idToEventType.find(id);
+	if (it == m_idToEventType.end()) {
+		spdlog::warn("No watched found with id: {}", id);
+		return;
 	}
 
-	auto& vec = m_entries[eventTypeIdx];
+	std::type_index eventTypeIdx = it->second;
+	m_idToEventType.erase(it);
+
+	auto& vec = m_entries.at(eventTypeIdx);
 	vec.erase(std::remove_if(vec.begin(), vec.end(),
 		[id](const auto& entry) { return entry->m_id == id; }), vec.end());
 }
 
 void Core::WatchManager::RemoveEventType(std::type_index eventType)
 {
-	// Note: m_entries entry is not being removed
 	spdlog::debug("No more watched for event type: {}, removing listener", eventType.name());
 
+	auto entriesIt = m_entries.find(eventType);
+	if (entriesIt == m_entries.end()) {
+		spdlog::error("Could not find entries vector for event type: {}", eventType.name());
+	}
+	else {
+		m_entries.erase(entriesIt);
+	}
+
 	auto it = m_typeToListenerId.find(eventType);
-	if (it == m_typeToListenerId.end()) return;
+	if (it == m_typeToListenerId.end()) {
+		spdlog::error("Could not find listener ID for event type: {}", eventType.name());
+		return;
+	}
+
 	EventManager::GetInstance()->RemoveListener(eventType, it->second);
 	m_typeToListenerId.erase(it);
 }
@@ -86,31 +95,12 @@ void Core::WatchManager::ProcessPendingChanges()
 		m_pendingChanges.pop();
 
 		if (change.type == ChangeType::Add) {
-			ApplyAdd(change);
+			AddEntry(change.entry, change.eventType);
 		}
 		else if (change.type == ChangeType::Remove) {
-			ApplyRemove(change);
+			RemoveEntry(change.id);
 		}
 	}
-}
-
-void Core::WatchManager::ApplyAdd(PendingChange& change)
-{
-	WatchedBase* entry = change.entry;
-	WatchedId id = entry->m_id;
-	std::type_index eventTypeIdx = change.eventType;
-
-	spdlog::debug("Applying queued add for watched: {} with id: {} (Event: {})",
-		typeid(*entry).name(), id, eventTypeIdx.name());
-
-	m_entries[eventTypeIdx].push_back(std::unique_ptr<WatchedBase>(entry));
-	m_idToEventType.push_back({ id, eventTypeIdx });
-}
-
-void Core::WatchManager::ApplyRemove(PendingChange& change)
-{
-	spdlog::debug("Applying queued remove for watched with id: {}", change.id);
-	RemoveEntry(change.id, change.eventType);
 }
 
 void Core::WatchManager::Update(std::type_index eventType)
@@ -126,6 +116,7 @@ void Core::WatchManager::Update(std::type_index eventType)
 	m_updating = true;
 
 	for (auto& entry : it->second) {
+		if (entry->GetWillDestroy()) continue;
 		entry->Update();
 	}
 
