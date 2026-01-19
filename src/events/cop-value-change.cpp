@@ -1,7 +1,6 @@
 #include "cop-value-change.h"
 #include "../hook-types/jump-hook.h"
 #include "../hook-types/function-multi-call-hook.h"
-#include "../hook-types/function-call-hook.h"
 
 static Game::ushort __stdcall DispatchCopValueChangeEvent(Game::ushort newValue)
 {
@@ -15,10 +14,11 @@ static const DWORD CopKillHookReturnAddress = 0x0043756c;
 static __declspec(naked) void CopKillHookFunction(void)
 {
 	__asm {
-		push esi
+		pushad
 		push ebx
 		call DispatchCopValueChangeEvent
-		pop esi
+		mov [esp + 0x1c], eax
+		popad
 		mov word ptr[esi + 0x20a], ax
 		jmp CopKillHookReturnAddress
 	}

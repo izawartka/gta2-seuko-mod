@@ -17,9 +17,13 @@ static void DispatchGameStartEvent()
 static __declspec(naked) void GameStartHookFunction(void)
 {
 	__asm {
+		pushad
 		call DispatchPreGameStartEvent
+		popad
 		call Game::Functions::InitGame
+		pushad
 		call DispatchGameStartEvent
+		popad
 		ret
 	}
 }

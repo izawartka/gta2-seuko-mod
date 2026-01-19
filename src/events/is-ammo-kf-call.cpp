@@ -15,7 +15,10 @@ static __declspec(naked) void IsAmmoKfCallHookFunction(void)
 		cmp WORD PTR [ecx], 0xffff
 		sete al
 		mov ecx, eax
+		pushad
 		call DispatchIsAmmoKfCallEvent
+		mov [esp + 0x1c], eax
+		popad
 		ret
 	}
 }

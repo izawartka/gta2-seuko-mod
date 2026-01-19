@@ -60,7 +60,9 @@ static void DispatchKeyboardEvent()
 static __declspec(naked) void OnKeyUpDownHookFunction(void)
 {
 	__asm {
+		pushad
 		call DispatchKeyboardEvent
+		popad
 		jmp Game::Functions::OnKeyUpDown
 	}
 }

@@ -18,7 +18,9 @@ static __declspec(naked) void AfterDebugFlagsHookFunction(void)
 		setnz al
 		mov ds : [0x005ead76], al
 		pop esi
+		pushad
 		call DispatchAfterDebugFlagsEvent
+		popad
 		ret
 	}
 }

@@ -17,11 +17,13 @@ static void DispatchDrawUIEvent()
 static __declspec(naked) void DrawUIHookFunction(void)
 {
 	__asm {
-		push ecx
+		pushad
 		call DispatchPreDrawUIEvent
-		pop ecx
+		popad
 		call Game::Functions::DrawUI
+		pushad
 		call DispatchDrawUIEvent
+		popad
 		ret
 	}
 }

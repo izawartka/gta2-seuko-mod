@@ -17,11 +17,13 @@ static void DispatchGameTickEvent()
 static __declspec(naked) void GameTickHookFunction(void)
 {
 	__asm {
-		push ecx
+		pushad
 		call DispatchPreGameTickEvent
-		pop ecx
+		popad
 		call Game::Functions::GameTick
+		pushad
 		call DispatchGameTickEvent
+		popad
 		ret
 	}
 }

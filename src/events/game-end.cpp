@@ -17,9 +17,13 @@ static void DispatchGameEndEvent()
 static __declspec(naked) void GameEndHookFunction(void)
 {
 	__asm {
+		pushad
 		call DispatchPreGameEndEvent
+		popad
 		call Game::Functions::DeinitGame
+		pushad
 		call DispatchGameEndEvent
+		popad
 		ret
 	}
 }

@@ -14,7 +14,9 @@ static __declspec(naked) void RendererLoadHookFunction(void)
 {
 	__asm {
 		call rendererLoadOriginalFunction
+		pushad
 		call DispatchRendererLoadEvent
+		popad
 		ret
 	}
 }
