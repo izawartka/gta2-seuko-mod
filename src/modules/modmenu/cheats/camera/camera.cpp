@@ -153,9 +153,10 @@ void ModMenuModule::CameraCheat::OnDrawTriangle(RendererDrawTriangleEvent& event
 
 void ModMenuModule::CameraCheat::OnPreDrawFrame(PreDrawFrameEvent& event)
 {
-	Game::Camera* mainCamera = Game::Memory::GetMainCamera();
-	Game::Ped* playerPed = Game::Memory::GetPlayerPed();
+	Game::Player* player = Core::MakeResolver(Game::Memory::GetGame, mem(&Game::Game::CurrentPlayer))();
+	if (!player) return;
 
+	Game::Ped* playerPed = player->ped;
 	short* playerPedRotationPtr = Game::Utils::GetPlayerPedRotationPtr();
 	if (playerPedRotationPtr != nullptr && m_options.followPedRotation) {
 		float pedRotationRad = Game::Utils::FromGTAAngleToRad(*playerPedRotationPtr) + static_cast<float>(M_PI);
@@ -170,22 +171,17 @@ void ModMenuModule::CameraCheat::OnPreDrawFrame(PreDrawFrameEvent& event)
 
 	m_snapVerticalRotation = false;
 
-	if (mainCamera) {
-		auto* cameraPosCheat = CameraPosCheat::GetInstance();
-		bool isZlocked = cameraPosCheat && cameraPosCheat->IsEnabled() && cameraPosCheat->GetOptions().z.mode == CameraPosCheatMode::LockTargetAt;
-		bool ignorePlayerPedZ = !playerPed || isZlocked;
-		Game::SCR_f playerPedZ = ignorePlayerPedZ ? Game::Utils::FromFloat(3.0f) : playerPed->position.z;
+	auto* cameraPosCheat = CameraPosCheat::GetInstance();
+	bool isZlocked = cameraPosCheat && cameraPosCheat->IsEnabled() && cameraPosCheat->GetOptions().z.mode == CameraPosCheatMode::LockTargetAt;
+	bool ignorePlayerPedZ = !playerPed || isZlocked;
+	Game::SCR_f playerPedZ = ignorePlayerPedZ ? Game::Utils::FromFloat(3.0f) : playerPed->position.z;
 
-		m_cameraValues = Utils::Vertex::GetCameraValues(*mainCamera, playerPedZ);
-		m_customCameraPos = Utils::Vertex::GetCustomCameraPos(
-			m_cameraValues.value(),
-			m_options.cameraTransform
-		);
-	}
-	else {
-		m_cameraValues = std::nullopt;
-		m_customCameraPos = std::nullopt;
-	}
+	Game::Camera* mainCamera = &player->ph2;
+	m_cameraValues = Utils::Vertex::GetCameraValues(*mainCamera, playerPedZ);
+	m_customCameraPos = Utils::Vertex::GetCustomCameraPos(
+		m_cameraValues.value(),
+		m_options.cameraTransform
+	);
 
 	if (m_options.customRenderQueue && m_customCameraPos.has_value()) {
 		m_customRenderQueue = Utils::CustomRenderQueue::BuildRenderQueue(

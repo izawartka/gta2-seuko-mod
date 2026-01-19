@@ -4,6 +4,8 @@
 /*
 Dispatched right before every frame is drawn.
 Things drawn here will probably stay covered.
+
+Note: Game::Memory::GetMainCamera() may be invalid when this event is dispatched on first frame of a level. Use game->currentPlayer->ph2 instead.
 */
 class PreDrawFrameEvent : public Core::EventBase {
 public:
