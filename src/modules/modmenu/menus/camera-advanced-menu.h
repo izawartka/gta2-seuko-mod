@@ -24,9 +24,6 @@ namespace ModMenuModule {
 		void UpdateCheatStates();
 
 		UiModule::SelectController<bool>* m_cameraCheatController = nullptr;
-		UiModule::SelectController<bool>* m_clearScreenCheatController = nullptr;
-		UiModule::SelectController<bool>* m_disableCullingCheatController = nullptr;
-		UiModule::SelectController<bool>* m_shadowsFixCheatController = nullptr;
 		UiModule::VertCont* m_cheatItemsCont = nullptr;
 		UiModule::MenuItemGroupId m_cheatItemsGroupId = -1;
 		bool m_cheatItemsAttached = false;

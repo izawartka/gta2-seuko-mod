@@ -17,6 +17,7 @@
 #include "get-weapon-menu.h"
 #include "camera-menu.h"
 #include "camera-pos-menu.h"
+#include "camera-rendering-menu.h"
 #include "camera-advanced-menu.h"
 #include "world-menu.h"
 #include "spawn-object-menu.h"

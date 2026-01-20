@@ -2,6 +2,7 @@
 #include "../../../converters/camera-easy-mode.h"
 #include "../utils/camera-easy-mode-utils.h"
 #include "camera-pos-menu.h"
+#include "camera-rendering-menu.h"
 #include "camera-advanced-menu.h"
 #include "../root.h"
 
@@ -24,6 +25,7 @@ bool ModMenuModule::CameraMenu::Attach()
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Camera position", options.textSize);
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Advanced rendering options", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Advanced camera options", options.textSize);
 
 	// easy mode
@@ -56,7 +58,10 @@ void ModMenuModule::CameraMenu::OnMenuAction(UiModule::Selectable* item, UiModul
 	case 1: // Camera position
 		ModMenuModule::MenuManager::GetInstance()->AddMenu<CameraPosMenu>();
 		break;
-	case 2: // Advanced camera settings
+	case 2: // Advanced rendering options
+		ModMenuModule::MenuManager::GetInstance()->AddMenu<CameraRenderingMenu>();
+		break;
+	case 3: // Advanced camera settings
 		ModMenuModule::MenuManager::GetInstance()->AddMenu<CameraAdvancedMenu>();
 		break;
 	default:
