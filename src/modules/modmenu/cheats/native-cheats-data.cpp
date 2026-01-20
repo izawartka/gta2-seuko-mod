@@ -81,7 +81,7 @@ namespace ModMenuModule {
 		{ NativeCheatCategory::DebugInfo, L"Show vehicle info", 0x34},
 		{ NativeCheatCategory::ReplayRelated, L"Ignore replay header", 0x35},
 		{ NativeCheatCategory::OtherDebug, L"Debug keys", 0x36},
-		{ NativeCheatCategory::OtherDebug, L"Insane speed", 0x37},
+		{ NativeCheatCategory::UnstableOrUnused, L"Insane speed", 0x37},
 		{ NativeCheatCategory::DebugInfo, L"Show junctions IDs", 0x38},
 		{ NativeCheatCategory::RequiringRestart, L"Max respect", 0x39},
 		{ NativeCheatCategory::SkipThings, L"Skip fire engines", 0x3A},
