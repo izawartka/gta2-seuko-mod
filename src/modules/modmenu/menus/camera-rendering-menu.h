@@ -23,5 +23,6 @@ namespace ModMenuModule {
 		UiModule::SelectController<bool>* m_clearScreenCheatController = nullptr;
 		UiModule::SelectController<bool>* m_disableCullingCheatController = nullptr;
 		UiModule::SelectController<bool>* m_shadowsFixCheatController = nullptr;
+		UiModule::SelectController<bool>* m_disableAACheatController = nullptr;
 	};
 }

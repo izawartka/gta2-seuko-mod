@@ -3,6 +3,7 @@
 #include "../cheats/camera/clear-screen.h"
 #include "../cheats/camera/disable-culling.h"
 #include "../cheats/camera/shadows-fix.h"
+#include "../cheats/camera/disable-antialiasing.h"
 #include "../../../converters/enabled-disabled.h"
 
 ModMenuModule::CameraRenderingMenu::CameraRenderingMenu()
@@ -25,6 +26,7 @@ bool ModMenuModule::CameraRenderingMenu::Attach()
 	ClearScreenCheat* clearScreenCheat = ClearScreenCheat::GetInstance();
 	DisableCullingCheat* disableCullingCheat = DisableCullingCheat::GetInstance();
 	ShadowsFixCheat* shadowsFixCheat = ShadowsFixCheat::GetInstance();
+	DisableAntialiasingCheat* disableAACheat = DisableAntialiasingCheat::GetInstance();
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 
@@ -67,6 +69,21 @@ bool ModMenuModule::CameraRenderingMenu::Attach()
 		shadowsFixCheat->SetEnabled(newValue);
 	});
 
+	uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, options.menuSpacerHeight);
+
+	// disable antialiasing
+	UiModule::Text* disableAAText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
+	m_disableAACheatController = m_menuController->CreateLatestItemController<UiModule::SelectController<bool>>(
+		disableAAText,
+		UiModule::SelectOptionList<bool>{ false, true },
+		std::nullopt,
+		UiModule::SelectControllerOptions{ L"Disable anti-aliasing: #", L"#" }
+	);
+	m_disableAACheatController->SetConverter<EnabledDisabledConverter>();
+	m_disableAACheatController->SetSaveCallback([disableAACheat](bool newValue) {
+		disableAACheat->SetEnabled(newValue);
+	});
+
 	return true;
 }
 
@@ -103,6 +120,9 @@ void ModMenuModule::CameraRenderingMenu::OnCheatStateChange(CheatStateEvent& eve
 	else if (event.GetCheatType() == typeid(ShadowsFixCheat)) {
 		m_shadowsFixCheatController->SetValue(event.IsEnabled());
 	}
+	else if (event.GetCheatType() == typeid(DisableAntialiasingCheat)) {
+		m_disableAACheatController->SetValue(event.IsEnabled());
+	}
 }
 
 void ModMenuModule::CameraRenderingMenu::UpdateCheatStates()
@@ -110,5 +130,6 @@ void ModMenuModule::CameraRenderingMenu::UpdateCheatStates()
 	m_clearScreenCheatController->SetValue(ClearScreenCheat::GetInstance()->IsEnabled());
 	m_disableCullingCheatController->SetValue(DisableCullingCheat::GetInstance()->IsEnabled());
 	m_shadowsFixCheatController->SetValue(ShadowsFixCheat::GetInstance()->IsEnabled());
+	m_disableAACheatController->SetValue(DisableAntialiasingCheat::GetInstance()->IsEnabled());
 }
 
