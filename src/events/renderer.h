@@ -14,7 +14,7 @@ public:
 
 /*
 Dispatched when the game calls renderer gbh_DrawTile function.
-Event will fail to initialize if the renderer is not loaded yet.
+Event will fail to initialize if the renderer has not been loaded yet.
 */
 class RendererDrawTileEvent : public Core::EventBase {
 public:
@@ -34,7 +34,7 @@ private:
 
 /*
 Dispatched when the game calls renderer gbh_DrawQuad function.
-Event will fail to initialize if the renderer is not loaded yet.
+Event will fail to initialize if the renderer has not been loaded yet.
 */
 class RendererDrawQuadEvent : public Core::EventBase {
 public:
@@ -54,7 +54,7 @@ private:
 
 /*
 Dispatched when the game calls renderer gbh_DrawTriangle function.
-Event will fail to initialize if the renderer is not loaded yet.
+Event will fail to initialize if the renderer has not been loaded yet.
 */
 
 class RendererDrawTriangleEvent : public Core::EventBase {
