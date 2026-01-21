@@ -114,6 +114,16 @@ void ModMenuModule::CameraCheat::OnDrawQuad(RendererDrawQuadEvent& event)
 	memcpy(m_vertexBuffer, event.GetVertices(), sizeof(m_vertexBuffer));
 	event.SetVertices(m_vertexBuffer);
 
+	if ((event.GetFlags() == 0xa180)) { // mission arrows
+		Utils::Vertex::ApplyArrowsCameraTransform(
+			m_vertexBuffer,
+			m_cameraValues.value(),
+			m_options.cameraTransform
+		);
+
+		return;
+	}
+
 	Utils::Vertex::ApplyQuadCameraTransform(
 		m_vertexBuffer,
 		m_cameraValues.value(),

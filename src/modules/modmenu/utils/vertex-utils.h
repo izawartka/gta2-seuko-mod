@@ -13,6 +13,7 @@ namespace ModMenuModule::Utils::Vertex {
 		float gameCameraY;
 		float gameCameraZ;
 		float zOffset;
+		float perspFactor;
 	};
 
 	struct CustomCameraPos {
@@ -43,9 +44,11 @@ namespace ModMenuModule::Utils::Vertex {
 	void RotateVertexZ(Game::GTAVertex& vertex, float angleRad);
 	void ToWorldSpaceVertex(Game::GTAVertex& vertex, const CameraValues& cameraValues);
 	void ToScreenSpaceVertex(Game::GTAVertex& vertex, const CameraValues& cameraValues);
+	void ToSetZPosition(Game::GTAVertex& vertex, float newZ, const CameraValues& cameraValues);
 	float GetCrossProduct(const Game::GTAVertex& v1, const Game::GTAVertex& v2, const Game::GTAVertex& v3);
 	
 	void ApplyQuadCameraTransform(Game::GTAVertex* vertices, const CameraValues& cameraValues, const CameraTransform& cameraTransform);
+	void ApplyArrowsCameraTransform(Game::GTAVertex* vertices, const CameraValues& cameraValues, const CameraTransform& cameraTransform);
 	void ApplyTriangleCameraTransform(Game::GTAVertex* vertices, const CameraValues& cameraValues, const CameraTransform& cameraTransform, bool* isReversedOut = nullptr);
 	bool ApplyCustomCulling(Game::GTAVertex* vertices, size_t vertexCount, const CameraValues& cameraValues, bool isReversed = false);
 
