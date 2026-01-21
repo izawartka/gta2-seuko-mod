@@ -16,6 +16,7 @@ An ultimate mod menu (aka. trainer) for Grand Theft Auto 2.
 - Obtaining weapons (selectable ammo count, including vehicle weapons)
 - Obtaining all (handheld) weapons at one key press
 - Weapon control (ammo count, infinite ammo, fast reload)
+- Obtaining power-ups
 - Quicksaving
 - Custom quick actions on key press
 - Saving and spawning saved vehicles
@@ -23,20 +24,33 @@ An ultimate mod menu (aka. trainer) for Grand Theft Auto 2.
 - Native cheats (each cheat can be force disabled, force enabled or unmodified to not interfere with cheat codes and registry flags)
 - Configurable menu controls
 - Shadows distance fix
-
-more features coming soon...
+- Disabling anti-aliasing
 
 ## Compatibility
 
 - This mod is intended for [GTA2 PC version 11.44](https://gtamp.com/GTA2/gta2-installer.exe) only
-- Widescreenfix is not supported at the moment, i'm planning to include by own version of it in the future
+- [Widescreenfix](https://github.com/ThirteenAG/WidescreenFixesPack/releases/tag/gta2) and [GTA2 radar](https://github.com/gennariarmando/gta2-radar) seem to work fine with this mod (the ASI version), but expect visual glitches and more bugs when using multiple mods together
 
 ## Installation
+### Standalone version
+This version is recommended if you want to use this mod alone without any other mods.
 
 1. Make sure you have [VC++ Redistributables](https://www.techpowerup.com/download/visual-c-redistributable-runtime-package-all-in-one/) installed
-2. Download the [latest release](https://github.com/izawartka/gta2-seuko-mod/releases/latest)
-3. Extract the contents of the downloaded archive to your GTA2 installation folder
-4. Launch the game
+2. Open the [latest release](https://github.com/izawartka/gta2-seuko-mod/releases/latest) page
+3. Download `gta2-seuko-mod-<version>.zip` archive
+4. Extract the contents of the downloaded archive to your GTA2 installation folder
+5. Launch the game
+
+### ASI version
+This version is recommended if you want to use this mod together with other mods using the ASI Loader.
+
+1. Make sure you have [VC++ Redistributables](https://www.techpowerup.com/download/visual-c-redistributable-runtime-package-all-in-one/) installed
+2. Download and install [ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader/releases/latest) (Win32 dinput.dll version) to your GTA2 installation folder
+3. Open the [latest release](https://github.com/izawartka/gta2-seuko-mod/releases/latest) page
+4. Download `gta2-seuko-mod-<version>-asi.zip` archive
+5. Create `scripts` folder in your GTA2 installation folder if it doesn't exist yet
+6. Extract the contents of the downloaded archive to the `scripts` folder
+7. Launch the game
 
 ## Basic controls
 
@@ -66,14 +80,25 @@ Customizable quick actions can be found in `Mod menu` > `Misc` > `Quick actions`
    ```git clone https://github.com/izawartka/gta2-seuko-mod --recurse-submodules```
 
 2. Open `GTA2.props` in any text editor and set `GTA2_DIR` and `GTA2_EXE` variables to point to your GTA2 installation folder and gta2.exe file respectively.
-3. Open `gta2-seuko-mod.sln` in Visual Studio.
-4. Select one of the build configurations - Debug, Release or ReleaseWithLogging.
-5. Build the solution.
-6. After the build, output files will be automatically copied to your GTA2 installation folder and the game will be launched.
+3. If you plan to build an ASI version, you'll also need to set `GTA2_ASI_DIR` and `GTA2_ASI_FILENAME` variables and install ASI Loader to your GTA2 installation folder (see the [Installation](#asi-version) section).
+4. Open `gta2-seuko-mod.sln` in Visual Studio.
+5. Select one of the build configurations - `Debug`, `DebugAsi`, `Release`, `ReleaseAsi` or `ReleaseWithLogging`.
+6. Build the solution.
+7. After the build, output files will be automatically copied to your GTA2 installation folder and the game will be launched.
 
 ## Support
 
 If you like this mod and want to support its development, you can donate via [PayPal](https://www.paypal.me/maseuko) :)
+
+## Known issues
+- Mission arrows are misaligned when using 3D camera mode and camera position is locked
+- The game sometimes crashes on level restart
+- Setting large camera height / very low camera zoom crashes the game
+- The camera sometimes "jumps" one block higher when locking its position while in 3D mode
+- Spawning a lot of explosions (i.e. while using Rocket Launcher with Instant reload cheat) may cause the game to crash
+- "Unlock all levels" native cheat does not work
+
+Please remember that this mod is an experimental project and may cause a lot of unexpected bugs, crashes etc.
 
 ## Credits
 
