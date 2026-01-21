@@ -135,6 +135,21 @@ void ModMenuModule::CameraAdvancedMenu::AttachCheatMenuItems()
 		cameraCheat->SetOptions(options);
 	});
 
+	// arrows scale
+	UiModule::Text* arrowsScaleText = m_menuController->CreateItem<UiModule::Text>(container, L"", options.textSize);
+	auto arrowsScaleController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<float, float>>(
+		arrowsScaleText,
+		[cameraCheat]() {
+		return cameraCheat->GetOptions().cameraTransform.arrowsScale;
+	},
+		UiModule::VarTextEditableControllerOptions{ L"Arrows scale: #", L"#" }
+	);
+	arrowsScaleController->SetCustomSaveCallback([cameraCheat](float newValue) {
+		CameraCheatOptions options = cameraCheat->GetOptions();
+		options.cameraTransform.arrowsScale = newValue;
+		cameraCheat->SetOptions(options);
+	});
+
 	// custom culling
 	UiModule::Text* customCullingText = m_menuController->CreateItem<UiModule::Text>(container, L"", options.textSize);
 	auto customCullingController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<bool, bool>>(

@@ -26,11 +26,13 @@ namespace ModMenuModule::Utils::Vertex {
 		float horizontalAngleRad = 0.0f;
 		float verticalAngleRad = 0.0f;
 		float additionalZOffset = 0.0f;
+		float arrowsScale = 1.0f;
 
 		bool operator==(const CameraTransform& other) const {
 			return horizontalAngleRad == other.horizontalAngleRad &&
 				verticalAngleRad == other.verticalAngleRad &&
-				additionalZOffset == other.additionalZOffset;
+				additionalZOffset == other.additionalZOffset &&
+				arrowsScale == other.arrowsScale;
 		}
 
 		bool operator!=(const CameraTransform& other) const {
@@ -45,6 +47,7 @@ namespace ModMenuModule::Utils::Vertex {
 	void ToWorldSpaceVertex(Game::GTAVertex& vertex, const CameraValues& cameraValues);
 	void ToScreenSpaceVertex(Game::GTAVertex& vertex, const CameraValues& cameraValues);
 	void ToSetZPosition(Game::GTAVertex& vertex, float newZ, const CameraValues& cameraValues);
+	void ScaleXY(Game::GTAVertex& vertex, float scale);
 	float GetCrossProduct(const Game::GTAVertex& v1, const Game::GTAVertex& v2, const Game::GTAVertex& v3);
 	
 	void ApplyQuadCameraTransform(Game::GTAVertex* vertices, const CameraValues& cameraValues, const CameraTransform& cameraTransform);

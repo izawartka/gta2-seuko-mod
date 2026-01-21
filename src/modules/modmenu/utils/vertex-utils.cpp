@@ -62,6 +62,12 @@ void ModMenuModule::Utils::Vertex::ToSetZPosition(Game::GTAVertex& vertex, float
 	vertex.z = newZ;
 }
 
+void ModMenuModule::Utils::Vertex::ScaleXY(Game::GTAVertex& vertex, float scale)
+{
+	vertex.x *= scale;
+	vertex.y *= scale;
+}
+
 float ModMenuModule::Utils::Vertex::GetCrossProduct(const Game::GTAVertex& v1, const Game::GTAVertex& v2, const Game::GTAVertex& v3)
 {
 	float ax = v2.x - v1.x;
@@ -99,9 +105,10 @@ void ModMenuModule::Utils::Vertex::ApplyArrowsCameraTransform(Game::GTAVertex* v
 		if (cameraTransform.verticalAngleRad != 0.0f) {
 			RotateVertexZ(vertex, cameraTransform.verticalAngleRad);
 		}
-		if (cameraTransform.horizontalAngleRad != 0.0f) {
+		if (cameraTransform.horizontalAngleRad != 0.0f || cameraTransform.arrowsScale != 1.0f) {
 			ToWorldSpaceVertex(vertex, cameraValues);
 			ToSetZPosition(vertex, -0.5f, cameraValues);
+			ScaleXY(vertex, cameraTransform.arrowsScale);
 			if (cameraTransform.horizontalAngleRad != 0.0f) {
 				RotateVertexX(vertex, cameraTransform.horizontalAngleRad);
 			}
