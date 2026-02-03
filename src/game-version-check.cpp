@@ -20,11 +20,15 @@ struct GameVersion {
 		: major(maj), minor(min), build(bld), revision(rev) {
 	}
 
+	bool operator==(const GameVersion& other) const {
+		return major == other.major &&
+			minor == other.minor &&
+			build == other.build &&
+			revision == other.revision;
+	}
+
 	bool operator!=(const GameVersion& other) const {
-		return major != other.major ||
-			minor != other.minor ||
-			build != other.build ||
-			revision != other.revision;
+		return !(*this == other);
 	}
 
 	std::string ToString() const {
@@ -35,7 +39,10 @@ struct GameVersion {
 	}
 };
 
-static constexpr GameVersion expectedGameVersion = { 11, 44, 0, 0 };
+static constexpr std::array<GameVersion, 2> expectedGameVersions = { 
+	GameVersion{ 11, 44, 0, 0 }, 
+	GameVersion{ 9, 6, 0, 0} 
+};
 
 static std::wstring GetExePath() {
 	wchar_t exePath[MAX_PATH];
@@ -107,8 +114,10 @@ static bool GameVersionCheck() {
 	auto& version = versionOpt.value();
 	spdlog::info("Game version: {}", version.ToString());
 
-	if (version != expectedGameVersion) {
-		ShowVersionCheckError("Game version mismatch. Expected version: " + expectedGameVersion.ToString() + ". Seuko mod will not be initialized.");
+	auto it = std::find(expectedGameVersions.begin(), expectedGameVersions.end(), version);
+
+	if (it == expectedGameVersions.end()) {
+		ShowVersionCheckError("Unsupported game version: " + version.ToString() + ". Seuko mod will not be initialized.");
 		return false;
 	}
 
