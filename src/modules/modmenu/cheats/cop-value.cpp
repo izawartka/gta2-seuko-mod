@@ -113,6 +113,9 @@ void ModMenuModule::CopValueCheat::OnValueUpdate(const std::optional<short>& old
 
 void ModMenuModule::CopValueCheat::OnCopValueChange(CopValueChangeEvent& event)
 {
+	Game::Ped* playerPed = Game::Memory::GetPlayerPed();
+	if (event.GetPed() != playerPed) return;
+
 	const auto& savedValue = m_watchedCopValue->GetSavedValue();
 	if (!savedValue.has_value()) {
 		return;

@@ -8,13 +8,15 @@ Dispatched when the game is about to change the player's cop value. (not all cas
 class CopValueChangeEvent : public Core::EventBase {
 public:
 	static bool Init();
-	CopValueChangeEvent(Game::ushort newValue) : m_newValue(newValue), m_modifiedNewValue(newValue) {};
+	CopValueChangeEvent(Game::Ped* ped, Game::ushort newValue) : m_ped(ped), m_newValue(newValue), m_modifiedNewValue(newValue) {};
 	virtual ~CopValueChangeEvent() override {};
 
+	Game::Ped* GetPed() const { return m_ped; }
 	Game::ushort GetNewValue() const { return m_newValue; }
 	Game::ushort GetModifiedNewValue() const { return m_modifiedNewValue; }
 	void SetModifiedNewValue(Game::ushort newValue) { m_modifiedNewValue = newValue; }
 private:
+	Game::Ped* m_ped;
 	Game::ushort m_newValue;
 	Game::ushort m_modifiedNewValue;
 };

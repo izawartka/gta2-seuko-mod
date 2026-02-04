@@ -1,10 +1,19 @@
 #include "cop-value-change.h"
 #include "../hook-types/jump-hook.h"
-#include "../hook-types/function-multi-call-hook.h"
 
-static Game::ushort __stdcall DispatchCopValueChangeEvent(Game::ushort newValue)
+static Game::ushort __stdcall DispatchCopValueChangeEvent(Game::Ped* ped, Game::ushort newValue)
 {
-	CopValueChangeEvent event(newValue);
+	newValue &= 0xffff;
+	CopValueChangeEvent event(ped, newValue);
+	Core::EventManager::GetInstance()->Dispatch(event);
+	return event.GetModifiedNewValue();
+}
+
+static Game::ushort __stdcall DispatchCopValueChangeEventWithStars(Game::Ped* ped, Game::uchar newStarValue)
+{
+	newStarValue &= 0xff;
+	Game::ushort newValue = Game::Utils::StarsToCopValue(newStarValue);
+	CopValueChangeEvent event(ped, newValue);
 	Core::EventManager::GetInstance()->Dispatch(event);
 	return event.GetModifiedNewValue();
 }
@@ -16,10 +25,11 @@ static __declspec(naked) void CopKillHookFunction(void)
 	__asm {
 		pushad
 		push ebx
+		push esi
 		call DispatchCopValueChangeEvent
-		mov [esp + 0x1c], eax
-		popad
+		mov esi, dword ptr[esp + 0x4]
 		mov word ptr[esi + 0x20a], ax
+		popad
 		jmp CopKillHookReturnAddress
 	}
 }
@@ -34,11 +44,13 @@ static const DWORD AddCopValueHook1ReturnAddress = 0x00435402;
 static __declspec(naked) void AddCopValueHook1Function(void)
 {
 	__asm {
-		push ecx
+		pushad
 		push 0
+		push ecx
 		call DispatchCopValueChangeEvent
-		pop ecx
+		mov ecx, dword ptr[esp + 0x18]
 		mov word ptr[ecx + 0x20a], ax
+		popad
 		jmp AddCopValueHook1ReturnAddress
 	}
 }
@@ -53,11 +65,13 @@ static const DWORD AddCopValueHook2ReturnAddress = 0x004353f2;
 static __declspec(naked) void AddCopValueHook2Function(void)
 {
 	__asm {
-		push ecx
+		pushad
 		push 0x2ee0
+		push ecx
 		call DispatchCopValueChangeEvent
-		pop ecx
+		mov ecx, dword ptr[esp + 0x18]
 		mov word ptr[ecx + 0x20a], ax
+		popad
 		jmp AddCopValueHook2ReturnAddress
 	}
 }
@@ -72,11 +86,14 @@ static const DWORD AddCopValueHook3ReturnAddress = 0x004353dc;
 static __declspec(naked) void AddCopValueHook3Function(void)
 {
 	__asm {
-		push ecx
+		pushad
+		add ax, word ptr[ecx + 0x20a]
 		push eax
+		push ecx
 		call DispatchCopValueChangeEvent
-		pop ecx
-		add word ptr[ecx + 0x20a], ax
+		mov ecx, dword ptr[esp + 0x18]
+		mov word ptr[ecx + 0x20a], ax
+		popad
 		jmp AddCopValueHook3ReturnAddress
 	}
 }
@@ -86,15 +103,38 @@ const JumpHook addCopValueHook3 = {
 	(DWORD)&AddCopValueHook3Function
 };
 
+static const DWORD SetCopValue600HookReturnAddress = 0x0043754e;
+
+static __declspec(naked) void SetCopValue600HookFunction(void)
+{
+	__asm {
+		pushad
+		push ebx
+		push esi
+		call DispatchCopValueChangeEvent
+		mov esi, dword ptr[esp + 0x4]
+		mov word ptr[esi + 0x20a], ax
+		popad
+		jmp SetCopValue600HookReturnAddress
+	}
+}
+
+const JumpHook setCopValue600Hook = {
+	0x00437547,
+	(DWORD)&SetCopValue600HookFunction
+};
+
 static const DWORD ExplodeCarHookReturnAddress = 0x0042715a;
 
 static __declspec(naked) void ExplodeCarHookFunction(void)
 {
 	__asm {
-		push edi
+		pushad
 		push eax
+		push edi
 		call DispatchCopValueChangeEvent
-		pop edi
+		mov word ptr[esp + 0x1c], ax
+		popad
 		mov word ptr[edi + 0x20a], ax
 		jmp ExplodeCarHookReturnAddress
 	}
@@ -108,11 +148,13 @@ const JumpHook explodeCarHook = {
 static __declspec(naked) void SetCopValue0HookFunction(void)
 {
 	__asm {
-		push ecx
+		pushad
 		push 0
+		push ecx
 		call DispatchCopValueChangeEvent
-		pop ecx
+		mov ecx, dword ptr[esp + 0x18]
 		mov word ptr[ecx + 0x20a], ax
+		popad
 		ret
 	}
 }
@@ -122,25 +164,23 @@ const JumpHook setCopValue0Hook = {
 	(DWORD)&SetCopValue0HookFunction
 };
 
-static const DWORD SetCopStarsOriginalFn = 0x00434cd0;
-
 static __declspec(naked) void SetCopStarsHookFunction()
 {
 	__asm {
-		push edx
-		push ecx
-		mov eax, dword ptr[esp + 0x4]
+		pushad
+		mov eax, dword ptr[esp + 0x24]
 		push eax
-		call DispatchCopValueChangeEvent
-		mov dword ptr[esp + 0x4], eax
-		pop ecx
-		pop edx
-		jmp SetCopStarsOriginalFn
+		push ecx
+		call DispatchCopValueChangeEventWithStars
+		mov ecx, dword ptr[esp + 0x18]
+		mov word ptr[ecx + 0x20a], ax
+		popad
+		ret 0x4
 	}
 }
 
-const FunctionMultiCallHook setCopStarsHook = {
-	{0x00435422, 0x0047b7f4},
+const JumpHook setCopStarsHook = {
+	0x00434cd0,
 	(DWORD)&SetCopStarsHookFunction
 };
 
@@ -152,6 +192,7 @@ bool CopValueChangeEvent::Init()
 		hookManager->AddHook(addCopValueHook1) &&
 		hookManager->AddHook(addCopValueHook2) &&
 		hookManager->AddHook(addCopValueHook3) &&
+		hookManager->AddHook(setCopValue600Hook) &&
 		hookManager->AddHook(explodeCarHook) &&
 		hookManager->AddHook(setCopValue0Hook) &&
 		hookManager->AddHook(setCopStarsHook);
