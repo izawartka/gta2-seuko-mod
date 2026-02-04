@@ -2,6 +2,7 @@
 
 #include "angle-utils.h"
 #include "car-roof-utils.h"
+#include "cop-value-utils.h"
 #include "lists-utils.h"
 #include "player-utils.h"
 #include "scrf-utils.h"

@@ -143,6 +143,7 @@
     <ClCompile Include="src\modules\modmenu\cheats\camera\disable-antialiasing.cpp" />
     <ClCompile Include="src\events\renderer-antialiasing-check.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\camera-rendering-menu.cpp" />
+    <ClCompile Include="src\game\utils\cop-value-utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -383,6 +384,7 @@
     <ClInclude Include="src\modules\modmenu\cheats\camera\disable-antialiasing.h" />
     <ClInclude Include="src\events\renderer-antialiasing-check.h" />
     <ClInclude Include="src\modules\modmenu\menus\camera-rendering-menu.h" />
+    <ClInclude Include="src\game\utils\cop-value-utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

@@ -101,3 +101,17 @@ const std::vector<Game::POWERUP_TYPE>& Game::Utils::GetAvailablePowerupTypes() {
 	);
 	return powerupTypes;
 }
+
+const std::vector<short>& Game::Utils::GetAvailableCopValues()
+{
+	static const std::vector<short> copValues({
+		0,
+		600,
+		1600,
+		3000,
+		5000,
+		8000,
+		12000
+	});
+	return copValues;
+}

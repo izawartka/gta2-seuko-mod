@@ -11,4 +11,5 @@ namespace Game::Utils {
 	const std::vector<PED_REMAP>& GetAvailablePedRemaps();
 	const std::vector<PED_GRAPHIC_TYPE>& GetAvailablePedGraphicTypes();
 	const std::vector<POWERUP_TYPE>& GetAvailablePowerupTypes();
+	const std::vector<short>& GetAvailableCopValues();
 }
