@@ -39,7 +39,7 @@ bool ModMenuModule::PlayerMenu::Attach()
 	}
 
 	// wanted level
-	UiModule::VarTextSelectOptionList<short> wantedLevelOptionList = { 0, 600, 1600, 3000, 5000, 8000, 12000 };
+	const auto& wantedLevelOptionList = Game::Utils::GetAvailableCopValues();
 	UiModule::Text* wantedLevelText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	auto wantedLevelController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<short, short>>(
 		wantedLevelText,
