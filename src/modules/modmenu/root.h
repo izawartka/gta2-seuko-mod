@@ -11,6 +11,7 @@ namespace ModMenuModule {
 		std::string keyBindToggleMenuName = "ModMenu_ToggleMenu";
 		KeyBindingModule::Key keyBindToggleMenuDefault = KeyBindingModule::Key(Game::KeyCode::DIK_F11);
 		unsigned int resetBindsHoldTime = 90; // frames
+		unsigned int resetBindsToastInterval = 10; // frames
 		Game::SCR_f menuX = Game::Utils::FromFloat(9.0f);
 		Game::SCR_f menuY = Game::Utils::FromFloat(90.0f);
 		Game::SCR_f menuHeaderMarginX = Game::Utils::FromFloat(15.0f);

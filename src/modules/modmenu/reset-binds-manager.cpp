@@ -18,14 +18,16 @@ ModMenuModule::ResetBindsManager::~ResetBindsManager() {
 }
 
 void ModMenuModule::ResetBindsManager::Reset() {
-	spdlog::info("Resetting Mod Menu key binds to default values");
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	auto* bindManager = KeyBindingModule::BindManager::GetInstance();
 	bindManager->SetBind(options.keyBindToggleMenuName, options.keyBindToggleMenuDefault);
 	UiModule::StandardBindsSupportOptions uiBindOptions = options.menuControllerOptions.keyBindOptions;
 	bindManager->SetBind(uiBindOptions.keyBindNextName, uiBindOptions.keyBindNextDefault);
 	bindManager->SetBind(uiBindOptions.keyBindPrevName, uiBindOptions.keyBindPrevDefault);
-	bindManager->SetBind(uiBindOptions.keyBindActionName, uiBindOptions.keyBindActionDefault);
+	bindManager->SetBind(uiBindOptions.keyBindActionName, uiBindOptions.keyBindActionDefault);\
+
+	spdlog::info("Reset Mod Menu key binds to default values");
+	ToastManager::GetInstance()->Show({ L"Reset Mod Menu key binds" });
 }
 
 void ModMenuModule::ResetBindsManager::Attach() {
@@ -66,9 +68,17 @@ void ModMenuModule::ResetBindsManager::OnPreUpdateUI(UiModule::PreUpdateUIEvent&
 	m_resetKeyHoldFrames++;
 
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
-	if (m_resetKeyHoldFrames > options.resetBindsHoldTime) {
+
+	if (m_resetKeyHoldFrames >= options.resetBindsHoldTime) {
 		Reset();
 		m_resetKeyHoldFrames = 0;
+	}
+	else if (m_resetKeyHoldFrames % options.resetBindsToastInterval == 0) {
+		ModMenuModule::ToastManager::GetInstance()->Show({
+			L"Keep holding to reset Mod Menu key binds...", 
+			ToastType::Info, 
+			static_cast<unsigned short>(options.resetBindsToastInterval)
+		});
 	}
 }
 
