@@ -78,7 +78,11 @@ void ModMenuModule::PlayerPosMenu::Teleport()
 		return;
 	}
 
-	playerPosCheat->Teleport(segmentDataOpt->position);
+	playerPosCheat->Teleport(segmentDataOpt->position, [this](bool success) {
+		m_positionSegment->SetDoUpdatePosition(true);
 
-	m_positionSegment->SetDoUpdatePosition(true);
+		if(!success) {
+			ToastManager::GetInstance()->Show({ L"Teleport failed", ToastType::Error });
+		}
+	});
 }

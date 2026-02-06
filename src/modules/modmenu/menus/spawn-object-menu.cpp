@@ -3,6 +3,7 @@
 #include "../segments/spawn-object-segment.h"
 #include "../root.h"
 #include "../utils/spawn-object.h"
+#include "../../../converters/object-type.h"
 
 ModMenuModule::SpawnObjectMenu::SpawnObjectMenu()
 {
@@ -88,9 +89,14 @@ void ModMenuModule::SpawnObjectMenu::Spawn()
 
 	auto& spawnObjectSegmentData = spawnObjectSegmentDataOpt.value();
 
-	ModMenuModule::Utils::SpawnObject(
+	bool success = ModMenuModule::Utils::SpawnObject(
 		posRotSegmentData.position,
 		posRotSegmentData.rotation,
 		spawnObjectSegmentData.objectType
 	);
+
+	if (!success) {
+		std::wstring objectTypeStr = ObjectTypeConverter::ConvertToString(spawnObjectSegmentData.objectType);
+		ModMenuModule::ToastManager::GetInstance()->Show({ L"Failed to spawn " + objectTypeStr, ToastType::Error });
+	}
 }

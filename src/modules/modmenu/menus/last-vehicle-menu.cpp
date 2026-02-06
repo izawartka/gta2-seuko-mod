@@ -189,7 +189,8 @@ void ModMenuModule::LastVehicleMenu::TurnEngineOff()
 	}
 
 	if (lastCar->engineState != Game::CAR_ENGINE_STATE_ON) {
-		spdlog::warn("The engine is already off or broken.");
+		spdlog::warn("Engine is already off or broken.");
+		ToastManager::GetInstance()->Show({ L"Engine is already off or broken", ToastType::Warning });
 		return;
 	}
 

@@ -12,6 +12,7 @@ namespace ModMenuModule {
 		virtual bool Attach() override;
 
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
+		void Spawn();
 
 		std::wstring m_savedCarName;
 	};

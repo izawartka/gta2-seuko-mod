@@ -65,9 +65,14 @@ void ModMenuModule::SpawnVehicleMenu::Spawn()
 
 	auto& segmentData = segmentDataOpt.value();
 
-	ModMenuModule::Utils::SpawnCarAtPlayer(
-		segmentData.model, 
-		segmentData.remap, 
+	bool success = ModMenuModule::Utils::SpawnCarAtPlayer(
+		segmentData.model,
+		segmentData.remap,
 		segmentData.palette
 	);
+
+	if (!success) {
+		std::wstring modelStr = CarModelConverter::ConvertToString(segmentData.model);
+		ToastManager::GetInstance()->Show({ L"Failed to spawn " + modelStr, ToastType::Error });
+	}
 }

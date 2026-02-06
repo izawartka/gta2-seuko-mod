@@ -87,6 +87,7 @@ void ModMenuModule::GetWeaponMenu::GetWeapon()
 
 	if(Game::Utils::IsWeaponCarWeapon(selectedWeapon) && playerPed->currentCar == nullptr) {
 		spdlog::warn("Could not give weapon: player is not in a vehicle to receive vehicle weapon.");
+		ToastManager::GetInstance()->Show({ L"Player is not in a vehicle", ToastType::Warning });
 		return;
 	}
 

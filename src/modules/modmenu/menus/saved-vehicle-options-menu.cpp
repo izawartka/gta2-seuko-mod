@@ -51,11 +51,21 @@ void ModMenuModule::SavedVehicleOptionsMenu::OnMenuAction(UiModule::Selectable* 
 		menuManager->RemoveLastMenu();
 		break;
 	case 1: // Spawn Vehicle
-		savedCarsCheat->SpawnCar(m_savedCarName);
+		Spawn();
 		break;
 	case 2: // Delete
 		savedCarsCheat->DeleteCar(m_savedCarName);
 		menuManager->RemoveLastMenu();
 		break;
+	}
+}
+
+void ModMenuModule::SavedVehicleOptionsMenu::Spawn()
+{
+	SavedCarsCheat* savedCarsCheat = SavedCarsCheat::GetInstance();
+	bool success = savedCarsCheat->SpawnCar(m_savedCarName);
+
+	if (!success) {
+		ToastManager::GetInstance()->Show({ L"Failed to spawn " + m_savedCarName, ToastType::Error });
 	}
 }
