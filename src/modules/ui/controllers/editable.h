@@ -15,6 +15,9 @@ namespace UiModule {
 	template <typename T>
 	using EditableValidateCallback = std::function<bool(const T& newValue)>;
 
+	template <typename T>
+	using EditableClampCallback = std::function <T(const T& newValue)>;
+
 	struct EditableControllerOptions {
 		std::wstring prefix = L"";
 		std::wstring suffix = L"";
@@ -33,10 +36,7 @@ namespace UiModule {
 			static_assert(std::is_copy_constructible<T>::value, "T must be copy-constructible");
 			m_textComponent = text;
 			m_options = options;
-			m_value = value;
-
-			UpdateTextBuffer();
-			UpdateText();
+			SetValue(value);
 		}
 
 		virtual ~EditableController() {
@@ -92,10 +92,21 @@ namespace UiModule {
 			m_validateCallback = callback;
 		}
 
+		void SetClampCallback(EditableClampCallback<T> callback) {
+			m_clampCallback = callback;
+		}
+
 		void SetValue(const std::optional<T>& value) {
-			if(m_validateCallback && value.has_value() && !m_validateCallback(value.value())) {
-				spdlog::warn("UiModule::EditableController: Attempted to set invalid value");
-				return;
+			std::optional<T> clampedValue = value;
+			if (value.has_value()) {
+				if (m_clampCallback) {
+					clampedValue = m_clampCallback(value.value());
+				}
+
+				if (m_validateCallback && !m_validateCallback(value.value())) {
+					spdlog::warn("UiModule::EditableController: Attempted to set invalid value");
+					return;
+				}
 			}
 
 			m_value = value;
@@ -141,6 +152,10 @@ namespace UiModule {
 			catch (const std::exception& e) {
 				spdlog::warn("UiModule::EditableController: Failed to parse input: {}", e.what());
 				return;
+			}
+
+			if (m_clampCallback) {
+				newValue = m_clampCallback(newValue);
 			}
 
 			if (m_validateCallback && !m_validateCallback(newValue)) {
@@ -222,6 +237,7 @@ namespace UiModule {
 		bool m_hasUpdateListener = false;
 		std::wstring m_textBuffer = L"";
 		EditableSaveCallback<T> m_saveCallback = nullptr;
+		EditableClampCallback<T> m_clampCallback = nullptr;
 		EditableValidateCallback<T> m_validateCallback = nullptr;
 		int m_blinkCounter = 0;
 	};

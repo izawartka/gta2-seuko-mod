@@ -15,6 +15,9 @@ namespace UiModule {
 	template <typename ValueT>
 	using VarTextEditableValidateCallback = std::function<bool(const ValueT& newValue)>;
 
+	template <typename ValueT>
+	using VarTextEditableClampCallback = std::function<ValueT(const ValueT& value)>;
+
 	struct VarTextEditableControllerOptions {
 		std::wstring prefix = L"";
 		std::wstring suffix = L"";
@@ -127,6 +130,10 @@ namespace UiModule {
 			m_validateCallback = callback;
 		}
 
+		void SetClampCallback(VarTextEditableClampCallback<ValueT> callback) {
+			m_clampCallback = callback;
+		}
+
 	protected:
 		virtual void OnConverterChanged() override {
 			if (m_editing) return;
@@ -165,17 +172,18 @@ namespace UiModule {
 
 		void ApplyPendingSave() {
 			ValueT newValue = m_pendingSaveValue.value();
+			ValueT clampedNewValue = m_clampCallback ? m_clampCallback(newValue) : newValue;
 			m_pendingSaveValue = std::nullopt;
 
-			if (m_validateCallback && !m_validateCallback(newValue)) {
+			if (m_validateCallback && !m_validateCallback(clampedNewValue)) {
 				spdlog::warn("UiModule::VarTextEditableController: Input validation failed");
 			}
 			else if (m_customSaveCallback) {
-				m_customSaveCallback(newValue);
+				m_customSaveCallback(clampedNewValue);
 			}
 			else {
 				if constexpr (Core::WatchedHasSetValue_v<Core::Watched<ValueT, ResRetT>>) {
-					if (!m_watched->SetValueNow(newValue, true)) {
+					if (!m_watched->SetValueNow(clampedNewValue, true)) {
 						spdlog::warn("Failed to set new value on watched variable");
 					}
 				}
@@ -273,6 +281,7 @@ namespace UiModule {
 		std::optional<ValueT> m_pendingSaveValue = std::nullopt;
 		VarTextEditableCustomSaveCallback<ValueT> m_customSaveCallback = nullptr;
 		VarTextEditableValidateCallback<ValueT> m_validateCallback = nullptr;
+		VarTextEditableClampCallback<ValueT> m_clampCallback = nullptr;
 		int m_blinkCounter = 0;
 	};
 }
