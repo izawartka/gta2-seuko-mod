@@ -43,6 +43,10 @@ bool ModMenuModule::GetWeaponMenu::Attach()
 		ammoDefault,
 		UiModule::EditableControllerOptions{ L"Ammo: #", L"#" }
 	);
+	m_ammoController->SetClampCallback([](short newValue) {
+		if (newValue < 0) return static_cast<short>(-1);
+		return std::min(static_cast<short>(99), newValue);
+	});
 
 	// get weapon button
 	auto getWeaponText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"Get weapon", options.textSize);

@@ -101,7 +101,7 @@ bool ModMenuModule::PositionSegment::Attach(ModMenuModule::MenuBase* menu, UiMod
 	);
 	m_xController->SetConverter<ScrfConverter>();
 	m_xController->SetSaveCallback(std::bind(&PositionSegment::OnCoordControllerSave, this, false));
-	m_xController->SetValidateCallback(std::bind(&PositionSegment::ValidateCoord, std::placeholders::_1, false));
+	m_xController->SetClampCallback(std::bind(&PositionSegment::ClampCoord, std::placeholders::_1, false));
 
 	// Y position
 	UiModule::Text* yText = m_menuController->CreateItem<UiModule::Text>(m_vertCont, L"", options.textSize);
@@ -112,7 +112,7 @@ bool ModMenuModule::PositionSegment::Attach(ModMenuModule::MenuBase* menu, UiMod
 	);
 	m_yController->SetConverter<ScrfConverter>();
 	m_yController->SetSaveCallback(std::bind(&PositionSegment::OnCoordControllerSave, this, false));
-	m_yController->SetValidateCallback(std::bind(&PositionSegment::ValidateCoord, std::placeholders::_1, false));
+	m_yController->SetClampCallback(std::bind(&PositionSegment::ClampCoord, std::placeholders::_1, false));
 
 	// Z position
 	UiModule::Text* zText = m_menuController->CreateItem<UiModule::Text>(m_vertCont, L"", options.textSize);
@@ -123,7 +123,7 @@ bool ModMenuModule::PositionSegment::Attach(ModMenuModule::MenuBase* menu, UiMod
 	);
 	m_zController->SetConverter<ScrfConverter>();
 	m_zController->SetSaveCallback(std::bind(&PositionSegment::OnCoordControllerSave, this, true));
-	m_zController->SetValidateCallback(std::bind(&PositionSegment::ValidateCoord, std::placeholders::_1, true));
+	m_zController->SetClampCallback(std::bind(&PositionSegment::ClampCoord, std::placeholders::_1, true));
 
 	// Auto Z
 	UiModule::Text* autoZText = m_menuController->CreateItem<UiModule::Text>(m_vertCont, L"", options.textSize);
@@ -177,11 +177,11 @@ void ModMenuModule::PositionSegment::OnHide()
 	}
 }
 
-bool ModMenuModule::PositionSegment::ValidateCoord(Game::SCR_f value, bool isZCoord)
+Game::SCR_f ModMenuModule::PositionSegment::ClampCoord(Game::SCR_f value, bool isZCoord)
 {
-	if (value <= Game::Utils::FromFloat(0.0f)) return false;
-	if (isZCoord) return value < Game::Utils::FromFloat(8.0f);
-	else return value < Game::Utils::FromFloat(255.0f);
+	return isZCoord ?
+		Game::Utils::ClampZCoordToSafe(value) :
+		Game::Utils::ClampCoordToSafe(value);
 }
 
 void ModMenuModule::PositionSegment::SetCoordControllerValues(const Game::SCR_Vector3& position)

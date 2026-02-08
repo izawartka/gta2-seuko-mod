@@ -86,6 +86,10 @@ bool ModMenuModule::WeaponsMenu::Attach()
 		UiModule::VarTextEditableControllerOptions{ L"Ammo: #", L"#" }
 	);
 	ammoController->SetConverter<AmmoConverter>();
+	ammoController->SetClampCallback([](short newValue) {
+		if (newValue < 0) return static_cast<short>(-1);
+		return std::min(newValue, static_cast<short>(990));
+	});
 
 	SetPreviousSelectedIndex();
 
