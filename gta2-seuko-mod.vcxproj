@@ -814,6 +814,7 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
     <ClCompile Include="src\game\utils\cop-value-utils.cpp" />
     <ClCompile Include="src\game\utils\player-utils.cpp" />
     <ClCompile Include="src\game\utils\lists-utils.cpp" />
+    <ClCompile Include="src\game\utils\scrf-utils.cpp" />
     <ClCompile Include="src\logging.cpp" />
     <ClCompile Include="src\modules\keybinding\bind-manager.cpp" />
     <ClCompile Include="src\modules\keybinding\root.cpp" />

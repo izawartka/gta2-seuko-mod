@@ -144,6 +144,7 @@
     <ClCompile Include="src\events\renderer-antialiasing-check.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\camera-rendering-menu.cpp" />
     <ClCompile Include="src\game\utils\cop-value-utils.cpp" />
+    <ClCompile Include="src\game\utils\scrf-utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
