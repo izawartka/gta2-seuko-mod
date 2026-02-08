@@ -37,7 +37,7 @@ bool ModMenuModule::GetWeaponMenu::Attach()
 
 	// ammo
 	UiModule::Text* ammoText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	short ammoDefault = persistence->Load("ModMenu_GetWeaponMenu_SelectedAmmo", (short)99);
+	short ammoDefault = persistence->Load("ModMenu_GetWeaponMenu_SelectedAmmo", static_cast<short>(99));
 	m_ammoController = m_menuController->CreateLatestItemController<UiModule::EditableController<short>>(
 		ammoText,
 		ammoDefault,
@@ -82,6 +82,7 @@ void ModMenuModule::GetWeaponMenu::GetWeapon()
 {
 	Game::WEAPON_INDEX selectedWeapon = m_weaponController->GetValue().value();
 	short selectedAmmo = m_ammoController->GetValue().value();
+	bool isKf = selectedAmmo == -1;
 
 	Game::Ped* playerPed = Game::Memory::GetPlayerPed();
 	if (!playerPed) {
@@ -101,10 +102,14 @@ void ModMenuModule::GetWeaponMenu::GetWeapon()
 		playerPed,
 		0,
 		selectedWeapon,
-		selectedAmmo
+		isKf ? 99 : selectedAmmo
 	);
 
 	Game::Utils::AddCarRoofForWeapon(playerPed->currentCar, selectedWeapon);
 
 	playerPed->playerWeapons->selectedWeapon = static_cast<short>(selectedWeapon);
+
+	if (isKf) {
+		playerPed->playerWeapons->weapons[selectedWeapon]->ammo = -1;
+	}
 }
