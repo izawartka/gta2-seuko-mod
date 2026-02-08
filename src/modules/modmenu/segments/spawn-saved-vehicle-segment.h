@@ -13,6 +13,8 @@ namespace ModMenuModule {
 		SpawnSavedVehicleSegment(const std::string& persistencePrefix);
 		virtual ~SpawnSavedVehicleSegment();
 
+		virtual bool ValidateSegment() const override;
+
 		virtual std::optional<SpawnSavedVehicleSegmentData> GetSegmentData() const override;
 		virtual bool SetSegmentData(const SpawnSavedVehicleSegmentData& data) override;
 

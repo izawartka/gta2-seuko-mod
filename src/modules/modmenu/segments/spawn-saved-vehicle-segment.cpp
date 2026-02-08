@@ -12,6 +12,28 @@ ModMenuModule::SpawnSavedVehicleSegment::~SpawnSavedVehicleSegment()
 
 }
 
+bool ModMenuModule::SpawnSavedVehicleSegment::ValidateSegment() const
+{
+	bool hasValue = m_savedCarNameController && m_savedCarNameController->GetValue().has_value();
+	if (!hasValue) {
+		spdlog::warn("No saved vehicles found");
+		ToastManager::GetInstance()->Show({ L"No saved vehicles found", ToastType::Warning });
+		return false;
+	}
+
+	std::wstring savedCarName = m_savedCarNameController->GetValue().value();
+	SavedCarsCheat* savedCarsCheat = SavedCarsCheat::GetInstance();
+	const auto& savedCarNames = savedCarsCheat->GetSavedCarsList();
+
+	if (std::find(savedCarNames.begin(), savedCarNames.end(), savedCarName) == savedCarNames.end()) {
+		spdlog::warn("Selected saved vehicle not found");
+		ToastManager::GetInstance()->Show({ L"Selected saved vehicle not found", ToastType::Warning });
+		return false;
+	}
+
+	return true;
+}
+
 std::optional<ModMenuModule::SpawnSavedVehicleSegmentData> ModMenuModule::SpawnSavedVehicleSegment::GetSegmentData() const
 {
 	if (!m_savedCarNameController) {
@@ -50,8 +72,12 @@ bool ModMenuModule::SpawnSavedVehicleSegment::Attach(ModMenuModule::MenuBase* me
 	SavedCarsCheat* savedCarsCheat = SavedCarsCheat::GetInstance();
 	const auto& savedCarNames = savedCarsCheat->GetSavedCarsList();
 
-	std::wstring selectedSavedCarName = savedCarNames.size() > 0 ? savedCarNames[0] : L"";
+	if (savedCarNames.empty()) {
+		UiModule::Text* noSavedCarsText = m_menuController->CreateItem<UiModule::Text>(m_vertCont, L"No saved vehicles found", options.textSize);
+		return true;
+	}
 
+	std::wstring selectedSavedCarName = savedCarNames[0];
 	if (m_persistencePrefix.size()) {
 		PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 		auto loadedNameOpt = persistence->LoadOptional<std::wstring>(m_persistencePrefix + "_SelectedSavedCarName");
@@ -80,6 +106,8 @@ void ModMenuModule::SpawnSavedVehicleSegment::Detach()
 			persistence->Save(m_persistencePrefix + "_SelectedSavedCarName", selectedSavedCarNameOpt.value());
 		}
 	}
+
+	m_savedCarNameController = nullptr;
 
 	DestroySegment();
 }
