@@ -28,8 +28,10 @@ An ultimate mod menu (aka. trainer) for Grand Theft Auto 2.
 
 ## Compatibility
 
-- This mod is intended for [GTA2 PC version 11.44](https://gtamp.com/GTA2/gta2-installer.exe) only
-- [Widescreenfix](https://github.com/ThirteenAG/WidescreenFixesPack/releases/tag/gta2) and [GTA2 radar](https://github.com/gennariarmando/gta2-radar) seem to work fine with this mod (the ASI version), but expect visual glitches and more bugs when using multiple mods together
+- This mod is mainly intended for [GTA2 PC version 11.44](https://gtamp.com/GTA2/gta2-installer.exe)
+- The mod should also work with GTA2 PC version 9.6, but this version is not supported
+- [Widescreenfix](https://github.com/ThirteenAG/WidescreenFixesPack/releases/tag/gta2) seems to work fine with this mod, but settings persistence and camera may be broken
+- [GTA2 radar](https://github.com/gennariarmando/gta2-radar) also seems to work fine, but expect performance issues, especially when using 3D camera mode
 
 ## Installation
 ### Standalone version
