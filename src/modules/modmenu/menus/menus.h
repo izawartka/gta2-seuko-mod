@@ -29,3 +29,4 @@
 #include "quick-action-options-menu.h"
 #include "menu-controls-menu.h"
 #include "version-menu.h"
+#include "mouse-debug-menu.h"
