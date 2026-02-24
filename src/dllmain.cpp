@@ -8,6 +8,7 @@
 #include "modules/persistence/persistence.h"
 #include "modules/keybinding/keybinding.h"
 #include "modules/ui/ui.h"
+#include "modules/mouse/mouse.h"
 #include "modules/modmenu/modmenu.h"
 
 Core::Core* coreInstance = nullptr;
@@ -29,6 +30,7 @@ static void Init()
 	PersistenceModule::RootModule* persistenceModule = moduleManager->AddModule<PersistenceModule::RootModule>();
 	KeyBindingModule::RootModule* keyBindingModule = moduleManager->AddModule<KeyBindingModule::RootModule>();
 	UiModule::RootModule* uiModule = moduleManager->AddModule<UiModule::RootModule>();
+	MouseModule::RootModule* mouseModule = moduleManager->AddModule<MouseModule::RootModule>();
 	ModMenuModule::RootModule* modMenuModule = moduleManager->AddModule<ModMenuModule::RootModule>();
 	ModMenuModule::MenuManager* menuManager = ModMenuModule::MenuManager::GetInstance();
 	if (menuManager) menuManager->AddMenu<ModMenuModule::MainMenu>();
@@ -41,6 +43,7 @@ static void Deinit()
 	if (coreInstance != nullptr) {
 		Core::ModuleManager* moduleManager = Core::ModuleManager::GetInstance();
 		moduleManager->RemoveModule<ModMenuModule::RootModule>();
+		moduleManager->RemoveModule<MouseModule::RootModule>();
 		moduleManager->RemoveModule<UiModule::RootModule>();
 		moduleManager->RemoveModule<KeyBindingModule::RootModule>();
 		moduleManager->RemoveModule<PersistenceModule::RootModule>();

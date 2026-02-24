@@ -6,6 +6,7 @@ ModMenuModule::RootModule::RootModule(const ModMenuOptions& options) : m_options
 	assert(PersistenceModule::RootModule::GetInstance() != nullptr && "ModMenuModule::RootModule requires PersistenceModule::RootModule to be initialized first!");
 	assert(KeyBindingModule::RootModule::GetInstance() != nullptr && "ModMenuModule::RootModule requires KeyBindingModule::RootModule to be initialized first!");
 	assert(UiModule::RootModule::GetInstance() != nullptr && "ModMenuModule::RootModule requires Ui::RootModule to be initialized first!");
+	assert(MouseModule::MouseManager::GetInstance() != nullptr && "ModMenuModule::RootModule requires MouseModule::MouseManager to be initialized first!");
 	assert(m_instance == nullptr && "ModMenuModule::RootModule instance already exists!");
 	m_instance = this;
 	spdlog::info("ModMenuModule::RootModule module initialized.");
