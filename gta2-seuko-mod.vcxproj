@@ -717,6 +717,7 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
     <ClInclude Include="src\modules\mouse\mouse-position.h" />
     <ClInclude Include="src\modules\mouse\mouse-state.h" />
     <ClInclude Include="src\modules\mouse\mouse.h" />
+    <ClInclude Include="src\modules\mouse\normalized-mouse-position.h" />
     <ClInclude Include="src\modules\mouse\root.h" />
     <ClInclude Include="src\modules\persistence\common.h" />
     <ClInclude Include="src\modules\persistence\persistence-manager.h" />

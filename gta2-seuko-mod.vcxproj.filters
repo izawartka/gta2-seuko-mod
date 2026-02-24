@@ -400,6 +400,7 @@
     <ClInclude Include="src\modules\mouse\mouse-position.h" />
     <ClInclude Include="src\modules\mouse\mouse-manager.h" />
     <ClInclude Include="src\modules\mouse\mouse-state.h" />
+    <ClInclude Include="src\modules\mouse\normalized-mouse-position.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

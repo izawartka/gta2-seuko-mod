@@ -42,6 +42,25 @@ MouseModule::MouseState MouseModule::MouseManager::FetchMouseState()
 	return state;
 }
 
+MouseModule::NormalizedMousePosition MouseModule::MouseManager::ToNormalizedPosition(const MousePosition& pos)
+{
+	MousePosition clientSize = GetClientAreaSize();
+	if (clientSize.x == 0 || clientSize.y == 0) return { 0.0f, 0.0f };
+	return {
+		static_cast<float>(pos.x) / clientSize.x,
+		static_cast<float>(pos.y) / clientSize.y
+	};
+}
+
+MouseModule::MousePosition MouseModule::MouseManager::ToPixelPosition(const NormalizedMousePosition& normalizedPos)
+{
+	MousePosition clientSize = GetClientAreaSize();
+	return {
+		static_cast<int>(normalizedPos.x * clientSize.x),
+		static_cast<int>(normalizedPos.y * clientSize.y)
+	};
+}
+
 bool MouseModule::MouseManager::MarkEventInitialized()
 {
 	if(!m_attached) {
@@ -116,6 +135,14 @@ void MouseModule::MouseManager::SetToCenter()
 	if (previousPos.x != center.x || previousPos.y != center.y) {
 		SetCursorPos(center.x, center.y);
 	}
+}
+
+MouseModule::MousePosition MouseModule::MouseManager::GetClientAreaSize()
+{
+	HWND hwnd = *Game::Memory::GetGameWindow();
+	RECT rect;
+	GetClientRect(hwnd, &rect);
+	return MousePosition{ rect.right - 1, rect.bottom - 1 };
 }
 
 void MouseModule::MouseManager::OnWndProcEvent(WndProcEvent& event)

@@ -4,6 +4,7 @@
 #include "../../events/wnd-proc.h"
 #include "../../events/draw-frame.h"
 #include "mouse-position.h"
+#include "normalized-mouse-position.h"
 
 namespace MouseModule {
 	class MouseManager : public Core::EventListenerSupport {
@@ -11,6 +12,8 @@ namespace MouseModule {
 		static MouseManager* GetInstance();
 		static bool IsSafeToInitEvents();
 		static MouseState FetchMouseState();
+		static NormalizedMousePosition ToNormalizedPosition(const MousePosition& pos);
+		static MousePosition ToPixelPosition(const NormalizedMousePosition& normalizedPos);
 
 		std::optional<MouseState> GetLastMouseState() const;
 
@@ -31,6 +34,7 @@ namespace MouseModule {
 		MouseManager& operator=(const MouseManager&) = delete;
 
 		static void SetToCenter();
+		static MousePosition GetClientAreaSize();
 
 		void OnWndProcEvent(WndProcEvent& event);
 		void OnPreDrawFrame(PreDrawFrameEvent& event);
