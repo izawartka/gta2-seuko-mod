@@ -145,6 +145,7 @@
     <ClCompile Include="src\modules\modmenu\menus\camera-rendering-menu.cpp" />
     <ClCompile Include="src\game\utils\cop-value-utils.cpp" />
     <ClCompile Include="src\game\utils\scrf-utils.cpp" />
+    <ClCompile Include="src\events\wnd-proc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -386,6 +387,7 @@
     <ClInclude Include="src\events\renderer-antialiasing-check.h" />
     <ClInclude Include="src\modules\modmenu\menus\camera-rendering-menu.h" />
     <ClInclude Include="src\game\utils\cop-value-utils.h" />
+    <ClInclude Include="src\events\wnd-proc.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
