@@ -86,6 +86,8 @@ namespace Core {
 		}
 
 		void ProcessPendingChanges() {
+			if (m_pendingChanges.empty()) return;
+
 			CallInitIfNeeded();
 			while (!m_pendingChanges.empty()) {
 				auto change = std::move(m_pendingChanges.front());
