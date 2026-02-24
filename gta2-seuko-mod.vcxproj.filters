@@ -146,6 +146,9 @@
     <ClCompile Include="src\game\utils\cop-value-utils.cpp" />
     <ClCompile Include="src\game\utils\scrf-utils.cpp" />
     <ClCompile Include="src\events\wnd-proc.cpp" />
+    <ClCompile Include="src\modules\mouse\root.cpp" />
+    <ClCompile Include="src\modules\mouse\events\mouse.cpp" />
+    <ClCompile Include="src\modules\mouse\mouse-manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -388,6 +391,15 @@
     <ClInclude Include="src\modules\modmenu\menus\camera-rendering-menu.h" />
     <ClInclude Include="src\game\utils\cop-value-utils.h" />
     <ClInclude Include="src\events\wnd-proc.h" />
+    <ClInclude Include="src\modules\mouse\mouse.h" />
+    <ClInclude Include="src\modules\mouse\common.h" />
+    <ClInclude Include="src\modules\mouse\events\events.h" />
+    <ClInclude Include="src\modules\mouse\events\mouse.h" />
+    <ClInclude Include="src\modules\mouse\root.h" />
+    <ClInclude Include="src\modules\mouse\mouse-button.h" />
+    <ClInclude Include="src\modules\mouse\mouse-position.h" />
+    <ClInclude Include="src\modules\mouse\mouse-manager.h" />
+    <ClInclude Include="src\modules\mouse\mouse-state.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
