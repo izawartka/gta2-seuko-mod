@@ -150,6 +150,8 @@
     <ClCompile Include="src\modules\mouse\events\mouse.cpp" />
     <ClCompile Include="src\modules\mouse\mouse-manager.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\mouse-debug-menu.cpp" />
+    <ClCompile Include="src\events\game-pause.cpp" />
+    <ClCompile Include="src\events\game-unpause.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -403,6 +405,8 @@
     <ClInclude Include="src\modules\mouse\mouse-state.h" />
     <ClInclude Include="src\modules\modmenu\menus\mouse-debug-menu.h" />
     <ClInclude Include="src\modules\mouse\normalized-mouse-position.h" />
+    <ClInclude Include="src\events\game-pause.h" />
+    <ClInclude Include="src\events\game-unpause.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

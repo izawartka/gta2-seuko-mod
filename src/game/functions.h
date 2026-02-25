@@ -139,5 +139,11 @@ namespace Game {
 
 		typedef uint(__fastcall GivePowerUpType)(Player* player, DWORD edx, POWERUP_TYPE type);
 		static constexpr GivePowerUpType* GivePowerUp = (GivePowerUpType*)0x004a5780;
+
+		typedef void ToggleGamePauseType();
+		static constexpr ToggleGamePauseType* ToggleGamePause = (ToggleGamePauseType*)0x0045baa0;
+
+		typedef void UnpauseGameType();
+		static constexpr UnpauseGameType* UnpauseGame = (UnpauseGameType*)0x0045ba60;
 	};  
 }
