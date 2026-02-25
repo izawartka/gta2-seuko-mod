@@ -23,7 +23,7 @@ public:
 		std::wstring text = std::to_wstring(roundedValue);
 		size_t decimalPos = text.find(L'.');
 		if (decimalPos == std::wstring::npos) return text;
-		size_t endPos = decimalPos + 1 + precision;
+		size_t endPos = decimalPos + (precision == 0 ? 0 : 1 + precision);
 		if (endPos < text.length()) {
 			text = text.substr(0, endPos);
 		}
@@ -39,8 +39,10 @@ public:
 	}
 
 	static bool IsValidChar(std::wstring text, wchar_t c) {
-		bool hasDecimal = text.find(L'.') != std::wstring::npos;
-		if (c == L'.') return !hasDecimal;
+		if (precision != 0) {
+			bool hasDecimal = text.find(L'.') != std::wstring::npos;
+			if (c == L'.') return !hasDecimal;
+		}
 
 		bool hasLength = text.length() > 0;
 		if (c == L'-') return !hasLength;
