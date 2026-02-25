@@ -56,6 +56,7 @@ namespace MouseModule {
 		bool m_invisible = false;
 		bool m_locked = false;
 		bool m_cursorOwned = false;
+		bool m_lockedFirstTick = false;
 		int m_initializedEvents = 0;
 		MouseState m_state;
 	};

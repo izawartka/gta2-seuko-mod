@@ -96,13 +96,15 @@ std::optional<MouseModule::MouseState> MouseModule::MouseManager::GetLastMouseSt
 
 void MouseModule::MouseManager::SetLocked(bool locked)
 {
+	if (m_locked == locked) return;
 	m_locked = locked;
-	if(locked) UpdateCursorOwned();
+	if (locked) UpdateCursorOwned();
 	UpdateLockedState();
 }
 
 void MouseModule::MouseManager::SetInvisible(bool invisible)
 {
+	if (m_invisible == invisible) return;
 	m_invisible = invisible;
 	if (invisible) UpdateCursorOwned();
 	UpdateInvisible();
@@ -242,6 +244,12 @@ void MouseModule::MouseManager::OnPreDrawFrame(PreDrawFrameEvent& event)
 {
 	if (!m_locked || !m_cursorOwned) return;
 
+	if (m_lockedFirstTick) {
+		SetToCenter();
+		m_lockedFirstTick = false;
+		return;
+	}
+
 	MousePosition movePosition = m_state.position;
 
 	POINT centerPoint;
@@ -372,7 +380,7 @@ void MouseModule::MouseManager::UpdateLockedState()
 
 	UpdateWndProcEventListener();
 	SetEventListener<PreDrawFrameEvent>(&MouseManager::OnPreDrawFrame, locked);
-	if (locked) SetToCenter();
+	m_lockedFirstTick = locked;
 }
 
 void MouseModule::MouseManager::UpdateInvisible()
