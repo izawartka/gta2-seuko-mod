@@ -409,6 +409,7 @@
     <ClInclude Include="src\modules\mouse\normalized-mouse-position.h" />
     <ClInclude Include="src\events\game-pause.h" />
     <ClInclude Include="src\events\game-unpause.h" />
+    <ClInclude Include="src\modules\modmenu\events\cheat-options-update.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
