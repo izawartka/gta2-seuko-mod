@@ -19,13 +19,15 @@ ModMenuModule::CameraPosCheat* ModMenuModule::CameraPosCheat::GetInstance()
 	return m_instance;
 }
 
-const std::vector<ModMenuModule::CameraPosCheatMode> ModMenuModule::CameraPosCheat::GetAllCameraPosCheatModes()
+const std::vector<ModMenuModule::CameraPosCheatMode>& ModMenuModule::CameraPosCheat::GetAllCameraPosCheatModes()
 {
-	return {
+	static const std::vector<CameraPosCheatMode> modes = {
 		CameraPosCheatMode::Unmodified,
 		CameraPosCheatMode::LockTargetAt,
 		CameraPosCheatMode::IncrementTargetBy
 	};
+
+	return modes;
 }
 
 void ModMenuModule::CameraPosCheat::ResetPosOptions()

@@ -56,7 +56,7 @@ namespace ModMenuModule {
 		virtual ~CameraPosCheat() override;
 		static CameraPosCheat* GetInstance();
 
-		static const std::vector<CameraPosCheatMode> GetAllCameraPosCheatModes();
+		static const std::vector<CameraPosCheatMode>& GetAllCameraPosCheatModes();
 
 		void ResetPosOptions(); // resets all position options to unmodified
 		void LockAtCurrentPos(); // locks camera target to current camera position

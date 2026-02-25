@@ -92,8 +92,8 @@ void ModMenuModule::CameraAdvancedMenu::AttachCheatMenuItems()
 	auto vertAngleController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<float, float>>(
 		verticalAngleText,
 		[cameraCheat]() {
-		return cameraCheat->GetOptions().cameraTransform.verticalAngleRad;
-	},
+			return cameraCheat->GetOptions().cameraTransform.verticalAngleRad;
+		},
 		UiModule::VarTextEditableControllerOptions{ L"Vertical angle: #", L" deg #" }
 	);
 	vertAngleController->SetConverter<RadiansConverter<>>();
@@ -109,8 +109,8 @@ void ModMenuModule::CameraAdvancedMenu::AttachCheatMenuItems()
 	auto horizAngleController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<float, float>>(
 		horizontalAngleText,
 		[cameraCheat]() {
-		return cameraCheat->GetOptions().cameraTransform.horizontalAngleRad;
-	},
+			return cameraCheat->GetOptions().cameraTransform.horizontalAngleRad;
+		},
 		UiModule::VarTextEditableControllerOptions{ L"Horizontal angle: #", L" deg #" }
 	);
 	horizAngleController->SetConverter<RadiansConverter<>>();
@@ -125,8 +125,8 @@ void ModMenuModule::CameraAdvancedMenu::AttachCheatMenuItems()
 	auto addZOffsetController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<float, float>>(
 		additionalZOffsetText,
 		[cameraCheat]() {
-		return cameraCheat->GetOptions().cameraTransform.additionalZOffset;
-	},
+			return cameraCheat->GetOptions().cameraTransform.additionalZOffset;
+		},
 		UiModule::VarTextEditableControllerOptions{ L"Additional Z offset: #", L"#" }
 	);
 	addZOffsetController->SetCustomSaveCallback([cameraCheat](float newValue) {
@@ -140,8 +140,8 @@ void ModMenuModule::CameraAdvancedMenu::AttachCheatMenuItems()
 	auto arrowsScaleController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<float, float>>(
 		arrowsScaleText,
 		[cameraCheat]() {
-		return cameraCheat->GetOptions().cameraTransform.arrowsScale;
-	},
+			return cameraCheat->GetOptions().cameraTransform.arrowsScale;
+		},
 		UiModule::VarTextEditableControllerOptions{ L"Arrows scale: #", L"#" }
 	);
 	arrowsScaleController->SetCustomSaveCallback([cameraCheat](float newValue) {
@@ -155,8 +155,8 @@ void ModMenuModule::CameraAdvancedMenu::AttachCheatMenuItems()
 	auto customCullingController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<bool, bool>>(
 		customCullingText,
 		[cameraCheat]() {
-		return cameraCheat->GetOptions().customCulling;
-	},
+			return cameraCheat->GetOptions().customCulling;
+		},
 		UiModule::SelectOptionList<bool>{ false, true },
 		UiModule::VarTextSelectControllerOptions{ L"Custom culling: #", L"#" }
 	);
@@ -172,8 +172,8 @@ void ModMenuModule::CameraAdvancedMenu::AttachCheatMenuItems()
 	auto followPedRotationController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<bool, bool>>(
 		followPedRotationText,
 		[cameraCheat]() {
-		return cameraCheat->GetOptions().followPedRotation;
-	},
+			return cameraCheat->GetOptions().followPedRotation;
+		},
 		UiModule::SelectOptionList<bool>{ false, true },
 		UiModule::VarTextSelectControllerOptions{ L"Follow ped rotation: #", L"#" }
 	);
@@ -189,8 +189,8 @@ void ModMenuModule::CameraAdvancedMenu::AttachCheatMenuItems()
 	auto customRenderQueueController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<bool, bool>>(
 		customRenderQueueText,
 		[cameraCheat]() {
-		return cameraCheat->GetOptions().customRenderQueue;
-	},
+			return cameraCheat->GetOptions().customRenderQueue;
+		},
 		UiModule::SelectOptionList<bool>{ false, true },
 		UiModule::VarTextSelectControllerOptions{ L"Custom render queue: #", L"#" }
 	);
@@ -206,8 +206,8 @@ void ModMenuModule::CameraAdvancedMenu::AttachCheatMenuItems()
 	auto renderDistanceController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<size_t, size_t>>(
 		renderDistanceText,
 		[cameraCheat]() {
-		return cameraCheat->GetOptions().renderDistance;
-	},
+			return cameraCheat->GetOptions().renderDistance;
+		},
 		UiModule::VarTextEditableControllerOptions{ L"Render distance: #", L"#" }
 	);
 	renderDistanceController->SetCustomSaveCallback([cameraCheat](size_t newValue) {

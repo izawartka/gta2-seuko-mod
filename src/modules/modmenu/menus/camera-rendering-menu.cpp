@@ -84,6 +84,8 @@ bool ModMenuModule::CameraRenderingMenu::Attach()
 		disableAACheat->SetEnabled(newValue);
 	});
 
+	SetPreviousSelectedIndex();
+
 	return true;
 }
 
@@ -132,4 +134,3 @@ void ModMenuModule::CameraRenderingMenu::UpdateCheatStates()
 	m_shadowsFixCheatController->SetValue(ShadowsFixCheat::GetInstance()->IsEnabled());
 	m_disableAACheatController->SetValue(DisableAntialiasingCheat::GetInstance()->IsEnabled());
 }
-

@@ -7,6 +7,7 @@ Base class for all keyboard events. Not to be used directly.
 */
 class KeyboardEvent : public Core::EventBase {
 public:
+	static bool Init() { return false; }
 	Game::KeyCode GetKeyCode() const { return m_keyCode; }
 	bool IsShiftPressed() const { return m_shift; }
 	bool IsCtrlPressed() const { return m_ctrl; }
