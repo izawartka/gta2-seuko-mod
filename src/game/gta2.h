@@ -9290,3 +9290,52 @@ struct Verts {
 	struct Vert mVerts[4];
 };
 
+typedef struct DirectInput_DeviceObjectData DirectInput_DeviceObjectData, * PDirectInput_DeviceObjectData;
+
+struct DirectInput_DeviceObjectData {
+	dword ofs;
+	dword data;
+	dword timeStamp;
+	dword sequence;
+	void* appData;
+};
+
+typedef struct KeyboardEvent KeyboardEvent, * PKeyboardEvent;
+
+struct KeyboardEvent {
+	uint tick;
+	enum KEYBOARD_STATE state;
+	uint random; // Created by retype action
+};
+
+typedef struct Keyboard Keyboard, * PKeyboard;
+
+typedef enum REPLAY_STATUS {
+	REPLAY_STATUS_NOT_PLAYING = 0,
+	REPLAY_STATUS_PLAYING = 1,
+	REPLAY_STATUS_NOT_PLAYING_NO_CONTROL = 2,
+	REPLAY_STATUS_PLAYING_EXIT_ON_KEYPRESS = 3
+} REPLAY_STATUS;
+
+struct Keyboard {
+	undefined1 directInputCleanedMaybe;
+	undefined field1_0x1;
+	undefined field2_0x2;
+	undefined field3_0x3;
+	enum KEYBOARD_STATE state;
+	enum KEYBOARD_STATE controls[12];
+	enum REPLAY_STATUS replayStatus;
+	struct KeyboardEvent allEvents[40000];
+	uint replayEventCount;
+	uint eventCount;
+	undefined1 lastFocusEventLParam;
+	undefined1 field11_0x75345;
+};
+
+typedef struct Tick Tick, * PTick;
+
+struct Tick {
+	uint tick;
+	uint random;
+};
+

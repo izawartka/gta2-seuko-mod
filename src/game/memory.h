@@ -48,5 +48,10 @@ namespace Game {
 		static TrafficManager* GetTrafficManager() { return (TrafficManager*)*(DWORD*)0x005e4ca4; }
 		static int* GetCarsScale() { return (int*)0x005e4d4c; }
 		static HWND* GetGameWindow() { return (HWND*)0x00673d18; }
+		static bool* GetIsMultiplayer() { return (bool*)0x00673e2c; }
+		static DirectInput_DeviceObjectData* GetDirectInputDeviceObjectData() { return (DirectInput_DeviceObjectData*)0x005e8f8c; }
+		static DWORD* GetDirectInputDeviceObjectDataCount() { return (DWORD*)0x005e8f04; }
+		static Keyboard* GetKeyboard() { return (Keyboard*)0x005ecac8; }
+		static Tick* GetTick() { return (Tick*)*(DWORD*)0x005e8108; }
 	};
 }
