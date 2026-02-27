@@ -7,16 +7,20 @@
 #include "../../../events/game-end.h"
 #include "../../../events/game-pause.h"
 #include "../../../events/game-unpause.h"
+#include "../events/cheat-state.h"
+#include "../events/cheat-options-update.h"
 #include "../../mouse/normalized-mouse-position.h"
 
 namespace ModMenuModule {
+	class CameraCheat;
+
 	enum class MouseControlCheatMode {
 		Rotate = 0,
 		PointAt = 2,
 	};
 
 	struct MouseControlCheatOptions {
-		bool autoMode = true; /// TODO: implement
+		bool autoMode = true;
 		MouseControlCheatMode mode = MouseControlCheatMode::Rotate;
 		float rotateModeSensitivity = 0.02f;
 	};
@@ -46,10 +50,16 @@ namespace ModMenuModule {
 		void OnGameEnd(GameEndEvent& event);
 		void OnGamePause(GamePauseEvent& event);
 		void OnGameUnpause(GameUnpauseEvent& event);
+		void OnCheatStateChange(CheatStateEvent& event);
+		void OnCameraCheatOptionsUpdate(CheatOptionsUpdateEvent<CameraCheat>& event);
 
+		void SetOptionsInternal(const MouseControlCheatOptions& options);
 		void UpdateTargetDeltaRotation();
 		void UpdateMode();
 		void UpdateLastNormalizedPos();
+		void UpdateAutoMode();
+		void UpdateAutoModeListeners();
+		void RemoveAutoModeListeners();
 		void Start();
 		void Stop();
 
@@ -61,6 +71,7 @@ namespace ModMenuModule {
 		static Game::KEYBOARD_STATE GetRotationInput(float deltaAngle);
 		static std::optional<float> GetPlayerRotation();
 		static std::optional<float> GetTargetRotation(MouseModule::NormalizedMousePosition normalizedPos);
+		static MouseControlCheatMode GetAutoModeTargetMode();
 
 		static MouseControlCheat* m_instance;
 		float m_targetDeltaRotation = 0.0f;

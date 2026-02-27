@@ -1,6 +1,5 @@
 #include "mouse-control.h"
 #include "../utils/angle-utils.h"
-#include "../events/cheat-options-update.h"
 #include "camera/camera.h"
 #include "../cheat-registry.h"
 
@@ -43,15 +42,7 @@ void ModMenuModule::MouseControlCheat::SetOptions(const MouseControlCheatOptions
 		return;
 	}
 
-	MouseControlCheatOptions oldOptions = m_options;
-	m_options = options;
-
-	bool modeChanged = (oldOptions.mode != m_options.mode);
-	if (m_started && modeChanged) UpdateMode();
-
-	Core::EventManager* eventManager = Core::EventManager::GetInstance();
-	CheatOptionsUpdateEvent<MouseControlCheat> event(oldOptions, m_options);
-	eventManager->Dispatch(event);
+	SetOptionsInternal(options);
 }
 
 void ModMenuModule::MouseControlCheat::OnFirstEnable()
@@ -65,6 +56,8 @@ void ModMenuModule::MouseControlCheat::OnEnable()
 	AddEventListener<GameEndEvent>(&MouseControlCheat::OnGameEnd);
 	AddEventListener<GamePauseEvent>(&MouseControlCheat::OnGamePause);
 	AddEventListener<GameUnpauseEvent>(&MouseControlCheat::OnGameUnpause);
+	UpdateAutoModeListeners();
+	UpdateAutoMode();
 	if (CheckShouldStart()) Start();
 }
 
@@ -74,6 +67,7 @@ void ModMenuModule::MouseControlCheat::OnDisable()
 	RemoveEventListener<GameEndEvent>();
 	RemoveEventListener<GamePauseEvent>();
 	RemoveEventListener<GameUnpauseEvent>();
+	RemoveAutoModeListeners();
 	Stop();
 	SaveToPersistence();
 }
@@ -138,6 +132,39 @@ void ModMenuModule::MouseControlCheat::OnGameUnpause(GameUnpauseEvent& event)
 	if (CheckShouldStart(true)) Start();
 }
 
+void ModMenuModule::MouseControlCheat::OnCheatStateChange(CheatStateEvent& event)
+{
+	if (event.GetCheatType() != typeid(CameraCheat)) return;
+
+	UpdateAutoMode();
+}
+
+void ModMenuModule::MouseControlCheat::OnCameraCheatOptionsUpdate(CheatOptionsUpdateEvent<CameraCheat>& event)
+{
+	if (event.GetOldOptions().followPedRotation == event.GetNewOptions().followPedRotation) return;
+
+	UpdateAutoMode();
+}
+
+void ModMenuModule::MouseControlCheat::SetOptionsInternal(const MouseControlCheatOptions& options)
+{
+	MouseControlCheatOptions oldOptions = m_options;
+	m_options = options;
+
+	bool autoModeChanged = (oldOptions.autoMode != m_options.autoMode);
+	if (autoModeChanged) {
+		if (m_options.autoMode) m_options.mode = GetAutoModeTargetMode();
+		if (IsEnabled()) UpdateAutoModeListeners();
+	}
+
+	bool modeChanged = (oldOptions.mode != m_options.mode);
+	if (m_started && modeChanged) UpdateMode();
+
+	Core::EventManager* eventManager = Core::EventManager::GetInstance();
+	CheatOptionsUpdateEvent<MouseControlCheat> event(oldOptions, m_options);
+	eventManager->Dispatch(event);
+}
+
 void ModMenuModule::MouseControlCheat::UpdateTargetDeltaRotation()
 {
 	if (!CheckShouldUseRotation()) {
@@ -183,6 +210,30 @@ void ModMenuModule::MouseControlCheat::UpdateLastNormalizedPos()
 {
 	MouseModule::MousePosition currentPos = MouseModule::MouseManager::FetchMouseState().position;
 	m_lastNormalizedPos = MouseModule::MouseManager::ToNormalizedPosition(currentPos);
+}
+
+void ModMenuModule::MouseControlCheat::UpdateAutoMode()
+{
+	if (!m_options.autoMode) return;
+
+	MouseControlCheatOptions newOptions = m_options;
+	newOptions.mode = GetAutoModeTargetMode();
+
+	if (newOptions.mode != m_options.mode) {
+		SetOptionsInternal(newOptions);
+	}
+}
+
+void ModMenuModule::MouseControlCheat::UpdateAutoModeListeners()
+{
+	SetEventListener<CheatStateEvent>(&MouseControlCheat::OnCheatStateChange, m_options.autoMode);
+	SetEventListener<CheatOptionsUpdateEvent<CameraCheat>>(&MouseControlCheat::OnCameraCheatOptionsUpdate, m_options.autoMode);
+}
+
+void ModMenuModule::MouseControlCheat::RemoveAutoModeListeners()
+{
+	if (HasEventListener<CheatStateEvent>()) RemoveEventListener<CheatStateEvent>();
+	if (HasEventListener<CheatOptionsUpdateEvent<CameraCheat>>()) RemoveEventListener<CheatOptionsUpdateEvent<CameraCheat>>();
 }
 
 void ModMenuModule::MouseControlCheat::Start()
@@ -306,6 +357,21 @@ std::optional<float> ModMenuModule::MouseControlCheat::GetTargetRotation(MouseMo
 	else {
 		return Utils::Angle::NormalizeAngle(std::atan2(normalizedPos.y, normalizedPos.x) - static_cast<float>(M_PI / 2.0f));
 	}
+}
+
+ModMenuModule::MouseControlCheatMode ModMenuModule::MouseControlCheat::GetAutoModeTargetMode()
+{
+	CameraCheat* cameraCheat = CameraCheat::GetInstance();
+	if (!cameraCheat->IsEnabled()) {
+		return MouseControlCheatMode::PointAt;
+	}
+
+	CameraCheatOptions cameraOptions = cameraCheat->GetOptions();
+	if (!cameraOptions.followPedRotation) {
+		return MouseControlCheatMode::PointAt;
+	}
+
+	return MouseControlCheatMode::Rotate;
 }
 
 REGISTER_CHEAT(MouseControlCheat)
