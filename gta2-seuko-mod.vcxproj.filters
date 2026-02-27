@@ -150,6 +150,7 @@
     <ClCompile Include="src\modules\mouse\events\mouse.cpp" />
     <ClCompile Include="src\modules\mouse\mouse-manager.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\mouse-debug-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\mouse-control.cpp" />
     <ClCompile Include="src\events\keyboard-state-update.cpp" />
     <ClCompile Include="src\events\game-pause.cpp" />
     <ClCompile Include="src\events\game-unpause.cpp" />
@@ -405,6 +406,7 @@
     <ClInclude Include="src\modules\mouse\mouse-manager.h" />
     <ClInclude Include="src\modules\mouse\mouse-state.h" />
     <ClInclude Include="src\modules\modmenu\menus\mouse-debug-menu.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\mouse-control.h" />
     <ClInclude Include="src\events\keyboard-state-update.h" />
     <ClInclude Include="src\modules\mouse\normalized-mouse-position.h" />
     <ClInclude Include="src\events\game-pause.h" />
