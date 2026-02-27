@@ -46,6 +46,7 @@ namespace ModMenuModule {
 
 	class CameraCheat : public CheatBase, public Core::EventListenerSupport {
 	public:
+		using OptionsT = CameraCheatOptions;
 		CameraCheat();
 		virtual ~CameraCheat() override;
 		static CameraCheat* GetInstance();

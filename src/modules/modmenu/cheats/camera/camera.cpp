@@ -1,10 +1,10 @@
 #include "camera.h"
 #include "camera-pos.h"
-#include "../../cheat-registry.h"
 #include "../../utils/angle-utils.h"
 #include "../../utils/custom-render-queue-utils.h"
 #include "../../../../events/culling-check.h"
-#include "../../root.h"
+#include "../../events/cheat-options-update.h"
+#include "../../cheat-registry.h"
 
 ModMenuModule::CameraCheat* ModMenuModule::CameraCheat::m_instance = nullptr;
 
@@ -31,11 +31,20 @@ void ModMenuModule::CameraCheat::SetOptions(const CameraCheatOptions& options)
 		return;
 	}
 
+	CameraCheatOptions oldOptions = m_options;
 	m_options = options;
+
 	if(!m_options.followPedRotation) {
 		m_snapVerticalRotation = false;
 	}
-	UpdatePreDrawMapLayerListener();
+
+	if (m_options.customRenderQueue != oldOptions.customRenderQueue) {
+		UpdatePreDrawMapLayerListener();
+	}
+
+	Core::EventManager* eventManager = Core::EventManager::GetInstance();
+	CheatOptionsUpdateEvent<CameraCheat> event(oldOptions, m_options);
+	eventManager->Dispatch(event);
 }
 
 void ModMenuModule::CameraCheat::SnapVerticalRotation()
@@ -170,12 +179,19 @@ void ModMenuModule::CameraCheat::OnPreDrawFrame(PreDrawFrameEvent& event)
 	short* playerPedRotationPtr = Game::Utils::GetPlayerPedRotationPtr();
 	if (playerPedRotationPtr != nullptr && m_options.followPedRotation) {
 		float pedRotationRad = Game::Utils::FromGTAAngleToRad(*playerPedRotationPtr) + static_cast<float>(M_PI);
-		float& cameraRotation = m_options.cameraTransform.verticalAngleRad;
+		float oldCameraRotation = m_options.cameraTransform.verticalAngleRad;
+		float newCameraRotation = oldCameraRotation;
 		if (m_snapVerticalRotation) {
-			cameraRotation = pedRotationRad;
+			newCameraRotation = pedRotationRad;
 		}
 		else {
-			cameraRotation = Utils::Angle::LerpAngle(cameraRotation, pedRotationRad, m_options.followPedRotationLerpFactor);
+			newCameraRotation = Utils::Angle::LerpAngle(oldCameraRotation, pedRotationRad, m_options.followPedRotationLerpFactor);
+		}
+
+		if (newCameraRotation != oldCameraRotation) {
+			CameraCheatOptions newOptions = m_options;
+			newOptions.cameraTransform.verticalAngleRad = newCameraRotation;
+			SetOptions(newOptions);
 		}
 	}
 
