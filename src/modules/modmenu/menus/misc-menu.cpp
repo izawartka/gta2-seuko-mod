@@ -1,5 +1,6 @@
 #include "misc-menu.h"
 #include "../root.h"
+#include "mouse-control-menu.h"
 #include "menu-controls-menu.h"
 #include "quick-actions-menu.h"
 #include "version-menu.h"
@@ -25,6 +26,7 @@ bool ModMenuModule::MiscMenu::Attach()
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Mouse control", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Menu controls", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Quick actions", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Version details", options.textSize);
@@ -46,16 +48,19 @@ void ModMenuModule::MiscMenu::OnMenuAction(UiModule::Selectable* item, UiModule:
 	case 0: // Go back
 		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
 		break;
-	case 1: // Menu controls
+	case 1: // Mouse control
+		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::MouseControlMenu>();
+		break;
+	case 2: // Menu controls
 		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::MenuControlsMenu>();
 		break;
-	case 2: // Quick actions
+	case 3: // Quick actions
 		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::QuickActionsMenu>();
 		break;
-	case 3: // Version info
+	case 4: // Version info
 		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::VersionMenu>();
 		break;
-	case 4: // Mouse debug menu
+	case 5: // Mouse debug menu
 		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::MouseDebugMenu>();
 		break;
 	default:

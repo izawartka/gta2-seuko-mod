@@ -152,6 +152,7 @@
     <ClCompile Include="src\modules\modmenu\menus\mouse-debug-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\mouse-control.cpp" />
     <ClCompile Include="src\events\keyboard-state-update.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\mouse-control-menu.cpp" />
     <ClCompile Include="src\events\game-pause.cpp" />
     <ClCompile Include="src\events\game-unpause.cpp" />
   </ItemGroup>
@@ -408,7 +409,9 @@
     <ClInclude Include="src\modules\modmenu\menus\mouse-debug-menu.h" />
     <ClInclude Include="src\modules\modmenu\cheats\mouse-control.h" />
     <ClInclude Include="src\events\keyboard-state-update.h" />
+    <ClInclude Include="src\modules\modmenu\menus\mouse-control-menu.h" />
     <ClInclude Include="src\modules\mouse\normalized-mouse-position.h" />
+    <ClInclude Include="src\converters\mouse-control-cheat-mode.h" />
     <ClInclude Include="src\events\game-pause.h" />
     <ClInclude Include="src\events\game-unpause.h" />
     <ClInclude Include="src\modules\modmenu\events\cheat-options-update.h" />
