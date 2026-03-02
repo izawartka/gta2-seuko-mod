@@ -101,6 +101,9 @@ void ModMenuModule::MouseControlMenu::OnCheatStateChange(CheatStateEvent& event)
 
 void ModMenuModule::MouseControlMenu::OnCheatOptionsUpdate(CheatOptionsUpdateEvent<MouseControlCheat>& event)
 {
+	MouseControlCheat* mouseControlCheat = MouseControlCheat::GetInstance();
+	if (!mouseControlCheat->IsEnabled()) return;
+
 	UpdateRotateModeMenuItemsAttached();
 }
 
@@ -225,17 +228,11 @@ void ModMenuModule::MouseControlMenu::UpdateAttachedItems()
 void ModMenuModule::MouseControlMenu::UpdateRotateModeMenuItemsAttached()
 {
 	MouseControlCheat* mouseControlCheat = MouseControlCheat::GetInstance();
-
-	if (!mouseControlCheat->IsEnabled()) {
-		DetachRotateModeMenuItems();
-		return;
-	}
-
 	MouseControlCheatOptions options = mouseControlCheat->GetOptions();
 	bool isAutoMode = options.autoMode;
 	bool isRotateMode = options.mode == MouseControlCheatMode::Rotate;
 
-	if (isAutoMode || isRotateMode) {
+	if (m_cheatItemsAttached && (isAutoMode || isRotateMode)) {
 		AttachRotateModeMenuItems();
 	}
 	else {
