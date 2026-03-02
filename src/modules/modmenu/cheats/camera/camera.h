@@ -1,6 +1,7 @@
 #pragma once
 #include "../../common.h"
 #include "../../cheat-base.h"
+#include "camera-pos.h"
 #include "../../../../events/game-start.h"
 #include "../../../../events/draw-frame.h"
 #include "../../../../events/renderer.h"
@@ -50,6 +51,10 @@ namespace ModMenuModule {
 		CameraCheat();
 		virtual ~CameraCheat() override;
 		static CameraCheat* GetInstance();
+
+		static auto GetDependencies() {
+			return std::array<std::type_index, 1> { typeid(CameraPosCheat) };
+		}
 
 		void SetOptions(const CameraCheatOptions& options);
 		const CameraCheatOptions& GetOptions() const { return m_options; }

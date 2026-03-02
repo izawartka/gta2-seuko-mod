@@ -1,5 +1,4 @@
 #include "camera.h"
-#include "camera-pos.h"
 #include "../../utils/angle-utils.h"
 #include "../../utils/custom-render-queue-utils.h"
 #include "../../../../events/culling-check.h"
@@ -197,8 +196,8 @@ void ModMenuModule::CameraCheat::OnPreDrawFrame(PreDrawFrameEvent& event)
 
 	m_snapVerticalRotation = false;
 
-	auto* cameraPosCheat = CameraPosCheat::GetInstance();
-	bool isZlocked = cameraPosCheat && cameraPosCheat->IsEnabled() && cameraPosCheat->GetOptions().z.mode == CameraPosCheatMode::LockTargetAt;
+	CameraPosCheat* cameraPosCheat = CameraPosCheat::GetInstance();
+	bool isZlocked = cameraPosCheat->IsEnabled() && cameraPosCheat->GetOptions().z.mode == CameraPosCheatMode::LockTargetAt;
 	bool ignorePlayerPedZ = !playerPed || isZlocked;
 	Game::SCR_f playerPedZ = ignorePlayerPedZ ? Game::Utils::FromFloat(3.0f) : playerPed->position.z;
 
