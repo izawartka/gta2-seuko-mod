@@ -46,6 +46,7 @@ namespace ModMenuModule {
 				return true;
 			}
 
+			if (m_persistenceKey.empty()) return true;
 			PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 			bool enabled = persistence->Load(m_persistenceKey, false);
 			SetEnabled(enabled);

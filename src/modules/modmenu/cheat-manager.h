@@ -18,7 +18,10 @@ namespace ModMenuModule {
 
 		void InstantiateCheats();
 		void DestroyCheats();
+		
+		static std::vector<std::type_index> TopologicalSort();
 
 		std::unordered_map<std::type_index, std::unique_ptr<CheatBase>> m_cheats;
+		std::vector<std::type_index> m_attachOrder;
 	};
 }
