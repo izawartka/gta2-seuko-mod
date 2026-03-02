@@ -156,6 +156,7 @@
     <ClCompile Include="src\events\game-pause.cpp" />
     <ClCompile Include="src\events\game-unpause.cpp" />
     <ClCompile Include="src\events\keyboard-get-data.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\force-controls.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -418,6 +419,7 @@
     <ClInclude Include="src\modules\modmenu\events\cheat-options-update.h" />
     <ClInclude Include="src\events\keyboard-get-data.h" />
     <ClInclude Include="src\game\gta2_additional.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\force-controls.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

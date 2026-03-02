@@ -1,5 +1,6 @@
 #pragma once
 #include "cop-value.h"
+#include "force-controls.h"
 #include "invulnerability.h"
 #include "infinite-ammo.h"
 #include "instant-reload.h"
