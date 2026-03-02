@@ -1,6 +1,7 @@
 #include "mouse-control.h"
 #include "../utils/angle-utils.h"
 #include "camera/camera.h"
+#include "../toast-manager.h"
 #include "../cheat-registry.h"
 
 static constexpr float ROTATE_MODE_SMOOTING = 0.2f;
@@ -58,7 +59,8 @@ void ModMenuModule::MouseControlCheat::OnEnable()
 	AddEventListener<GameUnpauseEvent>(&MouseControlCheat::OnGameUnpause);
 	UpdateAutoModeListeners();
 	UpdateAutoMode();
-	if (CheckShouldStart()) Start();
+	CreateControlHandles();
+	if (ForceControlsCheat::CheckGameReadyToForce()) Start();
 }
 
 void ModMenuModule::MouseControlCheat::OnDisable()
@@ -69,35 +71,31 @@ void ModMenuModule::MouseControlCheat::OnDisable()
 	RemoveEventListener<GameUnpauseEvent>();
 	RemoveAutoModeListeners();
 	Stop();
+	FreeControlHandles();
 	SaveToPersistence();
 }
 
 void ModMenuModule::MouseControlCheat::OnPreGameTick(PreGameTickEvent& event)
 {
-	UpdateTargetDeltaRotation();
-}
+	if (CheckShouldUseRotation()) {
+		StartRotation();
+		UpdateTargetDeltaRotation();
+	}
+	else {
+		StopRotation();
+		return;
+	}
 
-void ModMenuModule::MouseControlCheat::OnKeyboardStateUpdate(KeyboardStateUpdateEvent& event)
-{
-	Game::Game* game = Game::Memory::GetGame();
-	if (!game) return;
-	Game::Player* player = game->CurrentPlayer;
-	if (event.GetPlayer() != player) return;
+	char rotationDirection = GetRotationDirection(m_targetDeltaRotation);
+	bool shouldRotateLeft = rotationDirection == -1;
+	bool shouldRotateRight = rotationDirection == 1;
 
-	Game::KEYBOARD_STATE state = event.GetModifiedState();
-	std::optional<MouseModule::MouseState> lastMouseStateOpt = MouseModule::MouseManager::GetInstance()->GetLastMouseState();
-	if (!lastMouseStateOpt.has_value()) return;
+	if (shouldRotateLeft) m_targetDeltaRotation -= ROTATION_SPEED;
+	else if (shouldRotateRight) m_targetDeltaRotation += ROTATION_SPEED;
 
-	state = static_cast<Game::KEYBOARD_STATE>(state | (lastMouseStateOpt->leftButtonDown ? Game::KEYBOARD_STATE_ATTACK : 0));
-	state = static_cast<Game::KEYBOARD_STATE>(state & ~(Game::KEYBOARD_STATE_ROTATE_LEFT | Game::KEYBOARD_STATE_ROTATE_RIGHT));
-
-	Game::KEYBOARD_STATE inputState = GetRotationInput(m_targetDeltaRotation);
-	if (inputState & Game::KEYBOARD_STATE_ROTATE_LEFT) m_targetDeltaRotation -= ROTATION_SPEED;
-	else if (inputState & Game::KEYBOARD_STATE_ROTATE_RIGHT) m_targetDeltaRotation += ROTATION_SPEED;
-
-	state = static_cast<Game::KEYBOARD_STATE>(state | inputState);
-
-	event.SetModifiedState(state);
+	ForceControlsCheat* forceControlsCheat = ForceControlsCheat::GetInstance();
+	forceControlsCheat->SetControlState(m_leftControlHandle, shouldRotateLeft ? ForceControlState::ForceDown : ForceControlState::ForceUp);
+	forceControlsCheat->SetControlState(m_rightControlHandle, shouldRotateRight ? ForceControlState::ForceDown : ForceControlState::ForceUp);
 }
 
 void ModMenuModule::MouseControlCheat::OnMouseLockedMove(MouseModule::MouseLockedMoveEvent& event)
@@ -112,9 +110,25 @@ void ModMenuModule::MouseControlCheat::OnMouseMove(MouseModule::MouseMoveEvent& 
 	m_lastNormalizedPos = MouseModule::MouseManager::ToNormalizedPosition(pos);
 }
 
+void ModMenuModule::MouseControlCheat::OnMouseButtonDown(MouseModule::MouseButtonDownEvent& event)
+{
+	if (event.GetButton() != MouseModule::MouseButton::Left) return;
+
+	ForceControlsCheat* forceControlsCheat = ForceControlsCheat::GetInstance();
+	forceControlsCheat->SetControlState(m_attackControlHandle, ForceControlState::ForceDown);
+}
+
+void ModMenuModule::MouseControlCheat::OnMouseButtonUp(MouseModule::MouseButtonUpEvent& event)
+{
+	if (event.GetButton() != MouseModule::MouseButton::Left) return;
+
+	ForceControlsCheat* forceControlsCheat = ForceControlsCheat::GetInstance();
+	forceControlsCheat->SetControlState(m_attackControlHandle, ForceControlState::Unmodified);
+}
+
 void ModMenuModule::MouseControlCheat::OnGameStart(GameStartEvent& event)
 {
-	if (CheckShouldStart()) Start();
+	if (ForceControlsCheat::CheckGameReadyToForce()) Start();
 }
 
 void ModMenuModule::MouseControlCheat::OnGameEnd(GameEndEvent& event)
@@ -129,7 +143,7 @@ void ModMenuModule::MouseControlCheat::OnGamePause(GamePauseEvent& event)
 
 void ModMenuModule::MouseControlCheat::OnGameUnpause(GameUnpauseEvent& event)
 {
-	if (CheckShouldStart(true)) Start();
+	if (ForceControlsCheat::CheckGameReadyToForce(true)) Start();
 }
 
 void ModMenuModule::MouseControlCheat::OnCheatStateChange(CheatStateEvent& event)
@@ -167,11 +181,6 @@ void ModMenuModule::MouseControlCheat::SetOptionsInternal(const MouseControlChea
 
 void ModMenuModule::MouseControlCheat::UpdateTargetDeltaRotation()
 {
-	if (!CheckShouldUseRotation()) {
-		m_targetDeltaRotation = 0;
-		return;
-	}
-
 	float currentRotation = GetPlayerRotation().value();
 
 	bool isPointAtMode = m_options.mode == MouseControlCheatMode::PointAt;
@@ -212,6 +221,15 @@ void ModMenuModule::MouseControlCheat::UpdateLastNormalizedPos()
 	m_lastNormalizedPos = MouseModule::MouseManager::ToNormalizedPosition(currentPos);
 }
 
+void ModMenuModule::MouseControlCheat::UpdateAttack() const
+{
+	MouseModule::MouseState mouseState = MouseModule::MouseManager::FetchMouseState();
+	bool shouldAttack = mouseState.leftButtonDown;
+
+	ForceControlsCheat* forceControlsCheat = ForceControlsCheat::GetInstance();
+	forceControlsCheat->SetControlState(m_attackControlHandle, shouldAttack ? ForceControlState::ForceDown : ForceControlState::Unmodified);
+}
+
 void ModMenuModule::MouseControlCheat::UpdateAutoMode()
 {
 	if (!m_options.autoMode) return;
@@ -236,21 +254,77 @@ void ModMenuModule::MouseControlCheat::RemoveAutoModeListeners()
 	if (HasEventListener<CheatOptionsUpdateEvent<CameraCheat>>()) RemoveEventListener<CheatOptionsUpdateEvent<CameraCheat>>();
 }
 
+bool ModMenuModule::MouseControlCheat::EnsureNotControllerControls() const
+{
+	ForceControlsCheat::ControlIndex leftControlIndex = ForceControlsCheat::GetControlIndex(Game::KEYBOARD_STATE_LEFT);
+	ForceControlsCheat::ControlIndex rightControlIndex = ForceControlsCheat::GetControlIndex(Game::KEYBOARD_STATE_RIGHT);
+	ForceControlsCheat::ControlIndex attackControlIndex = ForceControlsCheat::GetControlIndex(Game::KEYBOARD_STATE_ATTACK);
+
+	bool allOk = !ForceControlsCheat::CheckUsesController(leftControlIndex)
+		&& !ForceControlsCheat::CheckUsesController(rightControlIndex)
+		&& !ForceControlsCheat::CheckUsesController(attackControlIndex);
+
+	if (!allOk) {
+		spdlog::warn("Mouse control won't work with Controller controls. Please update your controls in GTA2 Manager");
+		ToastManager::GetInstance()->Show({ L"Mouse control won't work with Controller controls.", ToastType::Warning, 240 });
+		ToastManager::GetInstance()->Show({ L"Please update your controls in GTA2 Mangager", ToastType::Warning, 240 });
+	}
+
+	return allOk;
+}
+
+bool ModMenuModule::MouseControlCheat::EnsureControlHandlesOk() const
+{
+	if (m_controlHandlesOk) return true;
+
+	spdlog::warn("Mouse control cheat cannot start because control handles are not ok");
+	ToastManager::GetInstance()->Show({ L"Mouse control cheat has failed to start", ToastType::Error, 240 });
+	return false;
+}
+
+void ModMenuModule::MouseControlCheat::StartRotation()
+{
+	if (m_usingRotation) return;
+	spdlog::debug("MouseControlCheat: Starting rotation");
+	m_usingRotation = true;
+	m_targetDeltaRotation = 0.0f;
+}
+
+void ModMenuModule::MouseControlCheat::StopRotation()
+{
+	if (!m_usingRotation) return;
+	spdlog::debug("MouseControlCheat: Stopping rotation");
+	m_usingRotation = false;
+	ForceControlsCheat* forceControlsCheat = ForceControlsCheat::GetInstance();
+	forceControlsCheat->SetControlState(m_leftControlHandle, ForceControlState::Unmodified);
+	forceControlsCheat->SetControlState(m_rightControlHandle, ForceControlState::Unmodified);
+}
+
 void ModMenuModule::MouseControlCheat::Start()
 {
 	if (m_started) return;
+	if (!EnsureControlHandlesOk()) return;
+	if (!EnsureNotControllerControls()) return;
+	spdlog::debug("MouseControlCheat: Starting");
 	m_started = true;
+
 	AddEventListener<PreGameTickEvent>(&MouseControlCheat::OnPreGameTick);
-	AddEventListener<KeyboardStateUpdateEvent>(&MouseControlCheat::OnKeyboardStateUpdate);
+	AddEventListener<MouseModule::MouseButtonDownEvent>(&MouseControlCheat::OnMouseButtonDown);
+	AddEventListener<MouseModule::MouseButtonUpEvent>(&MouseControlCheat::OnMouseButtonUp);
+
 	UpdateMode();
+	UpdateAttack();
 }
 
 void ModMenuModule::MouseControlCheat::Stop()
 {
 	if (!m_started) return;
+	spdlog::debug("MouseControlCheat: Stopping");
 	m_started = false;
+
 	RemoveEventListener<PreGameTickEvent>();
-	RemoveEventListener<KeyboardStateUpdateEvent>();
+	RemoveEventListener<MouseModule::MouseButtonDownEvent>();
+	RemoveEventListener<MouseModule::MouseButtonUpEvent>();
 	if (HasEventListener<MouseModule::MouseLockedMoveEvent>()) RemoveEventListener<MouseModule::MouseLockedMoveEvent>();
 	if (HasEventListener<MouseModule::MouseMoveEvent>()) RemoveEventListener<MouseModule::MouseMoveEvent>();
 
@@ -258,7 +332,52 @@ void ModMenuModule::MouseControlCheat::Stop()
 	mouseManager->SetLocked(false);
 	mouseManager->SetInvisible(false);
 
-	m_targetDeltaRotation = 0.0f;
+	ForceControlsCheat* forceControlsCheat = ForceControlsCheat::GetInstance();
+	forceControlsCheat->SetControlState(m_attackControlHandle, ForceControlState::Unmodified);
+	StopRotation();
+}
+
+bool ModMenuModule::MouseControlCheat::CreateControlHandles()
+{
+	ForceControlsCheat* forceControlsCheat = ForceControlsCheat::GetInstance();
+
+	ForceControlsCheat::ControlIndex leftControlIndex = ForceControlsCheat::GetControlIndex(Game::KEYBOARD_STATE_LEFT);
+	m_leftControlHandle = forceControlsCheat->CreateControlHandle(leftControlIndex);
+	ForceControlsCheat::ControlIndex rightControlIndex = ForceControlsCheat::GetControlIndex(Game::KEYBOARD_STATE_RIGHT);
+	m_rightControlHandle = forceControlsCheat->CreateControlHandle(rightControlIndex);
+	ForceControlsCheat::ControlIndex attackControlIndex = ForceControlsCheat::GetControlIndex(Game::KEYBOARD_STATE_ATTACK);
+	m_attackControlHandle = forceControlsCheat->CreateControlHandle(attackControlIndex);
+
+	m_controlHandlesOk = (m_leftControlHandle != -1) && (m_rightControlHandle != -1) && (m_attackControlHandle != -1);
+	if(!m_controlHandlesOk) {
+		spdlog::error("Mouse control cheat failed to create control handles");
+		FreeControlHandles();
+		return false;
+	}
+
+	return true;
+}
+
+void ModMenuModule::MouseControlCheat::FreeControlHandles()
+{
+	ForceControlsCheat* forceControlsCheat = ForceControlsCheat::GetInstance();
+
+	if (m_leftControlHandle != -1) {
+		forceControlsCheat->FreeControlHandle(m_leftControlHandle);
+		m_leftControlHandle = -1;
+	}
+
+	if (m_rightControlHandle != -1) {
+		forceControlsCheat->FreeControlHandle(m_rightControlHandle);
+		m_rightControlHandle = -1;
+	}
+
+	if (m_attackControlHandle != -1) {
+		forceControlsCheat->FreeControlHandle(m_attackControlHandle);
+		m_attackControlHandle = -1;
+	}
+
+	m_controlHandlesOk = false;
 }
 
 void ModMenuModule::MouseControlCheat::SaveToPersistence() const
@@ -296,20 +415,6 @@ void ModMenuModule::MouseControlCheat::LoadFromPersistence()
 	SetOptions(m_options);
 }
 
-bool ModMenuModule::MouseControlCheat::CheckShouldStart(bool forceWithPause)
-{
-	Game::Game* game = Game::Memory::GetGame();
-	if (!game) return false;
-
-	Game::GAME_STATUS expectedStatus = forceWithPause ? Game::GAME_PAUSED : Game::GAME_RUN;
-	if (game->gameStatus != expectedStatus) return false;
-
-	Game::Keyboard* keyboard = Game::Memory::GetKeyboard();
-	if (!keyboard) return false;
-
-	return keyboard->replayStatus == Game::REPLAY_STATUS_NOT_PLAYING;
-}
-
 bool ModMenuModule::MouseControlCheat::CheckShouldUseRotation()
 {
 	Game::Game* game = Game::Memory::GetGame();
@@ -320,13 +425,12 @@ bool ModMenuModule::MouseControlCheat::CheckShouldUseRotation()
 	return true;
 }
 
-Game::KEYBOARD_STATE ModMenuModule::MouseControlCheat::GetRotationInput(float deltaAngle)
+char ModMenuModule::MouseControlCheat::GetRotationDirection(float deltaAngle)
 {
-	Game::KEYBOARD_STATE direction = deltaAngle > 0 ? Game::KEYBOARD_STATE_ROTATE_LEFT : Game::KEYBOARD_STATE_ROTATE_RIGHT;
 	if (std::abs(deltaAngle) < ROTATION_INPUT_THRESHOLD) {
 		return Game::KEYBOARD_STATE(0);
 	}
-	return direction;
+	return deltaAngle > 0 ? -1 : 1;
 }
 
 std::optional<float> ModMenuModule::MouseControlCheat::GetPlayerRotation()
