@@ -4094,9 +4094,9 @@ struct Player { /* Player actually */
 };
 
 struct Game { /* S8 */
-	enum GAME_STATUS gameStatus; /* 1 - run, 2 - pause game */
-	struct Player * players[6];
-	struct Player * CurrentPlayer2;
+	enum GAME_STATUS gameStatus;
+	struct Player* players[6];
+	struct Player* currentPlayer2;
 	byte field_0x20;
 	byte field_0x21;
 	byte field_0x22;
@@ -4112,7 +4112,7 @@ struct Game { /* S8 */
 	undefined field_0x32;
 	undefined field_0x33;
 	int field_0x34;
-	struct Player * CurrentPlayer; /* Created by retype action */
+	struct Player* currentPlayer;
 	undefined field_0x3c;
 	undefined field_0x3d;
 	undefined field_0x3e;

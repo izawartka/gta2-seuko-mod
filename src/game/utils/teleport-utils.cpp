@@ -25,7 +25,7 @@ bool Game::Utils::TeleportPlayer(SCR_f x, SCR_f y, SCR_f z)
 		return false;
 	}
 
-	Player* player = game->CurrentPlayer;
+	Player* player = game->currentPlayer;
 	if (!player) {
 		spdlog::warn("Cannot teleport: Current player not found");
 		return false;

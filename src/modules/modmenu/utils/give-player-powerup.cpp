@@ -8,7 +8,7 @@ bool ModMenuModule::Utils::GivePlayerPowerup(Game::POWERUP_TYPE powerupType)
 		return false;
 	}
 
-	Game::Player* player = game->CurrentPlayer;
+	Game::Player* player = game->currentPlayer;
 	if (!player) {
 		spdlog::warn("Could not give power-up: player is null.");
 		return false;

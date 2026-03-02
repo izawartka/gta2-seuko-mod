@@ -174,7 +174,7 @@ void ModMenuModule::PlayerPosCheat::UpdateCameraSync()
 	Game::Game* game = Game::Memory::GetGame();
 	if (!game) return;
 
-	Game::Player* player = game->CurrentPlayer;
+	Game::Player* player = game->currentPlayer;
 	if (!player) return;
 
 	spdlog::debug("PlayerPosCheat: Syncing camera position to target position after teleport");

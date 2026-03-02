@@ -171,7 +171,7 @@ void ModMenuModule::CameraCheat::OnDrawTriangle(RendererDrawTriangleEvent& event
 
 void ModMenuModule::CameraCheat::OnPreDrawFrame(PreDrawFrameEvent& event)
 {
-	Game::Player* player = Core::MakeResolver(Game::Memory::GetGame, mem(&Game::Game::CurrentPlayer))();
+	Game::Player* player = Core::MakeResolver(Game::Memory::GetGame, mem(&Game::Game::currentPlayer))();
 	if (!player) return;
 
 	Game::Ped* playerPed = player->ped;

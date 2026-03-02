@@ -26,7 +26,7 @@ bool ModMenuModule::PlayerStatsMenu::Attach()
 		moneyText,
 		Core::MakeResolver(
 			Game::Memory::GetGame,
-			mem(&Game::Game::CurrentPlayer),
+			mem(&Game::Game::currentPlayer),
 			mem(&Game::Player::animatedMoney),
 			mem(&Game::SaveSlotAnimatedValue::value)
 		),
@@ -39,7 +39,7 @@ bool ModMenuModule::PlayerStatsMenu::Attach()
 		multiplierText,
 		Core::MakeResolver(
 			Game::Memory::GetGame,
-			mem(&Game::Game::CurrentPlayer),
+			mem(&Game::Game::currentPlayer),
 			mem(&Game::Player::moneyMultiplier),
 			mem(&Game::SaveSlotAnimatedValue::value)
 		),
@@ -52,7 +52,7 @@ bool ModMenuModule::PlayerStatsMenu::Attach()
 		livesText,
 		Core::MakeResolver(
 			Game::Memory::GetGame,
-			mem(&Game::Game::CurrentPlayer),
+			mem(&Game::Game::currentPlayer),
 			mem(&Game::Player::lives),
 			mem(&Game::SaveSlotAnimatedValue::value)
 		),

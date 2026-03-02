@@ -10,7 +10,7 @@ namespace Game {
 		static Ped* GetPlayerPed() {
 			Game* game = GetGame();
 			if (!game) return nullptr;
-			Player* player = game->CurrentPlayer;
+			Player* player = game->currentPlayer;
 			if (!player) return nullptr;
 			return player->ped;
 		}

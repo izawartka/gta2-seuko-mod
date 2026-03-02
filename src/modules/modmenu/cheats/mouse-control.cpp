@@ -419,7 +419,7 @@ bool ModMenuModule::MouseControlCheat::CheckShouldUseRotation()
 {
 	Game::Game* game = Game::Memory::GetGame();
 	if (!game) return false;
-	Game::Player* player = game->CurrentPlayer;
+	Game::Player* player = game->currentPlayer;
 	if (!player || !player->ped || !player->ped->gameObject) return false;
 	if (player->ped->targetCarForEnter) return false;
 	return true;
@@ -437,7 +437,7 @@ std::optional<float> ModMenuModule::MouseControlCheat::GetPlayerRotation()
 {
 	Game::Game* game = Game::Memory::GetGame();
 	if (!game) return std::nullopt;
-	Game::Player* player = game->CurrentPlayer;
+	Game::Player* player = game->currentPlayer;
 	if (!player || !player->ped || !player->ped->gameObject) return std::nullopt;
 	return Game::Utils::FromGTAAngleToRad(player->ped->gameObject->spriteRotation);
 }

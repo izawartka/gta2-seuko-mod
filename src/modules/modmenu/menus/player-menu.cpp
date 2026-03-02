@@ -86,7 +86,7 @@ bool ModMenuModule::PlayerMenu::Attach()
 		armorText,
 		Core::MakeResolver(
 			Game::Memory::GetGame,
-			mem(&Game::Game::CurrentPlayer),
+			mem(&Game::Game::currentPlayer),
 			mem(&Game::Player::armor)
 		),
 		UiModule::VarTextEditableControllerOptions{ L"Armor: #", L"#" }
