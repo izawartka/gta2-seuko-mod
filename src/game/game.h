@@ -1,6 +1,8 @@
 #pragma once
 #include "common.h"
+#include "keycode.h"
 #include "gta2_wrapper.h"
+#include "gta2_additional.h"
 #include "memory.h"
 #include "functions.h"
 #include "utils/utils.h"

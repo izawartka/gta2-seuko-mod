@@ -417,6 +417,7 @@
     <ClInclude Include="src\events\game-unpause.h" />
     <ClInclude Include="src\modules\modmenu\events\cheat-options-update.h" />
     <ClInclude Include="src\events\keyboard-get-data.h" />
+    <ClInclude Include="src\game\gta2_additional.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

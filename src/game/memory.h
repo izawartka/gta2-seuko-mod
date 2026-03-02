@@ -1,6 +1,7 @@
 #pragma once
 #include "gta2_wrapper.h"
 #include "keycode.h"
+#include "gta2_additional.h"
 
 namespace Game {
 	class Memory {
@@ -53,5 +54,6 @@ namespace Game {
 		static DWORD* GetDirectInputDeviceObjectDataCount() { return (DWORD*)0x005e8f04; }
 		static Keyboard* GetKeyboard() { return (Keyboard*)0x005ecac8; }
 		static Tick* GetTick() { return (Tick*)*(DWORD*)0x005e8108; }
+		static Controls* GetControls() { return (Controls*)0x005e8f5c; }
 	};
 }

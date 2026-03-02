@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="DebugAsi|Win32">
@@ -596,6 +596,7 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
     <ClInclude Include="src\events\scale-shadow.h" />
     <ClInclude Include="src\events\try-shoot-weapon.h" />
     <ClInclude Include="src\events\wnd-proc.h" />
+    <ClInclude Include="src\game\gta2_additional.h" />
     <ClInclude Include="src\game\utils\angle-utils.h" />
     <ClInclude Include="src\game\utils\car-roof-utils.h" />
     <ClInclude Include="src\game\utils\cop-value-utils.h" />
