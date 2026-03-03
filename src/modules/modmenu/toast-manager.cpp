@@ -33,10 +33,12 @@ void ModMenuModule::ToastManager::Attach() {
 	m_toastListContainer = uiRoot->AddComponent<UiModule::VertCont>(m_mainContainer);
 
 	AddEventListener<UiModule::PreUpdateUIEvent>(&ToastManager::OnPreUpdateUI);
+	AddEventListener<GameEndEvent>(&ToastManager::OnGameEnd);
 }
 
 void ModMenuModule::ToastManager::Detach() {
 	RemoveEventListener<UiModule::PreUpdateUIEvent>();
+	RemoveEventListener<GameEndEvent>();
 
 	m_toasts.clear();
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
@@ -47,6 +49,17 @@ void ModMenuModule::ToastManager::Detach() {
 
 void ModMenuModule::ToastManager::OnPreUpdateUI(UiModule::PreUpdateUIEvent& event) {
 	Update();
+}
+
+void ModMenuModule::ToastManager::OnGameEnd(GameEndEvent& event)
+{
+	while (!m_toasts.empty()) {
+		const ToastItem& toast = m_toasts.back();
+		if (toast.container != nullptr) {
+			UiModule::RootModule::GetInstance()->RemoveComponent(toast.container, true);
+		}
+		m_toasts.pop_back();
+	}
 }
 
 short ModMenuModule::ToastManager::GetToastTypeRemap(ToastType type)

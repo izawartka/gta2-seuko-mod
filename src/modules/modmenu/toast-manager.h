@@ -1,5 +1,7 @@
 #pragma once
 #include "common.h"
+#include "../../events/game-end.h"
+#include "../../events/game-end.h"
 
 namespace ModMenuModule {
 	enum class ToastType {
@@ -33,6 +35,7 @@ namespace ModMenuModule {
 		static ToastManager* m_instance;
 
 		void OnPreUpdateUI(UiModule::PreUpdateUIEvent& event);
+		void OnGameEnd(GameEndEvent& event);
 		static short GetToastTypeRemap(ToastType type);
 		void Update();
 
