@@ -11,6 +11,7 @@ namespace ModMenuModule::Utils::CameraEasyMode {
 	};
 
 	CameraEasyMode GetCurrentMode();
+	CameraEasyMode GetNextMode(const std::vector<CameraEasyMode>& selectableModes);
 	bool SetCurrentMode(CameraEasyMode newMode);
 	const std::vector<CameraEasyMode>& GetSelectableModes();
 }

@@ -9,5 +9,6 @@
 #include "spawn-object.h"
 #include "spawn-saved-vehicle.h"
 #include "spawn-vehicle.h"
+#include "switch-camera-mode.h"
 #include "teleport.h"
 #include "toggle-native-cheat.h"

@@ -9,4 +9,5 @@
 #include "spawn-object-segment.h"
 #include "spawn-saved-vehicle-segment.h"
 #include "spawn-vehicle-segment.h"
+#include "switch-camera-mode-segment.h"
 #include "toggle-native-cheat-segment.h"

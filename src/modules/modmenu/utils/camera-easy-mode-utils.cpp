@@ -133,6 +133,26 @@ ModMenuModule::Utils::CameraEasyMode::CameraEasyMode ModMenuModule::Utils::Camer
 	return CameraEasyMode::Custom;
 }
 
+ModMenuModule::Utils::CameraEasyMode::CameraEasyMode ModMenuModule::Utils::CameraEasyMode::GetNextMode(const std::vector<CameraEasyMode>& selectableModes)
+{
+	if (selectableModes.empty()) {
+		spdlog::warn("CameraEasyMode::GetNextMode: selectableModes is empty, returning Unmodified");
+		return CameraEasyMode::Unmodified;
+	}
+
+	CameraEasyMode currentMode = GetCurrentMode();
+
+	for (size_t i = 0; i < selectableModes.size(); ++i) {
+		if (selectableModes[i] != currentMode) continue;
+
+		size_t nextIndex = (i + 1) % selectableModes.size();
+		CameraEasyMode nextMode = selectableModes[nextIndex];
+		return nextMode;
+	}
+
+	return selectableModes[0];
+}
+
 bool ModMenuModule::Utils::CameraEasyMode::SetCurrentMode(CameraEasyMode newMode)
 {
 	CameraCheat* cameraCheat = CameraCheat::GetInstance();

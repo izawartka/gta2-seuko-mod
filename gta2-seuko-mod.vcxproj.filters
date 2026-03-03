@@ -157,6 +157,9 @@
     <ClCompile Include="src\events\game-unpause.cpp" />
     <ClCompile Include="src\events\keyboard-get-data.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\force-controls.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-actions\switch-camera-mode.cpp" />
+    <ClCompile Include="src\modules\modmenu\segments\switch-camera-mode-segment.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\select-camera-modes-menu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -420,7 +423,11 @@
     <ClInclude Include="src\events\keyboard-get-data.h" />
     <ClInclude Include="src\game\gta2_additional.h" />
     <ClInclude Include="src\modules\modmenu\cheats\force-controls.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\switch-camera-mode.h" />
     <ClInclude Include="src\converters\all-specified.h" />
+    <ClInclude Include="src\modules\modmenu\segments\switch-camera-mode-segment.h" />
+    <ClInclude Include="src\converters\camera-easy-modes-list.h" />
+    <ClInclude Include="src\modules\modmenu\menus\select-camera-modes-menu.h" />
     <ClInclude Include="src\converters\elipsis.h" />
   </ItemGroup>
   <ItemGroup>
