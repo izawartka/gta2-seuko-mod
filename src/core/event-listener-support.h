@@ -19,15 +19,87 @@ namespace Core {
 			static_assert(std::is_base_of<EventBase, EventT>::value, "EventT must derive from Core::EventBase");
 			const std::type_index eventTypeIdx = typeid(EventT);
 
-			if (m_eventListenerIds.find(eventTypeIdx) != m_eventListenerIds.end()) {
+			if (HasEventListener<EventT>()) {
 				spdlog::error("Event listener for event type {} already added", eventTypeIdx.name());
 				return false;
 			}
 
+			return InternalAddEventListener<EventT, U>(method, oneTime);
+		}
+
+		template<typename EventT, typename U>
+		void SetEventListener(EventMethodListener<EventT, U> method, bool enabled) {
+			static_assert(std::is_base_of<EventBase, EventT>::value, "EventT must derive from Core::EventBase");
+
+			if (enabled) {
+				if (!HasEventListener<EventT>()) {
+					InternalAddEventListener<EventT, U>(method);
+				}
+			}
+			else {
+				auto it = FindEventListener<EventT>();
+				if (it != m_eventListenerIds.end()) {
+					InternalRemoveEventListener<EventT>(it);
+				}
+			}
+		}
+
+		template<typename EventT>
+		void RemoveEventListener(bool failSilently = false) {
+			static_assert(std::is_base_of<EventBase, EventT>::value, "EventT must derive from Core::EventBase");
+			const std::type_index eventTypeIdx = typeid(EventT);
+
+			auto it = FindEventListener<EventT>();
+			if (it == m_eventListenerIds.end()) {
+				if (!failSilently) spdlog::warn("No event listener found for event type {}", eventTypeIdx.name());
+				return;
+			}
+
+			InternalRemoveEventListener<EventT>(it);
+		}
+
+		template<typename EventT>
+		bool HasEventListener() const {
+			static_assert(std::is_base_of<EventBase, EventT>::value, "EventT must derive from Core::EventBase");
+			const std::type_index eventTypeIdx = typeid(EventT);
+
+			return FindEventListener<EventT>() != m_eventListenerIds.end();
+		}
+
+		void RemoveAllEventListeners() {
+			auto* eventManager = EventManager::GetInstance();
+			for (const auto& pair : m_eventListenerIds) {
+				eventManager->RemoveListener(pair.first, pair.second);
+			}
+			m_eventListenerIds.clear();
+		}
+
+		EventListenerSupport(const EventListenerSupport&) = delete;
+		EventListenerSupport& operator=(const EventListenerSupport&) = delete;
+		EventListenerSupport(EventListenerSupport&&) = delete;
+		EventListenerSupport& operator=(EventListenerSupport&&) = delete;
+
+	private:
+		template<typename EventT>
+		std::unordered_map<std::type_index, EventListenerId>::iterator FindEventListener() {
+			const std::type_index eventTypeIdx = typeid(EventT);
+			return m_eventListenerIds.find(eventTypeIdx);
+		}
+
+		template<typename EventT>
+		std::unordered_map<std::type_index, EventListenerId>::const_iterator FindEventListener() const {
+			const std::type_index eventTypeIdx = typeid(EventT);
+			return m_eventListenerIds.find(eventTypeIdx);
+		}
+
+		template<typename EventT, typename U>
+		bool InternalAddEventListener(EventMethodListener<EventT, U> method, bool oneTime = false) {
+			const std::type_index eventTypeIdx = typeid(EventT);
 			EventListenerId listenerId = 0;
 			auto* eventManager = EventManager::GetInstance();
+
 			if (oneTime) {
-				// create lambda that removes the listener from m_eventListenerIds after first call
+				// create a lambda that removes the listener from m_eventListenerIds after first call
 				listenerId = eventManager->AddListener<EventT>([this, method, eventTypeIdx](EventT& event) {
 					auto it = m_eventListenerIds.find(eventTypeIdx);
 					if (it != m_eventListenerIds.end()) {
@@ -46,59 +118,13 @@ namespace Core {
 			return true;
 		}
 
-		template<typename EventT, typename U>
-		void SetEventListener(EventMethodListener<EventT, U> method, bool enabled) {
-			static_assert(std::is_base_of<EventBase, EventT>::value, "EventT must derive from Core::EventBase");
-			if (enabled) {
-				if (!HasEventListener<EventT>()) {
-					AddEventListener<EventT, U>(method);
-				}
-			}
-			else {
-				if (HasEventListener<EventT>()) {
-					RemoveEventListener<EventT>();
-				}
-			}
-		}
-
 		template<typename EventT>
-		void RemoveEventListener() {
-			static_assert(std::is_base_of<EventBase, EventT>::value, "EventT must derive from Core::EventBase");
-			const std::type_index eventTypeIdx = typeid(EventT);
-
-			auto it = m_eventListenerIds.find(eventTypeIdx);
-			if (it == m_eventListenerIds.end()) {
-				spdlog::warn("No event listener found for event type {}", eventTypeIdx.name());
-				return;
-			}
+		void InternalRemoveEventListener(std::unordered_map<std::type_index, EventListenerId>::iterator it) {
 			auto* eventManager = EventManager::GetInstance();
 			eventManager->RemoveListener<EventT>(it->second);
 			m_eventListenerIds.erase(it);
 		}
 
-		template<typename EventT>
-		bool HasEventListener() {
-			static_assert(std::is_base_of<EventBase, EventT>::value, "EventT must derive from Core::EventBase");
-			const std::type_index eventTypeIdx = typeid(EventT);
-
-			auto it = m_eventListenerIds.find(eventTypeIdx);
-			return (it != m_eventListenerIds.end());
-		}
-
-		void RemoveAllEventListeners() {
-			auto* eventManager = EventManager::GetInstance();
-			for (const auto& pair : m_eventListenerIds) {
-				eventManager->RemoveListener(pair.first, pair.second);
-			}
-			m_eventListenerIds.clear();
-		}
-
-		EventListenerSupport(const EventListenerSupport&) = delete;
-		EventListenerSupport& operator=(const EventListenerSupport&) = delete;
-		EventListenerSupport(EventListenerSupport&&) = delete;
-		EventListenerSupport& operator=(EventListenerSupport&&) = delete;
-
-	private:
 		std::unordered_map<std::type_index, EventListenerId> m_eventListenerIds;
 	};
 }
