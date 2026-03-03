@@ -20,6 +20,7 @@ namespace ModMenuModule {
 
 		virtual void CreateMenu(std::wstring title, UiModule::Component*& vertCont) final;
 		virtual void SetPreviousSelectedIndex() final;
+		virtual void SaveCurrentSelectedIndex() final;
 		virtual void DestroyMenu() final;
 		void SetTitle(std::wstring title);
 

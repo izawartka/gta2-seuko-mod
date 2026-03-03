@@ -60,6 +60,14 @@ void ModMenuModule::MenuBase::SetPreviousSelectedIndex()
 {
 	if (m_menuController && m_selectedIndex != -1) {
 		m_menuController->SetIndex(m_selectedIndex);
+		m_selectedIndex = -1;
+	}
+}
+
+void ModMenuModule::MenuBase::SaveCurrentSelectedIndex()
+{
+	if (m_menuController) {
+		m_selectedIndex = m_menuController->GetIndex();
 	}
 }
 
@@ -67,7 +75,7 @@ void ModMenuModule::MenuBase::DestroyMenu()
 {
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	if (m_menuController) {
-		m_selectedIndex = m_menuController->GetIndex();
+		if(m_selectedIndex == -1) m_selectedIndex = m_menuController->GetIndex();
 		uiRoot->RemoveController(m_menuController);
 		m_menuController = nullptr;
 	}
