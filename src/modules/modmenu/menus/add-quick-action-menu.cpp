@@ -9,7 +9,7 @@ ModMenuModule::AddQuickActionMenu::AddQuickActionMenu()
 
 ModMenuModule::AddQuickActionMenu::~AddQuickActionMenu()
 {
-
+	DestroySegment();
 }
 
 bool ModMenuModule::AddQuickActionMenu::Attach()
@@ -19,6 +19,7 @@ bool ModMenuModule::AddQuickActionMenu::Attach()
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	QuickActionManager* quickActionManager = QuickActionManager::GetInstance();
+	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 	
@@ -26,7 +27,7 @@ bool ModMenuModule::AddQuickActionMenu::Attach()
 	auto keyText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	m_keyController = m_menuController->CreateLatestItemController<UiModule::KeyChangeController>(
 		keyText,
-		std::nullopt,
+		m_lastSelectedKey,
 		UiModule::KeyChangeControllerOptions{ L"Key: #", L"#" }
 	);
 
@@ -37,10 +38,16 @@ bool ModMenuModule::AddQuickActionMenu::Attach()
 		spdlog::error("No quick action types registered!");
 		return false;
 	}
+
+	auto selectedType = typesList[0];
+	if (m_lastSelectedActionType.has_value() && std::find(typesList.begin(), typesList.end(), m_lastSelectedActionType.value()) != typesList.end()) {
+		selectedType = m_lastSelectedActionType.value();
+	}
+
 	m_actionTypeController = m_menuController->CreateLatestItemController<UiModule::SelectController<QuickActionTypeIndex>>(
 		typeText,
 		typesList,
-		typesList[0],
+		selectedType,
 		UiModule::SelectControllerOptions{ L"Action: #", L"#" }
 	);
 	m_actionTypeController->SetConverter<QuickActionTypeConverter>();
@@ -54,7 +61,9 @@ bool ModMenuModule::AddQuickActionMenu::Attach()
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Save", options.textSize);
 	m_saveBtnMenuId = m_menuController->GetLatestMenuItemId();
 
-	CreateSegment(typesList[0]);
+	CreateSegment(selectedType);
+	AttachSegment();
+
 	SetPreviousSelectedIndex();
 
 	return true;
@@ -62,6 +71,14 @@ bool ModMenuModule::AddQuickActionMenu::Attach()
 
 void ModMenuModule::AddQuickActionMenu::Detach()
 {
+	if (m_keyController) {
+		m_lastSelectedKey = m_keyController->GetValue();
+	}
+	if (m_actionTypeController) {
+		m_lastSelectedActionType = m_actionTypeController->GetValue();
+	}
+
+	SaveCurrentSelectedIndex();
 	DetachAllSegments();
 	DestroyMenu();
 }
@@ -86,12 +103,16 @@ void ModMenuModule::AddQuickActionMenu::OnMenuAction(UiModule::Selectable* item,
 		OnSave();
 		return;
 	}
+	else if (m_segmentInstance) {
+		m_segmentInstance->OnPassedMenuAction(item, id);
+	}
 }
 
 void ModMenuModule::AddQuickActionMenu::OnActionTypeChange(QuickActionTypeIndex actionType)
 {
 	DestroySegment();
 	CreateSegment(actionType);
+	AttachSegment();
 }
 
 void ModMenuModule::AddQuickActionMenu::CreateSegment(QuickActionTypeIndex actionType)
@@ -102,21 +123,34 @@ void ModMenuModule::AddQuickActionMenu::CreateSegment(QuickActionTypeIndex actio
 		return;
 	}
 
-	m_menuController->SetNextAddedItemIndex(m_segmentBaseIndex);
 	m_segmentInstance = ModMenuModule::QuickActionManager::CreateSegment(actionType);
+	SegmentSupport::AddSegment(m_segmentInstance);
+}
 
-	AddAttachSetVisibleSegment(
+void ModMenuModule::AddQuickActionMenu::AttachSegment()
+{
+	if (m_segmentInstance == nullptr) return;
+
+	m_menuController->SetNextAddedItemIndex(m_segmentBaseIndex);
+	SegmentSupport::AttachSegment(
 		m_segmentInstance,
 		this,
 		m_segmentContainer
 	);
 }
 
+void ModMenuModule::AddQuickActionMenu::DetachSegment()
+{
+	if (m_segmentInstance == nullptr) return;
+
+	SegmentSupport::DetachSegment(m_segmentInstance);
+}
+
 void ModMenuModule::AddQuickActionMenu::DestroySegment()
 {
 	if (m_segmentInstance == nullptr) return;
 
-	DeleteSegment(m_segmentInstance);
+	SegmentSupport::DeleteSegment(m_segmentInstance);
 }
 
 void ModMenuModule::AddQuickActionMenu::OnSave()

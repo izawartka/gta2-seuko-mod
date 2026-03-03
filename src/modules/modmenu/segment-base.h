@@ -13,6 +13,8 @@ namespace ModMenuModule {
 		virtual bool IsVisible() const final { return m_visible; }
 		virtual bool ValidateSegment() const { return true; }
 
+		virtual bool OnPassedMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) { return false; }
+
 	protected:
 		friend class SegmentSupport;
 		virtual void SetAttached(bool attached, ModMenuModule::MenuBase* menu = nullptr, UiModule::Component* parent = nullptr) final;

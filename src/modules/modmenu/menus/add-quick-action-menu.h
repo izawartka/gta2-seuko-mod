@@ -22,6 +22,8 @@ namespace ModMenuModule {
 
 		void OnActionTypeChange(QuickActionTypeIndex actionType);
 		void CreateSegment(QuickActionTypeIndex actionType);
+		void AttachSegment();
+		void DetachSegment();
 		void DestroySegment();
 
 		UiModule::KeyChangeController* m_keyController = nullptr;
@@ -30,5 +32,9 @@ namespace ModMenuModule {
 		size_t m_segmentBaseIndex = -1;
 		UiModule::VertCont* m_segmentContainer = nullptr;
 		SegmentBase* m_segmentInstance = nullptr;
+
+		// semi-persistence for segments that use submenus
+		std::optional<KeyBindingModule::Key> m_lastSelectedKey = std::nullopt;
+		std::optional<QuickActionTypeIndex> m_lastSelectedActionType = std::nullopt;
 	};
 }
