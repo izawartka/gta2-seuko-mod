@@ -21,15 +21,15 @@ namespace ModMenuModule {
 		}
 
 		template<typename SegmentT, typename... Args>
-		SegmentT* CreateAttachSetVisibleSegment(ModMenuModule::MenuBase* menu, UiModule::Component* parent, Args&&... args) {
+		SegmentT* CreateAttachSegment(ModMenuModule::MenuBase* menu, UiModule::Component* parent, Args&&... args) {
 			static_assert(std::is_base_of_v<SegmentBase, SegmentT>, "SegmentT must be derived from SegmentBase");
 			SegmentT* segment = new SegmentT(std::forward<Args>(args)...);
-			AddAttachSetVisibleSegment(segment, menu, parent);
+			AddAttachSegment(segment, menu, parent);
 			return segment;
 		}
 
 		void AddSegment(SegmentBase* segment);
-		void AddAttachSetVisibleSegment(SegmentBase* segment, ModMenuModule::MenuBase* menu, UiModule::Component* parent);
+		bool AddAttachSegment(SegmentBase* segment, ModMenuModule::MenuBase* menu, UiModule::Component* parent);
 		bool RemoveSegment(SegmentBase* segment);
 		bool DeleteSegment(SegmentBase*& segment);
 		void ClearSegments();

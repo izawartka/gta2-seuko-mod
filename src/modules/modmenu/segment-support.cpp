@@ -17,13 +17,22 @@ void ModMenuModule::SegmentSupport::AddSegment(SegmentBase* segment)
 	m_segments.push_back({ segment });
 }
 
-void ModMenuModule::SegmentSupport::AddAttachSetVisibleSegment(SegmentBase* segment, ModMenuModule::MenuBase* menu, UiModule::Component* parent)
+bool ModMenuModule::SegmentSupport::AddAttachSegment(SegmentBase* segment, ModMenuModule::MenuBase* menu, UiModule::Component* parent)
 {
 	AddSegment(segment);
+	
 	segment->SetAttached(true, menu, parent);
-	if(segment->IsAttached() && m_visible) {
+
+	if (!segment->IsAttached()) {
+		spdlog::error("SegmentSupport::AttachSegment: Segment failed to attach");
+		return false;
+	}
+
+	if (m_visible) {
 		segment->SetVisible(true);
 	}
+
+	return true;
 }
 
 bool ModMenuModule::SegmentSupport::RemoveSegment(SegmentBase* segment)
