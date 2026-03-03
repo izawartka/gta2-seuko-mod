@@ -420,6 +420,8 @@
     <ClInclude Include="src\events\keyboard-get-data.h" />
     <ClInclude Include="src\game\gta2_additional.h" />
     <ClInclude Include="src\modules\modmenu\cheats\force-controls.h" />
+    <ClInclude Include="src\converters\all-specified.h" />
+    <ClInclude Include="src\converters\elipsis.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
