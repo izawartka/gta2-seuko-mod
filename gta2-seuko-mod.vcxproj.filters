@@ -429,6 +429,8 @@
     <ClInclude Include="src\converters\camera-easy-modes-list.h" />
     <ClInclude Include="src\modules\modmenu\menus\select-camera-modes-menu.h" />
     <ClInclude Include="src\converters\elipsis.h" />
+    <ClInclude Include="src\modules\keybinding\events\events.h" />
+    <ClInclude Include="src\modules\keybinding\events\key-bind-update.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

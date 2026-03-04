@@ -22,6 +22,7 @@ namespace KeyBindingModule {
 		BindManager& operator=(const BindManager&) = delete;
 
 		KeyPtr SetBindNoLookup(const std::string& name, const Key& newKey);
+		void DispatchKeyBindUpdateEvent(const std::string& name);
 		void SaveToPersistence() const;
 		void LoadFromPersistence();
 

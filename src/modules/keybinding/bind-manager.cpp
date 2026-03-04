@@ -1,4 +1,5 @@
 #include "bind-manager.h"
+#include "events/key-bind-update.h"
 
 KeyBindingModule::BindManager* KeyBindingModule::BindManager::m_instance = nullptr;
 
@@ -41,6 +42,7 @@ KeyBindingModule::KeyPtr KeyBindingModule::BindManager::SetBind(const std::strin
 	auto it = m_keyBinds.find(name);
 	if (it != m_keyBinds.end()) {
 		*(it->second) = newKey;
+		DispatchKeyBindUpdateEvent(name);
 		return it->second;
 	}
 	return SetBindNoLookup(name, newKey);
@@ -55,6 +57,7 @@ bool KeyBindingModule::BindManager::RemoveBind(const std::string& name)
 		return false;
 	}
 	m_keyBinds.erase(it);
+	DispatchKeyBindUpdateEvent(name);
 	return true;
 }
 
@@ -62,7 +65,15 @@ KeyBindingModule::KeyPtr KeyBindingModule::BindManager::SetBindNoLookup(const st
 {
 	std::shared_ptr<Key> keyPtr = std::make_shared<Key>(newKey);
 	m_keyBinds[name] = keyPtr;
+	DispatchKeyBindUpdateEvent(name);
 	return keyPtr;
+}
+
+void KeyBindingModule::BindManager::DispatchKeyBindUpdateEvent(const std::string& name)
+{
+	Core::EventManager* eventManager = Core::EventManager::GetInstance();
+	KeyBindUpdateEvent event(name);
+	eventManager->Dispatch(event);
 }
 
 void KeyBindingModule::BindManager::SaveToPersistence() const
