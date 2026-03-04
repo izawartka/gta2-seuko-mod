@@ -3,13 +3,15 @@
 #include "key.h"
 
 namespace KeyBindingModule {
+	using KeyPtr = std::weak_ptr<const Key>;
+
 	class BindManager {
 	public:
 		static BindManager* GetInstance();
 
-		const Key* GetBind(const std::string& name) const;
-		const Key* GetOrCreateBind(const std::string& name, const Key& defaultKey);
-		const Key* SetBind(const std::string& name, const Key& newKey);
+		KeyPtr GetBind(const std::string& name) const;
+		KeyPtr GetOrCreateBind(const std::string& name, const Key& defaultKey);
+		KeyPtr SetBind(const std::string& name, const Key& newKey);
 		bool RemoveBind(const std::string& name);
 
 	private:
@@ -19,12 +21,12 @@ namespace KeyBindingModule {
 		BindManager(const BindManager&) = delete;
 		BindManager& operator=(const BindManager&) = delete;
 
-		Key* SetBindNoLookup(const std::string& name, const Key& newKey);
+		KeyPtr SetBindNoLookup(const std::string& name, const Key& newKey);
 		void SaveToPersistence() const;
 		void LoadFromPersistence();
 
 		static BindManager* m_instance;
 
-		std::unordered_map<std::string, std::unique_ptr<Key>> m_keyBinds;
+		std::unordered_map<std::string, std::shared_ptr<Key>> m_keyBinds;
 	};
 }

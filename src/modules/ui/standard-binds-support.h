@@ -13,20 +13,20 @@ namespace UiModule {
 
 	class StandardBindsSupport {
 	public:
-		const KeyBindingModule::Key* GetBindNextKey() const { return m_keyBindNext; }
-		const KeyBindingModule::Key* GetBindPrevKey() const { return m_keyBindPrev; }
-		const KeyBindingModule::Key* GetBindActionKey() const { return m_keyBindAction; }
+		KeyBindingModule::KeyPtr GetBindNextKey() const { return m_keyBindNext; }
+		KeyBindingModule::KeyPtr GetBindPrevKey() const { return m_keyBindPrev; }
+		KeyBindingModule::KeyPtr GetBindActionKey() const { return m_keyBindAction; }
 
 		const bool IsNextKey(const KeyBindingModule::Key& key) const {
-			return m_keyBindNext && KeyBindingModule::Key::ToNoShift(key) == *m_keyBindNext;
+			return !m_keyBindNext.expired() && KeyBindingModule::Key::ToNoShift(key) == *m_keyBindNext.lock();
 		}
 
 		const bool IsPrevKey(const KeyBindingModule::Key& key) const {
-			return m_keyBindPrev && KeyBindingModule::Key::ToNoShift(key) == *m_keyBindPrev;
+			return !m_keyBindPrev.expired() && KeyBindingModule::Key::ToNoShift(key) == *m_keyBindPrev.lock();
 		}
 
 		const bool IsActionKey(const KeyBindingModule::Key& key) const {
-			return m_keyBindAction && KeyBindingModule::Key::ToNoShift(key) == *m_keyBindAction;
+			return !m_keyBindAction.expired() && KeyBindingModule::Key::ToNoShift(key) == *m_keyBindAction.lock();
 		}
 
 	protected:
@@ -39,8 +39,8 @@ namespace UiModule {
 		virtual ~StandardBindsSupport() = default;
 
 	private:
-		const KeyBindingModule::Key* m_keyBindNext = nullptr;
-		const KeyBindingModule::Key* m_keyBindPrev = nullptr;
-		const KeyBindingModule::Key* m_keyBindAction = nullptr;
+		KeyBindingModule::KeyPtr m_keyBindNext = {};
+		KeyBindingModule::KeyPtr m_keyBindPrev = {};
+		KeyBindingModule::KeyPtr m_keyBindAction = {};
 	};
 }

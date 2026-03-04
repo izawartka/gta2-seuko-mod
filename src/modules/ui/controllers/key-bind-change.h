@@ -29,10 +29,17 @@ namespace UiModule {
 			m_value = keyBindDefault;
 			m_options = options;
 
-			m_resolver = [this]() -> const KeyBindingModule::Key* {
-				if (!m_value.has_value()) return nullptr;
+			if (m_value.has_value()) {
 				KeyBindingModule::BindManager* bindManager = KeyBindingModule::BindManager::GetInstance();
-				return bindManager->GetOrCreateBind(m_keyBindName, m_value.value());
+				m_keyBind = bindManager->GetOrCreateBind(m_keyBindName, m_value.value());
+			}
+
+			m_resolver = [this]() -> std::optional<KeyBindingModule::Key> {
+				if (m_keyBind.expired()) {
+					return std::nullopt;
+				}
+
+				return std::make_optional(*m_keyBind.lock());
 			};
 
 			UpdateTextBuffer();
@@ -198,8 +205,9 @@ namespace UiModule {
 		KeyBindChangeControllerOptions m_options;
 		std::string m_keyBindName;
 		Text* m_textComponent = nullptr;
-		Core::Resolver<const KeyBindingModule::Key*> m_resolver = nullptr;
-		Core::Watched<KeyBindingModule::Key, const KeyBindingModule::Key*>* m_watched = nullptr;
+		KeyBindingModule::KeyPtr m_keyBind;
+		Core::Resolver<std::optional<KeyBindingModule::Key>> m_resolver = nullptr;
+		Core::Watched<KeyBindingModule::Key, std::optional<KeyBindingModule::Key>>* m_watched = nullptr;
 		std::optional<KeyBindingModule::Key> m_value = std::nullopt;
 		bool m_activeBeforeEdit = false;
 		bool m_watchingBeforeEdit = false;

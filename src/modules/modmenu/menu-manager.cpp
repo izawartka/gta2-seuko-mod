@@ -77,7 +77,14 @@ void ModMenuModule::MenuManager::SetVisible(bool visible)
 
 void ModMenuModule::MenuManager::OnKeyDown(KeyDownEvent& event)
 {
-	if (!m_keyBindToggle || *m_keyBindToggle != KeyBindingModule::Key::FromKeyboardEvent(event)) {
+	if (m_keyBindToggle.expired()) {
+		spdlog::error("Menu toggle key bind expired");
+		return;
+	}
+
+	KeyBindingModule::Key toggleKey = *(m_keyBindToggle.lock());
+
+	if (toggleKey != KeyBindingModule::Key::FromKeyboardEvent(event)) {
 		return;
 	}
 
@@ -126,7 +133,7 @@ void ModMenuModule::MenuManager::Detach() {
 	SetVisible(false);
 	ClearMenus();
 
-	m_keyBindToggle = nullptr;
+	m_keyBindToggle.reset();
 }
 
 void ModMenuModule::MenuManager::ApplyMenuAdd(PendingChange& change)

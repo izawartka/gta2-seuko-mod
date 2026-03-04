@@ -53,13 +53,23 @@ ModMenuModule::SegmentBase* ModMenuModule::QuickActionManager::CreateSegment(Qui
 std::optional<ModMenuModule::QuickActionInfo> ModMenuModule::QuickActionManager::GetInfo(QuickActionId actionId) const
 {
 	QuickActionEntry* entry = const_cast<QuickActionManager*>(this)->GetQuickActionEntry(actionId);
-	if (!entry || !entry->keyBind || !entry->action) {
+	if (!entry) {
 		spdlog::error("GetInfo: No quick action found for ID {}", actionId);
 		return std::nullopt;
 	}
 
+	if (entry->keyBind.expired()) {
+		spdlog::error("GetInfo: Key bind for quick action ID {} has expired", actionId);
+		return std::nullopt;
+	}
+
+	if (!entry->action) {
+		spdlog::error("GetInfo: No action instance found for quick action ID {}", actionId);
+		return std::nullopt;
+	}
+
 	ModMenuModule::QuickActionInfo info(
-		*(entry->keyBind),
+		*(entry->keyBind.lock()),
 		entry->action->GetLabel(),
 		entry->customLabel,
 		entry->typeIndex
@@ -205,8 +215,10 @@ void ModMenuModule::QuickActionManager::OnKeyDown(KeyDownEvent& event)
 	KeyBindingModule::Key pressedKey = KeyBindingModule::Key::FromKeyboardEvent(event);
 	for (auto& pair : m_quickActions) {
 		QuickActionEntry& entry = pair.second;
-		if (!entry.keyBind || *entry.keyBind != pressedKey) continue;
 		if (!entry.action) continue;
+		if (entry.keyBind.expired()) continue;
+		KeyBindingModule::Key actionKey = *(entry.keyBind.lock());
+		if (actionKey != pressedKey) continue;
 
 		spdlog::debug("Executing quick action ID {}", pair.first);
 		entry.action->Execute();

@@ -108,7 +108,7 @@ namespace ModMenuModule {
 		void Detach();
 
 		struct QuickActionEntry {
-			const KeyBindingModule::Key* keyBind = nullptr;
+			KeyBindingModule::KeyPtr keyBind = {};
 			std::wstring customLabel = L"";
 			std::type_index typeIndex = typeid(void);
 			std::unique_ptr<QuickActionBase> action = nullptr;

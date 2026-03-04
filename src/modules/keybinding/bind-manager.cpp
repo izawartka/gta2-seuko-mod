@@ -16,32 +16,32 @@ KeyBindingModule::BindManager* KeyBindingModule::BindManager::GetInstance() {
 	return m_instance;
 }
 
-const KeyBindingModule::Key* KeyBindingModule::BindManager::GetBind(const std::string& name) const
+KeyBindingModule::KeyPtr KeyBindingModule::BindManager::GetBind(const std::string& name) const
 {
 	auto it = m_keyBinds.find(name);
 	if (it != m_keyBinds.end()) {
-		return it->second.get();
+		return it->second;
 	}
-	return nullptr;
+	return KeyPtr();
 }
 
-const KeyBindingModule::Key* KeyBindingModule::BindManager::GetOrCreateBind(const std::string& name, const KeyBindingModule::Key& defaultKey)
+KeyBindingModule::KeyPtr KeyBindingModule::BindManager::GetOrCreateBind(const std::string& name, const KeyBindingModule::Key& defaultKey)
 {
 	auto it = m_keyBinds.find(name);
 	if (it != m_keyBinds.end()) {
-		return it->second.get();
+		return it->second;
 	}
 	spdlog::debug("Creating default key bind: {}", name);
 	return SetBindNoLookup(name, defaultKey);
 }
 
-const KeyBindingModule::Key* KeyBindingModule::BindManager::SetBind(const std::string& name, const KeyBindingModule::Key& newKey)
+KeyBindingModule::KeyPtr KeyBindingModule::BindManager::SetBind(const std::string& name, const KeyBindingModule::Key& newKey)
 {
 	spdlog::debug("Setting key bind: {}", name);
 	auto it = m_keyBinds.find(name);
 	if (it != m_keyBinds.end()) {
 		*(it->second) = newKey;
-		return it->second.get();
+		return it->second;
 	}
 	return SetBindNoLookup(name, newKey);
 }
@@ -58,12 +58,11 @@ bool KeyBindingModule::BindManager::RemoveBind(const std::string& name)
 	return true;
 }
 
-KeyBindingModule::Key* KeyBindingModule::BindManager::SetBindNoLookup(const std::string& name, const Key& newKey)
+KeyBindingModule::KeyPtr KeyBindingModule::BindManager::SetBindNoLookup(const std::string& name, const Key& newKey)
 {
-	auto keyPtr = std::make_unique<KeyBindingModule::Key>(newKey);
-	KeyBindingModule::Key* retPtr = keyPtr.get();
-	m_keyBinds[name] = std::move(keyPtr);
-	return retPtr;
+	std::shared_ptr<Key> keyPtr = std::make_shared<Key>(newKey);
+	m_keyBinds[name] = keyPtr;
+	return keyPtr;
 }
 
 void KeyBindingModule::BindManager::SaveToPersistence() const
@@ -148,7 +147,7 @@ void KeyBindingModule::BindManager::LoadFromPersistence()
 		return;
 	}
 
-	std::unordered_map<std::string, std::unique_ptr<KeyBindingModule::Key>> loadedBinds;
+	std::unordered_map<std::string, std::shared_ptr<KeyBindingModule::Key>> loadedBinds;
 	bool readError = false;
 
 	size_t bindCount = *bindCountOpt;
@@ -171,7 +170,7 @@ void KeyBindingModule::BindManager::LoadFromPersistence()
 			break;
 		}
 		KeyBindingModule::Key key = *keyOpt;
-		loadedBinds[name] = std::make_unique<KeyBindingModule::Key>(key);
+		loadedBinds[name] = std::make_shared<KeyBindingModule::Key>(key);
 	}
 
 	if (offset != size) {
