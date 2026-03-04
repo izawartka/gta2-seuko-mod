@@ -68,12 +68,17 @@ std::optional<ModMenuModule::QuickActionInfo> ModMenuModule::QuickActionManager:
 	return info;
 }
 
-std::vector<ModMenuModule::QuickActionId> ModMenuModule::QuickActionManager::GetAll() const
+std::vector<ModMenuModule::QuickActionId> ModMenuModule::QuickActionManager::GetAll()
 {
 	std::vector<QuickActionId> ids;
 	for (const auto& pair : m_quickActions) {
 		ids.push_back(pair.first);
 	}
+
+	std::sort(ids.begin(), ids.end());
+	m_sortedQuickActionIdsCache = ids;
+	m_sortedQuickActionsCacheDirty = false;
+
 	return ids;
 }
 
@@ -234,6 +239,7 @@ void ModMenuModule::QuickActionManager::AddQuickActionInternal(const AddQuickAct
 	}
 
 	m_quickActions[data.actionId] = std::move(newEntry);
+	m_sortedQuickActionsCacheDirty = true;
 }
 
 void ModMenuModule::QuickActionManager::SaveToPersistence() const
