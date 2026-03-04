@@ -337,4 +337,44 @@ namespace Core
 	struct WatchedCapabilities<Watched<std::tuple<Values...>, std::tuple<Values*...>>> {
 		static constexpr bool has_set_value = true;
 	};
+
+	// specialization for resolvers that return std::optional
+	template<typename T>
+	class Watched<T, std::optional<T>> : public WatchedBase {
+	public:
+		Resolver<std::optional<T>> GetResolver() {
+			return m_resolver;
+		}
+
+		const std::optional<T>& GetSavedValue() const {
+			return m_savedValue;
+		}
+
+		void Update() override {
+			std::optional<T> value = m_resolver();
+			bool changed = value != m_savedValue;
+			if (m_needsUpdate || changed) {
+				std::optional<T> lastValue = m_savedValue;
+				m_needsUpdate = false;
+				m_savedValue = value;
+				m_listener(lastValue, m_savedValue);
+			}
+		}
+
+	private:
+		friend class WatchManager;
+		Watched(WatchedId id, Resolver<std::optional<T>> resolver, WatchedListener<T> listener)
+			: m_resolver(std::move(resolver)), m_listener(std::move(listener)) {
+			m_id = id;
+		}
+
+		Resolver<std::optional<T>> m_resolver;
+		WatchedListener<T> m_listener;
+		std::optional<T> m_savedValue = std::nullopt;
+	};
+
+	template<typename T>
+	struct WatchedCapabilities<Watched<T, std::optional<T>>> {
+		static constexpr bool has_set_value = false;
+	};
 }
