@@ -108,6 +108,8 @@ namespace UiModule {
 				UpdateText();
 				if (m_onEditStop) m_onEditStop();
 			}
+
+			if (m_onEditStateChange) m_onEditStateChange(editing);
 		}
 
 	protected:
