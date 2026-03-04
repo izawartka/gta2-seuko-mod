@@ -151,9 +151,20 @@ void ModMenuModule::QuickActionManager::Remove(QuickActionId actionId)
 	std::string keyBindName = GetKeyBindName(actionId);
 	bindManager->RemoveBind(keyBindName);
 	m_quickActions.erase(actionId);
+	m_sortedQuickActionsCacheDirty = true;
 }
 
-ModMenuModule::QuickActionManager::QuickActionManager() 
+void ModMenuModule::QuickActionManager::SetListen(bool doListen)
+{
+	SetEventListener<KeyDownEvent>(&QuickActionManager::OnKeyDown, doListen);
+}
+
+bool ModMenuModule::QuickActionManager::IsListening() const
+{
+	return HasEventListener<KeyDownEvent>();
+}
+
+ModMenuModule::QuickActionManager::QuickActionManager()
 {
 	assert(!m_instance && "QuickActionManager instance already exists");
 	m_instance = this;
@@ -175,12 +186,12 @@ void ModMenuModule::QuickActionManager::Attach()
 	Utils::AddDefaultActions(m_loadedDefaultsVersion);
 	m_loadedDefaultsVersion = CURRENT_QUICK_ACTION_DEFAULTS_VERSION;
 
-	AddEventListener<KeyDownEvent>(&QuickActionManager::OnKeyDown);
+	SetListen(true);
 }
 
 void ModMenuModule::QuickActionManager::Detach() 
 {
-	RemoveEventListener<KeyDownEvent>();
+	SetListen(false);
 	SaveToPersistence();
 }
 

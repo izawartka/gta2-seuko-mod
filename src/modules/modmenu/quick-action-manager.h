@@ -92,6 +92,9 @@ namespace ModMenuModule {
 			return true;
 		}
 
+		void SetListen(bool doListen);
+		bool IsListening() const;
+
 	private:
 		friend class RootModule;
 		QuickActionManager();
