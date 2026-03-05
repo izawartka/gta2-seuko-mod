@@ -4,7 +4,6 @@
 #include "menu-controls-menu.h"
 #include "quick-actions-menu.h"
 #include "version-menu.h"
-#include "mouse-debug-menu.h"
 #include "../utils/save-game.h"
 #include "../toast-manager.h"
 
@@ -30,7 +29,6 @@ bool ModMenuModule::MiscMenu::Attach()
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Menu controls", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Quick actions", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Version details", options.textSize);
-	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Mouse debug menu", options.textSize);
 
 	// quick save button
 	auto quickSaveText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"Quick save", options.textSize);
@@ -59,9 +57,6 @@ void ModMenuModule::MiscMenu::OnMenuAction(UiModule::Selectable* item, UiModule:
 		break;
 	case 4: // Version info
 		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::VersionMenu>();
-		break;
-	case 5: // Mouse debug menu
-		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::MouseDebugMenu>();
 		break;
 	default:
 		break;

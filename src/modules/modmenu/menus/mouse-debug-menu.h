@@ -3,6 +3,9 @@
 #include "../menu-base.h"
 
 namespace ModMenuModule {
+	/*
+	Currently unused
+	*/
 	class MouseDebugMenu : public MenuBase, public Core::EventListenerSupport {
 	public:
 		MouseDebugMenu();
