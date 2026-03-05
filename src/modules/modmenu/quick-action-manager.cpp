@@ -26,6 +26,17 @@ const std::wstring& ModMenuModule::QuickActionManager::GetTypeLabel(QuickActionT
 	return actionItem->typeLabel;
 }
 
+bool ModMenuModule::QuickActionManager::CheckKeyIsInUse(KeyBindingModule::Key key, const std::optional<QuickActionId>& ignoreActionId)
+{
+	KeyBindingModule::BindManager* bindManager = KeyBindingModule::BindManager::GetInstance();
+	if (!ignoreActionId.has_value()) {
+		return bindManager->CheckKeyIsInUse(key);
+	}
+
+	std::string ignoreBindName = GetKeyBindName(ignoreActionId.value());
+	return bindManager->CheckKeyIsInUse(key, ignoreBindName);
+}
+
 bool ModMenuModule::QuickActionManager::HasSegmentFactory(QuickActionTypeIndex typeIndex)
 {
 	auto actionItem = QuickActionRegistry::GetByTypeIndex(typeIndex);

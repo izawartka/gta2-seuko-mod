@@ -13,6 +13,8 @@ namespace KeyBindingModule {
 		KeyPtr GetOrCreateBind(const std::string& name, const Key& defaultKey);
 		KeyPtr SetBind(const std::string& name, const Key& newKey);
 		bool RemoveBind(const std::string& name);
+		std::vector<std::string> GetBindsByKey(const Key& key) const;
+		bool CheckKeyIsInUse(const Key& key, const std::optional<std::string>& ignoreBindName = std::nullopt) const;
 
 	private:
 		friend class RootModule;

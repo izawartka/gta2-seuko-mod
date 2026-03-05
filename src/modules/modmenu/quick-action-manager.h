@@ -40,6 +40,7 @@ namespace ModMenuModule {
 		static QuickActionManager* GetInstance();
 		static const std::vector<QuickActionTypeIndex>& GetAllTypes(bool excludeDeprecated);
 		static const std::wstring& GetTypeLabel(QuickActionTypeIndex typeIndex);
+		static bool CheckKeyIsInUse(KeyBindingModule::Key key, const std::optional<QuickActionId>& ignoreActionId = std::nullopt);
 		
 		static bool HasSegmentFactory(QuickActionTypeIndex typeIndex);
 		static SegmentBase* CreateSegment(QuickActionTypeIndex typeIndex);

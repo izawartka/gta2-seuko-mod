@@ -61,6 +61,28 @@ bool KeyBindingModule::BindManager::RemoveBind(const std::string& name)
 	return true;
 }
 
+std::vector<std::string> KeyBindingModule::BindManager::GetBindsByKey(const Key& key) const
+{
+	std::vector<std::string> result;
+	for (const auto& pair : m_keyBinds) {
+		if (*(pair.second) == key) {
+			result.push_back(pair.first);
+		}
+	}
+	return result;
+}
+
+bool KeyBindingModule::BindManager::CheckKeyIsInUse(const Key& key, const std::optional<std::string>& ignoreBindName) const
+{
+	std::vector<std::string> binds = GetBindsByKey(key);
+	if (binds.empty()) return false;
+	if (!ignoreBindName.has_value()) return true;
+
+	return std::any_of(binds.begin(), binds.end(), [&ignoreBindName](const std::string& bindName) {
+		return bindName != ignoreBindName.value();
+	});
+}
+
 KeyBindingModule::KeyPtr KeyBindingModule::BindManager::SetBindNoLookup(const std::string& name, const Key& newKey)
 {
 	std::shared_ptr<Key> keyPtr = std::make_shared<Key>(newKey);
