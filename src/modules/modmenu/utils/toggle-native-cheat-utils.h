@@ -12,5 +12,5 @@ namespace ModMenuModule::Utils::ToggleNativeCheat {
 
 	const std::vector<ToggleNativeCheatMode>& GetAllToggleNativeCheatModes();
 	NativeCheatState GetNextState(NativeCheatState currentState, ToggleNativeCheatMode mode);
-	std::optional<NativeCheatState> ToggleNativeCheat(size_t cheatAddress, ToggleNativeCheatMode mode);
+	std::optional<NativeCheatState> ToggleNativeCheat(size_t cheatIndex, ToggleNativeCheatMode mode);
 }

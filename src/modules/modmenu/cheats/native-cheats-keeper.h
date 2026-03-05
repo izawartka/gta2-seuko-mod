@@ -24,7 +24,7 @@ namespace ModMenuModule {
 	struct NativeCheatDef {
 		NativeCheatCategory category;
 		std::wstring name;
-		size_t address;
+		size_t index;
 	};
 
 	enum class NativeCheatState {
@@ -47,12 +47,11 @@ namespace ModMenuModule {
 		static const std::vector<size_t>& GetAllNativeCheatsByCategory(NativeCheatCategory category);
 
 		static const NativeCheatCategoryDef* GetNativeCheatCategoryDef(NativeCheatCategory category);
-		static const NativeCheatDef* GetNativeCheatDef(size_t address);
+		static const NativeCheatDef* GetNativeCheatDef(size_t index);
 
-		bool SetCheat(const NativeCheatDef& cheat, NativeCheatState state);
-		bool SetCheat(size_t cheatAddress, NativeCheatState state);
-		NativeCheatState GetCheatState(const NativeCheatDef& cheat) const;
-		bool IsCheatEnabled(const NativeCheatDef& cheat) const;
+		static bool IsCheatEnabled(size_t index);
+		bool SetCheat(size_t index, NativeCheatState state);
+		NativeCheatState GetCheatState(size_t index) const;
 		void ResetAll();
 
 	private:
@@ -68,7 +67,7 @@ namespace ModMenuModule {
 		};
 
 		void OnAfterDebugFlags(AfterDebugFlagsEvent& event);
-		void OnCheatValueChange(size_t cheatAddress, const std::optional<bool>& oldValue, const std::optional<bool>& newValue);
+		void OnCheatValueChange(size_t index, const std::optional<bool>& oldValue, const std::optional<bool>& newValue);
 
 		virtual void OnFirstEnable() override;
 		virtual void OnEnable() override;
@@ -76,7 +75,7 @@ namespace ModMenuModule {
 
 		void SaveToPersistence() const;
 		void LoadFromPersistence();
-		void SetCheatStateInternal(size_t cheatAddress, NativeCheatState state);
+		void SetCheatStateInternal(size_t index, NativeCheatState state);
 
 		static NativeCheatsKeeperCheat* m_instance;
 		NativeCheatsKeeperEntry m_cheatEntries[sizeof(Game::Cheats)] = {};

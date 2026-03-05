@@ -56,56 +56,51 @@ const ModMenuModule::NativeCheatCategoryDef* ModMenuModule::NativeCheatsKeeperCh
 	return nullptr;
 }
 
-const ModMenuModule::NativeCheatDef* ModMenuModule::NativeCheatsKeeperCheat::GetNativeCheatDef(size_t address)
+const ModMenuModule::NativeCheatDef* ModMenuModule::NativeCheatsKeeperCheat::GetNativeCheatDef(size_t index)
 {
-	auto it = nativeCheatDefMap.find(address);
+	auto it = nativeCheatDefMap.find(index);
 	if (it != nativeCheatDefMap.end()) {
 		return it->second;
 	}
 	return nullptr;
 }
 
-bool ModMenuModule::NativeCheatsKeeperCheat::SetCheat(const NativeCheatDef& cheat, NativeCheatState state)
+bool ModMenuModule::NativeCheatsKeeperCheat::IsCheatEnabled(size_t index)
 {
-	return SetCheat(cheat.address, state);
-}
-
-bool ModMenuModule::NativeCheatsKeeperCheat::SetCheat(size_t cheatAddress, NativeCheatState state)
-{
-	if (!IsEnabled()) {
-		spdlog::warn("NativeCheatsKeeperCheat::SetCheat: Cheat keeper is not enabled, cannot set cheat state");
-		return false;
-	}
-	if (cheatAddress >= sizeof(Game::Cheats)) {
-		spdlog::error("NativeCheatsKeeperCheat::SetCheat: Invalid cheat address: {}", cheatAddress);
-		return false;
-	}
-	spdlog::debug("Setting cheat {} state to {}", static_cast<size_t>(cheatAddress), static_cast<int>(state));
-	SetCheatStateInternal(cheatAddress, state);
-	return true;
-}
-
-ModMenuModule::NativeCheatState ModMenuModule::NativeCheatsKeeperCheat::GetCheatState(const NativeCheatDef& cheat) const
-{
-	if (!IsEnabled()) return NativeCheatState::Unchanged;
-	if (cheat.address >= sizeof(Game::Cheats)) {
-		spdlog::error("NativeCheatsKeeperCheat::GetCheatState: Invalid cheat address: {}", cheat.address);
-		return NativeCheatState::Unchanged;
-	}
-
-	return m_cheatEntries[cheat.address].state;
-}
-
-bool ModMenuModule::NativeCheatsKeeperCheat::IsCheatEnabled(const NativeCheatDef& cheat) const
-{
-	if (cheat.address >= sizeof(Game::Cheats)) {
-		spdlog::error("NativeCheatsKeeperCheat::IsCheatEnabled: Invalid cheat address: {}", cheat.address);
+	if (index >= sizeof(Game::Cheats)) {
+		spdlog::error("NativeCheatsKeeperCheat::IsCheatEnabled: Invalid cheat index: {}", index);
 		return false;
 	}
 
 	Game::Cheats* cheats = Game::Memory::GetCheats();
 	bool* cheatBytes = reinterpret_cast<bool*>(cheats);
-	return cheatBytes[cheat.address];
+	return cheatBytes[index];
+}
+
+bool ModMenuModule::NativeCheatsKeeperCheat::SetCheat(size_t index, NativeCheatState state)
+{
+	if (!IsEnabled()) {
+		spdlog::warn("NativeCheatsKeeperCheat::SetCheat: Cheat keeper is not enabled, cannot set cheat state");
+		return false;
+	}
+	if (index >= sizeof(Game::Cheats)) {
+		spdlog::error("NativeCheatsKeeperCheat::SetCheat: Invalid cheat index: {}", index);
+		return false;
+	}
+	spdlog::debug("Setting cheat {} state to {}", static_cast<size_t>(index), static_cast<int>(state));
+	SetCheatStateInternal(index, state);
+	return true;
+}
+
+ModMenuModule::NativeCheatState ModMenuModule::NativeCheatsKeeperCheat::GetCheatState(size_t index) const
+{
+	if (!IsEnabled()) return NativeCheatState::Unchanged;
+	if (index >= sizeof(Game::Cheats)) {
+		spdlog::error("NativeCheatsKeeperCheat::GetCheatState: Invalid cheat index: {}", index);
+		return NativeCheatState::Unchanged;
+	}
+
+	return m_cheatEntries[index].state;
 }
 
 void ModMenuModule::NativeCheatsKeeperCheat::ResetAll()
@@ -127,15 +122,15 @@ void ModMenuModule::NativeCheatsKeeperCheat::OnAfterDebugFlags(AfterDebugFlagsEv
 	}
 }
 
-void ModMenuModule::NativeCheatsKeeperCheat::OnCheatValueChange(size_t cheatAddress, const std::optional<bool>& oldValue, const std::optional<bool>& newValue)
+void ModMenuModule::NativeCheatsKeeperCheat::OnCheatValueChange(size_t index, const std::optional<bool>& oldValue, const std::optional<bool>& newValue)
 {
-	NativeCheatsKeeperEntry& entry = m_cheatEntries[cheatAddress];
+	NativeCheatsKeeperEntry& entry = m_cheatEntries[index];
 	if (entry.ignoreValueChange) {
 		entry.ignoreValueChange = false;
 		return;
 	}
 
-	spdlog::debug("NativeCheatsKeeperCheat::OnCheatValueChange: Cheat at address {} changed from {} to {}", cheatAddress,
+	spdlog::debug("NativeCheatsKeeperCheat::OnCheatValueChange: Cheat with index {} changed from {} to {}", index,
 		oldValue.has_value() ? (oldValue.value() ? "true" : "false") : "null",
 		newValue.has_value() ? (newValue.value() ? "true" : "false") : "null"
 	);
@@ -182,11 +177,11 @@ void ModMenuModule::NativeCheatsKeeperCheat::LoadFromPersistence()
 	}
 }
 
-void ModMenuModule::NativeCheatsKeeperCheat::SetCheatStateInternal(size_t cheatAddress, NativeCheatState state)
+void ModMenuModule::NativeCheatsKeeperCheat::SetCheatStateInternal(size_t index, NativeCheatState state)
 {
 	Core::WatchManager* watchManager = Core::WatchManager::GetInstance();
-	bool& cheatValue = (reinterpret_cast<bool*>(Game::Memory::GetCheats()))[cheatAddress];
-	NativeCheatsKeeperEntry& entry = m_cheatEntries[cheatAddress];
+	bool& cheatValue = (reinterpret_cast<bool*>(Game::Memory::GetCheats()))[index];
+	NativeCheatsKeeperEntry& entry = m_cheatEntries[index];
 
 	entry.state = state;
 	if (state == NativeCheatState::Unchanged) {
@@ -203,8 +198,8 @@ void ModMenuModule::NativeCheatsKeeperCheat::SetCheatStateInternal(size_t cheatA
 		entry.originalValue = cheatValue;
 		entry.ignoreValueChange = true;
 		entry.watched = watchManager->Watch<PreGameTickEvent, bool, bool*>(
-			[cheatAddress]() { return &(reinterpret_cast<bool*>(Game::Memory::GetCheats()))[cheatAddress]; },
-			std::bind(&ModMenuModule::NativeCheatsKeeperCheat::OnCheatValueChange, this, cheatAddress, std::placeholders::_1, std::placeholders::_2)
+			[index]() { return &(reinterpret_cast<bool*>(Game::Memory::GetCheats()))[index]; },
+			std::bind(&ModMenuModule::NativeCheatsKeeperCheat::OnCheatValueChange, this, index, std::placeholders::_1, std::placeholders::_2)
 		);
 		entry.watched->Update();
 	}

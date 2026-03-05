@@ -35,23 +35,17 @@ ModMenuModule::NativeCheatState ModMenuModule::Utils::ToggleNativeCheat::GetNext
 	}
 }
 
-std::optional<ModMenuModule::NativeCheatState> ModMenuModule::Utils::ToggleNativeCheat::ToggleNativeCheat(size_t cheatAddress, ToggleNativeCheatMode mode)
+std::optional<ModMenuModule::NativeCheatState> ModMenuModule::Utils::ToggleNativeCheat::ToggleNativeCheat(size_t cheatIndex, ToggleNativeCheatMode mode)
 {
 	NativeCheatsKeeperCheat* nativeCheatsKeeper = NativeCheatsKeeperCheat::GetInstance();
 	if (!nativeCheatsKeeper->IsEnabled()) {
 		nativeCheatsKeeper->SetEnabled(true);
 	}
 
-	const auto* cheatDef = NativeCheatsKeeperCheat::GetNativeCheatDef(cheatAddress);
-	if (!cheatDef) {
-		spdlog::error("ToggleNativeCheat: no native cheat found for address {}", cheatAddress);
-		return std::nullopt;
-	}
-
-	NativeCheatState currentState = nativeCheatsKeeper->GetCheatState(*cheatDef);
+	NativeCheatState currentState = nativeCheatsKeeper->GetCheatState(cheatIndex);
 	NativeCheatState nextState = GetNextState(currentState, mode);
 	
-	if (!nativeCheatsKeeper->SetCheat(cheatAddress, nextState)) {
+	if (!nativeCheatsKeeper->SetCheat(cheatIndex, nextState)) {
 		return std::nullopt;
 	}
 

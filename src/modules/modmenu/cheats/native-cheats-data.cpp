@@ -138,7 +138,7 @@ namespace ModMenuModule {
 	static const std::unordered_map<size_t, const NativeCheatDef*> nativeCheatDefMap = []() {
 		std::unordered_map<size_t, const NativeCheatDef*> map;
 		for (const auto& cheat : nativeCheatDefs) {
-			map.insert({ cheat.address, &cheat });
+			map.insert({ cheat.index, &cheat });
 		}
 		return map;
 	}();
@@ -154,7 +154,7 @@ namespace ModMenuModule {
 	static const std::unordered_map<NativeCheatCategory, std::vector<size_t>> nativeCheatsByCategoryMap = []() {
 		std::unordered_map<NativeCheatCategory, std::vector<size_t>> map;
 		for (const auto& cheat : nativeCheatDefs) {
-			map[cheat.category].push_back(cheat.address);
+			map[cheat.category].push_back(cheat.index);
 		}
 		return map;
 	}();

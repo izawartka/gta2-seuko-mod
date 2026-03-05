@@ -40,9 +40,9 @@ void ModMenuModule::ToggleNativeCheatAction::Execute()
 	}
 
 	ToggleNativeCheatSegmentData data = m_data.value();
-	std::wstring cheatName = NativeCheatConverter::ConvertToString(data.cheatAddress);
+	std::wstring cheatName = NativeCheatConverter::ConvertToString(data.cheatIndex);
 
-	auto result = Utils::ToggleNativeCheat::ToggleNativeCheat(data.cheatAddress, data.mode);
+	auto result = Utils::ToggleNativeCheat::ToggleNativeCheat(data.cheatIndex, data.mode);
 
 	if (!result.has_value()) {
 		ModMenuModule::ToastManager::GetInstance()->Show({ L"Failed to toggle " + cheatName, ToastType::Error });
@@ -62,7 +62,7 @@ const std::wstring& ModMenuModule::ToggleNativeCheatAction::GetLabel() const
 void ModMenuModule::ToggleNativeCheatAction::OnDataChange()
 {
 	if (m_data.has_value()) {
-		m_label = L"Toggle " + NativeCheatConverter::ConvertToString(m_data->cheatAddress);
+		m_label = L"Toggle " + NativeCheatConverter::ConvertToString(m_data->cheatIndex);
 	}
 	else {
 		m_label = typeLabel;

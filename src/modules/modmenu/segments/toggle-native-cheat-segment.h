@@ -6,7 +6,7 @@
 
 namespace ModMenuModule {
 	struct ToggleNativeCheatSegmentData {
-		size_t cheatAddress;
+		size_t cheatIndex;
 		Utils::ToggleNativeCheat::ToggleNativeCheatMode mode;
 	};
 

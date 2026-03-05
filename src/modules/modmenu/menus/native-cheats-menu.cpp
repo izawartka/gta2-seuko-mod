@@ -34,7 +34,8 @@ bool ModMenuModule::NativeCheatsMenu::Attach()
 	uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, options.menuSpacerHeight);
 
 	// categories
-	for (const auto& category : m_categories) {
+	const auto& categories = NativeCheatsKeeperCheat::GetAllNativeCheatCategoryDefs();
+	for (const auto& category : categories) {
 		auto categoryText = m_menuController->CreateItem<UiModule::Text>(vertCont, category.name.c_str(), options.textSize);
 		if (m_firstCategoryItemId == -1) {
 			m_firstCategoryItemId = m_menuController->GetLatestMenuItemId();
@@ -56,8 +57,9 @@ void ModMenuModule::NativeCheatsMenu::OnMenuAction(UiModule::Selectable* item, U
 		break;
 	}
 
-	if (id >= m_firstCategoryItemId && id < static_cast<UiModule::MenuItemId>(m_categories.size() + m_firstCategoryItemId)) {
-		const NativeCheatCategoryDef& categoryDef = m_categories.at(id - m_firstCategoryItemId);
+	const auto& categories = NativeCheatsKeeperCheat::GetAllNativeCheatCategoryDefs();
+	if (id >= m_firstCategoryItemId && id < static_cast<UiModule::MenuItemId>(categories.size() + m_firstCategoryItemId)) {
+		const NativeCheatCategoryDef& categoryDef = categories.at(id - m_firstCategoryItemId);
 		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::NativeCheatsCategoryMenu>(categoryDef);
 		return;
 	}

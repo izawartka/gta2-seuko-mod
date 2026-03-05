@@ -11,9 +11,9 @@ std::optional<ModMenuModule::ToggleNativeCheatSegmentData> ModMenuModule::Toggle
 		return std::nullopt;
 	}
 
-	const auto& cheatAddressOpt = m_cheatController->GetValue();
-	if (!cheatAddressOpt.has_value()) {
-		spdlog::error("Cannot get segment data: cheatAddress has no value");
+	const auto& cheatIndexOpt = m_cheatController->GetValue();
+	if (!cheatIndexOpt.has_value()) {
+		spdlog::error("Cannot get segment data: cheatIndex has no value");
 		return std::nullopt;
 	}
 
@@ -24,7 +24,7 @@ std::optional<ModMenuModule::ToggleNativeCheatSegmentData> ModMenuModule::Toggle
 	}
 
 	return ToggleNativeCheatSegmentData{
-		cheatAddressOpt.value(),
+		cheatIndexOpt.value(),
 		modeOpt.value()
 	};
 }
@@ -37,16 +37,16 @@ bool ModMenuModule::ToggleNativeCheatSegment::SetSegmentData(const ToggleNativeC
 	}
 
 	NativeCheatsKeeperCheat* nativeCheatsKeeper = NativeCheatsKeeperCheat::GetInstance();
-	const auto* cheatDef = NativeCheatsKeeperCheat::GetNativeCheatDef(data.cheatAddress);
+	const auto* cheatDef = NativeCheatsKeeperCheat::GetNativeCheatDef(data.cheatIndex);
 	if (!cheatDef) {
-		spdlog::error("Cannot set segment data: no native cheat found for address {}", data.cheatAddress);
+		spdlog::error("Cannot set segment data: cheat with index {} not found", data.cheatIndex);
 		return false;
 	}
 
 	m_cheatCategoryController->SetValue(cheatDef->category);
 	DestroyCheatController();
 	CreateCheatController(cheatDef->category);
-	m_cheatController->SetValue(data.cheatAddress);
+	m_cheatController->SetValue(data.cheatIndex);
 	m_modeController->SetValue(data.mode);
 
 	return true;

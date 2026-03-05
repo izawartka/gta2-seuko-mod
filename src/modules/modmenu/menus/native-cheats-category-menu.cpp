@@ -52,7 +52,7 @@ bool ModMenuModule::NativeCheatsCategoryMenu::Attach()
 		auto cheatCont = m_menuController->CreateItem<UiModule::HorCont>(vertCont);
 		auto cheatValueText = uiRoot->AddComponent<UiModule::Text>(cheatCont, L"", options.textSize);
 		auto cheatValueResolver = [nativeCheatsKeeper, cheat]() {
-			return nativeCheatsKeeper->IsCheatEnabled(*cheat);
+			return nativeCheatsKeeper->IsCheatEnabled(cheat->index);
 		};
 		auto cheatValueController = uiRoot->AddController<UiModule::VarTextController<bool, bool>>(
 			cheatValueText, 
@@ -64,7 +64,7 @@ bool ModMenuModule::NativeCheatsCategoryMenu::Attach()
 
 		auto cheatStateText = uiRoot->AddComponent<UiModule::Text>(cheatCont, L"", options.textSize);
 		auto cheatStateResolver = [nativeCheatsKeeper, cheat]() {
-			return nativeCheatsKeeper->GetCheatState(*cheat);
+			return nativeCheatsKeeper->GetCheatState(cheat->index);
 		};
 		auto cheatStateController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<NativeCheatState, NativeCheatState>>(
 			cheatStateText,
@@ -75,7 +75,7 @@ bool ModMenuModule::NativeCheatsCategoryMenu::Attach()
 		cheatStateController->SetConverter<InBracketsConverter<NativeCheatState, NativeCheatStateConverter<false>>>();
 		cheatStateController->SetCustomSaveCallback([nativeCheatsKeeper, cheat](NativeCheatState newValue) {
 			nativeCheatsKeeper->SetEnabled(true);
-			nativeCheatsKeeper->SetCheat(*cheat, newValue);
+			nativeCheatsKeeper->SetCheat(cheat->index, newValue);
 		});
 	}
 
