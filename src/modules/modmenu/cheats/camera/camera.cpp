@@ -263,14 +263,8 @@ void ModMenuModule::CameraCheat::RemoveCameraListeners()
 {
 	RemoveEventListener<GameStartEvent>();
 	RemoveEventListener<PreDrawFrameEvent>();
-
-	if (HasEventListener<CullingCheckEvent>()) {
-		RemoveEventListener<CullingCheckEvent>();
-	}
-
-	if (HasEventListener<PreDrawMapLayerEvent>()) {
-		RemoveEventListener<PreDrawMapLayerEvent>();
-	}
+	RemoveEventListener<CullingCheckEvent>(true);
+	RemoveEventListener<PreDrawMapLayerEvent>(true);
 
 	if (m_hasRendererListeners) {
 		RemoveEventListener<RendererDrawTileEvent>();
@@ -279,9 +273,7 @@ void ModMenuModule::CameraCheat::RemoveCameraListeners()
 		m_hasRendererListeners = false;
 	}
 
-	if (HasEventListener<RendererLoadEvent>()) {
-		RemoveEventListener<RendererLoadEvent>();
-	}
+	RemoveEventListener<RendererLoadEvent>(true);
 }
 
 void ModMenuModule::CameraCheat::UpdatePreDrawMapLayerListener()

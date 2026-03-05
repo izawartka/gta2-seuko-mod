@@ -89,9 +89,7 @@ void ModMenuModule::CopValueCheat::OnDisable()
 	SaveToPersistence();
 
 	RemoveEventListener<GameEndEvent>();
-	if (HasEventListener<CopValueChangeEvent>()) {
-		RemoveEventListener<CopValueChangeEvent>();
-	}
+	RemoveEventListener<CopValueChangeEvent>(true);
 
 	Core::WatchManager* watchManager = Core::WatchManager::GetInstance();
 

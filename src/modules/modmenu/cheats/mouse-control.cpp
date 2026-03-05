@@ -250,8 +250,8 @@ void ModMenuModule::MouseControlCheat::UpdateAutoModeListeners()
 
 void ModMenuModule::MouseControlCheat::RemoveAutoModeListeners()
 {
-	if (HasEventListener<CheatStateEvent>()) RemoveEventListener<CheatStateEvent>();
-	if (HasEventListener<CheatOptionsUpdateEvent<CameraCheat>>()) RemoveEventListener<CheatOptionsUpdateEvent<CameraCheat>>();
+	RemoveEventListener<CheatStateEvent>(true);
+	RemoveEventListener<CheatOptionsUpdateEvent<CameraCheat>>(true);
 }
 
 bool ModMenuModule::MouseControlCheat::EnsureNotControllerControls() const
@@ -325,8 +325,8 @@ void ModMenuModule::MouseControlCheat::Stop()
 	RemoveEventListener<PreGameTickEvent>();
 	RemoveEventListener<MouseModule::MouseButtonDownEvent>();
 	RemoveEventListener<MouseModule::MouseButtonUpEvent>();
-	if (HasEventListener<MouseModule::MouseLockedMoveEvent>()) RemoveEventListener<MouseModule::MouseLockedMoveEvent>();
-	if (HasEventListener<MouseModule::MouseMoveEvent>()) RemoveEventListener<MouseModule::MouseMoveEvent>();
+	RemoveEventListener<MouseModule::MouseLockedMoveEvent>(true);
+	RemoveEventListener<MouseModule::MouseMoveEvent>(true);
 
 	MouseModule::MouseManager* mouseManager = MouseModule::MouseManager::GetInstance();
 	mouseManager->SetLocked(false);

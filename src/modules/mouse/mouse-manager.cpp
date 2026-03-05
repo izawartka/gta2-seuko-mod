@@ -284,8 +284,8 @@ void MouseModule::MouseManager::Detach()
 	m_attached = false;
 	SetLocked(false);
 	SetInvisible(false);
-	if (HasEventListener<WndProcEvent>()) {
-		spdlog::error("MouseManager is being detached while having uninitialized events");
+	if (m_initializedEvents > 0) {
+		spdlog::error("MouseManager is being detached while its events are still initialized");
 		m_initializedEvents = 0;
 		RemoveEventListener<WndProcEvent>();
 	}

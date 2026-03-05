@@ -35,8 +35,8 @@ void ModMenuModule::DisableAntialiasingCheat::OnEnable()
 
 void ModMenuModule::DisableAntialiasingCheat::OnDisable()
 {
-	if (HasEventListener<RendererLoadEvent>()) RemoveEventListener<RendererLoadEvent>();
-	if (HasEventListener<RendererAntialiasingCheckEvent>()) RemoveEventListener<RendererAntialiasingCheckEvent>();
+	RemoveEventListener<RendererLoadEvent>(true);
+	RemoveEventListener<RendererAntialiasingCheckEvent>(true);
 }
 
 void ModMenuModule::DisableAntialiasingCheat::OnRendererLoad(RendererLoadEvent& event)

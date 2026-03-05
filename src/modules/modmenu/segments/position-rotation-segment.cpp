@@ -193,12 +193,8 @@ void ModMenuModule::PositionRotationSegment::OnShow()
 
 void ModMenuModule::PositionRotationSegment::OnHide()
 {
-	if (HasEventListener<ModMenuModule::PlayerPosUpdateEvent>()) {
-		RemoveEventListener<ModMenuModule::PlayerPosUpdateEvent>();
-	}
-	if (HasEventListener<ModMenuModule::PlayerRotUpdateEvent>()) {
-		RemoveEventListener<ModMenuModule::PlayerRotUpdateEvent>();
-	}
+	RemoveEventListener<ModMenuModule::PlayerPosUpdateEvent>(true);
+	RemoveEventListener<ModMenuModule::PlayerRotUpdateEvent>(true);
 }
 
 Game::SCR_f ModMenuModule::PositionRotationSegment::ClampCoord(Game::SCR_f value, bool isZCoord)

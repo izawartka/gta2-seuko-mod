@@ -172,9 +172,7 @@ void ModMenuModule::PositionSegment::OnShow()
 
 void ModMenuModule::PositionSegment::OnHide()
 {
-	if (HasEventListener<ModMenuModule::PlayerPosUpdateEvent>()) {
-		RemoveEventListener<ModMenuModule::PlayerPosUpdateEvent>();
-	}
+	RemoveEventListener<ModMenuModule::PlayerPosUpdateEvent>(true);
 }
 
 Game::SCR_f ModMenuModule::PositionSegment::ClampCoord(Game::SCR_f value, bool isZCoord)
