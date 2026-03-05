@@ -28,6 +28,12 @@ namespace ModMenuModule {
 			return segment;
 		}
 
+		template<typename SegmentT>
+		bool DeleteSegment(SegmentT*& segment) {
+			static_assert(std::is_base_of_v<SegmentBase, SegmentT>, "SegmentT must be derived from SegmentBase");
+			return DeleteSegment(reinterpret_cast<SegmentBase*&>(segment));
+		}
+
 		void AddSegment(SegmentBase* segment);
 		bool AddAttachSegment(SegmentBase* segment, ModMenuModule::MenuBase* menu, UiModule::Component* parent);
 		bool RemoveSegment(SegmentBase* segment);
