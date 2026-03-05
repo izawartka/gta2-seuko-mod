@@ -5,11 +5,12 @@
 ModMenuModule::QuickActionOptionsMenu::QuickActionOptionsMenu(QuickActionId actionId)
 {
 	m_actionId = actionId;
+	m_keySegment = CreateSegment<QuickActionKeySegment>(actionId);
 }
 
 ModMenuModule::QuickActionOptionsMenu::~QuickActionOptionsMenu()
 {
-
+	DeleteSegment(m_keySegment);
 }
 
 bool ModMenuModule::QuickActionOptionsMenu::Attach()
@@ -44,15 +45,8 @@ bool ModMenuModule::QuickActionOptionsMenu::Attach()
 	});
 
 	// key
-	auto keyText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	auto keyController = m_menuController->CreateLatestItemController<UiModule::KeyChangeController>(
-		keyText,
-		m_actionInfo->key,
-		UiModule::KeyChangeControllerOptions{ L"Key: #", L"#" }
-	);
-	keyController->SetSaveCallback([this, quickActionManager](KeyBindingModule::Key newKey) {
-		m_actionInfo->key = newKey;
-	});
+	AttachSegment(m_keySegment, this, vertCont);
+	m_keySegment->SetSegmentData({ m_actionInfo->key });
 
 	// save button
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Save", options.textSize);
@@ -67,6 +61,22 @@ bool ModMenuModule::QuickActionOptionsMenu::Attach()
 	return true;
 }
 
+void ModMenuModule::QuickActionOptionsMenu::Detach()
+{
+	DetachSegment(m_keySegment);
+	DestroyMenu();
+}
+
+void ModMenuModule::QuickActionOptionsMenu::OnShow()
+{
+	SetSegmentsVisible(true);
+}
+
+void ModMenuModule::QuickActionOptionsMenu::OnHide()
+{
+	SetSegmentsVisible(false);
+}
+
 void ModMenuModule::QuickActionOptionsMenu::OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
 {
 	ModMenuModule::QuickActionManager* quickActionManager = ModMenuModule::QuickActionManager::GetInstance();
@@ -76,11 +86,30 @@ void ModMenuModule::QuickActionOptionsMenu::OnMenuAction(UiModule::Selectable* i
 		menuManager->RemoveLastMenu();
 	} 
 	else if (id == m_saveBtnMenuId) { // Save
-		quickActionManager->Update(m_actionId, m_actionInfo.value());
+		if (!SaveAction()) return;
 		menuManager->RemoveLastMenu();
 	}
 	else if (id == m_deleteBtnMenuId) { // Delete
 		quickActionManager->Remove(m_actionId);
 		menuManager->RemoveLastMenu();
 	}
+}
+
+bool ModMenuModule::QuickActionOptionsMenu::SaveAction()
+{
+	if (!m_keySegment) {
+		spdlog::warn("Cannot save quick action: key segment not initialized");
+		return false;
+	}
+	auto keySegmentData = m_keySegment->GetSegmentData();
+	if (!keySegmentData.has_value()) {
+		spdlog::warn("Cannot save quick action: no key selected");
+		ToastManager::GetInstance()->Show({ L"Cannot save quick action: no key bind set", ToastType::Warning });
+		return false;
+	}
+	m_actionInfo->key = keySegmentData.value().key;
+
+	QuickActionManager* quickActionManager = QuickActionManager::GetInstance();
+	quickActionManager->Update(m_actionId, m_actionInfo.value());
+	return true;
 }

@@ -160,6 +160,7 @@
     <ClCompile Include="src\modules\modmenu\quick-actions\switch-camera-mode.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\switch-camera-mode-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\select-camera-modes-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\segments\quick-action-key-segment.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -431,6 +432,7 @@
     <ClInclude Include="src\converters\elipsis.h" />
     <ClInclude Include="src\modules\keybinding\events\events.h" />
     <ClInclude Include="src\modules\keybinding\events\key-bind-update.h" />
+    <ClInclude Include="src\modules\modmenu\segments\quick-action-key-segment.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

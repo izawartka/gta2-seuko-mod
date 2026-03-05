@@ -4,12 +4,13 @@
 
 ModMenuModule::AddQuickActionMenu::AddQuickActionMenu()
 {
-
+	m_keySegment = CreateSegment<QuickActionKeySegment>();
 }
 
 ModMenuModule::AddQuickActionMenu::~AddQuickActionMenu()
 {
 	DestroyOptionsSegment();
+	DeleteSegment(m_keySegment);
 }
 
 bool ModMenuModule::AddQuickActionMenu::Attach()
@@ -22,14 +23,10 @@ bool ModMenuModule::AddQuickActionMenu::Attach()
 	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
-	
+
 	// key
-	auto keyText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	m_keyController = m_menuController->CreateLatestItemController<UiModule::KeyChangeController>(
-		keyText,
-		m_lastSelectedKey,
-		UiModule::KeyChangeControllerOptions{ L"Key: #", L"#" }
-	);
+	AttachSegment(m_keySegment, this, vertCont);
+	if (m_lastSelectedKey.has_value()) m_keySegment->SetSegmentData({ m_lastSelectedKey.value() });
 
 	// action type
 	auto typeText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
@@ -71,8 +68,9 @@ bool ModMenuModule::AddQuickActionMenu::Attach()
 
 void ModMenuModule::AddQuickActionMenu::Detach()
 {
-	if (m_keyController) {
-		m_lastSelectedKey = m_keyController->GetValue();
+	if (m_keySegment) {
+		auto keySegmentData = m_keySegment->GetSegmentData();
+		m_lastSelectedKey = keySegmentData.has_value() ? std::make_optional(keySegmentData.value().key) : std::nullopt;
 	}
 	if (m_actionTypeController) {
 		m_lastSelectedActionType = m_actionTypeController->GetValue();
@@ -157,14 +155,19 @@ void ModMenuModule::AddQuickActionMenu::OnSave()
 {
 	ModMenuModule::QuickActionManager* quickActionManager = ModMenuModule::QuickActionManager::GetInstance();
 
-	auto& keyOpt = m_keyController->GetValue();
-	if (!keyOpt.has_value()) {
-		ToastManager* toastManager = ToastManager::GetInstance();
-		toastManager->Show({ L"Cannot add quick action: no key bind set", ToastType::Warning });
-		spdlog::warn("Cannot add quick action: no key bind set");
+	if(!m_keySegment) {
+		spdlog::warn("Cannot add quick action: key segment not initialized");
 		return;
 	}
-	KeyBindingModule::Key key = keyOpt.value();
+
+	auto keySegmentData = m_keySegment->GetSegmentData();
+	if (!keySegmentData.has_value()) {
+		spdlog::warn("Cannot add quick action: no key selected");
+		ToastManager::GetInstance()->Show({ L"Cannot add quick action: no key bind set", ToastType::Warning });
+		return;
+	}
+
+	KeyBindingModule::Key key = keySegmentData.value().key;
 
 	auto& actionTypeOpt = m_actionTypeController->GetValue();
 	if (!actionTypeOpt.has_value()) {

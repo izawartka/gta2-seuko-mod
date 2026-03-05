@@ -5,6 +5,8 @@
 #include "../quick-action-registry.h"
 
 namespace ModMenuModule {
+	class QuickActionKeySegment;
+
 	class AddQuickActionMenu : public MenuBase, public SegmentSupport {
 	public:
 		AddQuickActionMenu();
@@ -21,21 +23,17 @@ namespace ModMenuModule {
 		void OnSave();
 
 		void OnActionTypeChange(QuickActionTypeIndex actionType);
-		void CreateSegment(QuickActionTypeIndex actionType);
-		void AttachSegment();
-		void DetachSegment();
-		void DestroySegment();
 		void CreateOptionsSegment(QuickActionTypeIndex actionType);
 		void AttachOptionsSegment();
 		void DetachOptionsSegment();
 		void DestroyOptionsSegment();
 
-		UiModule::KeyChangeController* m_keyController = nullptr;
+		QuickActionKeySegment* m_keySegment = nullptr;
 		UiModule::SelectController<QuickActionTypeIndex>* m_actionTypeController = nullptr;
 		UiModule::MenuItemId m_saveBtnMenuId = 0;
-		size_t m_segmentBaseIndex = -1;
-		UiModule::VertCont* m_segmentContainer = nullptr;
-		SegmentBase* m_segmentInstance = nullptr;
+		size_t m_optionsSegmentBaseIndex = -1;
+		UiModule::VertCont* m_optionsSegmentContainer = nullptr;
+		SegmentBase* m_optionsSegment = nullptr;
 
 		// semi-persistence for segments that use submenus
 		std::optional<KeyBindingModule::Key> m_lastSelectedKey = std::nullopt;
