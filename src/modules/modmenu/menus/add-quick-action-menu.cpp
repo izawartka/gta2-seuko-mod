@@ -9,7 +9,7 @@ ModMenuModule::AddQuickActionMenu::AddQuickActionMenu()
 
 ModMenuModule::AddQuickActionMenu::~AddQuickActionMenu()
 {
-	DestroySegment();
+	DestroyOptionsSegment();
 }
 
 bool ModMenuModule::AddQuickActionMenu::Attach()
@@ -54,15 +54,15 @@ bool ModMenuModule::AddQuickActionMenu::Attach()
 	m_actionTypeController->SetSaveCallback(std::bind(&AddQuickActionMenu::OnActionTypeChange, this, std::placeholders::_1));
 
 	// segment container
-	m_segmentBaseIndex = m_menuController->GetNextAddedItemIndex();
-	m_segmentContainer = uiRoot->AddComponent<UiModule::VertCont>(vertCont);
+	m_optionsSegmentBaseIndex = m_menuController->GetNextAddedItemIndex();
+	m_optionsSegmentContainer = uiRoot->AddComponent<UiModule::VertCont>(vertCont);
 
 	// save button
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Save", options.textSize);
 	m_saveBtnMenuId = m_menuController->GetLatestMenuItemId();
 
-	CreateSegment(selectedType);
-	AttachSegment();
+	CreateOptionsSegment(selectedType);
+	AttachOptionsSegment();
 
 	SetPreviousSelectedIndex();
 
@@ -103,54 +103,54 @@ void ModMenuModule::AddQuickActionMenu::OnMenuAction(UiModule::Selectable* item,
 		OnSave();
 		return;
 	}
-	else if (m_segmentInstance) {
-		m_segmentInstance->OnPassedMenuAction(item, id);
+	else if (m_optionsSegment) {
+		m_optionsSegment->OnPassedMenuAction(item, id);
 	}
 }
 
 void ModMenuModule::AddQuickActionMenu::OnActionTypeChange(QuickActionTypeIndex actionType)
 {
-	DestroySegment();
-	CreateSegment(actionType);
-	AttachSegment();
+	DestroyOptionsSegment();
+	CreateOptionsSegment(actionType);
+	AttachOptionsSegment();
 }
 
-void ModMenuModule::AddQuickActionMenu::CreateSegment(QuickActionTypeIndex actionType)
+void ModMenuModule::AddQuickActionMenu::CreateOptionsSegment(QuickActionTypeIndex actionType)
 {
-	if (m_segmentInstance != nullptr) return;
+	if (m_optionsSegment != nullptr) return;
 
 	if (!ModMenuModule::QuickActionManager::HasSegmentFactory(actionType)) {
 		return;
 	}
 
-	m_segmentInstance = ModMenuModule::QuickActionManager::CreateSegment(actionType);
-	SegmentSupport::AddSegment(m_segmentInstance);
+	m_optionsSegment = ModMenuModule::QuickActionManager::CreateSegment(actionType);
+	AddSegment(m_optionsSegment);
 }
 
-void ModMenuModule::AddQuickActionMenu::AttachSegment()
+void ModMenuModule::AddQuickActionMenu::AttachOptionsSegment()
 {
-	if (m_segmentInstance == nullptr) return;
+	if (m_optionsSegment == nullptr) return;
 
-	m_menuController->SetNextAddedItemIndex(m_segmentBaseIndex);
-	SegmentSupport::AttachSegment(
-		m_segmentInstance,
+	m_menuController->SetNextAddedItemIndex(m_optionsSegmentBaseIndex);
+	AttachSegment(
+		m_optionsSegment,
 		this,
-		m_segmentContainer
+		m_optionsSegmentContainer
 	);
 }
 
-void ModMenuModule::AddQuickActionMenu::DetachSegment()
+void ModMenuModule::AddQuickActionMenu::DetachOptionsSegment()
 {
-	if (m_segmentInstance == nullptr) return;
+	if (m_optionsSegment == nullptr) return;
 
-	SegmentSupport::DetachSegment(m_segmentInstance);
+	DetachSegment(m_optionsSegment);
 }
 
-void ModMenuModule::AddQuickActionMenu::DestroySegment()
+void ModMenuModule::AddQuickActionMenu::DestroyOptionsSegment()
 {
-	if (m_segmentInstance == nullptr) return;
+	if (m_optionsSegment == nullptr) return;
 
-	SegmentSupport::DeleteSegment(m_segmentInstance);
+	DeleteSegment(m_optionsSegment);
 }
 
 void ModMenuModule::AddQuickActionMenu::OnSave()
@@ -173,12 +173,12 @@ void ModMenuModule::AddQuickActionMenu::OnSave()
 	}
 	QuickActionTypeIndex actionType = actionTypeOpt.value();
 
-	if (m_segmentInstance && !m_segmentInstance->ValidateSegment()) {
+	if (m_optionsSegment && !m_optionsSegment->ValidateSegment()) {
 		spdlog::warn("Cannot add quick action: segment validation failed");
 		return;
 	}
 
 	QuickActionId actionId = quickActionManager->Add(key, actionType);
-	if(m_segmentInstance) quickActionManager->SetDataFromSegmentData(actionId, m_segmentInstance);
+	if(m_optionsSegment) quickActionManager->SetDataFromSegmentData(actionId, m_optionsSegment);
 	ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
 }

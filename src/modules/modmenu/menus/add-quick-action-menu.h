@@ -25,6 +25,10 @@ namespace ModMenuModule {
 		void AttachSegment();
 		void DetachSegment();
 		void DestroySegment();
+		void CreateOptionsSegment(QuickActionTypeIndex actionType);
+		void AttachOptionsSegment();
+		void DetachOptionsSegment();
+		void DestroyOptionsSegment();
 
 		UiModule::KeyChangeController* m_keyController = nullptr;
 		UiModule::SelectController<QuickActionTypeIndex>* m_actionTypeController = nullptr;
