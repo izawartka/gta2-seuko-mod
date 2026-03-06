@@ -35,6 +35,10 @@ bool ModMenuModule::NativeCheatsCategoryMenu::Attach()
 		m_nextPageItemId = m_menuController->GetLatestMenuItemId();
 	}
 
+	if (m_categoryDef.category == CategorizedNativeCheats::NativeCheatCategory::UnstableOrUnused) {
+		CreateUnstableWarning(vertCont);
+	}
+
 	uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, options.menuSpacerHeight);
 
 	std::vector<NativeCheatState> cheatStates = {
@@ -142,4 +146,19 @@ std::wstring ModMenuModule::NativeCheatsCategoryMenu::GetPageTitle() const
 	else {
 		return L"#Native cheats - " + m_categoryDef.name + L"#";
 	}
+}
+
+void ModMenuModule::NativeCheatsCategoryMenu::CreateUnstableWarning(UiModule::Component* parent)
+{
+	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
+	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
+
+	Game::SCR_f marginX = options.menuControllerOptions.createdSelectableOptions.markerOffsetX;
+	auto* warningMargin = uiRoot->AddComponent<UiModule::Margin>(parent, marginX, 0);
+	auto* warningText = uiRoot->AddComponent<UiModule::Text>(
+		warningMargin, 
+		L"These cheats may hard lock your game!",
+		options.textSize,
+		4 // orange color
+	);
 }

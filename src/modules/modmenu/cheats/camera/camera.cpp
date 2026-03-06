@@ -41,6 +41,10 @@ void ModMenuModule::CameraCheat::SetOptions(const CameraCheatOptions& options)
 		UpdatePreDrawMapLayerListener();
 	}
 
+	if (m_options.cameraTransform != oldOptions.cameraTransform) {
+		m_cachedCameraTransform = std::nullopt;
+	}
+
 	Core::EventManager* eventManager = Core::EventManager::GetInstance();
 	CheatOptionsUpdateEvent<CameraCheat> event(oldOptions, m_options);
 	eventManager->Dispatch(event);
@@ -78,6 +82,7 @@ void ModMenuModule::CameraCheat::OnDisable()
 	RemoveCameraListeners();
 	m_cameraValues = std::nullopt;
 	m_customCameraPos = std::nullopt;
+	m_cachedCameraTransform = std::nullopt;
 	m_customRenderQueue.clear();
 	m_snapVerticalRotation = false;
 }
@@ -201,11 +206,15 @@ void ModMenuModule::CameraCheat::OnPreDrawFrame(PreDrawFrameEvent& event)
 	bool ignorePlayerPedZ = !playerPed || isZlocked;
 	Game::SCR_f playerPedZ = ignorePlayerPedZ ? Game::Utils::FromFloat(3.0f) : playerPed->position.z;
 
+	if(!m_cachedCameraTransform.has_value()) {
+		m_cachedCameraTransform = Utils::Vertex::CachedCameraTransform(m_options.cameraTransform);
+	}
+
 	Game::Camera* mainCamera = &player->ph2;
 	m_cameraValues = Utils::Vertex::GetCameraValues(*mainCamera, playerPedZ);
 	m_customCameraPos = Utils::Vertex::GetCustomCameraPos(
 		m_cameraValues.value(),
-		m_options.cameraTransform
+		m_cachedCameraTransform.value()
 	);
 
 	if (m_options.customRenderQueue && m_customCameraPos.has_value()) {

@@ -89,6 +89,7 @@ namespace ModMenuModule {
 		Game::GTAVertex m_vertexBuffer[8] = {};
 		std::optional<Utils::Vertex::CameraValues> m_cameraValues = std::nullopt;
 		std::optional<Utils::Vertex::CustomCameraPos> m_customCameraPos = std::nullopt;
+		std::optional<Utils::Vertex::CachedCameraTransform> m_cachedCameraTransform = std::nullopt;
 		std::vector<std::array<int, 2>> m_customRenderQueue = {};
 	};
 }

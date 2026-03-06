@@ -40,21 +40,48 @@ namespace ModMenuModule::Utils::Vertex {
 		}
 	};
 
+	struct CachedCameraTransform {
+		float horizontalAngleSin = 0.0f;
+		float horizontalAngleCos = 1.0f;
+		float verticalAngleSin = 0.0f;
+		float verticalAngleCos = 1.0f;
+		float additionalZOffset = 0.0f;
+		float arrowsScale = 1.0f;
+		bool needsVerticalRotation = false;
+		bool needsHorizontalRotation = false;
+		bool needsWorldSpaceTransform = false;
+		bool needsArrowsWorldSpaceTransform = false;
+
+		CachedCameraTransform() = default;
+		CachedCameraTransform(const CameraTransform& cameraTransform) {
+			horizontalAngleSin = sinf(cameraTransform.horizontalAngleRad);
+			horizontalAngleCos = cosf(cameraTransform.horizontalAngleRad);
+			verticalAngleSin = sinf(cameraTransform.verticalAngleRad);
+			verticalAngleCos = cosf(cameraTransform.verticalAngleRad);
+			additionalZOffset = cameraTransform.additionalZOffset;
+			arrowsScale = cameraTransform.arrowsScale;
+			needsVerticalRotation = cameraTransform.verticalAngleRad != 0.0f;
+			needsHorizontalRotation = cameraTransform.horizontalAngleRad != 0.0f;
+			needsWorldSpaceTransform = needsHorizontalRotation || cameraTransform.additionalZOffset != 0.0f;
+			needsArrowsWorldSpaceTransform = needsHorizontalRotation || cameraTransform.arrowsScale != 1.0f;
+		}
+	};
+
 	void ToCenteredScreenSpaceVertex(Game::GTAVertex& vertex, const CameraValues& cameraValues);
 	void FromCenteredScreenSpaceVertex(Game::GTAVertex& vertex, const CameraValues& cameraValues);
-	void RotateVertexX(Game::GTAVertex& vertex, float angleRad);
-	void RotateVertexZ(Game::GTAVertex& vertex, float angleRad);
+	void RotateVertexX(Game::GTAVertex& vertex, float angleSin, float angleCos);
+	void RotateVertexZ(Game::GTAVertex& vertex, float angleSin, float angleCos);
 	void ToWorldSpaceVertex(Game::GTAVertex& vertex, const CameraValues& cameraValues);
 	void ToScreenSpaceVertex(Game::GTAVertex& vertex, const CameraValues& cameraValues);
 	void ToSetZPosition(Game::GTAVertex& vertex, float newZ, const CameraValues& cameraValues);
 	void ScaleXY(Game::GTAVertex& vertex, float scale);
 	float GetCrossProduct(const Game::GTAVertex& v1, const Game::GTAVertex& v2, const Game::GTAVertex& v3);
 	
-	void ApplyQuadCameraTransform(Game::GTAVertex* vertices, const CameraValues& cameraValues, const CameraTransform& cameraTransform);
-	void ApplyArrowsCameraTransform(Game::GTAVertex* vertices, const CameraValues& cameraValues, const CameraTransform& cameraTransform);
-	void ApplyTriangleCameraTransform(Game::GTAVertex* vertices, const CameraValues& cameraValues, const CameraTransform& cameraTransform, bool* isReversedOut = nullptr);
+	void ApplyQuadCameraTransform(Game::GTAVertex* vertices, const CameraValues& cameraValues, const CachedCameraTransform& cachedCameraTransform);
+	void ApplyArrowsCameraTransform(Game::GTAVertex* vertices, const CameraValues& cameraValues, const CachedCameraTransform& cachedCameraTransform);
+	void ApplyTriangleCameraTransform(Game::GTAVertex* vertices, const CameraValues& cameraValues, const CachedCameraTransform& cachedCameraTransform, bool* isReversedOut = nullptr);
 	bool ApplyCustomCulling(Game::GTAVertex* vertices, size_t vertexCount, const CameraValues& cameraValues, bool isReversed = false);
 
 	CameraValues GetCameraValues(const Game::Camera& camera, Game::SCR_f playerPedZ);
-	CustomCameraPos GetCustomCameraPos(const CameraValues& cameraValues, const CameraTransform& cameraTransform);
+	CustomCameraPos GetCustomCameraPos(const CameraValues& cameraValues, const CachedCameraTransform& cachedCameraTransform);
 }
