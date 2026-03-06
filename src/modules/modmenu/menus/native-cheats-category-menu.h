@@ -1,14 +1,14 @@
 #pragma once
 #include "../common.h"
 #include "../menu-base.h"
-#include "../cheats/native-cheats-keeper.h"
+#include "../utils/categorized-native-cheats-utils.h"
 
 static constexpr size_t CHEATS_PER_PAGE = 9;
 
 namespace ModMenuModule {
 	class NativeCheatsCategoryMenu : public MenuBase {
 	public:
-		NativeCheatsCategoryMenu(const NativeCheatCategoryDef& categoryDef, size_t page = 0);
+		NativeCheatsCategoryMenu(const CategorizedNativeCheats::NativeCheatCategoryDef& categoryDef, size_t page = 0);
 		virtual ~NativeCheatsCategoryMenu();
 
 	private:
@@ -21,8 +21,8 @@ namespace ModMenuModule {
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 		std::wstring GetPageTitle() const;
 
-		const NativeCheatCategoryDef& m_categoryDef;
-		const std::vector<const NativeCheatDef*>& m_cheats;
+		const CategorizedNativeCheats::NativeCheatCategoryDef& m_categoryDef;
+		const std::vector<const CategorizedNativeCheats::NativeCheatDef*>& m_cheats;
 		size_t m_page;
 		size_t m_pageCount;
 		std::vector<UiModule::VarTextController<bool, bool>*> m_cheatValueControllers = {};

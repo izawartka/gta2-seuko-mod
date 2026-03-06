@@ -1,6 +1,6 @@
-#include "native-cheats-keeper.h"
+#include "categorized-native-cheats-utils.h"
 
-namespace ModMenuModule {
+namespace ModMenuModule::CategorizedNativeCheats {
 	static const std::vector<NativeCheatCategory> nativeCheatCategories = {
 		NativeCheatCategory::Standard,
 		NativeCheatCategory::SkipThings,

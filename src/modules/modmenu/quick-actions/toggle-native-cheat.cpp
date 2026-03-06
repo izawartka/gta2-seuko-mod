@@ -1,4 +1,5 @@
 #include "toggle-native-cheat.h"
+#include "../utils/categorized-native-cheats-utils.h"
 #include "../../../converters/native-cheat.h"
 #include "../../../converters/native-cheat-state.h"
 #include "../utils/toggle-native-cheat-utils.h"

@@ -36,8 +36,7 @@ bool ModMenuModule::ToggleNativeCheatSegment::SetSegmentData(const ToggleNativeC
 		return false;
 	}
 
-	NativeCheatsKeeperCheat* nativeCheatsKeeper = NativeCheatsKeeperCheat::GetInstance();
-	const auto* cheatDef = NativeCheatsKeeperCheat::GetNativeCheatDef(data.cheatIndex);
+	const auto* cheatDef = CategorizedNativeCheats::GetCheatDef(data.cheatIndex);
 	if (!cheatDef) {
 		spdlog::error("Cannot set segment data: cheat with index {} not found", data.cheatIndex);
 		return false;
@@ -59,12 +58,11 @@ bool ModMenuModule::ToggleNativeCheatSegment::Attach(ModMenuModule::MenuBase* me
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 
-	NativeCheatsKeeperCheat* nativeCheatsKeeper = NativeCheatsKeeperCheat::GetInstance();
-	const auto& cheatCategoriesList = NativeCheatsKeeperCheat::GetAllNativeCheatCategories();
+	const auto& cheatCategoriesList = CategorizedNativeCheats::GetAllCategories();
 	auto selectedCheatCategory = cheatCategoriesList[0];
 
 	UiModule::Text* cheatCategoryText = m_menuController->CreateItem<UiModule::Text>(m_vertCont, L"", options.textSize);
-	m_cheatCategoryController = m_menuController->CreateLatestItemController<UiModule::SelectController<NativeCheatCategory>>(
+	m_cheatCategoryController = m_menuController->CreateLatestItemController<UiModule::SelectController<CategorizedNativeCheats::NativeCheatCategory>>(
 		cheatCategoryText,
 		cheatCategoriesList,
 		selectedCheatCategory,
@@ -98,13 +96,12 @@ void ModMenuModule::ToggleNativeCheatSegment::Detach()
 	DestroySegment();
 }
 
-void ModMenuModule::ToggleNativeCheatSegment::CreateCheatController(NativeCheatCategory category)
+void ModMenuModule::ToggleNativeCheatSegment::CreateCheatController(CategorizedNativeCheats::NativeCheatCategory category)
 {
 	if (m_cheatMenuItemId == -1 || !m_cheatText) return;
 	if (m_cheatController) return;
 
-	NativeCheatsKeeperCheat* nativeCheatsKeeper = NativeCheatsKeeperCheat::GetInstance();
-	const auto& cheatsInCategory = NativeCheatsKeeperCheat::GetAllNativeCheatsByCategory(category);
+	const auto& cheatsInCategory = CategorizedNativeCheats::GetCheatsByCategory(category);
 	if (cheatsInCategory.size() == 0) {
 		spdlog::error("Cannot create cheat controller: no cheats found in category {}", static_cast<int>(category));
 		return;
@@ -128,7 +125,7 @@ void ModMenuModule::ToggleNativeCheatSegment::DestroyCheatController()
 	m_cheatController = nullptr;
 }
 
-void ModMenuModule::ToggleNativeCheatSegment::OnCheatCategoryControllerSave(NativeCheatCategory newCategory)
+void ModMenuModule::ToggleNativeCheatSegment::OnCheatCategoryControllerSave(CategorizedNativeCheats::NativeCheatCategory newCategory)
 {
 	DestroyCheatController();
 	CreateCheatController(newCategory);

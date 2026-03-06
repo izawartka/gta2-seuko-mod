@@ -4,29 +4,6 @@
 #include "../../../events/after-debug-flags.h"
 
 namespace ModMenuModule {
-	enum class NativeCheatCategory {
-		Standard,
-		SkipThings,
-		DebugInfo,
-		TilesRelated,
-		RequiringRestart,
-		ReplayRelated,
-		UnstableOrUnused,
-		Logging,
-		OtherDebug
-	};
-
-	struct NativeCheatCategoryDef {
-		NativeCheatCategory category;
-		std::wstring name;
-	};
-
-	struct NativeCheatDef {
-		NativeCheatCategory category;
-		std::wstring name;
-		size_t index;
-	};
-
 	enum class NativeCheatState {
 		ForceDisabled = -1,
 		Unchanged = 0,
@@ -38,16 +15,6 @@ namespace ModMenuModule {
 		NativeCheatsKeeperCheat();
 		virtual ~NativeCheatsKeeperCheat() override;
 		static NativeCheatsKeeperCheat* GetInstance();
-
-		static const std::vector<NativeCheatCategory>& GetAllNativeCheatCategories();
-		static const std::vector<NativeCheatCategoryDef>& GetAllNativeCheatCategoryDefs();
-		static const std::vector<NativeCheatDef>& GetAllNativeCheatDefs();
-
-		static const std::vector<const NativeCheatDef*>& GetAllNativeCheatDefsByCategory(NativeCheatCategory category);
-		static const std::vector<size_t>& GetAllNativeCheatsByCategory(NativeCheatCategory category);
-
-		static const NativeCheatCategoryDef* GetNativeCheatCategoryDef(NativeCheatCategory category);
-		static const NativeCheatDef* GetNativeCheatDef(size_t index);
 
 		static bool IsCheatEnabled(size_t index);
 		bool SetCheat(size_t index, NativeCheatState state);

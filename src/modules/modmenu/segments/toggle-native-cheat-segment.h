@@ -2,6 +2,7 @@
 #include "../common.h"
 #include "../segment-base.h"
 #include "../utils/toggle-native-cheat-utils.h"
+#include "../utils/categorized-native-cheats-utils.h"
 #include "../cheats/native-cheats-keeper.h"
 
 namespace ModMenuModule {
@@ -22,11 +23,11 @@ namespace ModMenuModule {
 		virtual bool Attach(ModMenuModule::MenuBase* menu, UiModule::Component* parent) override;
 		virtual void Detach() override;
 
-		void CreateCheatController(NativeCheatCategory category);
+		void CreateCheatController(CategorizedNativeCheats::NativeCheatCategory category);
 		void DestroyCheatController();
-		void OnCheatCategoryControllerSave(NativeCheatCategory newCategory);
+		void OnCheatCategoryControllerSave(CategorizedNativeCheats::NativeCheatCategory newCategory);
 
-		UiModule::SelectController<NativeCheatCategory>* m_cheatCategoryController = nullptr;
+		UiModule::SelectController<CategorizedNativeCheats::NativeCheatCategory>* m_cheatCategoryController = nullptr;
 		UiModule::SelectController<size_t>* m_cheatController = nullptr;
 		UiModule::Text* m_cheatText = nullptr;
 		UiModule::MenuItemId m_cheatMenuItemId = -1;

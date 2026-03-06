@@ -1,11 +1,11 @@
 #pragma once
 #include <string>
-#include "../modules/modmenu/cheats/native-cheats-keeper.h"
+#include "../modules/modmenu/utils/categorized-native-cheats-utils.h"
 
 class NativeCheatConverter {
 public:
 	static std::wstring ConvertToString(size_t value) {
-		const ModMenuModule::NativeCheatDef* cheatDef = ModMenuModule::NativeCheatsKeeperCheat::GetNativeCheatDef(value);
+		const auto* cheatDef = ModMenuModule::CategorizedNativeCheats::GetCheatDef(value);
 		if (cheatDef) {
 			return cheatDef->name;
 		}

@@ -1,7 +1,6 @@
 #include "native-cheats-keeper.h"
 #include "../cheat-registry.h"
 #include "../../../events/game-tick.h"
-#include "native-cheats-data.cpp"
 
 ModMenuModule::NativeCheatsKeeperCheat* ModMenuModule::NativeCheatsKeeperCheat::m_instance = nullptr;
 
@@ -20,49 +19,6 @@ ModMenuModule::NativeCheatsKeeperCheat* ModMenuModule::NativeCheatsKeeperCheat::
 {
 	assert(m_instance && "NativeCheatsKeeperCheat not initialized!");
 	return m_instance;
-}
-
-const std::vector<ModMenuModule::NativeCheatCategory>& ModMenuModule::NativeCheatsKeeperCheat::GetAllNativeCheatCategories()
-{
-	return nativeCheatCategories;
-}
-
-const std::vector<ModMenuModule::NativeCheatCategoryDef>& ModMenuModule::NativeCheatsKeeperCheat::GetAllNativeCheatCategoryDefs()
-{
-	return nativeCheatCategoryDefs;
-}
-
-const std::vector<ModMenuModule::NativeCheatDef>& ModMenuModule::NativeCheatsKeeperCheat::GetAllNativeCheatDefs()
-{
-	return nativeCheatDefs;
-}
-
-const std::vector<const ModMenuModule::NativeCheatDef*>& ModMenuModule::NativeCheatsKeeperCheat::GetAllNativeCheatDefsByCategory(NativeCheatCategory category)
-{
-	return nativeCheatDefsByCategoryMap.at(category);
-}
-
-const std::vector<size_t>& ModMenuModule::NativeCheatsKeeperCheat::GetAllNativeCheatsByCategory(NativeCheatCategory category)
-{
-	return nativeCheatsByCategoryMap.at(category);
-}
-
-const ModMenuModule::NativeCheatCategoryDef* ModMenuModule::NativeCheatsKeeperCheat::GetNativeCheatCategoryDef(NativeCheatCategory category)
-{
-	auto it = nativeCheatCategoryDefMap.find(category);
-	if (it != nativeCheatCategoryDefMap.end()) {
-		return it->second;
-	}
-	return nullptr;
-}
-
-const ModMenuModule::NativeCheatDef* ModMenuModule::NativeCheatsKeeperCheat::GetNativeCheatDef(size_t index)
-{
-	auto it = nativeCheatDefMap.find(index);
-	if (it != nativeCheatDefMap.end()) {
-		return it->second;
-	}
-	return nullptr;
 }
 
 bool ModMenuModule::NativeCheatsKeeperCheat::IsCheatEnabled(size_t index)

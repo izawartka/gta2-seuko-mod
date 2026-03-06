@@ -5,9 +5,9 @@
 #include "../../../converters/native-cheat-state.h"
 #include "../root.h"
 
-ModMenuModule::NativeCheatsCategoryMenu::NativeCheatsCategoryMenu(const NativeCheatCategoryDef& categoryDef, size_t page) :
+ModMenuModule::NativeCheatsCategoryMenu::NativeCheatsCategoryMenu(const CategorizedNativeCheats::NativeCheatCategoryDef& categoryDef, size_t page) :
 	m_categoryDef(categoryDef),
-	m_cheats(NativeCheatsKeeperCheat::GetAllNativeCheatDefsByCategory(categoryDef.category))
+	m_cheats(CategorizedNativeCheats::GetCheatDefsByCategory(categoryDef.category))
 {
 	m_page = page;
 	m_pageCount = (m_cheats.size() + CHEATS_PER_PAGE - 1) / CHEATS_PER_PAGE;
@@ -46,7 +46,7 @@ bool ModMenuModule::NativeCheatsCategoryMenu::Attach()
 	auto* nativeCheatsKeeper = NativeCheatsKeeperCheat::GetInstance();
 
 	for (size_t i = m_page * CHEATS_PER_PAGE; i < std::min(m_cheats.size(), (m_page + 1) * CHEATS_PER_PAGE); i++) {
-		const NativeCheatDef* cheat = m_cheats.at(i);
+		const CategorizedNativeCheats::NativeCheatDef* cheat = m_cheats.at(i);
 		if (cheat == nullptr) continue;
 
 		auto cheatCont = m_menuController->CreateItem<UiModule::HorCont>(vertCont);
