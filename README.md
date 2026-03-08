@@ -1,6 +1,6 @@
 # gta2-seuko-mod
 
-An ultimate mod menu (aka. trainer) for Grand Theft Auto 2.
+An ultimate mod menu (a.k.a. trainer) for Grand Theft Auto 2.
 
 [Video showcase](https://www.youtube.com/watch?v=5gCCe0UtBl4)
 
@@ -11,10 +11,11 @@ An ultimate mod menu (aka. trainer) for Grand Theft Auto 2.
 - Player control (money, health, armor, wanted level, wanted level lock, appearance, invulnerability, respect, multiplier, lives)
 - Teleport
 - Spawning vehicles (selectable model and remap)
-- Current/last vehicle control (physics aka. invulnerability, remap, fixing damage, turning the engine off, exploding)
-- Advanced game camera position control and 3D mode
+- Current/last vehicle control (physics, invulnerability, remap, fixing damage, turning the engine off, exploding)
+- Advanced game camera position control and 3D camera mode
+- Mouse control (with multiplayer support)
 - Obtaining weapons (selectable ammo count, including vehicle weapons)
-- Obtaining all (handheld) weapons at one key press
+- Obtaining all (handheld) weapons with a single key press
 - Weapon control (ammo count, infinite ammo, fast reload)
 - Obtaining power-ups
 - Quicksaving
@@ -30,7 +31,7 @@ An ultimate mod menu (aka. trainer) for Grand Theft Auto 2.
 
 - This mod is mainly intended for [GTA2 PC version 11.44](https://gtamp.com/GTA2/gta2-installer.exe)
 - The mod should also work with GTA2 PC version 9.6, but this version is not supported
-- [Widescreenfix](https://github.com/ThirteenAG/WidescreenFixesPack/releases/tag/gta2) seems to work fine with this mod, but settings persistence and camera may be broken
+- [Widescreenfix](https://github.com/ThirteenAG/WidescreenFixesPack/releases/tag/gta2) seems to work fine with this mod, but settings persistence and camera behavior may be broken
 - [GTA2 radar](https://github.com/gennariarmando/gta2-radar) also seems to work fine, but expect performance issues, especially when using 3D camera mode
 
 ## Installation
@@ -93,18 +94,22 @@ Customizable quick actions can be found in `Mod menu` > `Misc` > `Quick actions`
 If you like this mod and want to support its development, you can donate via [PayPal](https://www.paypal.me/maseuko) :)
 
 ## Known issues
-- Mission arrows are misaligned when using 3D camera mode and camera position is locked
-- The game sometimes crashes on level restart
+- Mission arrows are misaligned when using 3D camera mode and the camera position is locked
+- Cigarette smoke is buggy when using 3D camera mode
+- The game may sometimes crash on level restart
 - Setting large camera height / very low camera zoom crashes the game
 - The camera sometimes "jumps" one block higher when locking its position while in 3D mode
-- Spawning a lot of explosions (i.e. while using Rocket Launcher with Instant reload cheat) may cause the game to crash
+- Spawning a lot of explosions (i.e., while using Rocket Launcher with Instant reload cheat) may cause the game to crash
 - "Unlock all levels" native cheat does not work
+- Mouse control does not work with Controller configuration
+- Mouse control does not work in fullscreen mode
+- Most of the mod's features cause multiplayer games to desync
 
 Please remember that this mod is an experimental project and may cause a lot of unexpected bugs, crashes etc.
 
 ## Credits
 
-- Original GTA2 game by DMA Design / Rockstar Games (none of original game files are included in this project)
+- Original GTA2 game by DMA Design / Rockstar Games (none of the original game files are included in this project)
 - Mod by [izawartka](https://github.com/izawartka)
 - Research support by [h0x91b](https://github.com/h0x91b)
 

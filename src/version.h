@@ -7,8 +7,8 @@
 
 // version
 #define SEUKOMOD_VERSION_MAJOR 1
-#define SEUKOMOD_VERSION_MINOR 2
-#define SEUKOMOD_VERSION_PATCH 1
+#define SEUKOMOD_VERSION_MINOR 3
+#define SEUKOMOD_VERSION_PATCH 0
 
 // stringification helpers
 #define STRINGIFY2(X) #X
