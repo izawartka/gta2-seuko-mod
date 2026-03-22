@@ -144,12 +144,22 @@ namespace Game {
 		static constexpr ToggleGamePauseType* ToggleGamePause = (ToggleGamePauseType*)0x0045baa0;
 
 		typedef void UnpauseGameType();
+		// Does not send GameUnpauseEvent
 		static constexpr UnpauseGameType* UnpauseGame = (UnpauseGameType*)0x0045ba60;
 
 		typedef void HideCursorType();
+		// Does not send HideCursorEvent
 		static constexpr HideCursorType* HideCursor = (HideCursorType*)0x004cb530;
 
 		typedef void ShowCursorType();
+		// Does not send ShowCursorEvent
 		static constexpr ShowCursorType* ShowCursor = (ShowCursorType*)0x004cb550;
+
+		typedef bool InitMouseExclusiveType();
+		// Does not send MouseExclusiveModeChangeEvent
+		static constexpr InitMouseExclusiveType* InitMouseExclusive = (InitMouseExclusiveType*)0x004cad30;
+
+		typedef void DeinitMouseExclusiveType();
+		static constexpr DeinitMouseExclusiveType* DeinitMouseExclusive = (DeinitMouseExclusiveType*)0x004cadb0;
 	};  
 }
