@@ -16,10 +16,26 @@ PersistenceModule::PersistenceManager* PersistenceModule::PersistenceManager::Ge
 	return m_instance;
 }
 
+std::wstring PersistenceModule::PersistenceManager::GetRootDirectory()
+{
+	wchar_t buffer[MAX_PATH];
+	DWORD len = GetCurrentDirectoryW(MAX_PATH, buffer);
+	if (len == 0 || len == MAX_PATH) {
+		spdlog::error("PersistenceManager: Failed to get legacy root directory");
+		return L"";
+	}
+
+	return std::wstring(buffer);
+}
+
 void PersistenceModule::PersistenceManager::SaveToFile() {
 	std::ofstream ofs(m_persistenceFilePath, std::ios::binary | std::ios::trunc);
 	if (!ofs) {
-		spdlog::error("Failed to open persistence file for saving: {}", m_persistenceFilePath);
+		spdlog::error(
+			L"Failed to open persistence file for saving: {}", 
+			m_persistenceFilePath
+		);
+
 		return;
 	}
 
@@ -48,7 +64,7 @@ void PersistenceModule::PersistenceManager::SaveToFile() {
 void PersistenceModule::PersistenceManager::LoadFromFile() {
 	std::ifstream ifs(m_persistenceFilePath, std::ios::binary);
 	if (!ifs) {
-		spdlog::warn("Persistence file not found: {}", m_persistenceFilePath);
+		spdlog::warn(L"Persistence file not found: {}", m_persistenceFilePath);
 		return;
 	}
 
@@ -98,12 +114,12 @@ void PersistenceModule::PersistenceManager::LoadFromFile() {
 
 void PersistenceModule::PersistenceManager::UpdatePersistenceFilePath()
 {
-	char buffer[MAX_PATH];
-	if (GetCurrentDirectoryA(MAX_PATH, buffer) == 0) {
-		spdlog::error("PersistenceManager: Failed to get current directory");
+	std::wstring rootDir = GetRootDirectory();
+	if (rootDir.empty()) {
+		spdlog::error("Cannot update persistence file path due to invalid root directory");
 		return;
 	}
 
-	std::string workingDir(buffer);
-	m_persistenceFilePath = workingDir + "\\" + PERSISTENCE_FILE;
+	m_persistenceFilePath = rootDir + L"\\" + PERSISTENCE_FILE;
+	spdlog::debug(L"Persistence file path set to: {}", m_persistenceFilePath);
 }

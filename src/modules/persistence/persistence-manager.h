@@ -1,7 +1,7 @@
 #pragma once
 #include "common.h"
 
-constexpr const char* PERSISTENCE_FILE = "seukomod.dat";
+constexpr const wchar_t* PERSISTENCE_FILE = L"seukomod.dat";
 
 namespace PersistenceModule {
 	class PersistenceManager {
@@ -58,6 +58,8 @@ namespace PersistenceModule {
 		~PersistenceManager();
 		PersistenceManager(const PersistenceManager&) = delete;
 		PersistenceManager& operator=(const PersistenceManager&) = delete;
+
+		static std::wstring GetRootDirectory();
 
 		void SaveToFile();
 		void LoadFromFile();
@@ -143,6 +145,6 @@ namespace PersistenceModule {
 		}
 
 		std::unordered_map<std::string, std::unique_ptr<SavedValue>> m_savedValues;
-		std::string m_persistenceFilePath;
+		std::wstring m_persistenceFilePath;
 	};
 }
