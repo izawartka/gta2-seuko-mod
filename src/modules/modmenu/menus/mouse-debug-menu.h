@@ -35,7 +35,7 @@ namespace ModMenuModule {
 		UiModule::SelectController<bool>* m_subMouseEnterController = nullptr;
 		UiModule::SelectController<bool>* m_subMouseLeaveController = nullptr;
 		UiModule::VarTextSelectController<bool, bool>* m_lockMouseController = nullptr;
-		UiModule::VarTextSelectController<bool, bool>* m_invisibleMouseController = nullptr;
+		UiModule::VarTextSelectController<MouseModule::CursorVisibility, MouseModule::CursorVisibility>* m_cursorVisibilityController = nullptr;
 		UiModule::Text* m_posXText = nullptr;
 		UiModule::Text* m_posYText = nullptr;
 		UiModule::Text* m_leftButtonText = nullptr;

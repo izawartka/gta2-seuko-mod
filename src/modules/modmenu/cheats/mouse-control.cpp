@@ -210,7 +210,7 @@ void ModMenuModule::MouseControlCheat::UpdateMode()
 
 	MouseModule::MouseManager* mouseManager = MouseModule::MouseManager::GetInstance();
 	mouseManager->SetLocked(isRotateMode);
-	mouseManager->SetInvisible(isRotateMode);
+	mouseManager->SetCursorVisibility(isRotateMode ? MouseModule::CursorVisibility::ForceInvisible : MouseModule::CursorVisibility::ForceVisible);
 
 	if (isPointAtMode) UpdateLastNormalizedPos();
 }
@@ -330,7 +330,7 @@ void ModMenuModule::MouseControlCheat::Stop()
 
 	MouseModule::MouseManager* mouseManager = MouseModule::MouseManager::GetInstance();
 	mouseManager->SetLocked(false);
-	mouseManager->SetInvisible(false);
+	mouseManager->SetCursorVisibility(MouseModule::CursorVisibility::Unmodified);
 
 	ForceControlsCheat* forceControlsCheat = ForceControlsCheat::GetInstance();
 	forceControlsCheat->SetControlState(m_attackControlHandle, ForceControlState::Unmodified);

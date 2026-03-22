@@ -1,6 +1,7 @@
 #include "mouse-debug-menu.h"
 #include "../root.h"
 #include "../../../converters/yes-no.h"
+#include "../../../converters/cursor-visibility.h"
 
 ModMenuModule::MouseDebugMenu::MouseDebugMenu()
 {
@@ -109,20 +110,27 @@ bool ModMenuModule::MouseDebugMenu::Attach()
 		mouseManager->SetLocked(newValue);
 	});
 
+	UiModule::VarTextSelectOptionList<MouseModule::CursorVisibility> cursorVisibilityOptions = {
+		MouseModule::CursorVisibility::ForceVisible,
+		MouseModule::CursorVisibility::Unmodified,
+		MouseModule::CursorVisibility::ForceInvisible
+	};
 	auto invisibleMouseText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	m_invisibleMouseController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<bool, bool>>(
+	m_cursorVisibilityController = m_menuController->CreateLatestItemController<
+		UiModule::VarTextSelectController<MouseModule::CursorVisibility, MouseModule::CursorVisibility>
+	>(
 		invisibleMouseText,
-		[]() -> bool {
+		[]() -> MouseModule::CursorVisibility {
 			MouseModule::MouseManager* mouseManager = MouseModule::MouseManager::GetInstance();
-			return mouseManager->IsInvisible();
+			return mouseManager->GetCursorVisibility();
 		},
-		UiModule::VarTextSelectOptionList<bool>{ false, true },
-		UiModule::VarTextSelectControllerOptions{ L"Mouse invisible: #", L"#" }
+		cursorVisibilityOptions,
+		UiModule::VarTextSelectControllerOptions{ L"Cursor visibility: #", L"#" }
 	);
-	m_invisibleMouseController->SetConverter<YesNoConverter>();
-	m_invisibleMouseController->SetCustomSaveCallback([this](bool newValue) {
+	m_cursorVisibilityController->SetConverter<CursorVisibilityConverter>();
+	m_cursorVisibilityController->SetCustomSaveCallback([this](MouseModule::CursorVisibility newValue) {
 		MouseModule::MouseManager* mouseManager = MouseModule::MouseManager::GetInstance();
-		mouseManager->SetInvisible(newValue);
+		mouseManager->SetCursorVisibility(newValue);
 	});
 
 	m_posXText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);

@@ -102,12 +102,15 @@ void MouseModule::MouseManager::SetLocked(bool locked)
 	UpdateLockedState();
 }
 
-void MouseModule::MouseManager::SetInvisible(bool invisible)
+void MouseModule::MouseManager::SetCursorVisibility(CursorVisibility mode)
 {
-	if (m_invisible == invisible) return;
-	m_invisible = invisible;
-	if (invisible) UpdateCursorOwned();
-	UpdateInvisible();
+	if (m_cursorVisibility == mode) return;
+	if (m_cursorVisibility == CursorVisibility::Unmodified) {
+		m_wasCursorVisible = IsCursorVisible();
+	}
+	m_cursorVisibility = mode;
+	UpdateCursorVisibility();
+	UpdateCursorVisibilityEvents();
 }
 
 MouseModule::MouseManager::MouseManager() {
@@ -145,6 +148,25 @@ MouseModule::MousePosition MouseModule::MouseManager::GetClientAreaSize()
 	RECT rect;
 	GetClientRect(hwnd, &rect);
 	return MousePosition{ rect.right - 1, rect.bottom - 1 };
+}
+
+void MouseModule::MouseManager::SetCursorVisible(bool visible)
+{
+	if (visible) {
+		Game::Functions::ShowCursor();
+		SetCursor(LoadCursor(nullptr, IDC_ARROW));
+	}
+	else {
+		Game::Functions::HideCursor();
+	}
+}
+
+bool MouseModule::MouseManager::IsCursorVisible()
+{
+	CURSORINFO ci;
+	ci.cbSize = sizeof(ci);
+	GetCursorInfo(&ci);
+	return (ci.flags & CURSOR_SHOWING) != 0;
 }
 
 void MouseModule::MouseManager::OnWndProcEvent(WndProcEvent& event)
@@ -222,20 +244,13 @@ void MouseModule::MouseManager::OnWndProcEvent(WndProcEvent& event)
 		ResetButtons();
 		break;
 	}
-	case WM_SETCURSOR: {
-		if (m_invisible && m_cursorOwned) {
-			SetCursor(NULL);
-			event.SetHandled(true);
-		}
-		break;
-	}
 	case WM_KILLFOCUS:
 	case WM_SETFOCUS:
 	case WM_SIZE:
 	case WM_ACTIVATE:
 		UpdateCursorOwned();
 		UpdateLockedState();
-		UpdateInvisible();
+		UpdateCursorVisibility();
 		break;
 	};
 }
@@ -273,6 +288,28 @@ void MouseModule::MouseManager::OnPreDrawFrame(PreDrawFrameEvent& event)
 	SetToCenter();
 }
 
+void MouseModule::MouseManager::OnHideCursor(HideCursorEvent& event)
+{
+	if (m_cursorVisibility == CursorVisibility::ForceVisible) {
+		event.SetDoCancelHide(true);
+	}
+
+	if (m_cursorVisibility != CursorVisibility::Unmodified) {
+		m_wasCursorVisible = false;
+	}
+}
+
+void MouseModule::MouseManager::OnShowCursor(ShowCursorEvent& event)
+{
+	if (m_cursorVisibility == CursorVisibility::ForceInvisible) {
+		event.SetDoCancelShow(true);
+	}
+
+	if (m_cursorVisibility != CursorVisibility::Unmodified) {
+		m_wasCursorVisible = true;
+	}
+}
+
 bool MouseModule::MouseManager::Attach()
 {
 	m_attached = true;
@@ -283,7 +320,10 @@ void MouseModule::MouseManager::Detach()
 {
 	m_attached = false;
 	SetLocked(false);
-	SetInvisible(false);
+	SetCursorVisibility(CursorVisibility::Unmodified);
+	RemoveEventListener<ShowCursorEvent>(true);
+	RemoveEventListener<HideCursorEvent>(true);
+
 	if (m_initializedEvents > 0) {
 		spdlog::error("MouseManager is being detached while its events are still initialized");
 		m_initializedEvents = 0;
@@ -359,7 +399,7 @@ void MouseModule::MouseManager::ResetButtons()
 
 void MouseModule::MouseManager::UpdateWndProcEventListener()
 {
-	bool shouldListen = (m_initializedEvents > 0) || m_locked || m_invisible;
+	bool shouldListen = (m_initializedEvents > 0) || m_locked || m_cursorVisibility != CursorVisibility::Unmodified;
 	SetEventListener<WndProcEvent>(&MouseManager::OnWndProcEvent, shouldListen);
 	if (!shouldListen) m_tracking = false;
 }
@@ -383,15 +423,29 @@ void MouseModule::MouseManager::UpdateLockedState()
 	m_lockedFirstTick = locked;
 }
 
-void MouseModule::MouseManager::UpdateInvisible()
+void MouseModule::MouseManager::UpdateCursorVisibility()
 {
 	UpdateWndProcEventListener();
 
-	if (m_invisible && m_cursorOwned) {
-		SetCursor(NULL);
+	switch (m_cursorVisibility) {
+	case CursorVisibility::ForceInvisible:
+		SetCursorVisible(false);
+		break;
+	case CursorVisibility::ForceVisible:
+		SetCursorVisible(true);
+		break;
+	case CursorVisibility::Unmodified:
+		SetCursorVisible(m_wasCursorVisible);
+		break;
+	default:
+		break;
 	}
-	else {
-		HCURSOR defaultCursor = LoadCursor(NULL, IDC_ARROW);
-		SetCursor(defaultCursor);
-	}
+}
+
+void MouseModule::MouseManager::UpdateCursorVisibilityEvents()
+{
+	bool shouldListen = m_cursorVisibility != CursorVisibility::Unmodified;
+
+	SetEventListener<HideCursorEvent>(&MouseManager::OnHideCursor, shouldListen);
+	SetEventListener<ShowCursorEvent>(&MouseManager::OnShowCursor, shouldListen);
 }

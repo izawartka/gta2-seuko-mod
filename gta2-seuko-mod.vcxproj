@@ -553,6 +553,7 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
     <ClInclude Include="src\converters\categorized-object-def.h" />
     <ClInclude Include="src\converters\categorized-object-variant.h" />
     <ClInclude Include="src\converters\cop-value.h" />
+    <ClInclude Include="src\converters\cursor-visibility.h" />
     <ClInclude Include="src\converters\default.h" />
     <ClInclude Include="src\converters\elipsis.h" />
     <ClInclude Include="src\converters\enabled-disabled.h" />
