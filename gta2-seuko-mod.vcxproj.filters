@@ -164,6 +164,7 @@
     <ClCompile Include="src\modules\modmenu\utils\categorized-native-cheats-data.cpp" />
     <ClCompile Include="src\events\hide-cursor.cpp" />
     <ClCompile Include="src\events\show-cursor.cpp" />
+    <ClCompile Include="src\events\mouse-exclusive-init.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -440,6 +441,7 @@
     <ClInclude Include="src\events\hide-cursor.h" />
     <ClInclude Include="src\events\show-cursor.h" />
     <ClInclude Include="src\converters\cursor-visibility.h" />
+    <ClInclude Include="src\events\mouse-exclusive-init.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
