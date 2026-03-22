@@ -71,6 +71,7 @@ bool MouseModule::MouseManager::MarkEventInitialized()
 	m_initializedEvents++;
 	if (m_initializedEvents == 1) {
 		UpdateWndProcEventListener();
+		UpdateMouseExclusivity();
 		UpdateState();
 	}
 
@@ -83,6 +84,7 @@ void MouseModule::MouseManager::MarkEventDeinitialized()
 	if (m_initializedEvents <= 0) {
 		m_initializedEvents = 0;
 		UpdateWndProcEventListener();
+		UpdateMouseExclusivity();
 	}
 }
 
@@ -310,6 +312,11 @@ void MouseModule::MouseManager::OnShowCursor(ShowCursorEvent& event)
 	}
 }
 
+void MouseModule::MouseManager::OnMouseExclusiveInit(MouseExclusiveInitEvent& event)
+{
+	event.SetDoCancelInit(true);
+}
+
 bool MouseModule::MouseManager::Attach()
 {
 	m_attached = true;
@@ -401,7 +408,18 @@ void MouseModule::MouseManager::UpdateWndProcEventListener()
 {
 	bool shouldListen = (m_initializedEvents > 0) || m_locked || m_cursorVisibility != CursorVisibility::Unmodified;
 	SetEventListener<WndProcEvent>(&MouseManager::OnWndProcEvent, shouldListen);
+
 	if (!shouldListen) m_tracking = false;
+}
+
+void MouseModule::MouseManager::UpdateMouseExclusivity()
+{
+	bool shouldStopExclusivity = m_initializedEvents > 0;
+
+	SetEventListener<MouseExclusiveInitEvent>(&MouseManager::OnMouseExclusiveInit, shouldStopExclusivity);
+	if (shouldStopExclusivity) {
+		Game::Functions::DeinitMouseExclusive();
+	}
 }
 
 void MouseModule::MouseManager::UpdateCursorOwned()
@@ -448,4 +466,5 @@ void MouseModule::MouseManager::UpdateCursorVisibilityEvents()
 
 	SetEventListener<HideCursorEvent>(&MouseManager::OnHideCursor, shouldListen);
 	SetEventListener<ShowCursorEvent>(&MouseManager::OnShowCursor, shouldListen);
+	SetEventListener<MouseExclusiveInitEvent>(&MouseManager::OnMouseExclusiveInit, shouldListen);
 }

@@ -5,6 +5,7 @@
 #include "../../events/draw-frame.h"
 #include "../../events/hide-cursor.h"
 #include "../../events/show-cursor.h"
+#include "../../events/mouse-exclusive-init.h"
 #include "mouse-position.h"
 #include "normalized-mouse-position.h"
 
@@ -50,6 +51,7 @@ namespace MouseModule {
 		void OnPreDrawFrame(PreDrawFrameEvent& event);
 		void OnHideCursor(HideCursorEvent& event);
 		void OnShowCursor(ShowCursorEvent& event);
+		void OnMouseExclusiveInit(MouseExclusiveInitEvent& event);
 
 		bool Attach();
 		void Detach();
@@ -58,6 +60,7 @@ namespace MouseModule {
 		void OnMouseEnter();
 		void ResetButtons();
 		void UpdateWndProcEventListener();
+		void UpdateMouseExclusivity();
 		void UpdateCursorOwned();
 		void UpdateLockedState();
 		void UpdateCursorVisibility();
