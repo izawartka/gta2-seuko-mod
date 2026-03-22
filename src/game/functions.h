@@ -145,5 +145,11 @@ namespace Game {
 
 		typedef void UnpauseGameType();
 		static constexpr UnpauseGameType* UnpauseGame = (UnpauseGameType*)0x0045ba60;
+
+		typedef void HideCursorType();
+		static constexpr HideCursorType* HideCursor = (HideCursorType*)0x004cb530;
+
+		typedef void ShowCursorType();
+		static constexpr ShowCursorType* ShowCursor = (ShowCursorType*)0x004cb550;
 	};  
 }
