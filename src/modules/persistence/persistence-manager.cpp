@@ -16,7 +16,51 @@ PersistenceModule::PersistenceManager* PersistenceModule::PersistenceManager::Ge
 	return m_instance;
 }
 
+bool PersistenceModule::PersistenceManager::BackupFileIfExists(const std::wstring& filePath)
+{
+	if (GetFileAttributesW(filePath.c_str()) == INVALID_FILE_ATTRIBUTES) {
+		return false;
+	}
+
+	std::wstring backupFilePath = filePath + PERSISTENCE_FILE_BACKUP_EXT;
+	if (!CopyFileW(filePath.c_str(), backupFilePath.c_str(), FALSE)) {
+		spdlog::error(
+			L"Failed to create backup of persistence file from {} to {}. Error code: {}",
+			filePath,
+			backupFilePath,
+			GetLastError()
+		);
+		return false;
+	}
+
+	spdlog::info(
+		L"Created backup of persistence file at: {}",
+		backupFilePath
+	);
+	return true;
+}
+
 std::wstring PersistenceModule::PersistenceManager::GetRootDirectory()
+{
+	wchar_t path[MAX_PATH];
+	DWORD len = GetModuleFileNameW(nullptr, path, MAX_PATH);
+	if (len == 0 || len == MAX_PATH) {
+		spdlog::error("PersistenceManager: Failed to get host module file name");
+		return L"";
+	}
+
+	std::wstring fullPath(path);
+
+	size_t pos = fullPath.find_last_of(L"\\/");
+	if (pos == std::wstring::npos) {
+		spdlog::error("PersistenceManager: Invalid host module file path format");
+		return L"";
+	}
+
+	return fullPath.substr(0, pos);
+}
+
+std::wstring PersistenceModule::PersistenceManager::GetLegacyRootDirectory()
 {
 	wchar_t buffer[MAX_PATH];
 	DWORD len = GetCurrentDirectoryW(MAX_PATH, buffer);
@@ -26,6 +70,30 @@ std::wstring PersistenceModule::PersistenceManager::GetRootDirectory()
 	}
 
 	return std::wstring(buffer);
+}
+
+void PersistenceModule::PersistenceManager::MoveLegacyFileIfExists()
+{
+	std::wstring legacyFilePath = GetLegacyRootDirectory() + L"\\" + PERSISTENCE_FILE;
+	std::wstring newFilePath = GetRootDirectory() + L"\\" + PERSISTENCE_FILE;
+
+	if (!BackupFileIfExists(legacyFilePath)) return;
+
+	if (!MoveFileExW(legacyFilePath.c_str(), newFilePath.c_str(), MOVEFILE_COPY_ALLOWED | MOVEFILE_WRITE_THROUGH | MOVEFILE_REPLACE_EXISTING)) {
+		spdlog::error(
+			L"Failed to move legacy persistence file from {} to {}. Error code: {}",
+			legacyFilePath,
+			newFilePath,
+			GetLastError()
+		);
+		return;
+	}
+
+	spdlog::info(
+		L"Moved legacy persistence file from {} to {}",
+		legacyFilePath,
+		newFilePath
+	);
 }
 
 void PersistenceModule::PersistenceManager::SaveToFile() {

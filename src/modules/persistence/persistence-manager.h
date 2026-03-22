@@ -2,6 +2,7 @@
 #include "common.h"
 
 constexpr const wchar_t* PERSISTENCE_FILE = L"seukomod.dat";
+constexpr const wchar_t* PERSISTENCE_FILE_BACKUP_EXT = L".bak";
 
 namespace PersistenceModule {
 	class PersistenceManager {
@@ -59,7 +60,10 @@ namespace PersistenceModule {
 		PersistenceManager(const PersistenceManager&) = delete;
 		PersistenceManager& operator=(const PersistenceManager&) = delete;
 
+		static bool BackupFileIfExists(const std::wstring& filePath);
 		static std::wstring GetRootDirectory();
+		static std::wstring GetLegacyRootDirectory();
+		static void MoveLegacyFileIfExists();
 
 		void SaveToFile();
 		void LoadFromFile();
