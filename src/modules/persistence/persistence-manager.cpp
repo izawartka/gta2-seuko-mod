@@ -97,6 +97,8 @@ void PersistenceModule::PersistenceManager::MoveLegacyFileIfExists()
 }
 
 void PersistenceModule::PersistenceManager::SaveToFile() {
+	BackupFileIfExists(m_persistenceFilePath);
+
 	std::ofstream ofs(m_persistenceFilePath, std::ios::binary | std::ios::trunc);
 	if (!ofs) {
 		spdlog::error(
