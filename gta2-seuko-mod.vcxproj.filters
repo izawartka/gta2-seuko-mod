@@ -442,6 +442,8 @@
     <ClInclude Include="src\events\show-cursor.h" />
     <ClInclude Include="src\converters\cursor-visibility.h" />
     <ClInclude Include="src\events\mouse-exclusive-init.h" />
+    <ClInclude Include="src\game\constants.h" />
+    <ClInclude Include="src\game\utils\keyboard-utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

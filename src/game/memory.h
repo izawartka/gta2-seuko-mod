@@ -55,5 +55,6 @@ namespace Game {
 		static Keyboard* GetKeyboard() { return (Keyboard*)0x005ecac8; }
 		static Tick* GetTick() { return (Tick*)*(DWORD*)0x005e8108; }
 		static Controls* GetControls() { return (Controls*)0x005e8f5c; }
+		static KeyCode* GetControlsAsArray() { return (KeyCode*)0x005e8f5c; }
 	};
 }
