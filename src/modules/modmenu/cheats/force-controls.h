@@ -9,8 +9,6 @@
 #include "../../../events/draw-frame.h"
 
 namespace ModMenuModule {
-	static constexpr size_t CONTROLS_COUNT = 12;
-
 	enum class ForceControlState {
 		ForceUp,
 		Unmodified,
@@ -71,7 +69,7 @@ namespace ModMenuModule {
 
 		static ForceControlsCheat* m_instance;
 
-		std::array<Control, CONTROLS_COUNT> m_controls = {};
+		std::array<Control, Game::Constants::CONTROLS_COUNT> m_controls = {};
 		std::unordered_map<ControlHandle, ControlIndex> m_controlHandles = {};
 		ControlHandle m_nextControlHandle = 1;
 		bool m_started = false;

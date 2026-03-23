@@ -21,24 +21,15 @@ ModMenuModule::ForceControlsCheat* ModMenuModule::ForceControlsCheat::GetInstanc
 
 ModMenuModule::ForceControlsCheat::ControlIndex ModMenuModule::ForceControlsCheat::GetControlIndex(Game::KEYBOARD_STATE control)
 {
-	size_t shiftedControl = static_cast<size_t>(control) & (1U << CONTROLS_COUNT) - 1;
-	if (shiftedControl == 0) return -1;
-
-	for (size_t i = 0; i < CONTROLS_COUNT; i++) {
-		if (shiftedControl == 1) return i;
-		shiftedControl = shiftedControl >> 1;
-	}
-
-	return -1;
+	return Game::Utils::GetControlIndex(control);
 }
 
 bool ModMenuModule::ForceControlsCheat::CheckUsesController(ControlIndex controlIndex)
 {
-	assert(controlIndex < CONTROLS_COUNT);
+	assert(controlIndex < Game::Constants::CONTROLS_COUNT);
 
-	Game::Controls* controls = Game::Memory::GetControls();
-	unsigned int controlKey = (reinterpret_cast<unsigned int*>(controls))[controlIndex];
-	return controlKey >= 0xE0 && controlKey <= 0xE3 || controlKey == 0x00 || controlKey == 0x01;
+	Game::KeyCode* controls = Game::Memory::GetControlsAsArray();
+	return Game::Utils::IsGamepadKey(controls[controlIndex]);
 }
 
 bool ModMenuModule::ForceControlsCheat::CheckGameReadyToForce(bool ignoreGamePause)
@@ -60,7 +51,7 @@ bool ModMenuModule::ForceControlsCheat::CheckGameReadyToForce(bool ignoreGamePau
 
 bool ModMenuModule::ForceControlsCheat::IsControlFree(ControlIndex controlIndex) const
 {
-	assert(controlIndex < CONTROLS_COUNT);
+	assert(controlIndex < Game::Constants::CONTROLS_COUNT);
 
 	const Control& controlState = m_controls.at(controlIndex);
 	return controlState.handle == -1;
@@ -68,7 +59,7 @@ bool ModMenuModule::ForceControlsCheat::IsControlFree(ControlIndex controlIndex)
 
 ModMenuModule::ForceControlsCheat::ControlHandle ModMenuModule::ForceControlsCheat::CreateControlHandle(ControlIndex controlIndex)
 {
-	assert(controlIndex < CONTROLS_COUNT);
+	assert(controlIndex < Game::Constants::CONTROLS_COUNT);
 
 	Control& controlState = m_controls.at(controlIndex);
 	if (controlState.handle != -1) {
@@ -112,7 +103,7 @@ void ModMenuModule::ForceControlsCheat::SetControlState(ControlHandle controlHan
 
 	Game::Keyboard* keyboard = Game::Memory::GetKeyboard();
 	if (state != ForceControlState::Unmodified && controlState.state == ForceControlState::Unmodified) {
-		controlState.unmodifiedIsDown = (keyboard->state & (1U << controlIndex)) != 0;
+		controlState.unmodifiedIsDown = Game::Utils::IsControlDown(keyboard->state, controlIndex);
 	}
 }
 
@@ -166,7 +157,7 @@ void ModMenuModule::ForceControlsCheat::OnKeyboardGetData(KeyboardGetDataEvent& 
 	PreProcessEvent(event);
 	if (!event.IsReadyToEmulate()) return;
 
-	for (size_t i = 0; i < CONTROLS_COUNT; i++) {
+	for (size_t i = 0; i < Game::Constants::CONTROLS_COUNT; i++) {
 		if (ProcessControl(event, i)) break;
 	}
 }
@@ -230,10 +221,10 @@ bool ModMenuModule::ForceControlsCheat::CheckCheatNeeded() const
 void ModMenuModule::ForceControlsCheat::PreProcessEvent(KeyboardGetDataEvent& event)
 {
 	if (event.IsReadyToEmulate()) return;
-	Game::Controls* controls = Game::Memory::GetControls();
+	Game::KeyCode* controls = Game::Memory::GetControlsAsArray();
 
-	for (size_t i = 0; i < CONTROLS_COUNT; i++) {
-		Game::KeyCode controlKeyCode = (reinterpret_cast<Game::KeyCode*>(controls))[i];
+	for (size_t i = 0; i < Game::Constants::CONTROLS_COUNT; i++) {
+		Game::KeyCode controlKeyCode = controls[i];
 		if (event.GetKeyCode() != controlKeyCode) continue;
 		Control& controlState = m_controls.at(i);
 
@@ -256,11 +247,10 @@ bool ModMenuModule::ForceControlsCheat::ProcessControl(KeyboardGetDataEvent& eve
 	ForceControlState& nextState = control.nextState;
 	bool currentNextMatch = state == nextState;
 
-	Game::Controls* controls = Game::Memory::GetControls();
-	Game::KeyCode controlKeyCode = (reinterpret_cast<Game::KeyCode*>(controls))[controlIndex];
+	Game::KeyCode* controls = Game::Memory::GetControlsAsArray();
+	Game::KeyCode controlKeyCode = controls[controlIndex];
 	Game::Keyboard* keyboard = Game::Memory::GetKeyboard();
-	Game::KEYBOARD_STATE controlMask = static_cast<Game::KEYBOARD_STATE>(1U << controlIndex);
-	bool isDown = (keyboard->state & controlMask) != 0;
+	bool isDown = Game::Utils::IsControlDown(keyboard->state, controlIndex);
 
 	switch (nextState) {
 	case ForceControlState::Unmodified:
