@@ -66,7 +66,7 @@ namespace ModMenuModule {
 		void UpdateAutoMode();
 		void UpdateAutoModeListeners();
 		void RemoveAutoModeListeners();
-		bool EnsureNotControllerControls() const;
+		bool EnsureNotGamepadControls() const;
 		bool EnsureControlHandlesOk() const;
 		void StartRotation();
 		void StopRotation();

@@ -19,12 +19,7 @@ ModMenuModule::ForceControlsCheat* ModMenuModule::ForceControlsCheat::GetInstanc
 	return m_instance;
 }
 
-ModMenuModule::ForceControlsCheat::ControlIndex ModMenuModule::ForceControlsCheat::GetControlIndex(Game::KEYBOARD_STATE control)
-{
-	return Game::Utils::GetControlIndex(control);
-}
-
-bool ModMenuModule::ForceControlsCheat::CheckUsesController(ControlIndex controlIndex)
+bool ModMenuModule::ForceControlsCheat::CheckUsesGamepad(ControlIndex controlIndex)
 {
 	assert(controlIndex < Game::Constants::CONTROLS_COUNT);
 

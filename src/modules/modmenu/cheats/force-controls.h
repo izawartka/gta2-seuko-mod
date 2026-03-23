@@ -19,7 +19,7 @@ namespace ModMenuModule {
 	The ForceControlsCheat allows forcing specific controls (mapped keys) to be pressed or preventing them from being pressed by the user.
 	The cheat automatically enables / disables when needed, so SetEnabled should not be called directly.
 	Controls are not modified when the game is not running, paused, or when replay is playing.
-	The cheat should not be used for controls that are binded to a controller (gamepad). Once the game starts, use CheckUsesController to check.
+	The cheat should not be used for controls that are binded to a gamepad. Once the game starts, use CheckUsesGamepad to check.
 	No state is saved to persistence.
 	*/
 	class ForceControlsCheat : public CheatBase, public Core::EventListenerSupport {
@@ -31,8 +31,7 @@ namespace ModMenuModule {
 		virtual ~ForceControlsCheat() override;
 		static ForceControlsCheat* GetInstance();
 
-		static ControlIndex GetControlIndex(Game::KEYBOARD_STATE control);
-		static bool CheckUsesController(ControlIndex controlIndex);
+		static bool CheckUsesGamepad(ControlIndex controlIndex);
 		static bool CheckGameReadyToForce(bool ignoreGamePause = false);
 
 		bool IsControlFree(ControlIndex controlIndex) const;

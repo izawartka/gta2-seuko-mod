@@ -8,6 +8,10 @@ static constexpr float ROTATE_MODE_SMOOTING = 0.2f;
 static constexpr float ROTATION_INPUT_THRESHOLD = 0.11f;
 static constexpr float ROTATION_SPEED = 0.20943928f;
 
+static constexpr size_t LEFT_CONTROL_INDEX = Game::Utils::GetControlIndex(Game::KEYBOARD_STATE_LEFT);
+static constexpr size_t RIGHT_CONTROL_INDEX = Game::Utils::GetControlIndex(Game::KEYBOARD_STATE_RIGHT);
+static constexpr size_t ATTACK_CONTROL_INDEX = Game::Utils::GetControlIndex(Game::KEYBOARD_STATE_ATTACK);
+
 ModMenuModule::MouseControlCheat* ModMenuModule::MouseControlCheat::m_instance = nullptr;
 
 ModMenuModule::MouseControlCheat::MouseControlCheat() : ModMenuModule::CheatBase("Cheat_MouseControl_IsEnabled") {
@@ -254,20 +258,17 @@ void ModMenuModule::MouseControlCheat::RemoveAutoModeListeners()
 	RemoveEventListener<CheatOptionsUpdateEvent<CameraCheat>>(true);
 }
 
-bool ModMenuModule::MouseControlCheat::EnsureNotControllerControls() const
+bool ModMenuModule::MouseControlCheat::EnsureNotGamepadControls() const
 {
-	ForceControlsCheat::ControlIndex leftControlIndex = ForceControlsCheat::GetControlIndex(Game::KEYBOARD_STATE_LEFT);
-	ForceControlsCheat::ControlIndex rightControlIndex = ForceControlsCheat::GetControlIndex(Game::KEYBOARD_STATE_RIGHT);
-	ForceControlsCheat::ControlIndex attackControlIndex = ForceControlsCheat::GetControlIndex(Game::KEYBOARD_STATE_ATTACK);
-
-	bool allOk = !ForceControlsCheat::CheckUsesController(leftControlIndex)
-		&& !ForceControlsCheat::CheckUsesController(rightControlIndex)
-		&& !ForceControlsCheat::CheckUsesController(attackControlIndex);
+	bool allOk = !ForceControlsCheat::CheckUsesGamepad(LEFT_CONTROL_INDEX)
+		&& !ForceControlsCheat::CheckUsesGamepad(RIGHT_CONTROL_INDEX)
+		&& !ForceControlsCheat::CheckUsesGamepad(ATTACK_CONTROL_INDEX);
 
 	if (!allOk) {
+		// the name "Controller" is purposely used instead of "Gamepad" or because that's how the preset is named in GTA2 Manager
 		spdlog::warn("Mouse control won't work with Controller controls. Please update your controls in GTA2 Manager");
 		ToastManager::GetInstance()->Show({ L"Mouse control won't work with Controller controls.", ToastType::Warning, 240 });
-		ToastManager::GetInstance()->Show({ L"Please update your controls in GTA2 Mangager", ToastType::Warning, 240 });
+		ToastManager::GetInstance()->Show({ L"Please update your controls in GTA2 Manager", ToastType::Warning, 240 });
 	}
 
 	return allOk;
@@ -304,7 +305,7 @@ void ModMenuModule::MouseControlCheat::Start()
 {
 	if (m_started) return;
 	if (!EnsureControlHandlesOk()) return;
-	if (!EnsureNotControllerControls()) return;
+	if (!EnsureNotGamepadControls()) return;
 	spdlog::debug("MouseControlCheat: Starting");
 	m_started = true;
 
@@ -341,12 +342,9 @@ bool ModMenuModule::MouseControlCheat::CreateControlHandles()
 {
 	ForceControlsCheat* forceControlsCheat = ForceControlsCheat::GetInstance();
 
-	ForceControlsCheat::ControlIndex leftControlIndex = ForceControlsCheat::GetControlIndex(Game::KEYBOARD_STATE_LEFT);
-	m_leftControlHandle = forceControlsCheat->CreateControlHandle(leftControlIndex);
-	ForceControlsCheat::ControlIndex rightControlIndex = ForceControlsCheat::GetControlIndex(Game::KEYBOARD_STATE_RIGHT);
-	m_rightControlHandle = forceControlsCheat->CreateControlHandle(rightControlIndex);
-	ForceControlsCheat::ControlIndex attackControlIndex = ForceControlsCheat::GetControlIndex(Game::KEYBOARD_STATE_ATTACK);
-	m_attackControlHandle = forceControlsCheat->CreateControlHandle(attackControlIndex);
+	m_leftControlHandle = forceControlsCheat->CreateControlHandle(LEFT_CONTROL_INDEX);
+	m_rightControlHandle = forceControlsCheat->CreateControlHandle(RIGHT_CONTROL_INDEX);
+	m_attackControlHandle = forceControlsCheat->CreateControlHandle(ATTACK_CONTROL_INDEX);
 
 	m_controlHandlesOk = (m_leftControlHandle != -1) && (m_rightControlHandle != -1) && (m_attackControlHandle != -1);
 	if(!m_controlHandlesOk) {
