@@ -92,6 +92,12 @@ bool ModMenuModule::SwitchCameraModeAction::DeserializeData(const std::vector<ui
 	for (size_t i = 0; i < selectedModesCount; i++) {
 		Utils::CameraEasyMode::CameraEasyMode mode;
 		std::memcpy(&mode, data.data() + sizeof(size_t) + sizeof(Utils::CameraEasyMode::CameraEasyMode) * i, sizeof(Utils::CameraEasyMode::CameraEasyMode));
+
+		// backwards compatibility
+		if (mode == Utils::CameraEasyMode::CameraEasyMode::Unmodified2) {
+			mode = Utils::CameraEasyMode::CameraEasyMode::Unmodified;
+		}
+
 		selectedModes.push_back(mode);
 	}
 

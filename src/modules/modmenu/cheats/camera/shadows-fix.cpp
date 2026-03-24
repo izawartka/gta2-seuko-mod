@@ -3,7 +3,7 @@
 
 ModMenuModule::ShadowsFixCheat* ModMenuModule::ShadowsFixCheat::m_instance = nullptr;
 
-ModMenuModule::ShadowsFixCheat::ShadowsFixCheat() : ModMenuModule::CheatBase("Cheat_ShadowsFix_IsEnabled") {
+ModMenuModule::ShadowsFixCheat::ShadowsFixCheat() : ModMenuModule::CheatBase("") {
 	assert(m_instance == nullptr && "ShadowsFixCheat instance already exists");
 	m_instance = this;
 }

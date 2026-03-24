@@ -59,34 +59,20 @@ ModMenuModule::Utils::CameraEasyMode::CameraEasyMode ModMenuModule::Utils::Camer
 	CameraPosCheat* cameraPosCheat = CameraPosCheat::GetInstance();
 	ClearScreenCheat* clearScreenCheat = ClearScreenCheat::GetInstance();
 	DisableCullingCheat* disableCullingCheat = DisableCullingCheat::GetInstance();
-	ShadowsFixCheat* shadowsFixCheat = ShadowsFixCheat::GetInstance();
 
 	bool cameraCheatEnabled = cameraCheat->IsEnabled();
 	bool cameraPosCheatEnabled = cameraPosCheat->IsEnabled();
 	bool clearScreenCheatEnabled = clearScreenCheat->IsEnabled();
 	bool disableCullingCheatEnabled = disableCullingCheat->IsEnabled();
-	bool shadowsFixCheatEnabled = shadowsFixCheat->IsEnabled();
 
-	bool allDisabled = 
+	bool allDisabled =
 		!cameraCheatEnabled &&
 		!cameraPosCheatEnabled &&
 		!clearScreenCheatEnabled &&
-		!disableCullingCheatEnabled &&
-		!shadowsFixCheatEnabled;
+		!disableCullingCheatEnabled;
 
 	if (allDisabled) {
 		return CameraEasyMode::Unmodified;
-	}
-
-	bool fixShadowsOnlyEnabled =
-		!cameraCheatEnabled &&
-		!cameraPosCheatEnabled &&
-		!clearScreenCheatEnabled &&
-		!disableCullingCheatEnabled &&
-		shadowsFixCheatEnabled;
-
-	if (fixShadowsOnlyEnabled) {
-		return CameraEasyMode::FixShadows;
 	}
 
 	bool camDisabled = (!cameraCheat || !cameraCheat->IsEnabled());
@@ -98,8 +84,7 @@ ModMenuModule::Utils::CameraEasyMode::CameraEasyMode ModMenuModule::Utils::Camer
 
 	bool rotateOnlyEnabled =
 		clearScreenCheatEnabled &&
-		!disableCullingCheatEnabled &&
-		shadowsFixCheatEnabled;
+		!disableCullingCheatEnabled;
 
 	const CameraCheatOptions& camOptions = cameraCheat->GetOptions();
 	const CameraPosCheatOptions& posOptions = cameraPosCheat->GetOptions();
@@ -115,8 +100,7 @@ ModMenuModule::Utils::CameraEasyMode::CameraEasyMode ModMenuModule::Utils::Camer
 
 	bool allEnabled =
 		clearScreenCheatEnabled &&
-		disableCullingCheatEnabled &&
-		shadowsFixCheatEnabled;
+		disableCullingCheatEnabled;
 
 	if (!allEnabled) {
 		return CameraEasyMode::Custom;
@@ -163,6 +147,7 @@ bool ModMenuModule::Utils::CameraEasyMode::SetCurrentMode(CameraEasyMode newMode
 
 	switch (newMode) {
 	case CameraEasyMode::Unmodified:
+	case CameraEasyMode::Unmodified2:
 		if(cameraCheat->IsEnabled()) cameraCheat->SetOptions({});
 		cameraCheat->SetEnabled(false);
 		if (cameraPosCheat->IsEnabled()) {
@@ -172,18 +157,6 @@ bool ModMenuModule::Utils::CameraEasyMode::SetCurrentMode(CameraEasyMode newMode
 		clearScreenCheat->SetEnabled(false);
 		disableCullingCheat->SetEnabled(false);
 		shadowsFixCheat->SetEnabled(false);
-		return true;
-
-	case CameraEasyMode::FixShadows:
-		if (cameraCheat->IsEnabled()) cameraCheat->SetOptions({});
-		cameraCheat->SetEnabled(false);
-		if (cameraPosCheat->IsEnabled()) {
-			cameraPosCheat->SetOptions({});
-			cameraPosCheat->SnapAndDisable();
-		}
-		clearScreenCheat->SetEnabled(false);
-		disableCullingCheat->SetEnabled(false);
-		shadowsFixCheat->SetEnabled(true);
 		return true;
 
 	case CameraEasyMode::Rotate:
@@ -222,7 +195,6 @@ const std::vector<ModMenuModule::Utils::CameraEasyMode::CameraEasyMode>& ModMenu
 {
 	static const std::vector<CameraEasyMode> modes = {
 		CameraEasyMode::Unmodified,
-		CameraEasyMode::FixShadows,
 		CameraEasyMode::Rotate,
 		CameraEasyMode::ThreeDimensional,
 	};

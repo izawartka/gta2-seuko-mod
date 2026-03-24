@@ -2,7 +2,6 @@
 #include "../root.h"
 #include "../cheats/camera/clear-screen.h"
 #include "../cheats/camera/disable-culling.h"
-#include "../cheats/camera/shadows-fix.h"
 #include "../cheats/camera/disable-antialiasing.h"
 #include "../../../converters/enabled-disabled.h"
 
@@ -25,7 +24,6 @@ bool ModMenuModule::CameraRenderingMenu::Attach()
 
 	ClearScreenCheat* clearScreenCheat = ClearScreenCheat::GetInstance();
 	DisableCullingCheat* disableCullingCheat = DisableCullingCheat::GetInstance();
-	ShadowsFixCheat* shadowsFixCheat = ShadowsFixCheat::GetInstance();
 	DisableAntialiasingCheat* disableAACheat = DisableAntialiasingCheat::GetInstance();
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
@@ -55,21 +53,6 @@ bool ModMenuModule::CameraRenderingMenu::Attach()
 	m_disableCullingCheatController->SetSaveCallback([disableCullingCheat](bool newValue) {
 		disableCullingCheat->SetEnabled(newValue);
 	});
-
-	// shadows fix
-	UiModule::Text* shadowsFixText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	m_shadowsFixCheatController = m_menuController->CreateLatestItemController<UiModule::SelectController<bool>>(
-		shadowsFixText,
-		UiModule::SelectOptionList<bool>{ false, true },
-		std::nullopt,
-		UiModule::SelectControllerOptions{ L"Shadows fix: #", L"#" }
-	);
-	m_shadowsFixCheatController->SetConverter<EnabledDisabledConverter>();
-	m_shadowsFixCheatController->SetSaveCallback([shadowsFixCheat](bool newValue) {
-		shadowsFixCheat->SetEnabled(newValue);
-	});
-
-	uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, options.menuSpacerHeight);
 
 	// disable antialiasing
 	UiModule::Text* disableAAText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
@@ -119,9 +102,6 @@ void ModMenuModule::CameraRenderingMenu::OnCheatStateChange(CheatStateEvent& eve
 	else if (event.GetCheatType() == typeid(DisableCullingCheat)) {
 		m_disableCullingCheatController->SetValue(event.IsEnabled());
 	}
-	else if (event.GetCheatType() == typeid(ShadowsFixCheat)) {
-		m_shadowsFixCheatController->SetValue(event.IsEnabled());
-	}
 	else if (event.GetCheatType() == typeid(DisableAntialiasingCheat)) {
 		m_disableAACheatController->SetValue(event.IsEnabled());
 	}
@@ -131,6 +111,5 @@ void ModMenuModule::CameraRenderingMenu::UpdateCheatStates()
 {
 	m_clearScreenCheatController->SetValue(ClearScreenCheat::GetInstance()->IsEnabled());
 	m_disableCullingCheatController->SetValue(DisableCullingCheat::GetInstance()->IsEnabled());
-	m_shadowsFixCheatController->SetValue(ShadowsFixCheat::GetInstance()->IsEnabled());
 	m_disableAACheatController->SetValue(DisableAntialiasingCheat::GetInstance()->IsEnabled());
 }

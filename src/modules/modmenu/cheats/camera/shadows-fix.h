@@ -14,6 +14,7 @@ namespace ModMenuModule {
 		virtual void OnFirstEnable() override;
 		virtual void OnEnable() override;
 		virtual void OnDisable() override;
+		virtual bool AutoEnableOnAttach() const override { return true; }
 
 		void OnScaleShadow(ScaleShadowEvent& event);
 

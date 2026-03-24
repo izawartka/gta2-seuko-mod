@@ -8,9 +8,8 @@ public:
 
 		switch (value) {
 		case ModMenuModule::Utils::CameraEasyMode::CameraEasyMode::Unmodified:
+		case ModMenuModule::Utils::CameraEasyMode::CameraEasyMode::Unmodified2:
 			return L"Unmodified";
-		case ModMenuModule::Utils::CameraEasyMode::CameraEasyMode::FixShadows:
-			return L"Fix Shadow distances";
 		case ModMenuModule::Utils::CameraEasyMode::CameraEasyMode::Rotate:
 			return L"Rotate";
 		case ModMenuModule::Utils::CameraEasyMode::CameraEasyMode::ThreeDimensional:
