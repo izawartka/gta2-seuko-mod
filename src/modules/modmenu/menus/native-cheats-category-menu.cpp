@@ -5,9 +5,9 @@
 #include "../../../converters/native-cheat-state.h"
 #include "../root.h"
 
-ModMenuModule::NativeCheatsCategoryMenu::NativeCheatsCategoryMenu(const CategorizedNativeCheats::NativeCheatCategoryDef& categoryDef, size_t page) :
+ModMenuModule::NativeCheatsCategoryMenu::NativeCheatsCategoryMenu(const Utils::CategorizedNativeCheats::NativeCheatCategoryDef& categoryDef, size_t page) :
 	m_categoryDef(categoryDef),
-	m_cheats(CategorizedNativeCheats::GetCheatDefsByCategory(categoryDef.category))
+	m_cheats(Utils::CategorizedNativeCheats::GetCheatDefsByCategory(categoryDef.category))
 {
 	m_page = page;
 	m_pageCount = (m_cheats.size() + CHEATS_PER_PAGE - 1) / CHEATS_PER_PAGE;
@@ -35,7 +35,7 @@ bool ModMenuModule::NativeCheatsCategoryMenu::Attach()
 		m_nextPageItemId = m_menuController->GetLatestMenuItemId();
 	}
 
-	if (m_categoryDef.category == CategorizedNativeCheats::NativeCheatCategory::UnstableOrUnused) {
+	if (m_categoryDef.category == Utils::CategorizedNativeCheats::NativeCheatCategory::UnstableOrUnused) {
 		CreateUnstableWarning(vertCont);
 	}
 
@@ -50,7 +50,7 @@ bool ModMenuModule::NativeCheatsCategoryMenu::Attach()
 	auto* nativeCheatsKeeper = NativeCheatsKeeperCheat::GetInstance();
 
 	for (size_t i = m_page * CHEATS_PER_PAGE; i < std::min(m_cheats.size(), (m_page + 1) * CHEATS_PER_PAGE); i++) {
-		const CategorizedNativeCheats::NativeCheatDef* cheat = m_cheats.at(i);
+		const Utils::CategorizedNativeCheats::NativeCheatDef* cheat = m_cheats.at(i);
 		if (cheat == nullptr) continue;
 
 		auto cheatCont = m_menuController->CreateItem<UiModule::HorCont>(vertCont);

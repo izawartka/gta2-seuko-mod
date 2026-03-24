@@ -34,7 +34,7 @@ bool ModMenuModule::NativeCheatsMenu::Attach()
 
 	uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, options.menuSpacerHeight);
 
-	const auto& categories = CategorizedNativeCheats::GetAllCategoryDefs();
+	const auto& categories = Utils::CategorizedNativeCheats::GetAllCategoryDefs();
 	for (const auto& category : categories) {
 		auto categoryText = m_menuController->CreateItem<UiModule::Text>(vertCont, category.name.c_str(), options.textSize);
 		if (m_firstCategoryItemId == -1) {
@@ -57,9 +57,9 @@ void ModMenuModule::NativeCheatsMenu::OnMenuAction(UiModule::Selectable* item, U
 		break;
 	}
 
-	const auto& categories = CategorizedNativeCheats::GetAllCategoryDefs();
+	const auto& categories = Utils::CategorizedNativeCheats::GetAllCategoryDefs();
 	if (id >= m_firstCategoryItemId && id < static_cast<UiModule::MenuItemId>(categories.size() + m_firstCategoryItemId)) {
-		const CategorizedNativeCheats::NativeCheatCategoryDef& categoryDef = categories.at(id - m_firstCategoryItemId);
+		const Utils::CategorizedNativeCheats::NativeCheatCategoryDef& categoryDef = categories.at(id - m_firstCategoryItemId);
 		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::NativeCheatsCategoryMenu>(categoryDef);
 		return;
 	}

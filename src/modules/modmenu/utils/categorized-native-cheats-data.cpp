@@ -1,6 +1,6 @@
 #include "categorized-native-cheats-utils.h"
 
-namespace ModMenuModule::CategorizedNativeCheats {
+namespace ModMenuModule::Utils::CategorizedNativeCheats {
 	static const std::vector<NativeCheatCategory> nativeCheatCategories = {
 		NativeCheatCategory::Standard,
 		NativeCheatCategory::SkipThings,
@@ -116,7 +116,7 @@ namespace ModMenuModule::CategorizedNativeCheats {
 		{ NativeCheatCategory::OtherDebug, L"Do sync check", 0x57},
 		{ NativeCheatCategory::OtherDebug, L"Do Police 3", 0x58},
 		{ NativeCheatCategory::ReplayRelated, L"Play replay", 0x59},
-		{ NativeCheatCategory::OtherDebug, L"Skip quit confirm", 0x5A},
+		{ NativeCheatCategory::SkipThings, L"Skip quit confirm", 0x5A},
 		{ NativeCheatCategory::OtherDebug, L"Limit recycling", 0x5B},
 		{ NativeCheatCategory::ReplayRelated, L"Exit after replay", 0x5C},
 		{ NativeCheatCategory::UnstableOrUnused, L"Skip missions", 0x5D},

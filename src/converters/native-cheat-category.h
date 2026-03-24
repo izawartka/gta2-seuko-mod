@@ -4,8 +4,8 @@
 
 class NativeCheatCategoryConverter {
 public:
-	static std::wstring ConvertToString(ModMenuModule::CategorizedNativeCheats::NativeCheatCategory value) {
-		const auto* categoryDef = ModMenuModule::CategorizedNativeCheats::GetCategoryDef(value);
+	static std::wstring ConvertToString(ModMenuModule::Utils::CategorizedNativeCheats::NativeCheatCategory value) {
+		const auto* categoryDef = ModMenuModule::Utils::CategorizedNativeCheats::GetCategoryDef(value);
 		if (categoryDef == nullptr) {
 			return L"???";
 		}
@@ -13,8 +13,8 @@ public:
 	}
 
 	static bool AreEqual(
-		ModMenuModule::CategorizedNativeCheats::NativeCheatCategory a, 
-		ModMenuModule::CategorizedNativeCheats::NativeCheatCategory b
+		ModMenuModule::Utils::CategorizedNativeCheats::NativeCheatCategory a, 
+		ModMenuModule::Utils::CategorizedNativeCheats::NativeCheatCategory b
 	) {
 		return a == b;
 	}

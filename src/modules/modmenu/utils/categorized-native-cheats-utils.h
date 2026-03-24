@@ -1,7 +1,7 @@
 #pragma once
 #include "../common.h"
 
-namespace ModMenuModule::CategorizedNativeCheats {
+namespace ModMenuModule::Utils::CategorizedNativeCheats {
 	enum class NativeCheatCategory {
 		Standard,
 		SkipThings,

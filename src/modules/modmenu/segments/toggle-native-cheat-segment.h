@@ -23,11 +23,11 @@ namespace ModMenuModule {
 		virtual bool Attach(ModMenuModule::MenuBase* menu, UiModule::Component* parent) override;
 		virtual void Detach() override;
 
-		void CreateCheatController(CategorizedNativeCheats::NativeCheatCategory category);
+		void CreateCheatController(Utils::CategorizedNativeCheats::NativeCheatCategory category);
 		void DestroyCheatController();
-		void OnCheatCategoryControllerSave(CategorizedNativeCheats::NativeCheatCategory newCategory);
+		void OnCheatCategoryControllerSave(Utils::CategorizedNativeCheats::NativeCheatCategory newCategory);
 
-		UiModule::SelectController<CategorizedNativeCheats::NativeCheatCategory>* m_cheatCategoryController = nullptr;
+		UiModule::SelectController<Utils::CategorizedNativeCheats::NativeCheatCategory>* m_cheatCategoryController = nullptr;
 		UiModule::SelectController<size_t>* m_cheatController = nullptr;
 		UiModule::Text* m_cheatText = nullptr;
 		UiModule::MenuItemId m_cheatMenuItemId = -1;

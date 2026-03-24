@@ -5,7 +5,7 @@
 class NativeCheatConverter {
 public:
 	static std::wstring ConvertToString(size_t value) {
-		const auto* cheatDef = ModMenuModule::CategorizedNativeCheats::GetCheatDef(value);
+		const auto* cheatDef = ModMenuModule::Utils::CategorizedNativeCheats::GetCheatDef(value);
 		if (cheatDef) {
 			return cheatDef->name;
 		}

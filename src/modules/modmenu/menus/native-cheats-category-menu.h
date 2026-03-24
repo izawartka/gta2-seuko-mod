@@ -8,7 +8,7 @@ static constexpr size_t CHEATS_PER_PAGE = 9;
 namespace ModMenuModule {
 	class NativeCheatsCategoryMenu : public MenuBase {
 	public:
-		NativeCheatsCategoryMenu(const CategorizedNativeCheats::NativeCheatCategoryDef& categoryDef, size_t page = 0);
+		NativeCheatsCategoryMenu(const Utils::CategorizedNativeCheats::NativeCheatCategoryDef& categoryDef, size_t page = 0);
 		virtual ~NativeCheatsCategoryMenu();
 
 	private:
@@ -22,8 +22,8 @@ namespace ModMenuModule {
 		std::wstring GetPageTitle() const;
 		void CreateUnstableWarning(UiModule::Component* parent);
 
-		const CategorizedNativeCheats::NativeCheatCategoryDef& m_categoryDef;
-		const std::vector<const CategorizedNativeCheats::NativeCheatDef*>& m_cheats;
+		const Utils::CategorizedNativeCheats::NativeCheatCategoryDef& m_categoryDef;
+		const std::vector<const Utils::CategorizedNativeCheats::NativeCheatDef*>& m_cheats;
 		size_t m_page;
 		size_t m_pageCount;
 		std::vector<UiModule::VarTextController<bool, bool>*> m_cheatValueControllers = {};

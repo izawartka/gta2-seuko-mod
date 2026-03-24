@@ -1,7 +1,7 @@
 #include "categorized-native-cheats-utils.h"
 #include "categorized-native-cheats-data.cpp"
 
-namespace ModMenuModule::CategorizedNativeCheats {
+namespace ModMenuModule::Utils::CategorizedNativeCheats {
 	const std::vector<NativeCheatCategory>& GetAllCategories()
 	{
 		return nativeCheatCategories;
