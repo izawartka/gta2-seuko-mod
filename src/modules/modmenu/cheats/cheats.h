@@ -16,3 +16,4 @@
 #include "player-appearance.h"
 #include "player-pos.h"
 #include "saved-cars.h"
+#include "unstuck-keys.h"

@@ -165,6 +165,7 @@
     <ClCompile Include="src\events\hide-cursor.cpp" />
     <ClCompile Include="src\events\show-cursor.cpp" />
     <ClCompile Include="src\events\mouse-exclusive-init.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\unstuck-keys.cpp" />
     <ClCompile Include="src\events\window-focus-change.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -443,6 +444,7 @@
     <ClInclude Include="src\events\show-cursor.h" />
     <ClInclude Include="src\converters\cursor-visibility.h" />
     <ClInclude Include="src\events\mouse-exclusive-init.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\unstuck-keys.h" />
     <ClInclude Include="src\events\window-focus-change.h" />
     <ClInclude Include="src\game\constants.h" />
     <ClInclude Include="src\game\utils\keyboard-utils.h" />
