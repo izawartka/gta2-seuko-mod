@@ -3,8 +3,8 @@
 #include "../game/game.h"
 
 /*
-Dispatched when the game is getting keyboard data and can be used to emulate keyboard input. 
-One keyboard input  per tick can be registered by the game, so check IsReadyToEmulate() before emulating a key.
+Dispatched when the game is about to get keyboard data and can be used to emulate keyboard input. 
+One keyboard input per tick can be registered by the game, so check IsReadyToEmulate() before emulating a key.
 */
 class KeyboardGetDataEvent : public Core::EventBase {
 public:
@@ -21,11 +21,13 @@ public:
 	bool GetModifiedIsDown() const { return m_modifiedIsDown; }
 
 	bool IsReadyToEmulate() const { return m_modifiedDataCount == 0; }
+
 	void EmulateKey(Game::KeyCode keyCode, bool isDown) {
 		m_modifiedDataCount = 1;
 		m_modifiedKeyCode = keyCode;
 		m_modifiedIsDown = isDown;
 	}
+
 	void Drop() {
 		m_modifiedDataCount = 0;
 		m_modifiedKeyCode = Game::KeyCode::DIK_NONE;
@@ -39,4 +41,26 @@ private:
 	Game::KeyCode m_modifiedKeyCode;
 	bool m_isDown;
 	bool m_modifiedIsDown;
+};
+
+/*
+Dispatched after the game gets keyboard data.
+Input that has been emulated using KeyboardGetDataEvent will also appear in this event.
+*/
+class PostKeyboardGetDataEvent : public Core::EventBase {
+public:
+	static bool Init();
+	PostKeyboardGetDataEvent(DWORD dataCount, Game::KeyCode keyCode, bool isDown)
+		: m_dataCount(dataCount), m_keyCode(keyCode), m_isDown(isDown) {
+	}
+	virtual ~PostKeyboardGetDataEvent() override {};
+
+	DWORD GetDataCount() const { return m_dataCount; }
+	Game::KeyCode GetKeyCode() const { return m_keyCode; }
+	bool IsDown() const { return m_isDown; }
+
+private:
+	DWORD m_dataCount;
+	Game::KeyCode m_keyCode;
+	bool m_isDown;
 };
