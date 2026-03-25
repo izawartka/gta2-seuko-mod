@@ -46,7 +46,7 @@ namespace ModMenuModule {
 		static SegmentBase* CreateSegment(QuickActionTypeIndex typeIndex);
 
 		std::optional<QuickActionInfo> GetInfo(QuickActionId actionId) const;
-		std::vector<QuickActionId> GetAll();
+		const std::vector<QuickActionId>& GetAll();
 
 		bool SetDataFromSegmentData(QuickActionId actionId, SegmentBase* segment);
 		bool SetSegmentDataFromData(QuickActionId actionId, SegmentBase* segment);
@@ -128,6 +128,7 @@ namespace ModMenuModule {
 
 		QuickActionEntry* GetQuickActionEntry(QuickActionId actionId);
 		void AddQuickActionInternal(const AddQuickActionData& data);
+		void CacheSortedQuickActionIds();
 		void SaveToPersistence() const;
 		void LoadFromPersistence();
 

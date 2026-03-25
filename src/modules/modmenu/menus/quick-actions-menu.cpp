@@ -17,7 +17,7 @@ ModMenuModule::QuickActionsMenu::~QuickActionsMenu()
 bool ModMenuModule::QuickActionsMenu::Attach()
 {
 	ModMenuModule::QuickActionManager* quickActionManager = ModMenuModule::QuickActionManager::GetInstance();
-	auto actionIds = quickActionManager->GetAll();
+	const auto& actionIds = quickActionManager->GetAll();
 	size_t pageCount = std::max((actionIds.size() + ACTIONS_PER_PAGE - 1) / ACTIONS_PER_PAGE, 1U);
 	if (m_page >= pageCount && pageCount > 0) {
 		m_page = pageCount - 1;
