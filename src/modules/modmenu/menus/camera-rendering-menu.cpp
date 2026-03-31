@@ -54,6 +54,9 @@ bool ModMenuModule::CameraRenderingMenu::Attach()
 		disableCullingCheat->SetEnabled(newValue);
 	});
 
+	// spacer
+	uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, options.menuSpacerHeight);
+
 	// disable antialiasing
 	UiModule::Text* disableAAText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	m_disableAACheatController = m_menuController->CreateLatestItemController<UiModule::SelectController<bool>>(

@@ -6,6 +6,7 @@
 #include "camera-menu.h"
 #include "world-menu.h"
 #include "native-cheats-menu.h"
+#include "mouse-control-menu.h"
 #include "misc-menu.h"
 
 ModMenuModule::MainMenu::MainMenu()
@@ -29,7 +30,8 @@ bool ModMenuModule::MainMenu::Attach()
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Weapons", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Camera", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"World", options.textSize);
-	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Native Cheats", options.textSize);
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Native cheats", options.textSize);
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Mouse control", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Misc", options.textSize);
 
 	SetPreviousSelectedIndex();
@@ -60,7 +62,10 @@ void ModMenuModule::MainMenu::OnMenuAction(UiModule::Selectable* item, UiModule:
 	case 5: // Native Cheats
 		menuManager->AddMenu<ModMenuModule::NativeCheatsMenu>();
 		break;
-	case 6: // Misc
+	case 6: // Mouse control
+		menuManager->AddMenu<ModMenuModule::MouseControlMenu>();
+		break;
+	case 7: // Misc
 		menuManager->AddMenu<ModMenuModule::MiscMenu>();
 		break;
 	default:
