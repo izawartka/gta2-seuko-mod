@@ -5,10 +5,10 @@
 namespace UiModule {
 	class Text : public Component {
 	public:
-		Text(Component* parent, const std::wstring& text, Game::SCR_f scale = Game::Utils::FromFloat(1.0f), short remap = -1);
+		Text(Component* parent, std::wstring_view text, Game::SCR_f scale = Game::Utils::FromFloat(1.0f), short remap = -1);
 		virtual void Draw() override;
 
-		void SetText(const std::wstring& text);
+		void SetText(std::wstring_view text);
 		const std::wstring& GetText() const { return m_text; }
 		void SetScale(Game::SCR_f scale);
 		Game::SCR_f GetScale() const { return m_scale; }

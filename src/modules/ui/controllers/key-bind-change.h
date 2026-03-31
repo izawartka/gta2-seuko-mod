@@ -21,7 +21,7 @@ namespace UiModule {
 
 	class KeyBindChangeController : public MenuItemController, public Core::EventListenerSupport, public StandardBindsSupport {
 	public:
-		KeyBindChangeController(Text* text, const std::string& keyBindName, const KeyBindingModule::Key& keyBindDefault, const KeyBindChangeControllerOptions& options = {})
+		KeyBindChangeController(Text* text, std::string_view keyBindName, const KeyBindingModule::Key& keyBindDefault, const KeyBindChangeControllerOptions& options = {})
 			: StandardBindsSupport::StandardBindsSupport(options.keyBindOptions)
 		{
 			m_textComponent = text;

@@ -1,6 +1,6 @@
 #include "text.h"
 
-UiModule::Text::Text(Component* parent, const std::wstring& text, Game::SCR_f scale, short remap)
+UiModule::Text::Text(Component* parent, std::wstring_view text, Game::SCR_f scale, short remap)
 {
 	m_text = text;
 	m_scale = scale;
@@ -47,7 +47,7 @@ void UiModule::Text::Draw()
 	);
 }
 
-void UiModule::Text::SetText(const std::wstring& text)
+void UiModule::Text::SetText(std::wstring_view text)
 {
 	m_text = text;
 	Game::SCR_f newWidth = GetTextWidth();
