@@ -13,7 +13,7 @@ namespace ModMenuModule {
 	class PositionSegment : public Segment<PositionSegmentData>, public Core::EventListenerSupport {
 	public:
 		PositionSegment() = default;
-		PositionSegment(const std::string& persistencePrefix);
+		PositionSegment(std::string_view persistencePrefix);
 		virtual ~PositionSegment();
 
 		virtual std::optional<PositionSegmentData> GetSegmentData() const override;

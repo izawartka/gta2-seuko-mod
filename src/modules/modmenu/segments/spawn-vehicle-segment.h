@@ -14,7 +14,7 @@ namespace ModMenuModule {
 	class SpawnVehicleSegment : public Segment<SpawnVehicleSegmentData> {
 	public:
 		SpawnVehicleSegment() = default;
-		SpawnVehicleSegment(const std::string& persistencePrefix);
+		SpawnVehicleSegment(std::string_view persistencePrefix);
 		virtual ~SpawnVehicleSegment();
 
 		virtual std::optional<SpawnVehicleSegmentData> GetSegmentData() const override;

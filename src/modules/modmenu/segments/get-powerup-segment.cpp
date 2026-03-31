@@ -3,7 +3,7 @@
 #include "../root.h"
 
 
-ModMenuModule::GetPowerupSegment::GetPowerupSegment(const std::string& persistencePrefix)
+ModMenuModule::GetPowerupSegment::GetPowerupSegment(std::string_view persistencePrefix)
 {
 	m_persistencePrefix = persistencePrefix;
 }

@@ -11,7 +11,7 @@ namespace ModMenuModule {
 	class ExplodeAllVehiclesSegment : public Segment<ExplodeAllVehiclesSegmentData> {
 	public:
 		ExplodeAllVehiclesSegment() = default;
-		ExplodeAllVehiclesSegment(const std::string& persistencePrefix);
+		ExplodeAllVehiclesSegment(std::string_view persistencePrefix);
 		virtual ~ExplodeAllVehiclesSegment();
 
 		virtual std::optional<ExplodeAllVehiclesSegmentData> GetSegmentData() const override;

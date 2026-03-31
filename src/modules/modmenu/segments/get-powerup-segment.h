@@ -10,7 +10,7 @@ namespace ModMenuModule {
 	class GetPowerupSegment : public Segment<GetPowerupSegmentData> {
 	public:
 		GetPowerupSegment() = default;
-		GetPowerupSegment(const std::string& persistencePrefix);
+		GetPowerupSegment(std::string_view persistencePrefix);
 		virtual ~GetPowerupSegment();
 
 		virtual std::optional<GetPowerupSegmentData> GetSegmentData() const override;

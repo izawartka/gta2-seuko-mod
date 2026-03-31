@@ -5,7 +5,7 @@
 #include "../cheats/player-pos.h"
 #include "../root.h"
 
-ModMenuModule::PositionSegment::PositionSegment(const std::string& persistencePrefix)
+ModMenuModule::PositionSegment::PositionSegment(std::string_view persistencePrefix)
 {
 	m_persistencePrefix = persistencePrefix;
 }

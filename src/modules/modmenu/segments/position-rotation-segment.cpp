@@ -5,9 +5,8 @@
 #include "../../../converters/gta-angle.h"
 #include "../cheats/player-pos.h"
 #include "../root.h"
-#include "position-rotation-segment.h"
 
-ModMenuModule::PositionRotationSegment::PositionRotationSegment(const std::string& persistencePrefix)
+ModMenuModule::PositionRotationSegment::PositionRotationSegment(std::string_view persistencePrefix)
 {
 	m_persistencePrefix = persistencePrefix;
 }

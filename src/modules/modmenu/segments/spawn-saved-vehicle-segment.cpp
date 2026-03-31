@@ -2,7 +2,7 @@
 #include "../cheats/saved-cars.h"
 #include "../root.h"
 
-ModMenuModule::SpawnSavedVehicleSegment::SpawnSavedVehicleSegment(const std::string& persistencePrefix)
+ModMenuModule::SpawnSavedVehicleSegment::SpawnSavedVehicleSegment(std::string_view persistencePrefix)
 {
 	m_persistencePrefix = persistencePrefix;
 }

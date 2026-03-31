@@ -3,7 +3,7 @@
 #include "../root.h"
 #include "../toast-manager.h"
 
-ModMenuModule::FixVehicleSegment::FixVehicleSegment(const std::string& persistencePrefix)
+ModMenuModule::FixVehicleSegment::FixVehicleSegment(std::string_view persistencePrefix)
 {
 	m_persistencePrefix = persistencePrefix;
 }

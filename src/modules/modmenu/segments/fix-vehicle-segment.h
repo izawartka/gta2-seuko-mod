@@ -12,7 +12,7 @@ namespace ModMenuModule {
 	class FixVehicleSegment : public Segment<FixVehicleSegmentData> {
 	public:
 		FixVehicleSegment() = default;
-		FixVehicleSegment(const std::string& persistencePrefix);
+		FixVehicleSegment(std::string_view persistencePrefix);
 		virtual ~FixVehicleSegment();
 
 		virtual bool ValidateSegment() const override;

@@ -4,7 +4,7 @@
 #include "../../../converters/categorized-object-variant.h"
 #include "../root.h"
 
-ModMenuModule::SpawnObjectSegment::SpawnObjectSegment(const std::string& persistencePrefix)
+ModMenuModule::SpawnObjectSegment::SpawnObjectSegment(std::string_view persistencePrefix)
 {
 	m_persistencePrefix = persistencePrefix;
 }

@@ -11,7 +11,7 @@ namespace ModMenuModule {
 	class SpawnObjectSegment : public Segment<SpawnObjectSegmentData> {
 	public:
 		SpawnObjectSegment() = default;
-		SpawnObjectSegment(const std::string& persistencePrefix);
+		SpawnObjectSegment(std::string_view persistencePrefix);
 		virtual ~SpawnObjectSegment();
 
 		virtual std::optional<SpawnObjectSegmentData> GetSegmentData() const override;

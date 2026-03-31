@@ -4,7 +4,7 @@
 #include "../root.h"
 
 
-ModMenuModule::ExplodeAllVehiclesSegment::ExplodeAllVehiclesSegment(const std::string& persistencePrefix)
+ModMenuModule::ExplodeAllVehiclesSegment::ExplodeAllVehiclesSegment(std::string_view persistencePrefix)
 {
 	m_persistencePrefix = persistencePrefix;
 }

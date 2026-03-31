@@ -4,7 +4,7 @@
 #include "../root.h"
 
 
-ModMenuModule::SpawnVehicleSegment::SpawnVehicleSegment(const std::string& persistencePrefix)
+ModMenuModule::SpawnVehicleSegment::SpawnVehicleSegment(std::string_view persistencePrefix)
 {
 	m_persistencePrefix = persistencePrefix;
 }
