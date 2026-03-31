@@ -30,7 +30,7 @@ namespace ModMenuModule {
 		virtual bool AutoEnableOnAttach() const { return false; }
 
 	protected:
-		CheatBase(std::string persistenceKey) {
+		CheatBase(std::string_view persistenceKey) {
 			m_persistenceKey = persistenceKey;
 		}
 

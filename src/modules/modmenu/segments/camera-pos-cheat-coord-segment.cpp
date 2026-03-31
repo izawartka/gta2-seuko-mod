@@ -3,7 +3,7 @@
 #include "../../../converters/scrf.h"
 #include "../root.h"
 
-ModMenuModule::CameraPosCheatCoordSegment::CameraPosCheatCoordSegment(const std::wstring& coordLabel, size_t coordIndex)
+ModMenuModule::CameraPosCheatCoordSegment::CameraPosCheatCoordSegment(std::wstring_view coordLabel, size_t coordIndex)
 	: m_coordLabel(coordLabel), m_coordIndex(coordIndex) 
 {
 	m_modeResolver = [this]() {

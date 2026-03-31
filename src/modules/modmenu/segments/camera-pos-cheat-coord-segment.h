@@ -6,7 +6,7 @@
 namespace ModMenuModule {
 	class CameraPosCheatCoordSegment : public SegmentBase {
 	public:
-		CameraPosCheatCoordSegment(const std::wstring& coordLabel, size_t coordIndex);
+		CameraPosCheatCoordSegment(std::wstring_view coordLabel, size_t coordIndex);
 		virtual ~CameraPosCheatCoordSegment();
 
 	private:

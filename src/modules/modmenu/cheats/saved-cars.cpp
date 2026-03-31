@@ -39,8 +39,7 @@ bool ModMenuModule::SavedCarsCheat::SaveCar(const std::wstring& name, Game::Car*
 		return false;
 	}
 
-	SavedCarsCheatEntry entry = CreateEntry(car);
-	m_entries.insert({ name, entry });
+	m_entries.emplace(name, CreateEntry(car));
 	m_cacheDirty = true;
 
 	spdlog::info("SavedCarsCheat::SaveCar: Car saved");
