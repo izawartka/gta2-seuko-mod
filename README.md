@@ -51,7 +51,7 @@ This version is recommended if you want to use this mod together with other mods
 2. Download and install [ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader/releases/latest) (Win32 dinput.dll version) to your GTA2 installation folder
 3. Open the [latest release](https://github.com/izawartka/gta2-seuko-mod/releases/latest) page
 4. Download `gta2-seuko-mod-<version>-asi.zip` archive
-5. Create `scripts` folder in your GTA2 installation folder if it doesn't exist yet
+5. Create `scripts` folder in your GTA2 installation folder if it doesn't exist
 6. Extract the contents of the downloaded archive to the `scripts` folder
 7. Launch the game
 
@@ -95,14 +95,12 @@ If you like this mod and want to support its development, you can donate via [Pa
 
 ## Known issues
 - Mission arrows are misaligned when using 3D camera mode and the camera position is locked
-- Cigarette smoke is buggy when using 3D camera mode
 - The game may sometimes crash on level restart
-- Setting large camera height / very low camera zoom crashes the game
+- Setting large camera height value / low camera zoom value crashes the game
 - The camera sometimes "jumps" one block higher when locking its position while in 3D mode
 - Spawning a lot of explosions (i.e., while using Rocket Launcher with Instant reload cheat) may cause the game to crash
 - "Unlock all levels" native cheat does not work
 - Mouse control does not work with Controller configuration
-- Mouse control does not work in fullscreen mode
 - Most of the mod's features cause multiplayer games to desync
 
 Please remember that this mod is an experimental project and may cause a lot of unexpected bugs, crashes etc.
