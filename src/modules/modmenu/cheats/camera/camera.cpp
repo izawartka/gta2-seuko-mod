@@ -127,7 +127,7 @@ void ModMenuModule::CameraCheat::OnDrawQuad(RendererDrawQuadEvent& event)
 	memcpy(m_vertexBuffer, event.GetVertices(), sizeof(m_vertexBuffer));
 	event.SetVertices(m_vertexBuffer);
 
-	if ((event.GetFlags() == 0xa180)) { // mission arrows
+	if (event.GetFlags() == 0xa180 && m_vertexBuffer[0].z < 0.01f) { // mission arrows and exploding scores
 		Utils::Vertex::ApplyArrowsCameraTransform(
 			m_vertexBuffer,
 			m_cameraValues.value(),
