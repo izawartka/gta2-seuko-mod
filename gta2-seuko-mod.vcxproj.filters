@@ -168,6 +168,7 @@
     <ClCompile Include="src\modules\modmenu\cheats\unstuck-keys.cpp" />
     <ClCompile Include="src\events\window-focus-change.cpp" />
     <ClCompile Include="src\events\steering-assist.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\disable-steering-assist.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -450,6 +451,7 @@
     <ClInclude Include="src\game\constants.h" />
     <ClInclude Include="src\game\utils\keyboard-utils.h" />
     <ClInclude Include="src\events\steering-assist.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\disable-steering-assist.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

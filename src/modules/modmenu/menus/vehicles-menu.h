@@ -17,8 +17,12 @@ namespace ModMenuModule {
 
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 		void OnLastCarStateChange(ModMenuModule::LastCarStateEvent& event);
+		void OnCheatStateChange(CheatStateEvent& event);
+
 		void UpdateLastCarState();
+		void UpdateCheatStates();
 
 		UiModule::Text* m_lastCarText = nullptr;
+		UiModule::SelectController<bool>* m_disableSteeringAssistCheatController = nullptr;
 	};
 }

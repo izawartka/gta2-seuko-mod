@@ -4,6 +4,8 @@
 #include "saved-vehicles-menu.h"
 #include "../root.h"
 #include "../cheats/last-car.h"
+#include "../cheats/disable-steering-assist.h"
+#include "../../../converters/yes-no.h"
 
 ModMenuModule::VehiclesMenu::VehiclesMenu()
 {
@@ -22,10 +24,26 @@ bool ModMenuModule::VehiclesMenu::Attach()
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 
+	DisableSteeringAssistCheat* disableSteeringAssistCheat = DisableSteeringAssistCheat::GetInstance();
+
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Spawn vehicle", options.textSize);
 	m_lastCarText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"No last vehicle", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Saved vehicles", options.textSize);
+
+
+	// disable steering assist cheat
+	UiModule::Text* disableSteeringAssistCheatText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
+	m_disableSteeringAssistCheatController = m_menuController->CreateLatestItemController<UiModule::SelectController<bool>>(
+		disableSteeringAssistCheatText,
+		UiModule::SelectOptionList<bool>{ false, true },
+		std::nullopt,
+		UiModule::SelectControllerOptions{ L"Disable steering assist: #", L"#" }
+	);
+	m_disableSteeringAssistCheatController->SetConverter<YesNoConverter>();
+	m_disableSteeringAssistCheatController->SetSaveCallback([disableSteeringAssistCheat](bool newValue) {
+		disableSteeringAssistCheat->SetEnabled(newValue);
+	});
 
 	SetPreviousSelectedIndex();
 
@@ -35,12 +53,15 @@ bool ModMenuModule::VehiclesMenu::Attach()
 void ModMenuModule::VehiclesMenu::OnShow()
 {
 	AddEventListener<LastCarStateEvent>(&ModMenuModule::VehiclesMenu::OnLastCarStateChange);
+	AddEventListener<CheatStateEvent>(&ModMenuModule::VehiclesMenu::OnCheatStateChange);
 	UpdateLastCarState();
+	UpdateCheatStates();
 }
 
 void ModMenuModule::VehiclesMenu::OnHide()
 {
 	RemoveEventListener<LastCarStateEvent>();
+	RemoveEventListener<CheatStateEvent>();
 }
 
 void ModMenuModule::VehiclesMenu::OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
@@ -75,6 +96,13 @@ void ModMenuModule::VehiclesMenu::OnLastCarStateChange(ModMenuModule::LastCarSta
 	UpdateLastCarState();
 }
 
+void ModMenuModule::VehiclesMenu::OnCheatStateChange(CheatStateEvent& event)
+{
+	if (event.GetCheatType() == typeid(DisableSteeringAssistCheat)) {
+		m_disableSteeringAssistCheatController->SetValue(event.IsEnabled());
+	}
+}
+
 void ModMenuModule::VehiclesMenu::UpdateLastCarState()
 {
 	if (!m_lastCarText) return;
@@ -84,4 +112,10 @@ void ModMenuModule::VehiclesMenu::UpdateLastCarState()
 
 	std::wstring stateText = lastCarCheat->GetLastCarStateMenuName();
 	m_lastCarText->SetText(stateText);
+}
+
+void ModMenuModule::VehiclesMenu::UpdateCheatStates()
+{
+	bool disableSteeringAssistCheatEnabled = DisableSteeringAssistCheat::GetInstance()->IsEnabled();
+	m_disableSteeringAssistCheatController->SetValue(disableSteeringAssistCheatEnabled);
 }
