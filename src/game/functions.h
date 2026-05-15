@@ -164,5 +164,8 @@ namespace Game {
 
 		typedef void(__fastcall ApplySteeringAssistType)(CarPhysics* carPhysics, DWORD edx);
 		static constexpr ApplySteeringAssistType* ApplySteeringAssist = (ApplySteeringAssistType*)0x004a17c0;
+
+		typedef Ped* (__fastcall GetCurrentPedType)(Player* player);
+		static constexpr GetCurrentPedType* GetCurrentPed = (GetCurrentPedType*)0x004a5150;
 	};  
 }

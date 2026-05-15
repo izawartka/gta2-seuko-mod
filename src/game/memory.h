@@ -7,6 +7,8 @@ namespace Game {
 	class Memory {
 	public:
 		static Game* GetGame() { return (Game*)*(DWORD*)0x005eb4fc; }
+
+		// Note: for camera and rendering related stuff use Utils::GetPlayerCurrentPed, the game uses auxiliary ped for things like RC controlled cars
 		static Ped* GetPlayerPed() {
 			Game* game = GetGame();
 			if (!game) return nullptr;
