@@ -803,6 +803,15 @@ typedef enum CAR_SURFACE2 : uint {
 	CAR_SURFACE2_METAL = 8
 } CAR_SURFACE2;
 
+typedef enum CAR_LOCK_STATE : uint {
+	CAR_LOCK_STATE_NO_LOCK = 0,
+	CAR_LOCK_STATE_LOCKED = 1,
+	CAR_LOCK_STATE_LOCKOUT_THIEF = 2,
+	CAR_LOCK_STATE_UNLOCKED = 3,
+	CAR_LOCK_STATE_LOCKED_PERMANENTLY = 4,
+	CAR_LOCK_STATE_LOCKOUT_PLAYER = 5
+} CAR_LOCK_STATE;
+
 struct Roof {
 	struct Sprite* sprite;
 	struct Roof* next; /* Created by retype action */
@@ -912,7 +921,7 @@ struct Car {
 	u1 field_0x95; /* player id (ped 1 will be set here if player enter to car) */
 	undefined field_0x96;
 	undefined field_0x97;
-	int locksDoor; /* 1 - locked, 2 - unlocked */
+	enum CAR_LOCK_STATE lockState;
 	enum CAR_ENGINE_STATE engineState;
 	enum TRAFFIC_CAR_TYPE trafficCarType;
 	enum CAR_LIGHTS_BITSTATE lightsBitstate;
@@ -2821,12 +2830,13 @@ typedef struct Game Game, *PGame;
 
 typedef struct Player Player, *PPlayer;
 
-typedef enum PLAYER_PHYSICS_STATE {
-	PLAYER_PHYSICS_STATE_0=0,
-	PLAYER_PHYSICS_STATE_1=1,
-	PLAYER_PHYSICS_STATE_2=2,
-	PLAYER_PHYSICS_STATE_3=3
-} PLAYER_PHYSICS_STATE;
+typedef enum PLAYER_CONTROL_STATE {
+	PLAYER_CONTROL_STATE_DEFAULT = 0,
+	PLAYER_CONTROL_STATE_FREECAM = 1,
+	PLAYER_CONTROL_STATE_AUX_PED = 2,
+	PLAYER_CONTROL_STATE_NO_CONTROL_AUX_CAM = 3,
+	PLAYER_CONTROL_STATE_NO_CONTROL_STOPPED_CAMERA = 4
+} PLAYER_CONTROL_STATE;
 
 typedef struct SaveSlotAnimatedValue SaveSlotAnimatedValue, *PSaveSlotAnimatedValue;
 
@@ -2931,7 +2941,7 @@ struct Player { /* Player actually */
 	undefined field_0x65;
 	undefined field_0x66;
 	undefined field_0x67;
-	enum PLAYER_PHYSICS_STATE state1;
+	enum PLAYER_CONTROL_STATE controlState;
 	int teleportMode;
 	byte up;
 	byte down;
@@ -2965,9 +2975,9 @@ struct Player { /* Player actually */
 	undefined field_0x8d;
 	undefined1 field_0x8e;
 	byte field_0x8f;
-	struct Camera ph1; /* player camera */
-	struct Camera ph2; /* actual camera */
-	struct Camera ph3; /* aux camera maybe? */
+	struct Camera ph1; /* game camera */
+	struct Camera ph2; /* view camera */
+	struct Camera ph3; /* aux camera */
 	struct Ped* ped;
 	struct Ped* ped2;
 	void * field_0x2cc;

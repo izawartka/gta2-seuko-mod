@@ -50,7 +50,7 @@ bool Game::Utils::TeleportPlayer(SCR_f x, SCR_f y, SCR_f z)
 
 	player->ph1.followState = CAMERA_FOLLOW_STATE_FOLLOW;
 	player->teleportMode = 0;
-	player->state1 = PLAYER_PHYSICS_STATE_0;
+	player->controlState = PLAYER_CONTROL_STATE_DEFAULT;
 
 	spdlog::info("Teleported player to ({}, {}, {})", Utils::ToFloat(x), Utils::ToFloat(y), Utils::ToFloat(z));
 
