@@ -185,8 +185,7 @@ void ModMenuModule::MouseControlCheat::SetOptionsInternal(const MouseControlChea
 
 void ModMenuModule::MouseControlCheat::UpdateTargetDeltaRotation()
 {
-	float currentRotation = GetPlayerRotation().value();
-
+	float currentRotation = GetPlayerPedRotation();
 	bool isPointAtMode = m_options.mode == MouseControlCheatMode::PointAt;
 
 	if (isPointAtMode) {
@@ -415,11 +414,10 @@ void ModMenuModule::MouseControlCheat::LoadFromPersistence()
 
 bool ModMenuModule::MouseControlCheat::CheckShouldUseRotation()
 {
-	Game::Game* game = Game::Memory::GetGame();
-	if (!game) return false;
-	Game::Player* player = game->currentPlayer;
-	if (!player || !player->ped || !player->ped->gameObject) return false;
-	if (player->ped->targetCarForEnter) return false;
+	Game::Ped* playerPed = Game::Utils::GetPlayerCurrentPed();
+	if (!playerPed || !playerPed->gameObject) return false;
+	if (playerPed->targetCarForEnter) return false;
+
 	return true;
 }
 
@@ -431,13 +429,12 @@ char ModMenuModule::MouseControlCheat::GetRotationDirection(float deltaAngle)
 	return deltaAngle > 0 ? -1 : 1;
 }
 
-std::optional<float> ModMenuModule::MouseControlCheat::GetPlayerRotation()
+float ModMenuModule::MouseControlCheat::GetPlayerPedRotation()
 {
-	Game::Game* game = Game::Memory::GetGame();
-	if (!game) return std::nullopt;
-	Game::Player* player = game->currentPlayer;
-	if (!player || !player->ped || !player->ped->gameObject) return std::nullopt;
-	return Game::Utils::FromGTAAngleToRad(player->ped->gameObject->spriteRotation);
+	Game::Ped* playerPed = Game::Utils::GetPlayerCurrentPed();
+	if (!playerPed || !playerPed->gameObject) return 0; // prior verified by ShouldUseRotation to not let this happen
+
+	return Game::Utils::FromGTAAngleToRad(playerPed->gameObject->spriteRotation);
 }
 
 std::optional<float> ModMenuModule::MouseControlCheat::GetTargetRotation(MouseModule::NormalizedMousePosition normalizedPos)

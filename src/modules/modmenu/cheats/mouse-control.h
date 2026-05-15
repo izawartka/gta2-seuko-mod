@@ -80,7 +80,7 @@ namespace ModMenuModule {
 
 		static bool CheckShouldUseRotation();
 		static char GetRotationDirection(float deltaAngle);
-		static std::optional<float> GetPlayerRotation();
+		static float GetPlayerPedRotation();
 		static std::optional<float> GetTargetRotation(MouseModule::NormalizedMousePosition normalizedPos);
 		static MouseControlCheatMode GetAutoModeTargetMode();
 

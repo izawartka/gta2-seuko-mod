@@ -179,8 +179,8 @@ void ModMenuModule::CameraCheat::OnPreDrawFrame(PreDrawFrameEvent& event)
 	Game::Player* player = Core::MakeResolver(Game::Memory::GetGame, mem(&Game::Game::currentPlayer))();
 	if (!player) return;
 
-	Game::Ped* playerPed = player->ped;
-	short* playerPedRotationPtr = Game::Utils::GetPlayerPedRotationPtr();
+	Game::Ped* playerPed = Game::Utils::GetPlayerCurrentPed();
+	short* playerPedRotationPtr = Game::Utils::GetPlayerCurrentPedRotationPtr();
 	if (playerPedRotationPtr != nullptr && m_options.followPedRotation) {
 		float pedRotationRad = Game::Utils::FromGTAAngleToRad(*playerPedRotationPtr) + static_cast<float>(M_PI);
 		float oldCameraRotation = m_options.cameraTransform.verticalAngleRad;
