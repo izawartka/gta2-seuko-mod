@@ -3,7 +3,9 @@
 #include "../cheats/last-car.h"
 #include "../../../converters/car-model.h"
 #include "../../../converters/car-remap.h"
+#include "../../../converters/car-lock-state.h"
 #include "../../../converters/car-damage.h"
+#include "../utils/get-selectable-car-lock-states.h"
 #include "../utils/fix-car-utils.h"
 #include "last-vehicle-physics-menu.h"
 #include "last-vehicle-save-menu.h"
@@ -61,6 +63,20 @@ bool ModMenuModule::LastVehicleMenu::Attach()
 		UiModule::VarTextSelectControllerOptions{ L"Remap: #", L"#" }
 	);
 	remapController->SetConverter<CarRemapConverter>();
+
+	// lock
+	UiModule::Text* doorsLockText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
+	const auto& doorsLockOptionList = Utils::GetSelectableCarLockStates();
+	auto doorsLockController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<Game::CAR_LOCK_STATE>>(
+		doorsLockText,
+		Core::MakeResolver(
+			lastCarResolver,
+			mem(&Game::Car::lockState)
+		),
+		doorsLockOptionList,
+		UiModule::VarTextSelectControllerOptions{ L"Lock: #", L"#" }
+	);
+	doorsLockController->SetConverter<CarLockStateConverter>();
 
 	// engine damage
 	UiModule::Text* engineDamageText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);

@@ -169,6 +169,7 @@
     <ClCompile Include="src\events\window-focus-change.cpp" />
     <ClCompile Include="src\events\steering-assist.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\disable-steering-assist.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\get-selectable-car-lock-states.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -454,6 +455,7 @@
     <ClInclude Include="src\modules\modmenu\cheats\disable-steering-assist.h" />
     <ClInclude Include="src\converters\car-door-lock.h" />
     <ClInclude Include="src\converters\car-lock-state.h" />
+    <ClInclude Include="src\modules\modmenu\utils\get-selectable-car-lock-states.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
