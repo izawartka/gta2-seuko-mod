@@ -452,6 +452,8 @@
     <ClInclude Include="src\game\utils\keyboard-utils.h" />
     <ClInclude Include="src\events\steering-assist.h" />
     <ClInclude Include="src\modules\modmenu\cheats\disable-steering-assist.h" />
+    <ClInclude Include="src\converters\car-door-lock.h" />
+    <ClInclude Include="src\converters\car-lock-state.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
