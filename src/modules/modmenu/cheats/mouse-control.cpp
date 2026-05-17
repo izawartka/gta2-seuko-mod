@@ -5,7 +5,7 @@
 #include "../cheat-registry.h"
 
 static constexpr float ROTATE_MODE_SMOOTING = 0.2f;
-static constexpr float ROTATION_INPUT_THRESHOLD = 0.11f;
+static constexpr float ROTATION_INPUT_THRESHOLD = 0.15f;
 static constexpr float ROTATION_SPEED = 0.20943928f;
 
 static constexpr size_t LEFT_CONTROL_INDEX = Game::Utils::GetControlIndex(Game::KEYBOARD_STATE_LEFT);
@@ -195,8 +195,7 @@ void ModMenuModule::MouseControlCheat::UpdateTargetDeltaRotation()
 			return;
 		}
 
-		float targetDelta = Utils::Angle::GetShortestAngleDifference(currentRotation, targetRotationOpt.value());
-		m_targetDeltaRotation = (targetDelta + m_targetDeltaRotation) / 2.0f;
+		m_targetDeltaRotation = Utils::Angle::GetShortestAngleDifference(currentRotation, targetRotationOpt.value());
 	}
 	else {
 		m_targetDeltaRotation *= (1.0f - ROTATE_MODE_SMOOTING);
@@ -424,7 +423,7 @@ bool ModMenuModule::MouseControlCheat::CheckShouldUseRotation()
 char ModMenuModule::MouseControlCheat::GetRotationDirection(float deltaAngle)
 {
 	if (std::abs(deltaAngle) < ROTATION_INPUT_THRESHOLD) {
-		return Game::KEYBOARD_STATE(0);
+		return 0;
 	}
 	return deltaAngle > 0 ? -1 : 1;
 }
@@ -443,19 +442,24 @@ std::optional<float> ModMenuModule::MouseControlCheat::GetTargetRotation(MouseMo
 	normalizedPos.y -= 0.5f;
 	normalizedPos.x *= -1.0f;
 
+	normalizedPos.x *= MouseModule::MouseManager::GetClientAreaAspectRatio();
+	float targetAngle;
+
 	CameraCheat* cameraCheat = CameraCheat::GetInstance();
 	if (cameraCheat->IsEnabled()) {
 		CameraCheatOptions cameraOptions = cameraCheat->GetOptions();
 		normalizedPos.x *= std::cos(cameraOptions.cameraTransform.horizontalAngleRad);
 		if (normalizedPos.x == 0.0f && normalizedPos.y == 0.0f) return std::nullopt;
-		float targetAngle = std::atan2(normalizedPos.y, normalizedPos.x);
+		targetAngle = std::atan2(normalizedPos.y, normalizedPos.x) - static_cast<float>(M_PI / 2.0f);
 
 		float cameraRotation = cameraCheat->GetOptions().cameraTransform.verticalAngleRad;
-		return Utils::Angle::NormalizeAngle(targetAngle + cameraRotation - static_cast<float>(M_PI / 2.0f));
+		targetAngle += cameraRotation;
 	}
 	else {
-		return Utils::Angle::NormalizeAngle(std::atan2(normalizedPos.y, normalizedPos.x) - static_cast<float>(M_PI / 2.0f));
+		targetAngle = std::atan2(normalizedPos.y, normalizedPos.x) - static_cast<float>(M_PI / 2.0f);
 	}
+
+	return Utils::Angle::NormalizeAngle(targetAngle);
 }
 
 ModMenuModule::MouseControlCheatMode ModMenuModule::MouseControlCheat::GetAutoModeTargetMode()
