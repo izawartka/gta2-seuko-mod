@@ -24,6 +24,9 @@ namespace MouseModule {
 		static NormalizedMousePosition ToNormalizedPosition(const MousePosition& pos);
 		static MousePosition ToPixelPosition(const NormalizedMousePosition& normalizedPos);
 
+		static MousePosition GetClientAreaSize();
+		static float GetClientAreaAspectRatio();
+
 		std::optional<MouseState> GetLastMouseState() const;
 
 		void SetLocked(bool locked);
@@ -43,7 +46,6 @@ namespace MouseModule {
 		MouseManager& operator=(const MouseManager&) = delete;
 
 		static void SetToCenter();
-		static MousePosition GetClientAreaSize();
 		static void SetCursorVisible(bool visible);
 		static bool IsCursorVisible();
 

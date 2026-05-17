@@ -47,8 +47,8 @@ MouseModule::NormalizedMousePosition MouseModule::MouseManager::ToNormalizedPosi
 	MousePosition clientSize = GetClientAreaSize();
 	if (clientSize.x == 0 || clientSize.y == 0) return { 0.0f, 0.0f };
 	return {
-		static_cast<float>(pos.x) / clientSize.x,
-		static_cast<float>(pos.y) / clientSize.y
+		static_cast<float>(pos.x) / (clientSize.x - 1),
+		static_cast<float>(pos.y) / (clientSize.y - 1)
 	};
 }
 
@@ -56,9 +56,23 @@ MouseModule::MousePosition MouseModule::MouseManager::ToPixelPosition(const Norm
 {
 	MousePosition clientSize = GetClientAreaSize();
 	return {
-		static_cast<int>(normalizedPos.x * clientSize.x),
-		static_cast<int>(normalizedPos.y * clientSize.y)
+		static_cast<int>(normalizedPos.x * (clientSize.x - 1)),
+		static_cast<int>(normalizedPos.y * (clientSize.y - 1))
 	};
+}
+
+MouseModule::MousePosition MouseModule::MouseManager::GetClientAreaSize()
+{
+	HWND hwnd = *Game::Memory::GetGameWindow();
+	RECT rect;
+	GetClientRect(hwnd, &rect);
+	return MousePosition{ rect.right, rect.bottom };
+}
+
+float MouseModule::MouseManager::GetClientAreaAspectRatio()
+{
+	MousePosition clientSize = GetClientAreaSize();
+	return static_cast<float>(clientSize.x) / static_cast<float>(clientSize.y);
 }
 
 bool MouseModule::MouseManager::MarkEventInitialized()
@@ -142,14 +156,6 @@ void MouseModule::MouseManager::SetToCenter()
 	if (previousPos.x != center.x || previousPos.y != center.y) {
 		SetCursorPos(center.x, center.y);
 	}
-}
-
-MouseModule::MousePosition MouseModule::MouseManager::GetClientAreaSize()
-{
-	HWND hwnd = *Game::Memory::GetGameWindow();
-	RECT rect;
-	GetClientRect(hwnd, &rect);
-	return MousePosition{ rect.right - 1, rect.bottom - 1 };
 }
 
 void MouseModule::MouseManager::SetCursorVisible(bool visible)
