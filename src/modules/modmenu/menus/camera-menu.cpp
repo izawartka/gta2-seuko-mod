@@ -4,6 +4,8 @@
 #include "camera-pos-menu.h"
 #include "camera-rendering-menu.h"
 #include "camera-advanced-menu.h"
+#include "../cheats/camera/freecam.h"
+#include "../../../converters/enabled-disabled.h"
 #include "../root.h"
 
 ModMenuModule::CameraMenu::CameraMenu()
@@ -43,10 +45,36 @@ bool ModMenuModule::CameraMenu::Attach()
 	);
 	modeController->SetConverter<CameraEasyModeConverter>();
 	modeController->SetCustomSaveCallback(Utils::CameraEasyMode::SetCurrentMode);
+
+	// freecam
+	FreecamCheat* freecamCheat = FreecamCheat::GetInstance();
+	UiModule::Text* freecamText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
+	m_freecamCheatController = m_menuController->CreateLatestItemController<UiModule::SelectController<bool>>(
+		freecamText,
+		UiModule::SelectOptionList<bool>{ false, true },
+		std::nullopt,
+		UiModule::SelectControllerOptions{ L"Freecam: #", L"#" }
+	);
+	m_freecamCheatController->SetConverter<EnabledDisabledConverter>();
+	m_freecamCheatController->SetSaveCallback([freecamCheat](bool newValue) {
+		if (newValue) freecamCheat->SetEnabled(true);
+		else freecamCheat->ResetAndDisable();
+	});
 	
 	SetPreviousSelectedIndex();
 
 	return true;
+}
+
+void ModMenuModule::CameraMenu::OnShow()
+{
+	AddEventListener<ModMenuModule::CheatStateEvent>(&CameraMenu::OnCheatStateChange);
+	UpdateCheatStates();
+}
+
+void ModMenuModule::CameraMenu::OnHide()
+{
+	RemoveEventListener<ModMenuModule::CheatStateEvent>();
 }
 
 void ModMenuModule::CameraMenu::OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
@@ -67,4 +95,16 @@ void ModMenuModule::CameraMenu::OnMenuAction(UiModule::Selectable* item, UiModul
 	default:
 		break;
 	}
+}
+
+void ModMenuModule::CameraMenu::OnCheatStateChange(CheatStateEvent& event)
+{
+	if (event.GetCheatType() == typeid(FreecamCheat)) {
+		m_freecamCheatController->SetValue(event.IsEnabled());
+	}
+}
+
+void ModMenuModule::CameraMenu::UpdateCheatStates()
+{
+	m_freecamCheatController->SetValue(FreecamCheat::GetInstance()->IsEnabled());
 }

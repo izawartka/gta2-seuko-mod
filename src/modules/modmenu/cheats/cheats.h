@@ -12,6 +12,7 @@
 #include "camera/clear-screen.h"
 #include "camera/disable-antialiasing.h"
 #include "camera/disable-culling.h"
+#include "camera/freecam.h"
 #include "camera/camera-pos.h"
 #include "camera/shadows-fix.h"
 #include "player-appearance.h"
