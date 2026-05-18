@@ -212,7 +212,7 @@ void ModMenuModule::PlayerAppearanceCheat::OnDisable()
 
 void ModMenuModule::PlayerAppearanceCheat::OnPedRemapUpdate(const std::optional<Game::PED_REMAP>& oldValue, const std::optional<Game::PED_REMAP>& newValue)
 {
-	if (m_isDisabling && m_originalRemap.has_value()) {
+	if (m_isDisabling) {
 		if (m_originalRemap.has_value()) {
 			m_watchedPedRemap->SetValueNow(m_originalRemap.value(), false);
 		}
