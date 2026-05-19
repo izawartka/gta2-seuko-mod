@@ -1,8 +1,8 @@
 #include "mouse-control.h"
-#include "../utils/angle-utils.h"
-#include "camera/camera.h"
-#include "../toast-manager.h"
-#include "../cheat-registry.h"
+#include "../../utils/angle-utils.h"
+#include "../camera/camera.h"
+#include "../../toast-manager.h"
+#include "../../cheat-registry.h"
 
 static constexpr float ROTATE_MODE_SMOOTING = 0.2f;
 static constexpr float ROTATION_INPUT_THRESHOLD = 0.15f;

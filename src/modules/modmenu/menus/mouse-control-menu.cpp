@@ -1,6 +1,6 @@
 #include "mouse-control-menu.h"
 #include "../root.h"
-#include "../cheats/mouse-control.h"
+#include "../cheats/mouse-control/mouse-control.h"
 #include "../../../converters/enabled-disabled.h"
 #include "../../../converters/mouse-control-cheat-mode.h"
 

@@ -1,15 +1,15 @@
 #pragma once
-#include "../common.h"
-#include "../cheat-base.h"
-#include "force-controls.h"
-#include "../../../events/game-tick.h"
-#include "../../../events/game-start.h"
-#include "../../../events/game-end.h"
-#include "../../../events/game-pause.h"
-#include "../../../events/game-unpause.h"
-#include "../events/cheat-state.h"
-#include "../events/cheat-options-update.h"
-#include "../../mouse/normalized-mouse-position.h"
+#include "../../common.h"
+#include "../../cheat-base.h"
+#include "../force-controls.h"
+#include "../../../../events/game-tick.h"
+#include "../../../../events/game-start.h"
+#include "../../../../events/game-end.h"
+#include "../../../../events/game-pause.h"
+#include "../../../../events/game-unpause.h"
+#include "../../events/cheat-state.h"
+#include "../../events/cheat-options-update.h"
+#include "../../../mouse/normalized-mouse-position.h"
 
 namespace ModMenuModule {
 	class CameraCheat;

@@ -149,7 +149,6 @@
     <ClCompile Include="src\modules\mouse\events\mouse.cpp" />
     <ClCompile Include="src\modules\mouse\mouse-manager.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\mouse-debug-menu.cpp" />
-    <ClCompile Include="src\modules\modmenu\cheats\mouse-control.cpp" />
     <ClCompile Include="src\events\keyboard-state-update.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\mouse-control-menu.cpp" />
     <ClCompile Include="src\events\game-pause.cpp" />
@@ -172,6 +171,7 @@
     <ClCompile Include="src\modules\modmenu\utils\get-selectable-car-lock-states.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\toggle-steering-assist.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\camera\freecam.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\mouse-control\mouse-control.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -424,7 +424,6 @@
     <ClInclude Include="src\modules\mouse\mouse-manager.h" />
     <ClInclude Include="src\modules\mouse\mouse-state.h" />
     <ClInclude Include="src\modules\modmenu\menus\mouse-debug-menu.h" />
-    <ClInclude Include="src\modules\modmenu\cheats\mouse-control.h" />
     <ClInclude Include="src\events\keyboard-state-update.h" />
     <ClInclude Include="src\modules\modmenu\menus\mouse-control-menu.h" />
     <ClInclude Include="src\modules\mouse\normalized-mouse-position.h" />
@@ -460,6 +459,7 @@
     <ClInclude Include="src\modules\modmenu\utils\get-selectable-car-lock-states.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\toggle-steering-assist.h" />
     <ClInclude Include="src\modules\modmenu\cheats\camera\freecam.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\mouse-control\mouse-control.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

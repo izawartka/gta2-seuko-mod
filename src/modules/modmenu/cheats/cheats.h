@@ -6,7 +6,7 @@
 #include "infinite-ammo.h"
 #include "instant-reload.h"
 #include "last-car.h"
-#include "mouse-control.h"
+#include "mouse-control/mouse-control.h"
 #include "native-cheats-keeper.h"
 #include "camera/camera.h"
 #include "camera/clear-screen.h"

@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "../modules/modmenu/cheats/mouse-control.h"
+#include "../modules/modmenu/cheats/mouse-control/mouse-control.h"
 
 class MouseControlCheatModeConverter {
 public:
