@@ -3,17 +3,12 @@
 #include "../../cheat-base.h"
 #include "../force-controls.h"
 #include "../../../../events/game-tick.h"
-#include "../../../../events/game-start.h"
 #include "../../../../events/game-end.h"
 #include "../../../../events/game-pause.h"
-#include "../../../../events/game-unpause.h"
-#include "../../events/cheat-state.h"
-#include "../../events/cheat-options-update.h"
-#include "../../../mouse/normalized-mouse-position.h"
+#include "mouse-control-worker.h"
+#include "mouse-control-worker-registry.h"
 
 namespace ModMenuModule {
-	class CameraCheat;
-
 	enum class MouseControlCheatMode {
 		Rotate = 0,
 		PointAt = 2,
@@ -41,58 +36,47 @@ namespace ModMenuModule {
 		void SetOptions(const MouseControlCheatOptions& options);
 		MouseControlCheatOptions GetOptions() const { return m_options; }
 
+		void ShowGamepadControlsToast();
+		void SetDeltaX(float deltaX) { m_deltaX = deltaX; }
+		float GetDeltaX() const { return m_deltaX; }
+		void SetDeltaY(float deltaY) { m_deltaY = deltaY; }
+		float GetDeltaY() const { return m_deltaY; }
+
 	private:
 		virtual void OnFirstEnable() override;
 		virtual void OnEnable() override;
 		virtual void OnDisable() override;
 
 		void OnPreGameTick(PreGameTickEvent& event);
-		void OnMouseLockedMove(MouseModule::MouseLockedMoveEvent& event);
-		void OnMouseMove(MouseModule::MouseMoveEvent& event);
-		void OnMouseButtonDown(MouseModule::MouseButtonDownEvent& event);
-		void OnMouseButtonUp(MouseModule::MouseButtonUpEvent& event);
-		void OnGameStart(GameStartEvent& event);
 		void OnGameEnd(GameEndEvent& event);
 		void OnGamePause(GamePauseEvent& event);
-		void OnGameUnpause(GameUnpauseEvent& event);
-		void OnCheatStateChange(CheatStateEvent& event);
-		void OnCameraCheatOptionsUpdate(CheatOptionsUpdateEvent<CameraCheat>& event);
 
-		void SetOptionsInternal(const MouseControlCheatOptions& options);
-		void UpdateTargetDeltaRotation();
-		void UpdateMode();
-		void UpdateLastNormalizedPos();
-		void UpdateAttack() const;
-		void UpdateAutoMode();
-		void UpdateAutoModeListeners();
-		void RemoveAutoModeListeners();
-		bool EnsureNotGamepadControls() const;
-		bool EnsureControlHandlesOk() const;
-		void StartRotation();
-		void StopRotation();
-		void Start();
-		void Stop();
-		bool CreateControlHandles();
-		void FreeControlHandles();
+		void ApplyAutoMode();
+		MouseControlCheatMode GetAutoModeTargetMode() const;
+
+		void UpdateWorkerSet();
+		void ClearWorkerSet();
+		MouseControlWorkerRegistry::WorkerSetType GetAppliableWorkerSetType() const;
+
+		void UpdateWorker(std::unique_ptr<MouseControlWorker>& worker, MouseControlWorkerRegistry::WorkerType targetType);
+		void CreateWorker(std::unique_ptr<MouseControlWorker>& worker, MouseControlWorkerRegistry::WorkerType type);
+		void RemoveWorker(std::unique_ptr<MouseControlWorker>& worker);
+
+		void SendWorkersUpdate();
 
 		void SaveToPersistence() const;
 		void LoadFromPersistence();
-
-		static bool CheckShouldUseRotation();
-		static char GetRotationDirection(float deltaAngle);
-		static float GetPlayerPedRotation();
-		static std::optional<float> GetTargetRotation(MouseModule::NormalizedMousePosition normalizedPos);
-		static MouseControlCheatMode GetAutoModeTargetMode();
+		static bool ConvertPersistence(std::unique_ptr<uint8_t[]>& dataPtr, size_t& dataSize, uint8_t version);
 
 		static MouseControlCheat* m_instance;
 		MouseControlCheatOptions m_options;
-		float m_targetDeltaRotation = 0.0f;
-		MouseModule::NormalizedMousePosition m_lastNormalizedPos = {};
-		bool m_started = false;
-		ForceControlsCheat::ControlHandle m_leftControlHandle = -1;
-		ForceControlsCheat::ControlHandle m_rightControlHandle = -1;
-		ForceControlsCheat::ControlHandle m_attackControlHandle = -1;
-		bool m_controlHandlesOk = false;
-		bool m_usingRotation = false;
+		MouseControlWorkerRegistry::WorkerSetType m_workerSetType = MouseControlWorkerRegistry::WorkerSetType::None;
+		std::unique_ptr<MouseControlWorker> m_attackWorker;
+		std::unique_ptr<MouseControlWorker> m_mouseWorker;
+		std::unique_ptr<MouseControlWorker> m_resultWorker;
+		bool m_gamepadControlsToastShown = false;
+
+		float m_deltaX = 0.0f;
+		float m_deltaY = 0.0f;
 	};
 }

@@ -1,16 +1,10 @@
 #include "mouse-control.h"
-#include "../../utils/angle-utils.h"
 #include "../camera/camera.h"
 #include "../../toast-manager.h"
+#include "../../events/cheat-options-update.h"
 #include "../../cheat-registry.h"
 
-static constexpr float ROTATE_MODE_SMOOTING = 0.2f;
-static constexpr float ROTATION_INPUT_THRESHOLD = 0.15f;
-static constexpr float ROTATION_SPEED = 0.20943928f;
-
-static constexpr size_t LEFT_CONTROL_INDEX = Game::Utils::GetControlIndex(Game::KEYBOARD_STATE_LEFT);
-static constexpr size_t RIGHT_CONTROL_INDEX = Game::Utils::GetControlIndex(Game::KEYBOARD_STATE_RIGHT);
-static constexpr size_t ATTACK_CONTROL_INDEX = Game::Utils::GetControlIndex(Game::KEYBOARD_STATE_ATTACK);
+static constexpr size_t PERSISTENCE_VERSION = 1;
 
 ModMenuModule::MouseControlCheat* ModMenuModule::MouseControlCheat::m_instance = nullptr;
 
@@ -47,8 +41,25 @@ void ModMenuModule::MouseControlCheat::SetOptions(const MouseControlCheatOptions
 		return;
 	}
 
-	SetOptionsInternal(options);
+	MouseControlCheatOptions oldOptions = m_options;
+	m_options = options;
+
+	Core::EventManager* eventManager = Core::EventManager::GetInstance();
+	CheatOptionsUpdateEvent<MouseControlCheat> event(oldOptions, m_options);
+	eventManager->Dispatch(event);
 }
+
+void ModMenuModule::MouseControlCheat::ShowGamepadControlsToast()
+{
+	if (m_gamepadControlsToastShown) return;
+	m_gamepadControlsToastShown = true;
+
+	// the name "Controller" is purposely used instead of "Gamepad" or because that's how the preset is named in GTA2 Manager
+	spdlog::warn("Mouse control won't work with Controller controls. Please update your controls in GTA2 Manager");
+	ToastManager::GetInstance()->Show({ L"Mouse control won't work with Controller controls.", ToastType::Warning, 240 });
+	ToastManager::GetInstance()->Show({ L"Please update your controls in GTA2 Manager", ToastType::Warning, 240 });
+}
+
 
 void ModMenuModule::MouseControlCheat::OnFirstEnable()
 {
@@ -57,182 +68,41 @@ void ModMenuModule::MouseControlCheat::OnFirstEnable()
 
 void ModMenuModule::MouseControlCheat::OnEnable()
 {
-	AddEventListener<GameStartEvent>(&MouseControlCheat::OnGameStart);
+	AddEventListener<PreGameTickEvent>(&MouseControlCheat::OnPreGameTick);
 	AddEventListener<GameEndEvent>(&MouseControlCheat::OnGameEnd);
 	AddEventListener<GamePauseEvent>(&MouseControlCheat::OnGamePause);
-	AddEventListener<GameUnpauseEvent>(&MouseControlCheat::OnGameUnpause);
-	UpdateAutoModeListeners();
-	UpdateAutoMode();
-	CreateControlHandles();
-	if (ForceControlsCheat::CheckGameReadyToForce()) Start();
 }
 
 void ModMenuModule::MouseControlCheat::OnDisable()
 {
-	RemoveEventListener<GameStartEvent>();
+	RemoveEventListener<PreGameTickEvent>();
 	RemoveEventListener<GameEndEvent>();
 	RemoveEventListener<GamePauseEvent>();
-	RemoveEventListener<GameUnpauseEvent>();
-	RemoveAutoModeListeners();
-	Stop();
-	FreeControlHandles();
+
+	ClearWorkerSet();
 	SaveToPersistence();
+
+	m_gamepadControlsToastShown = false;
 }
 
 void ModMenuModule::MouseControlCheat::OnPreGameTick(PreGameTickEvent& event)
 {
-	if (CheckShouldUseRotation()) {
-		StartRotation();
-		UpdateTargetDeltaRotation();
-	}
-	else {
-		StopRotation();
-		return;
-	}
-
-	char rotationDirection = GetRotationDirection(m_targetDeltaRotation);
-	bool shouldRotateLeft = rotationDirection == -1;
-	bool shouldRotateRight = rotationDirection == 1;
-
-	if (shouldRotateLeft) m_targetDeltaRotation -= ROTATION_SPEED;
-	else if (shouldRotateRight) m_targetDeltaRotation += ROTATION_SPEED;
-
-	ForceControlsCheat* forceControlsCheat = ForceControlsCheat::GetInstance();
-	forceControlsCheat->SetControlState(m_leftControlHandle, shouldRotateLeft ? ForceControlState::ForceDown : ForceControlState::ForceUp);
-	forceControlsCheat->SetControlState(m_rightControlHandle, shouldRotateRight ? ForceControlState::ForceDown : ForceControlState::ForceUp);
-}
-
-void ModMenuModule::MouseControlCheat::OnMouseLockedMove(MouseModule::MouseLockedMoveEvent& event)
-{
-	int deltaX = event.GetDelta().x;
-	m_targetDeltaRotation -= deltaX * m_options.rotateModeSensitivity;
-}
-
-void ModMenuModule::MouseControlCheat::OnMouseMove(MouseModule::MouseMoveEvent& event)
-{
-	MouseModule::MousePosition pos = event.GetPosition();
-	m_lastNormalizedPos = MouseModule::MouseManager::ToNormalizedPosition(pos);
-}
-
-void ModMenuModule::MouseControlCheat::OnMouseButtonDown(MouseModule::MouseButtonDownEvent& event)
-{
-	if (event.GetButton() != MouseModule::MouseButton::Left) return;
-
-	ForceControlsCheat* forceControlsCheat = ForceControlsCheat::GetInstance();
-	forceControlsCheat->SetControlState(m_attackControlHandle, ForceControlState::ForceDown);
-}
-
-void ModMenuModule::MouseControlCheat::OnMouseButtonUp(MouseModule::MouseButtonUpEvent& event)
-{
-	if (event.GetButton() != MouseModule::MouseButton::Left) return;
-
-	ForceControlsCheat* forceControlsCheat = ForceControlsCheat::GetInstance();
-	forceControlsCheat->SetControlState(m_attackControlHandle, ForceControlState::Unmodified);
-}
-
-void ModMenuModule::MouseControlCheat::OnGameStart(GameStartEvent& event)
-{
-	if (ForceControlsCheat::CheckGameReadyToForce()) Start();
+	ApplyAutoMode();
+	UpdateWorkerSet();
+	SendWorkersUpdate();
 }
 
 void ModMenuModule::MouseControlCheat::OnGameEnd(GameEndEvent& event)
 {
-	Stop();
+	ClearWorkerSet();
 }
 
 void ModMenuModule::MouseControlCheat::OnGamePause(GamePauseEvent& event)
 {
-	Stop();
+	ClearWorkerSet();
 }
 
-void ModMenuModule::MouseControlCheat::OnGameUnpause(GameUnpauseEvent& event)
-{
-	if (ForceControlsCheat::CheckGameReadyToForce(true)) Start();
-}
-
-void ModMenuModule::MouseControlCheat::OnCheatStateChange(CheatStateEvent& event)
-{
-	if (event.GetCheatType() != typeid(CameraCheat)) return;
-
-	UpdateAutoMode();
-}
-
-void ModMenuModule::MouseControlCheat::OnCameraCheatOptionsUpdate(CheatOptionsUpdateEvent<CameraCheat>& event)
-{
-	if (event.GetOldOptions().followPedRotation == event.GetNewOptions().followPedRotation) return;
-
-	UpdateAutoMode();
-}
-
-void ModMenuModule::MouseControlCheat::SetOptionsInternal(const MouseControlCheatOptions& options)
-{
-	MouseControlCheatOptions oldOptions = m_options;
-	m_options = options;
-
-	bool autoModeChanged = (oldOptions.autoMode != m_options.autoMode);
-	if (autoModeChanged) {
-		if (m_options.autoMode) m_options.mode = GetAutoModeTargetMode();
-		if (IsEnabled()) UpdateAutoModeListeners();
-	}
-
-	bool modeChanged = (oldOptions.mode != m_options.mode);
-	if (m_started && modeChanged) UpdateMode();
-
-	Core::EventManager* eventManager = Core::EventManager::GetInstance();
-	CheatOptionsUpdateEvent<MouseControlCheat> event(oldOptions, m_options);
-	eventManager->Dispatch(event);
-}
-
-void ModMenuModule::MouseControlCheat::UpdateTargetDeltaRotation()
-{
-	float currentRotation = GetPlayerPedRotation();
-	bool isPointAtMode = m_options.mode == MouseControlCheatMode::PointAt;
-
-	if (isPointAtMode) {
-		std::optional<float> targetRotationOpt = GetTargetRotation(m_lastNormalizedPos);
-		if (!targetRotationOpt.has_value()) {
-			m_targetDeltaRotation = 0.0f;
-			return;
-		}
-
-		m_targetDeltaRotation = Utils::Angle::GetShortestAngleDifference(currentRotation, targetRotationOpt.value());
-	}
-	else {
-		m_targetDeltaRotation *= (1.0f - ROTATE_MODE_SMOOTING);
-	}
-}
-
-void ModMenuModule::MouseControlCheat::UpdateMode()
-{
-	bool isRotateMode = m_options.mode == MouseControlCheatMode::Rotate;
-	bool isPointAtMode = m_options.mode == MouseControlCheatMode::PointAt;
-
-	SetEventListener<MouseModule::MouseLockedMoveEvent>(&MouseControlCheat::OnMouseLockedMove, isRotateMode);
-	SetEventListener<MouseModule::MouseMoveEvent>(&MouseControlCheat::OnMouseMove, isPointAtMode);
-
-	MouseModule::MouseManager* mouseManager = MouseModule::MouseManager::GetInstance();
-	mouseManager->SetLocked(isRotateMode);
-	mouseManager->SetCursorVisibility(isRotateMode ? MouseModule::CursorVisibility::ForceInvisible : MouseModule::CursorVisibility::ForceVisible);
-
-	if (isPointAtMode) UpdateLastNormalizedPos();
-}
-
-void ModMenuModule::MouseControlCheat::UpdateLastNormalizedPos()
-{
-	MouseModule::MousePosition currentPos = MouseModule::MouseManager::FetchMouseState().position;
-	m_lastNormalizedPos = MouseModule::MouseManager::ToNormalizedPosition(currentPos);
-}
-
-void ModMenuModule::MouseControlCheat::UpdateAttack() const
-{
-	MouseModule::MouseState mouseState = MouseModule::MouseManager::FetchMouseState();
-	bool shouldAttack = mouseState.leftButtonDown;
-
-	ForceControlsCheat* forceControlsCheat = ForceControlsCheat::GetInstance();
-	forceControlsCheat->SetControlState(m_attackControlHandle, shouldAttack ? ForceControlState::ForceDown : ForceControlState::Unmodified);
-}
-
-void ModMenuModule::MouseControlCheat::UpdateAutoMode()
+void ModMenuModule::MouseControlCheat::ApplyAutoMode()
 {
 	if (!m_options.autoMode) return;
 
@@ -240,229 +110,11 @@ void ModMenuModule::MouseControlCheat::UpdateAutoMode()
 	newOptions.mode = GetAutoModeTargetMode();
 
 	if (newOptions.mode != m_options.mode) {
-		SetOptionsInternal(newOptions);
+		SetOptions(newOptions);
 	}
 }
 
-void ModMenuModule::MouseControlCheat::UpdateAutoModeListeners()
-{
-	SetEventListener<CheatStateEvent>(&MouseControlCheat::OnCheatStateChange, m_options.autoMode);
-	SetEventListener<CheatOptionsUpdateEvent<CameraCheat>>(&MouseControlCheat::OnCameraCheatOptionsUpdate, m_options.autoMode);
-}
-
-void ModMenuModule::MouseControlCheat::RemoveAutoModeListeners()
-{
-	RemoveEventListener<CheatStateEvent>(true);
-	RemoveEventListener<CheatOptionsUpdateEvent<CameraCheat>>(true);
-}
-
-bool ModMenuModule::MouseControlCheat::EnsureNotGamepadControls() const
-{
-	bool allOk = !ForceControlsCheat::CheckUsesGamepad(LEFT_CONTROL_INDEX)
-		&& !ForceControlsCheat::CheckUsesGamepad(RIGHT_CONTROL_INDEX)
-		&& !ForceControlsCheat::CheckUsesGamepad(ATTACK_CONTROL_INDEX);
-
-	if (!allOk) {
-		// the name "Controller" is purposely used instead of "Gamepad" or because that's how the preset is named in GTA2 Manager
-		spdlog::warn("Mouse control won't work with Controller controls. Please update your controls in GTA2 Manager");
-		ToastManager::GetInstance()->Show({ L"Mouse control won't work with Controller controls.", ToastType::Warning, 240 });
-		ToastManager::GetInstance()->Show({ L"Please update your controls in GTA2 Manager", ToastType::Warning, 240 });
-	}
-
-	return allOk;
-}
-
-bool ModMenuModule::MouseControlCheat::EnsureControlHandlesOk() const
-{
-	if (m_controlHandlesOk) return true;
-
-	spdlog::warn("Mouse control cheat cannot start because control handles are not ok");
-	ToastManager::GetInstance()->Show({ L"Mouse control cheat has failed to start", ToastType::Error, 240 });
-	return false;
-}
-
-void ModMenuModule::MouseControlCheat::StartRotation()
-{
-	if (m_usingRotation) return;
-	spdlog::debug("MouseControlCheat: Starting rotation");
-	m_usingRotation = true;
-	m_targetDeltaRotation = 0.0f;
-}
-
-void ModMenuModule::MouseControlCheat::StopRotation()
-{
-	if (!m_usingRotation) return;
-	spdlog::debug("MouseControlCheat: Stopping rotation");
-	m_usingRotation = false;
-	ForceControlsCheat* forceControlsCheat = ForceControlsCheat::GetInstance();
-	forceControlsCheat->SetControlState(m_leftControlHandle, ForceControlState::Unmodified);
-	forceControlsCheat->SetControlState(m_rightControlHandle, ForceControlState::Unmodified);
-}
-
-void ModMenuModule::MouseControlCheat::Start()
-{
-	if (m_started) return;
-	if (!EnsureControlHandlesOk()) return;
-	if (!EnsureNotGamepadControls()) return;
-	spdlog::debug("MouseControlCheat: Starting");
-	m_started = true;
-
-	AddEventListener<PreGameTickEvent>(&MouseControlCheat::OnPreGameTick);
-	AddEventListener<MouseModule::MouseButtonDownEvent>(&MouseControlCheat::OnMouseButtonDown);
-	AddEventListener<MouseModule::MouseButtonUpEvent>(&MouseControlCheat::OnMouseButtonUp);
-
-	UpdateMode();
-	UpdateAttack();
-}
-
-void ModMenuModule::MouseControlCheat::Stop()
-{
-	if (!m_started) return;
-	spdlog::debug("MouseControlCheat: Stopping");
-	m_started = false;
-
-	RemoveEventListener<PreGameTickEvent>();
-	RemoveEventListener<MouseModule::MouseButtonDownEvent>();
-	RemoveEventListener<MouseModule::MouseButtonUpEvent>();
-	RemoveEventListener<MouseModule::MouseLockedMoveEvent>(true);
-	RemoveEventListener<MouseModule::MouseMoveEvent>(true);
-
-	MouseModule::MouseManager* mouseManager = MouseModule::MouseManager::GetInstance();
-	mouseManager->SetLocked(false);
-	mouseManager->SetCursorVisibility(MouseModule::CursorVisibility::Unmodified);
-
-	ForceControlsCheat* forceControlsCheat = ForceControlsCheat::GetInstance();
-	forceControlsCheat->SetControlState(m_attackControlHandle, ForceControlState::Unmodified);
-	StopRotation();
-}
-
-bool ModMenuModule::MouseControlCheat::CreateControlHandles()
-{
-	ForceControlsCheat* forceControlsCheat = ForceControlsCheat::GetInstance();
-
-	m_leftControlHandle = forceControlsCheat->CreateControlHandle(LEFT_CONTROL_INDEX);
-	m_rightControlHandle = forceControlsCheat->CreateControlHandle(RIGHT_CONTROL_INDEX);
-	m_attackControlHandle = forceControlsCheat->CreateControlHandle(ATTACK_CONTROL_INDEX);
-
-	m_controlHandlesOk = (m_leftControlHandle != -1) && (m_rightControlHandle != -1) && (m_attackControlHandle != -1);
-	if(!m_controlHandlesOk) {
-		spdlog::error("Mouse control cheat failed to create control handles");
-		FreeControlHandles();
-		return false;
-	}
-
-	return true;
-}
-
-void ModMenuModule::MouseControlCheat::FreeControlHandles()
-{
-	ForceControlsCheat* forceControlsCheat = ForceControlsCheat::GetInstance();
-
-	if (m_leftControlHandle != -1) {
-		forceControlsCheat->FreeControlHandle(m_leftControlHandle);
-		m_leftControlHandle = -1;
-	}
-
-	if (m_rightControlHandle != -1) {
-		forceControlsCheat->FreeControlHandle(m_rightControlHandle);
-		m_rightControlHandle = -1;
-	}
-
-	if (m_attackControlHandle != -1) {
-		forceControlsCheat->FreeControlHandle(m_attackControlHandle);
-		m_attackControlHandle = -1;
-	}
-
-	m_controlHandlesOk = false;
-}
-
-void ModMenuModule::MouseControlCheat::SaveToPersistence() const
-{
-	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
-	size_t dataSize = 1 + sizeof(MouseControlCheatOptions);
-	std::unique_ptr<uint8_t[]> dataPtr = std::make_unique<uint8_t[]>(dataSize);
-
-	dataPtr[0] = 1; // version
-	memcpy(dataPtr.get() + 1, &m_options, sizeof(MouseControlCheatOptions));
-
-	persistence->SaveRaw("Cheat_MouseControl_State", dataPtr.get(), dataSize);
-}
-
-void ModMenuModule::MouseControlCheat::LoadFromPersistence()
-{
-	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
-	std::unique_ptr<uint8_t[]> dataPtr = nullptr;
-	size_t dataSize = 0;
-	if (!persistence->LoadRaw("Cheat_MouseControl_State", dataPtr, dataSize)) return;
-	if (dataSize < 1) {
-		spdlog::error("MouseControlCheat::LoadFromPersistence: invalid data size");
-		return;
-	}
-	uint8_t version = dataPtr[0];
-	if (version != 1) {
-		spdlog::error("MouseControlCheat::LoadFromPersistence: unsupported version {}", version);
-		return;
-	}
-	if (dataSize != 1 + sizeof(MouseControlCheatOptions)) {
-		spdlog::error("MouseControlCheat::LoadFromPersistence: invalid data size for version {}", version);
-		return;
-	}
-	memcpy(&m_options, dataPtr.get() + 1, sizeof(MouseControlCheatOptions));
-	SetOptions(m_options);
-}
-
-bool ModMenuModule::MouseControlCheat::CheckShouldUseRotation()
-{
-	Game::Ped* playerPed = Game::Utils::GetPlayerCurrentPed();
-	if (!playerPed || !playerPed->gameObject) return false;
-	if (playerPed->targetCarForEnter) return false;
-
-	return true;
-}
-
-char ModMenuModule::MouseControlCheat::GetRotationDirection(float deltaAngle)
-{
-	if (std::abs(deltaAngle) < ROTATION_INPUT_THRESHOLD) {
-		return 0;
-	}
-	return deltaAngle > 0 ? -1 : 1;
-}
-
-float ModMenuModule::MouseControlCheat::GetPlayerPedRotation()
-{
-	Game::Ped* playerPed = Game::Utils::GetPlayerCurrentPed();
-	if (!playerPed || !playerPed->gameObject) return 0; // prior verified by ShouldUseRotation to not let this happen
-
-	return Game::Utils::FromGTAAngleToRad(playerPed->gameObject->spriteRotation);
-}
-
-std::optional<float> ModMenuModule::MouseControlCheat::GetTargetRotation(MouseModule::NormalizedMousePosition normalizedPos)
-{
-	normalizedPos.x -= 0.5f;
-	normalizedPos.y -= 0.5f;
-	normalizedPos.x *= -1.0f;
-
-	normalizedPos.x *= MouseModule::MouseManager::GetClientAreaAspectRatio();
-	float targetAngle;
-
-	CameraCheat* cameraCheat = CameraCheat::GetInstance();
-	if (cameraCheat->IsEnabled()) {
-		CameraCheatOptions cameraOptions = cameraCheat->GetOptions();
-		normalizedPos.x *= std::cos(cameraOptions.cameraTransform.horizontalAngleRad);
-		if (normalizedPos.x == 0.0f && normalizedPos.y == 0.0f) return std::nullopt;
-		targetAngle = std::atan2(normalizedPos.y, normalizedPos.x) - static_cast<float>(M_PI / 2.0f);
-
-		float cameraRotation = cameraCheat->GetOptions().cameraTransform.verticalAngleRad;
-		targetAngle += cameraRotation;
-	}
-	else {
-		targetAngle = std::atan2(normalizedPos.y, normalizedPos.x) - static_cast<float>(M_PI / 2.0f);
-	}
-
-	return Utils::Angle::NormalizeAngle(targetAngle);
-}
-
-ModMenuModule::MouseControlCheatMode ModMenuModule::MouseControlCheat::GetAutoModeTargetMode()
+ModMenuModule::MouseControlCheatMode ModMenuModule::MouseControlCheat::GetAutoModeTargetMode() const
 {
 	CameraCheat* cameraCheat = CameraCheat::GetInstance();
 	if (!cameraCheat->IsEnabled()) {
@@ -475,6 +127,144 @@ ModMenuModule::MouseControlCheatMode ModMenuModule::MouseControlCheat::GetAutoMo
 	}
 
 	return MouseControlCheatMode::Rotate;
+}
+
+void ModMenuModule::MouseControlCheat::UpdateWorkerSet()
+{
+	using namespace MouseControlWorkerRegistry;
+
+	WorkerSetType appliableWorkerSetType = GetAppliableWorkerSetType();
+	if (appliableWorkerSetType == m_workerSetType) return;
+
+	const MouseControlWorkerSetDef& workerSetDef = GetWorkerSetDef(appliableWorkerSetType);
+
+	UpdateWorker(m_attackWorker, workerSetDef.attackWorkerType);
+	UpdateWorker(m_mouseWorker, workerSetDef.mouseWorkerType);
+	UpdateWorker(m_resultWorker, workerSetDef.resultWorkerType);
+}
+
+void ModMenuModule::MouseControlCheat::ClearWorkerSet()
+{
+	m_workerSetType = MouseControlWorkerRegistry::WorkerSetType::None;
+	RemoveWorker(m_attackWorker);
+	RemoveWorker(m_mouseWorker);
+	RemoveWorker(m_resultWorker);
+}
+
+ModMenuModule::MouseControlWorkerRegistry::WorkerSetType ModMenuModule::MouseControlCheat::GetAppliableWorkerSetType() const
+{
+	using namespace MouseControlWorkerRegistry;
+
+	Game::Game* game = Game::Memory::GetGame();
+	if (!game || game->gameStatus != Game::GAME_RUN) {
+		return WorkerSetType::None;
+	}
+
+	Game::Ped* playerPed = Game::Utils::GetPlayerCurrentPed();
+	bool isInCar = playerPed && (playerPed->currentCar != nullptr || playerPed->targetCarForEnter != nullptr);
+	bool hasGameObject = playerPed && playerPed->gameObject != nullptr;
+
+	switch (m_options.mode) {
+	case MouseControlCheatMode::Rotate:
+		if (isInCar) return WorkerSetType::RotateModeInCar;
+		else if (hasGameObject)	return WorkerSetType::RotateMode;
+		return WorkerSetType::None;
+	case MouseControlCheatMode::PointAt:
+		if (isInCar) return WorkerSetType::PointAtModeInCar;
+		else if (hasGameObject)	return WorkerSetType::PointAtMode;
+		return WorkerSetType::None;
+	default:
+		spdlog::error("MouseControlCheat::GetAppliableWorkerSet: unknown mode {}", static_cast<int>(m_options.mode));
+		return WorkerSetType::None;
+	}
+}
+
+void ModMenuModule::MouseControlCheat::UpdateWorker(std::unique_ptr<MouseControlWorker>& worker, MouseControlWorkerRegistry::WorkerType targetType)
+{
+	if (worker && MouseControlWorkerRegistry::GetWorkerType(worker.get()) == targetType) {
+		return;
+	}
+
+	if (worker) {
+		RemoveWorker(worker);
+	}
+
+	if (targetType != MouseControlWorkerRegistry::GetWorkerType<void>()) {
+		CreateWorker(worker, targetType);
+	}
+}
+
+void ModMenuModule::MouseControlCheat::CreateWorker(std::unique_ptr<MouseControlWorker>& worker, MouseControlWorkerRegistry::WorkerType type)
+{
+	std::unique_ptr<MouseControlWorker> newWorker = MouseControlWorkerRegistry::CreateWorker(type);
+	if (!newWorker) {
+	   spdlog::error("MouseControlCheat::CreateWorker: failed to create worker for type {}", type.name());
+	   return;
+	}
+
+	newWorker->Start();
+	if(!newWorker->IsRunning()) {
+		spdlog::error("MouseControlCheat::CreateWorker: failed to start worker for type {}", type.name());
+		return;
+	}
+
+	worker = std::move(newWorker);
+}
+
+void ModMenuModule::MouseControlCheat::RemoveWorker(std::unique_ptr<MouseControlWorker>& worker)
+{
+	if (!worker) return;
+
+	worker->Stop();
+	worker.reset();
+}
+
+void ModMenuModule::MouseControlCheat::SendWorkersUpdate()
+{
+	if (m_attackWorker) m_attackWorker->Update();
+	if (m_mouseWorker) m_mouseWorker->Update();
+	if (m_resultWorker) m_resultWorker->Update();
+}
+
+void ModMenuModule::MouseControlCheat::SaveToPersistence() const
+{
+	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
+	size_t dataSize = 1 + sizeof(MouseControlCheatOptions);
+	std::unique_ptr<uint8_t[]> dataPtr = std::make_unique<uint8_t[]>(dataSize);
+
+	dataPtr[0] = PERSISTENCE_VERSION; // version
+	memcpy(dataPtr.get() + 1, &m_options, sizeof(MouseControlCheatOptions));
+
+	persistence->SaveRaw("Cheat_MouseControl_State", dataPtr.get(), dataSize);
+}
+
+void ModMenuModule::MouseControlCheat::LoadFromPersistence()
+{
+	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
+	std::unique_ptr<uint8_t[]> dataPtr = nullptr;
+	size_t dataSize = 0;
+	if (!persistence->LoadRaw("Cheat_MouseControl_State", dataPtr, dataSize)) return;
+
+	if (dataSize < 1) {
+		spdlog::error("MouseControlCheat::LoadFromPersistence: invalid data size");
+		return;
+	}
+	uint8_t version = dataPtr[0];
+	if (version != PERSISTENCE_VERSION) {
+		if (!ConvertPersistence(dataPtr, dataSize, version)) return;
+	}
+	if (dataSize != 1 + sizeof(MouseControlCheatOptions)) {
+		spdlog::error("MouseControlCheat::LoadFromPersistence: invalid persistence data size");
+		return;
+	}
+	memcpy(&m_options, dataPtr.get() + 1, sizeof(MouseControlCheatOptions));
+	SetOptions(m_options);
+}
+
+bool ModMenuModule::MouseControlCheat::ConvertPersistence(std::unique_ptr<uint8_t[]>& dataPtr, size_t& dataSize, uint8_t version)
+{
+	spdlog::error("MouseControlCheat::ConvertPersistence: unsupported version {}", version);
+	return false;
 }
 
 REGISTER_CHEAT(MouseControlCheat)

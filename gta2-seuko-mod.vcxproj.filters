@@ -172,6 +172,11 @@
     <ClCompile Include="src\modules\modmenu\quick-actions\toggle-steering-assist.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\camera\freecam.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\mouse-control\mouse-control.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\mouse-control\locked-mouse-worker.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\mouse-control\point-at-mouse-worker.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\mouse-control\attack-worker.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\mouse-control\left-right-worker.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\mouse-control\mouse-control-worker-registry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -460,6 +465,12 @@
     <ClInclude Include="src\modules\modmenu\quick-actions\toggle-steering-assist.h" />
     <ClInclude Include="src\modules\modmenu\cheats\camera\freecam.h" />
     <ClInclude Include="src\modules\modmenu\cheats\mouse-control\mouse-control.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\mouse-control\mouse-control-worker.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\mouse-control\locked-mouse-worker.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\mouse-control\point-at-mouse-worker.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\mouse-control\attack-worker.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\mouse-control\left-right-worker.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\mouse-control\mouse-control-worker-registry.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
