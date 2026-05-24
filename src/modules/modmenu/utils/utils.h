@@ -18,4 +18,5 @@
 #include "spawn-object.h"
 #include "spawn-object-at-player.h"
 #include "toggle-native-cheat-utils.h"
+#include "unlock-all-levels.h"
 #include "vertex-utils.h"

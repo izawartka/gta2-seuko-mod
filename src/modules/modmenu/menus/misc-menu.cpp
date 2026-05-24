@@ -4,6 +4,7 @@
 #include "quick-actions-menu.h"
 #include "version-menu.h"
 #include "../utils/save-game.h"
+#include "../utils/unlock-all-levels.h"
 #include "../toast-manager.h"
 
 ModMenuModule::MiscMenu::MiscMenu()
@@ -32,6 +33,11 @@ bool ModMenuModule::MiscMenu::Attach()
 	auto quickSaveText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"Quick save", options.textSize);
 	auto quickSaveBtn = m_menuController->CreateLatestItemController<UiModule::ButtonController>(quickSaveText);
 	quickSaveBtn->SetCallback(this, &MiscMenu::QuickSave);
+
+	// unlock all levels button
+	auto unlockAllLevelsText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"Unlock all levels", options.textSize);
+	auto unlockAllLevelsBtn = m_menuController->CreateLatestItemController<UiModule::ButtonController>(unlockAllLevelsText);
+	unlockAllLevelsBtn->SetCallback(this, &MiscMenu::UnlockAllLevels);
 
 	SetPreviousSelectedIndex();
 
@@ -65,5 +71,15 @@ void ModMenuModule::MiscMenu::QuickSave()
 	}
 	else {
 		ModMenuModule::ToastManager::GetInstance()->Show({ L"Failed to save game", ToastType::Error });
+	}
+}
+
+void ModMenuModule::MiscMenu::UnlockAllLevels()
+{
+	if (ModMenuModule::Utils::UnlockAllLevels()) {
+		ModMenuModule::ToastManager::GetInstance()->Show({ L"All levels unlocked" });
+	}
+	else {
+		ModMenuModule::ToastManager::GetInstance()->Show({ L"Failed to unlock all levels", ToastType::Error });
 	}
 }

@@ -13,5 +13,6 @@ namespace ModMenuModule {
 
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 		void QuickSave();
+		void UnlockAllLevels();
 	};
 }

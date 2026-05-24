@@ -37,7 +37,7 @@ namespace ModMenuModule::Utils::CategorizedNativeCheats {
 		{ NativeCheatCategory::TilesRelated, L"Skip right tiles", 0x8},
 		{ NativeCheatCategory::TilesRelated, L"Show hidden faces", 0x9},
 		{ NativeCheatCategory::SkipThings, L"No traffic", 0xA},
-		{ NativeCheatCategory::RequiringRestart, L"Unlock all levels", 0xB},
+		{ NativeCheatCategory::UnstableOrUnused, L"Unlock all levels", 0xB},
 		{ NativeCheatCategory::UnstableOrUnused, L"Exploding on", 0xC},
 		{ NativeCheatCategory::SkipThings, L"No police", 0xD},
 		{ NativeCheatCategory::TilesRelated, L"Skip bottom tiles", 0xE},
