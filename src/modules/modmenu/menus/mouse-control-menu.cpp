@@ -2,6 +2,7 @@
 #include "../root.h"
 #include "../cheats/mouse-control/mouse-control.h"
 #include "../../../converters/enabled-disabled.h"
+#include "../../../converters/yes-no.h"
 #include "../../../converters/mouse-control-cheat-mode.h"
 
 static constexpr float ROTATE_MODE_SENSITIVITY_MULTIPLIER = 0.001f;
@@ -178,7 +179,7 @@ void ModMenuModule::MouseControlMenu::AttachRotateModeMenuItems()
 
 	// rotate mode sensitivity
 	UiModule::Text* rotateModeSensitivityText = m_menuController->CreateItem<UiModule::Text>(container, L"", options.textSize);
-	auto rotateModeSensitivityController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<unsigned int, unsigned int>>(
+	auto* rotateModeSensitivityController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<unsigned int, unsigned int>>(
 		rotateModeSensitivityText,
 		[mouseControlCheat]() {
 			float sensitivity = mouseControlCheat->GetOptions().rotateModeSensitivity;
@@ -197,6 +198,23 @@ void ModMenuModule::MouseControlMenu::AttachRotateModeMenuItems()
 		if (newValue < 1U) return 1U;
 		if (newValue > 100U) return 100U;
 		return newValue;
+	});
+
+	// rotate camera
+	UiModule::Text* rotateCameraText = m_menuController->CreateItem<UiModule::Text>(container, L"", options.textSize);
+	auto* rotateCameraController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<bool, bool>>(
+		rotateCameraText,
+		[mouseControlCheat]() {
+			return mouseControlCheat->GetOptions().rotateCamera;
+		},
+		std::vector<bool>{ false, true },
+		UiModule::VarTextSelectControllerOptions{ L"Rotate camera: #", L"#" }
+	);
+	rotateCameraController->SetConverter<YesNoConverter>();
+	rotateCameraController->SetCustomSaveCallback([mouseControlCheat](bool newValue) {
+		MouseControlCheatOptions options = mouseControlCheat->GetOptions();
+		options.rotateCamera = newValue;
+		mouseControlCheat->SetOptions(options);
 	});
 
 	m_rotateModeItemsAttached = true;

@@ -32,10 +32,13 @@ namespace ModMenuModule::MouseControlWorkerRegistry {
 		const std::unordered_map<WorkerSetType, MouseControlWorkerSetDef>& GetWorkerSetDefs()
 		{
 			static const std::unordered_map<WorkerSetType, MouseControlWorkerSetDef> workerSetDefs = {
+				{ WorkerSetType::None, MouseControlWorkerSetDef::Create<void, void, void>() },
+				{ WorkerSetType::AttackOnly, MouseControlWorkerSetDef::Create<AttackWorker, void, void>() },
 				{ WorkerSetType::RotateMode, MouseControlWorkerSetDef::Create<AttackWorker, LockedMouseWorker, LeftRightWorker>() },
 				{ WorkerSetType::RotateModeInCar, MouseControlWorkerSetDef::Create<AttackWorker, LockedMouseWorker, RotateCameraWorker>() },
+				{ WorkerSetType::RotateModeAltMoving, MouseControlWorkerSetDef::Create<AttackWorker, LockedMouseWorker, RotateCameraWorker>() },
+				{ WorkerSetType::RotateModeFreecam, MouseControlWorkerSetDef::Create<void, LockedMouseWorker, RotateCameraWorker>() },
 				{ WorkerSetType::PointAtMode, MouseControlWorkerSetDef::Create<AttackWorker, PointAtMouseWorker, LeftRightWorker>() },
-				{ WorkerSetType::PointAtModeInCar, MouseControlWorkerSetDef::Create<AttackWorker, void, void>() },
 			};
 
 			return workerSetDefs;

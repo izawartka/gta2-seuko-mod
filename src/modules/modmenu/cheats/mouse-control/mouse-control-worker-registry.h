@@ -5,10 +5,12 @@
 namespace ModMenuModule::MouseControlWorkerRegistry {
 	enum class WorkerSetType {
 		None = 0,
+		AttackOnly,
 		RotateMode,
 		RotateModeInCar,
+		RotateModeAltMoving,
+		RotateModeFreecam,
 		PointAtMode,
-		PointAtModeInCar,
 	};
 
 	using WorkerType = std::type_index;

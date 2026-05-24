@@ -4,7 +4,7 @@
 #include "../../events/cheat-options-update.h"
 #include "../../cheat-registry.h"
 
-static constexpr size_t PERSISTENCE_VERSION = 1;
+static constexpr size_t PERSISTENCE_VERSION = 2;
 
 ModMenuModule::MouseControlCheat* ModMenuModule::MouseControlCheat::m_instance = nullptr;
 
@@ -135,6 +135,10 @@ void ModMenuModule::MouseControlCheat::UpdateWorkerSet()
 
 	WorkerSetType appliableWorkerSetType = GetAppliableWorkerSetType();
 	if (appliableWorkerSetType == m_workerSetType) return;
+	if (appliableWorkerSetType == WorkerSetType::None) {
+		ClearWorkerSet();
+		return;
+	}
 
 	const MouseControlWorkerSetDef& workerSetDef = GetWorkerSetDef(appliableWorkerSetType);
 
@@ -160,18 +164,25 @@ ModMenuModule::MouseControlWorkerRegistry::WorkerSetType ModMenuModule::MouseCon
 		return WorkerSetType::None;
 	}
 
-	Game::Ped* playerPed = Game::Utils::GetPlayerCurrentPed();
+	Game::Player* player = game->currentPlayer;
+	Game::Ped* playerPed = player ? Game::Functions::GetCurrentPed(player) : nullptr;
+
+	bool isAltMoving = player && player->keySpecial2;
+	bool isFreecam = player && player->controlState == Game::PLAYER_CONTROL_STATE_FREECAM;
 	bool isInCar = playerPed && (playerPed->currentCar != nullptr || playerPed->targetCarForEnter != nullptr);
 	bool hasGameObject = playerPed && playerPed->gameObject != nullptr;
 
 	switch (m_options.mode) {
 	case MouseControlCheatMode::Rotate:
-		if (isInCar) return WorkerSetType::RotateModeInCar;
-		else if (hasGameObject)	return WorkerSetType::RotateMode;
+		if (isFreecam) return m_options.rotateCamera ? WorkerSetType::RotateModeFreecam : WorkerSetType::None;
+		if (isAltMoving) return m_options.rotateCamera ? WorkerSetType::RotateModeAltMoving : WorkerSetType::AttackOnly;
+		if (isInCar) return m_options.rotateCamera ? WorkerSetType::RotateModeInCar : WorkerSetType::AttackOnly;
+		if (hasGameObject) return WorkerSetType::RotateMode;
 		return WorkerSetType::None;
 	case MouseControlCheatMode::PointAt:
-		if (isInCar) return WorkerSetType::PointAtModeInCar;
-		else if (hasGameObject)	return WorkerSetType::PointAtMode;
+		if (isFreecam) return WorkerSetType::None;
+		if (isInCar || isAltMoving) return WorkerSetType::AttackOnly;
+		if (hasGameObject) return WorkerSetType::PointAtMode;
 		return WorkerSetType::None;
 	default:
 		spdlog::error("MouseControlCheat::GetAppliableWorkerSet: unknown mode {}", static_cast<int>(m_options.mode));
@@ -232,7 +243,7 @@ void ModMenuModule::MouseControlCheat::SaveToPersistence() const
 	size_t dataSize = 1 + sizeof(MouseControlCheatOptions);
 	std::unique_ptr<uint8_t[]> dataPtr = std::make_unique<uint8_t[]>(dataSize);
 
-	dataPtr[0] = PERSISTENCE_VERSION; // version
+	dataPtr[0] = PERSISTENCE_VERSION;
 	memcpy(dataPtr.get() + 1, &m_options, sizeof(MouseControlCheatOptions));
 
 	persistence->SaveRaw("Cheat_MouseControl_State", dataPtr.get(), dataSize);
@@ -263,8 +274,22 @@ void ModMenuModule::MouseControlCheat::LoadFromPersistence()
 
 bool ModMenuModule::MouseControlCheat::ConvertPersistence(std::unique_ptr<uint8_t[]>& dataPtr, size_t& dataSize, uint8_t version)
 {
-	spdlog::error("MouseControlCheat::ConvertPersistence: unsupported version {}", version);
-	return false;
+	switch (version) {
+	case 1: {
+		// add rotateCamera option at the end
+		size_t newSize = dataSize + sizeof(bool);
+		std::unique_ptr<uint8_t[]> newDataPtr = std::make_unique<uint8_t[]>(newSize);
+		memcpy(newDataPtr.get(), dataPtr.get(), dataSize);
+		bool rotateCamera = true;
+		memcpy(newDataPtr.get() + dataSize, &rotateCamera, sizeof(bool));
+		dataPtr = std::move(newDataPtr);
+		dataSize = newSize;
+		return true;
+	}
+	default: {
+		spdlog::error("MouseControlCheat::ConvertPersistence: unsupported version {}", version);
+		return false;
+	}}
 }
 
 REGISTER_CHEAT(MouseControlCheat)

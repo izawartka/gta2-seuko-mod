@@ -18,6 +18,7 @@ namespace ModMenuModule {
 		bool autoMode = true;
 		MouseControlCheatMode mode = MouseControlCheatMode::Rotate;
 		float rotateModeSensitivity = 0.02f;
+		bool rotateCamera = true;
 	};
 
 	class MouseControlCheat : public CheatBase, public Core::EventListenerSupport {
