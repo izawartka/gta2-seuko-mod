@@ -16,6 +16,7 @@ namespace ModMenuModule {
 		bool followPedRotation = false;
 		float followPedRotationLerpFactor = 0.5f; // requires followPedRotation = true
 		size_t renderDistance = 20; // in map blocks, requires customRenderQueue = true
+		float followPedRotationOffset = 0.0f; // requires followPedRotation = true
 
 		bool SmartEquals(const CameraCheatOptions& other) const {
 			bool cameraTransformCheck = followPedRotation ?
@@ -27,7 +28,8 @@ namespace ModMenuModule {
 				customCulling == other.customCulling &&
 				customRenderQueue == other.customRenderQueue &&
 				followPedRotation == other.followPedRotation &&
-				(!followPedRotation || followPedRotationLerpFactor == other.followPedRotationLerpFactor) &&
+				(!followPedRotation || (followPedRotationLerpFactor == other.followPedRotationLerpFactor &&
+					followPedRotationOffset == other.followPedRotationOffset)) &&
 				(!customRenderQueue || renderDistance == other.renderDistance);
 		}
 
@@ -37,6 +39,7 @@ namespace ModMenuModule {
 				customRenderQueue == other.customRenderQueue &&
 				followPedRotation == other.followPedRotation &&
 				followPedRotationLerpFactor == other.followPedRotationLerpFactor &&
+				followPedRotationOffset == other.followPedRotationOffset &&
 				renderDistance == other.renderDistance;
 		}
 
@@ -81,6 +84,7 @@ namespace ModMenuModule {
 
 		void SaveToPersistence() const;
 		void LoadFromPersistence();
+		static bool ConvertPersistence(std::unique_ptr<uint8_t[]>& dataPtr, size_t& dataSize, uint8_t version);
 
 		static CameraCheat* m_instance;
 		CameraCheatOptions m_options;

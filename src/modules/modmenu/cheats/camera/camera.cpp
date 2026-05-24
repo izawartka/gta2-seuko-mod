@@ -5,6 +5,8 @@
 #include "../../events/cheat-options-update.h"
 #include "../../cheat-registry.h"
 
+static constexpr size_t PERSISTENCE_VERSION = 2;
+
 ModMenuModule::CameraCheat* ModMenuModule::CameraCheat::m_instance = nullptr;
 
 ModMenuModule::CameraCheat::CameraCheat() : ModMenuModule::CheatBase("Cheat_Camera_IsEnabled") {
@@ -183,13 +185,14 @@ void ModMenuModule::CameraCheat::OnPreDrawFrame(PreDrawFrameEvent& event)
 	short* playerPedRotationPtr = Game::Utils::GetPlayerCurrentPedRotationPtr();
 	if (playerPedRotationPtr != nullptr && m_options.followPedRotation) {
 		float pedRotationRad = Game::Utils::FromGTAAngleToRad(*playerPedRotationPtr) + static_cast<float>(M_PI);
+		float pedRotationWithOffsetRad = pedRotationRad + m_options.followPedRotationOffset;
 		float oldCameraRotation = m_options.cameraTransform.verticalAngleRad;
 		float newCameraRotation = oldCameraRotation;
 		if (m_snapVerticalRotation) {
-			newCameraRotation = pedRotationRad;
+			newCameraRotation = pedRotationWithOffsetRad;
 		}
 		else {
-			newCameraRotation = Utils::Angle::LerpAngle(oldCameraRotation, pedRotationRad, m_options.followPedRotationLerpFactor);
+			newCameraRotation = Utils::Angle::LerpAngle(oldCameraRotation, pedRotationWithOffsetRad, m_options.followPedRotationLerpFactor);
 		}
 
 		if (newCameraRotation != oldCameraRotation) {
@@ -296,7 +299,7 @@ void ModMenuModule::CameraCheat::SaveToPersistence() const
 	size_t dataSize = 1 + sizeof(CameraCheatOptions);
 	std::unique_ptr<uint8_t[]> dataPtr = std::make_unique<uint8_t[]>(dataSize);
 
-	dataPtr[0] = 1; // version
+	dataPtr[0] = PERSISTENCE_VERSION;
 	memcpy(dataPtr.get() + 1, &m_options, sizeof(CameraCheatOptions));
 
 	persistence->SaveRaw("Cheat_Camera_State", dataPtr.get(), dataSize);
@@ -313,8 +316,7 @@ void ModMenuModule::CameraCheat::LoadFromPersistence()
 		return;
 	}
 	uint8_t version = dataPtr[0];
-	if (version != 1) {
-		spdlog::error("CameraCheat::LoadFromPersistence: unsupported version {}", version);
+	if (version != PERSISTENCE_VERSION && !ConvertPersistence(dataPtr, dataSize, version)) {
 		return;
 	}
 	if (dataSize != 1 + sizeof(CameraCheatOptions)) {
@@ -323,6 +325,26 @@ void ModMenuModule::CameraCheat::LoadFromPersistence()
 	}
 	memcpy(&m_options, dataPtr.get() + 1, sizeof(CameraCheatOptions));
 	SetOptions(m_options);
+}
+
+bool ModMenuModule::CameraCheat::ConvertPersistence(std::unique_ptr<uint8_t[]>& dataPtr, size_t& dataSize, uint8_t version)
+{
+	switch (version) {
+	case 1: {
+		// add float followPedRotationOffset at the end (equals 0)
+		size_t newSize = dataSize + sizeof(float);
+		std::unique_ptr<uint8_t[]> newDataPtr = std::make_unique<uint8_t[]>(newSize);
+		memcpy(newDataPtr.get(), dataPtr.get(), dataSize);
+		float followPedRotationOffset = 0.0f;
+		memcpy(newDataPtr.get() + dataSize, &followPedRotationOffset, sizeof(float));
+		dataPtr = std::move(newDataPtr);
+		dataSize = newSize;
+		return true;
+	}
+	default: {
+		spdlog::error("CameraCheat::ConvertPersistence: unsupported version {}", version);
+		return false;
+	}}
 }
 
 REGISTER_CHEAT(CameraCheat)

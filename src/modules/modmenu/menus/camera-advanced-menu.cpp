@@ -184,6 +184,22 @@ void ModMenuModule::CameraAdvancedMenu::AttachCheatMenuItems()
 		cameraCheat->SetOptions(options);
 	});
 
+	// follow ped rotation offset
+	UiModule::Text* followPedRotationOffsetText = m_menuController->CreateItem<UiModule::Text>(container, L"", options.textSize);
+	auto followPedRotationOffsetController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<float, float>>(
+		followPedRotationOffsetText,
+		[cameraCheat]() {
+			return cameraCheat->GetOptions().followPedRotationOffset;
+		},
+		UiModule::VarTextEditableControllerOptions{ L"Follow ped rotation offset: #", L" deg#" }
+	);
+	followPedRotationOffsetController->SetConverter<RadiansConverter<>>();
+	followPedRotationOffsetController->SetCustomSaveCallback([cameraCheat](float newValue) {
+		CameraCheatOptions options = cameraCheat->GetOptions();
+		options.followPedRotationOffset = newValue;
+		cameraCheat->SetOptions(options);
+	});
+
 	// custom render queue
 	UiModule::Text* customRenderQueueText = m_menuController->CreateItem<UiModule::Text>(container, L"", options.textSize);
 	auto customRenderQueueController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<bool, bool>>(

@@ -11,7 +11,8 @@ static const ModMenuModule::CameraCheatOptions rotateCameraOptions = {
 	false, // customRenderQueue
 	true, // followPedRotation
 	0.5f, // followPedRotationLerpFactor
-	20 // renderDistance
+	20, // renderDistance
+	0.0f // followPedRotationOffset
 };
 
 static const ModMenuModule::CameraPosCheatOptions rotateCameraPosOptions = {
@@ -28,7 +29,8 @@ static const ModMenuModule::CameraCheatOptions threeDimensionalCameraOptions = {
 	true, // customRenderQueue
 	true, // followPedRotation
 	0.5f, // followPedRotationLerpFactor
-	20 // renderDistance
+	20, // renderDistance
+	0.0f // followPedRotationOffset
 };
 
 static const ModMenuModule::CameraPosCheatOptions threeDimensionalCameraPosOptions = {
