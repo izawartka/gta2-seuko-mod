@@ -48,7 +48,7 @@ This version is recommended if you want to use this mod alone without any other 
 This version is recommended if you want to use this mod together with other mods using the ASI Loader.
 
 1. Make sure you have [VC++ Redistributables](https://www.techpowerup.com/download/visual-c-redistributable-runtime-package-all-in-one/) installed
-2. Download and install [ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader/releases/latest) (Win32 dinput.dll version) to your GTA2 installation folder
+2. Download and install [ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader/releases/latest) (Win32 dinput8.dll version) to your GTA2 installation folder
 3. Open the [latest release](https://github.com/izawartka/gta2-seuko-mod/releases/latest) page
 4. Download `gta2-seuko-mod-<version>-asi.zip` archive
 5. Create `scripts` folder in your GTA2 installation folder if it doesn't exist
