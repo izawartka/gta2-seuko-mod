@@ -177,6 +177,7 @@
     <ClCompile Include="src\modules\modmenu\cheats\mouse-control\attack-worker.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\mouse-control\left-right-worker.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\mouse-control\mouse-control-worker-registry.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\mouse-control\rotate-camera-worker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -471,6 +472,7 @@
     <ClInclude Include="src\modules\modmenu\cheats\mouse-control\attack-worker.h" />
     <ClInclude Include="src\modules\modmenu\cheats\mouse-control\left-right-worker.h" />
     <ClInclude Include="src\modules\modmenu\cheats\mouse-control\mouse-control-worker-registry.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\mouse-control\rotate-camera-worker.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

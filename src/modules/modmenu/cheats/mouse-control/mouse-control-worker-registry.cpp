@@ -1,9 +1,10 @@
+#include "mouse-control-worker-registry.h"
 #include "mouse-control-worker.h"
 #include "attack-worker.h"
 #include "locked-mouse-worker.h"
 #include "point-at-mouse-worker.h"
 #include "left-right-worker.h"
-#include "mouse-control-worker-registry.h"
+#include "rotate-camera-worker.h"
 
 namespace ModMenuModule::MouseControlWorkerRegistry {
 	namespace {
@@ -22,6 +23,7 @@ namespace ModMenuModule::MouseControlWorkerRegistry {
 				{ GetWorkerType<LockedMouseWorker>(), &CreateWorkerInstance<LockedMouseWorker> },
 				{ GetWorkerType<PointAtMouseWorker>(), &CreateWorkerInstance<PointAtMouseWorker> },
 				{ GetWorkerType<LeftRightWorker>(), &CreateWorkerInstance<LeftRightWorker> },
+				{ GetWorkerType<RotateCameraWorker>(), &CreateWorkerInstance<RotateCameraWorker> },
 			};
 
 			return factories;
@@ -31,7 +33,7 @@ namespace ModMenuModule::MouseControlWorkerRegistry {
 		{
 			static const std::unordered_map<WorkerSetType, MouseControlWorkerSetDef> workerSetDefs = {
 				{ WorkerSetType::RotateMode, MouseControlWorkerSetDef::Create<AttackWorker, LockedMouseWorker, LeftRightWorker>() },
-				{ WorkerSetType::RotateModeInCar, MouseControlWorkerSetDef::Create<AttackWorker, void, void>() },
+				{ WorkerSetType::RotateModeInCar, MouseControlWorkerSetDef::Create<AttackWorker, LockedMouseWorker, RotateCameraWorker>() },
 				{ WorkerSetType::PointAtMode, MouseControlWorkerSetDef::Create<AttackWorker, PointAtMouseWorker, LeftRightWorker>() },
 				{ WorkerSetType::PointAtModeInCar, MouseControlWorkerSetDef::Create<AttackWorker, void, void>() },
 			};
