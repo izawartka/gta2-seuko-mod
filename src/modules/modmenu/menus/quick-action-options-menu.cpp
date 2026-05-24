@@ -1,6 +1,7 @@
 #include "quick-action-options-menu.h"
 #include "../root.h"
 #include "../../../converters/quick-action-type.h"
+#include "../../../converters/gta-font-safe.h"
 
 ModMenuModule::QuickActionOptionsMenu::QuickActionOptionsMenu(QuickActionId actionId)
 {
@@ -40,6 +41,7 @@ bool ModMenuModule::QuickActionOptionsMenu::Attach()
 		m_actionInfo->GetLabel(),
 		UiModule::EditableControllerOptions{ L"Name: #", L"#" }
 	);
+	nameController->SetConverter<GtaFontSafeConverter>();
 	nameController->SetSaveCallback([this, quickActionManager](std::wstring newName) {
 		m_actionInfo->customLabel = newName;
 	});
