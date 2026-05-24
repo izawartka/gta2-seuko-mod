@@ -167,5 +167,8 @@ namespace Game {
 
 		typedef Ped* (__fastcall GetCurrentPedType)(Player* player);
 		static constexpr GetCurrentPedType* GetCurrentPed = (GetCurrentPedType*)0x004a5150;
+
+		typedef void(__fastcall UnlockAllLevelsType)(S28* s28);
+		static constexpr UnlockAllLevelsType* UnlockAllLevels = (UnlockAllLevelsType*)0x004a8b00;
 	};  
 }
