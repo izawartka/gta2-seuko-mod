@@ -4,6 +4,7 @@
 #include "../../../../events/camera-pos-apply.h"
 #include "../../../../events/game-start.h"
 #include "../../../../events/game-end.h"
+#include "../../../../events/wsfix-z-update.h"
 
 namespace ModMenuModule {
 	enum class CameraPosCheatMode {
@@ -76,7 +77,8 @@ namespace ModMenuModule {
 		void OnCameraPosApply(CameraPosApplyEvent& event);
 		void OnGameStart(GameStartEvent& event);
 		void OnGameEnd(GameEndEvent& event);
-		void ApplyCoordinate(CameraPosCheatCoordinate& coord, Game::SCR_f& camCoord, Game::SCR_f& camCoordTarget2) const;
+		void OnWSFixZUpdate(WSFixZUpdateEvent& event);
+		void ApplyCoordinate(CameraPosCheatCoordinate& coord, Game::SCR_f& camCoord, Game::SCR_f& camCoordTarget2, bool isZ = false) const;
 		void ApplyReverseZMinLock(Game::Camera* camera) const;
 
 		void SaveToPersistence() const;
@@ -88,5 +90,6 @@ namespace ModMenuModule {
 		bool m_snapToTargetRequested = false;
 		bool m_snapAndDisableRequested = false;
 		std::optional<Game::CameraPos> m_lastPosition = std::nullopt;
+		Game::SCR_f m_wsfixZOffset = 0;
 	};
 }

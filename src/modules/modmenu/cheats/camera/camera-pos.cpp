@@ -89,6 +89,7 @@ void ModMenuModule::CameraPosCheat::OnEnable()
 	AddEventListener<CameraPosApplyEvent>(&ModMenuModule::CameraPosCheat::OnCameraPosApply);
 	AddEventListener<GameStartEvent>(&ModMenuModule::CameraPosCheat::OnGameStart);
 	AddEventListener<GameEndEvent>(&ModMenuModule::CameraPosCheat::OnGameEnd);
+	AddEventListener<WSFixZUpdateEvent>(&ModMenuModule::CameraPosCheat::OnWSFixZUpdate);
 }
 
 void ModMenuModule::CameraPosCheat::OnDisable()
@@ -96,10 +97,12 @@ void ModMenuModule::CameraPosCheat::OnDisable()
 	RemoveEventListener<CameraPosApplyEvent>();
 	RemoveEventListener<GameStartEvent>();
 	RemoveEventListener<GameEndEvent>();
+	RemoveEventListener<WSFixZUpdateEvent>();
 	m_lockAtCurrentRequested = false;
 	m_snapToTargetRequested = false;
 	m_snapAndDisableRequested = false;
 	m_lastPosition = std::nullopt;
+	m_wsfixZOffset = 0;
 
 	SaveToPersistence();
 }
@@ -123,18 +126,19 @@ void ModMenuModule::CameraPosCheat::OnCameraPosApply(CameraPosApplyEvent& event)
 
 	if (m_snapAndDisableRequested) {
 		camera->cameraPos = camera->cameraPosTarget2;
+		camera->cameraPos.z += m_wsfixZOffset;
 		SetEnabled(false);
 		return;
 	}
 
-	ApplyCoordinate(m_options.x, camera->cameraPos.x, camera->cameraPosTarget2.x);
-	ApplyCoordinate(m_options.y, camera->cameraPos.y, camera->cameraPosTarget2.y);
-	ApplyCoordinate(m_options.z, camera->cameraPos.z, camera->cameraPosTarget2.z);
-	ApplyCoordinate(m_options.zoom, camera->cameraPos.zoom, camera->cameraPosTarget2.zoom);
-
 	if (m_options.reverseZMinLock && m_options.z.mode != CameraPosCheatMode::LockTargetAt) {
 		ApplyReverseZMinLock(camera);
 	}
+
+	ApplyCoordinate(m_options.x, camera->cameraPos.x, camera->cameraPosTarget2.x);
+	ApplyCoordinate(m_options.y, camera->cameraPos.y, camera->cameraPosTarget2.y);
+	ApplyCoordinate(m_options.z, camera->cameraPos.z, camera->cameraPosTarget2.z, true);
+	ApplyCoordinate(m_options.zoom, camera->cameraPos.zoom, camera->cameraPosTarget2.zoom);
 
 	m_snapToTargetRequested = false;
 
@@ -157,11 +161,18 @@ void ModMenuModule::CameraPosCheat::OnGameEnd(GameEndEvent& event)
 	}
 }
 
-void ModMenuModule::CameraPosCheat::ApplyCoordinate(CameraPosCheatCoordinate& coord, Game::SCR_f& camCoord, Game::SCR_f& camCoordTarget2) const
+void ModMenuModule::CameraPosCheat::OnWSFixZUpdate(WSFixZUpdateEvent& event)
+{
+	if (!event.HasWidescreenFix()) return;
+	m_wsfixZOffset = event.GetZOffset();
+}
+
+void ModMenuModule::CameraPosCheat::ApplyCoordinate(CameraPosCheatCoordinate& coord, Game::SCR_f& camCoord, Game::SCR_f& camCoordTarget2, bool isZ) const
 {
 	switch (coord.mode) {
 	case CameraPosCheatMode::LockTargetAt:
 		camCoordTarget2 = coord.value;
+		if (isZ) camCoordTarget2 -= m_wsfixZOffset;
 		break;
 	case CameraPosCheatMode::IncrementTargetBy:
 		camCoordTarget2 += coord.value;
@@ -173,6 +184,7 @@ void ModMenuModule::CameraPosCheat::ApplyCoordinate(CameraPosCheatCoordinate& co
 
 	if (coord.lockAtTarget || m_snapToTargetRequested) {
 		camCoord = camCoordTarget2;
+		if (isZ) camCoord += m_wsfixZOffset;
 	}
 }
 
