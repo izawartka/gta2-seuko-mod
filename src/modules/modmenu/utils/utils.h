@@ -10,6 +10,8 @@
 #include "fix-car-utils.h"
 #include "get-all-weapons.h"
 #include "get-cars-sorted-by-distance.h"
+#include "get-ped-position.h"
+#include "get-ped-rotation.h"
 #include "get-selectable-car-lock-states.h"
 #include "give-player-powerup.h"
 #include "save-game.h"
