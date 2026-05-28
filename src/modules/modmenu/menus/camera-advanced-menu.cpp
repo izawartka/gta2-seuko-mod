@@ -200,6 +200,39 @@ void ModMenuModule::CameraAdvancedMenu::AttachCheatMenuItems()
 		cameraCheat->SetOptions(options);
 	});
 
+	// auto hor rot center
+	UiModule::Text* autoHorRotCenterText = m_menuController->CreateItem<UiModule::Text>(container, L"", options.textSize);
+	auto autoHorRotCenterController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<bool, bool>>(
+		autoHorRotCenterText,
+		[cameraCheat]() {
+			return cameraCheat->GetOptions().autoHorRotCenter;
+		},
+		UiModule::SelectOptionList<bool>{ false, true },
+		UiModule::VarTextSelectControllerOptions{ L"Auto horiz. rot center Z: #", L"#" }
+	);
+	autoHorRotCenterController->SetConverter<EnabledDisabledConverter>();
+	autoHorRotCenterController->SetCustomSaveCallback([cameraCheat](bool newValue) {
+		CameraCheatOptions options = cameraCheat->GetOptions();
+		options.autoHorRotCenter = newValue;
+		cameraCheat->SetOptions(options);
+	});
+
+	// hor rot center
+	UiModule::Text* horRotCenterText = m_menuController->CreateItem<UiModule::Text>(container, L"", options.textSize);
+	auto horRotCenterController = m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<float, float>>(
+		horRotCenterText,
+		[cameraCheat]() {
+			return cameraCheat->GetOptions().cameraTransform.horRotCenter;
+		},
+		UiModule::VarTextEditableControllerOptions{ L"Horiz. rot center Z: #", L"#" }
+	);
+	horRotCenterController->SetCustomSaveCallback([cameraCheat](float newValue) {
+		CameraCheatOptions options = cameraCheat->GetOptions();
+		options.cameraTransform.horRotCenter = newValue;
+		options.autoHorRotCenter = false;
+		cameraCheat->SetOptions(options);
+	});
+
 	// custom render queue
 	UiModule::Text* customRenderQueueText = m_menuController->CreateItem<UiModule::Text>(container, L"", options.textSize);
 	auto customRenderQueueController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<bool, bool>>(

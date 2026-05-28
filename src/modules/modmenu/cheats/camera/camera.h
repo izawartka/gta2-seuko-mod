@@ -17,17 +17,15 @@ namespace ModMenuModule {
 		float followPedRotationLerpFactor = 0.5f; // requires followPedRotation = true
 		size_t renderDistance = 20; // in map blocks, requires customRenderQueue = true
 		float followPedRotationOffset = 0.0f; // requires followPedRotation = true
+		bool autoHorRotCenter = true;
 
 		bool SmartEquals(const CameraCheatOptions& other) const {
-			bool cameraTransformCheck = followPedRotation ?
-				(cameraTransform.horizontalAngleRad == other.cameraTransform.horizontalAngleRad &&
-					cameraTransform.additionalZOffset == other.cameraTransform.additionalZOffset) :
-				(cameraTransform == other.cameraTransform);
+			if (!cameraTransform.SmartEquals(other.cameraTransform, followPedRotation, autoHorRotCenter)) return false;
 
-			return cameraTransformCheck &&
-				customCulling == other.customCulling &&
+			return customCulling == other.customCulling &&
 				customRenderQueue == other.customRenderQueue &&
 				followPedRotation == other.followPedRotation &&
+				autoHorRotCenter == other.autoHorRotCenter &&
 				(!followPedRotation || (followPedRotationLerpFactor == other.followPedRotationLerpFactor &&
 					followPedRotationOffset == other.followPedRotationOffset)) &&
 				(!customRenderQueue || renderDistance == other.renderDistance);
@@ -40,7 +38,8 @@ namespace ModMenuModule {
 				followPedRotation == other.followPedRotation &&
 				followPedRotationLerpFactor == other.followPedRotationLerpFactor &&
 				followPedRotationOffset == other.followPedRotationOffset &&
-				renderDistance == other.renderDistance;
+				renderDistance == other.renderDistance &&
+				autoHorRotCenter == other.autoHorRotCenter;
 		}
 
 		bool operator!=(const CameraCheatOptions& other) const {
@@ -81,6 +80,8 @@ namespace ModMenuModule {
 		void AddCameraListeners();
 		void RemoveCameraListeners();
 		void UpdatePreDrawMapLayerListener();
+		std::optional<float> GetAutoHorRotCenter(Game::Ped* cameraPed);
+		std::optional<float> GetVerticalRotation(Game::Ped* cameraPed);
 
 		void SaveToPersistence() const;
 		void LoadFromPersistence();

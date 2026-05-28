@@ -1,11 +1,13 @@
 #include "camera.h"
 #include "../../utils/angle-utils.h"
 #include "../../utils/custom-render-queue-utils.h"
+#include "../../utils/get-ped-position.h"
+#include "../../utils/get-ped-rotation.h"
 #include "../../../../events/culling-check.h"
 #include "../../events/cheat-options-update.h"
 #include "../../cheat-registry.h"
 
-static constexpr size_t PERSISTENCE_VERSION = 2;
+static constexpr size_t PERSISTENCE_VERSION = 3;
 
 ModMenuModule::CameraCheat* ModMenuModule::CameraCheat::m_instance = nullptr;
 
@@ -178,42 +180,46 @@ void ModMenuModule::CameraCheat::OnDrawTriangle(RendererDrawTriangleEvent& event
 
 void ModMenuModule::CameraCheat::OnPreDrawFrame(PreDrawFrameEvent& event)
 {
-	Game::Player* player = Core::MakeResolver(Game::Memory::GetGame, mem(&Game::Game::currentPlayer))();
+	Game::Player* player = Game::Utils::GetPlayer();
 	if (!player) return;
 
-	Game::Ped* playerPed = Game::Utils::GetPlayerCurrentPed();
-	short* playerPedRotationPtr = Game::Utils::GetPlayerCurrentPedRotationPtr();
-	if (playerPedRotationPtr != nullptr && m_options.followPedRotation) {
-		float pedRotationRad = Game::Utils::FromGTAAngleToRad(*playerPedRotationPtr) + static_cast<float>(M_PI);
-		float pedRotationWithOffsetRad = pedRotationRad + m_options.followPedRotationOffset;
-		float oldCameraRotation = m_options.cameraTransform.verticalAngleRad;
-		float newCameraRotation = oldCameraRotation;
-		if (m_snapVerticalRotation) {
-			newCameraRotation = pedRotationWithOffsetRad;
-		}
-		else {
-			newCameraRotation = Utils::Angle::LerpAngle(oldCameraRotation, pedRotationWithOffsetRad, m_options.followPedRotationLerpFactor);
-		}
+	Game::Camera* mainCamera = &player->ph2;
+	Game::Ped* cameraPed = mainCamera->ped;
 
-		if (newCameraRotation != oldCameraRotation) {
-			CameraCheatOptions newOptions = m_options;
-			newOptions.cameraTransform.verticalAngleRad = newCameraRotation;
-			SetOptions(newOptions);
-		}
+	bool doUpdateOptions = false;
+	float oldVerticalAngleRad = m_options.cameraTransform.verticalAngleRad;
+	float updatedVerticalAngleRad = oldVerticalAngleRad;
+	std::optional<float> newVerticalAngleRad = GetVerticalRotation(cameraPed);
+	if (newVerticalAngleRad.has_value() && newVerticalAngleRad != oldVerticalAngleRad) {
+		updatedVerticalAngleRad = m_snapVerticalRotation ?
+			newVerticalAngleRad.value() :
+			Utils::Angle::LerpAngle(oldVerticalAngleRad, newVerticalAngleRad.value(), m_options.followPedRotationLerpFactor);
+
+		doUpdateOptions = true;
 	}
 
 	m_snapVerticalRotation = false;
 
-	CameraPosCheat* cameraPosCheat = CameraPosCheat::GetInstance();
-	bool isZlocked = cameraPosCheat->IsEnabled() && cameraPosCheat->GetOptions().z.mode == CameraPosCheatMode::LockTargetAt;
-	bool ignorePlayerPedZ = !playerPed || isZlocked;
-	Game::SCR_f playerPedZ = ignorePlayerPedZ ? Game::Utils::FromFloat(3.0f) : playerPed->position.z;
+	float oldHorRotCenter = m_options.cameraTransform.horRotCenter;
+	std::optional<float> newHorRotCenter = GetAutoHorRotCenter(cameraPed);
+	float updatedHorRotCenter = oldHorRotCenter;
+	if (newHorRotCenter.has_value() && newHorRotCenter != oldHorRotCenter) {
+		updatedHorRotCenter = newHorRotCenter.value();
+
+		doUpdateOptions = true;
+	}
+
+	if (doUpdateOptions) {
+		CameraCheatOptions newOptions = m_options;
+		newOptions.cameraTransform.verticalAngleRad = updatedVerticalAngleRad;
+		newOptions.cameraTransform.horRotCenter = updatedHorRotCenter;
+		SetOptions(newOptions);
+	}
 
 	if(!m_cachedCameraTransform.has_value()) {
 		m_cachedCameraTransform = Utils::Vertex::CachedCameraTransform(m_options.cameraTransform);
 	}
 
-	Game::Camera* mainCamera = &player->ph2;
 	m_cameraValues = Utils::Vertex::GetCameraValues(*mainCamera, m_cachedCameraTransform.value());
 	m_customCameraPos = Utils::Vertex::GetCustomCameraPos(
 		m_cameraValues.value(),
@@ -293,6 +299,30 @@ void ModMenuModule::CameraCheat::UpdatePreDrawMapLayerListener()
 	SetEventListener<PreDrawMapLayerEvent>(&ModMenuModule::CameraCheat::OnPreDrawMapLayer, m_options.customRenderQueue);
 }
 
+std::optional<float> ModMenuModule::CameraCheat::GetAutoHorRotCenter(Game::Ped* cameraPed)
+{
+	if (!m_options.autoHorRotCenter) return std::nullopt;
+
+	const CameraPosCheat* cameraPosCheat = CameraPosCheat::GetInstance();
+	if (cameraPosCheat->IsEnabled() && cameraPosCheat->GetOptions().z.mode == CameraPosCheatMode::LockTargetAt) return std::nullopt;
+
+	const Game::SCR_Vector3* pedPosition = Utils::GetPedPosition(cameraPed);
+	if (!pedPosition) return std::nullopt;
+
+	return Game::Utils::ToFloat(pedPosition->z);
+}
+
+std::optional<float> ModMenuModule::CameraCheat::GetVerticalRotation(Game::Ped* cameraPed)
+{
+	if (!m_options.followPedRotation) return std::nullopt;
+
+	const Game::ushort* pedRotation = Utils::GetPedRotation(cameraPed);
+	if (!pedRotation) return std::nullopt;
+
+	float pedRotationRad = Game::Utils::FromGTAAngleToRad(*pedRotation) + static_cast<float>(M_PI);
+	return Utils::Angle::NormalizeAngle(pedRotationRad + m_options.followPedRotationOffset);
+}
+
 void ModMenuModule::CameraCheat::SaveToPersistence() const
 {
 	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
@@ -332,11 +362,24 @@ bool ModMenuModule::CameraCheat::ConvertPersistence(std::unique_ptr<uint8_t[]>& 
 	switch (version) {
 	case 1: {
 		// add float followPedRotationOffset at the end (equals 0)
-		size_t newSize = dataSize + sizeof(float);
+		size_t newSize = dataSize + 4;
 		std::unique_ptr<uint8_t[]> newDataPtr = std::make_unique<uint8_t[]>(newSize);
 		memcpy(newDataPtr.get(), dataPtr.get(), dataSize);
 		float followPedRotationOffset = 0.0f;
-		memcpy(newDataPtr.get() + dataSize, &followPedRotationOffset, sizeof(float));
+		memcpy(newDataPtr.get() + dataSize, &followPedRotationOffset, 4);
+		dataPtr = std::move(newDataPtr);
+		dataSize = newSize;
+	} [[fallthrough]];
+	case 2: {
+		// add autoHorRotCenter and horRotCenter
+		size_t newSize = dataSize + 8;
+		std::unique_ptr<uint8_t[]> newDataPtr = std::make_unique<uint8_t[]>(newSize);
+		memcpy(newDataPtr.get(), dataPtr.get(), dataSize);
+		memcpy(newDataPtr.get() + 20, dataPtr.get() + 16, dataSize - 16);
+		float horRotCenter = 2.0f;
+		memcpy(newDataPtr.get() + 16, &horRotCenter, 4);
+		bool autoHorRotCenter = true;
+		memcpy(newDataPtr.get() + dataSize, &autoHorRotCenter, 1);
 		dataPtr = std::move(newDataPtr);
 		dataSize = newSize;
 		return true;

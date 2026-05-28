@@ -10,7 +10,6 @@ namespace ModMenuModule::Utils::Vertex {
 		float gameCameraX;
 		float gameCameraY;
 		float gameCameraZ;
-		float horRotCenter;
 		float zOffset;
 	};
 
@@ -25,12 +24,22 @@ namespace ModMenuModule::Utils::Vertex {
 		float verticalAngleRad = 0.0f;
 		float additionalZOffset = 0.0f;
 		float arrowsScale = 1.0f;
+		float horRotCenter = 2.0f;
+
+		bool SmartEquals(const CameraTransform& other, bool ignoreVerticalAngleRad, bool ignoreHorRotCenter) const {
+			return horizontalAngleRad == other.horizontalAngleRad &&
+				(ignoreVerticalAngleRad || verticalAngleRad == other.verticalAngleRad) &&
+				additionalZOffset == other.additionalZOffset &&
+				arrowsScale == other.arrowsScale &&
+				(ignoreHorRotCenter || horRotCenter == other.horRotCenter);
+		}
 
 		bool operator==(const CameraTransform& other) const {
 			return horizontalAngleRad == other.horizontalAngleRad &&
 				verticalAngleRad == other.verticalAngleRad &&
 				additionalZOffset == other.additionalZOffset &&
-				arrowsScale == other.arrowsScale;
+				arrowsScale == other.arrowsScale &&
+				horRotCenter == other.horRotCenter;
 		}
 
 		bool operator!=(const CameraTransform& other) const {
@@ -45,6 +54,7 @@ namespace ModMenuModule::Utils::Vertex {
 		float verticalAngleCos = 1.0f;
 		float additionalZOffset = 0.0f;
 		float arrowsScale = 1.0f;
+		float horRotCenter = 2.0f;
 		bool needsVerticalRotation = false;
 		bool needsHorizontalRotation = false;
 		bool needsWorldSpaceTransform = false;
@@ -58,6 +68,7 @@ namespace ModMenuModule::Utils::Vertex {
 			verticalAngleCos = cosf(cameraTransform.verticalAngleRad);
 			additionalZOffset = cameraTransform.additionalZOffset;
 			arrowsScale = cameraTransform.arrowsScale;
+			horRotCenter = cameraTransform.horRotCenter;
 			needsVerticalRotation = cameraTransform.verticalAngleRad != 0.0f;
 			needsHorizontalRotation = cameraTransform.horizontalAngleRad != 0.0f;
 			needsWorldSpaceTransform = needsHorizontalRotation || cameraTransform.additionalZOffset != 0.0f;

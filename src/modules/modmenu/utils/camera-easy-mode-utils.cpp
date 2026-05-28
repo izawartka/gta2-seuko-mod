@@ -6,13 +6,14 @@
 #include "../cheats/camera/shadows-fix.h"
 
 static const ModMenuModule::CameraCheatOptions rotateCameraOptions = {
-	{ 0.0f, 0.0f, 5.0f, 1.0f }, // cameraTransform
+	{ 0.0f, 0.0f, 5.0f, 1.0f, 2.0f }, // cameraTransform
 	false, // customCulling
 	false, // customRenderQueue
 	true, // followPedRotation
 	0.5f, // followPedRotationLerpFactor
 	20, // renderDistance
-	0.0f // followPedRotationOffset
+	0.0f, // followPedRotationOffset
+	true // autoHorRotCenter
 };
 
 static const ModMenuModule::CameraPosCheatOptions rotateCameraPosOptions = {
@@ -24,13 +25,14 @@ static const ModMenuModule::CameraPosCheatOptions rotateCameraPosOptions = {
 };
 
 static const ModMenuModule::CameraCheatOptions threeDimensionalCameraOptions = {
-	{ (static_cast<float>(M_PI) / 4.0f), 0.0f, 10.0f, 1.0f }, // cameraTransform
+	{ (static_cast<float>(M_PI) / 4.0f), 0.0f, 10.0f, 1.0f, 2.0f }, // cameraTransform
 	true, // customCulling
 	true, // customRenderQueue
 	true, // followPedRotation
 	0.5f, // followPedRotationLerpFactor
 	20, // renderDistance
-	0.0f // followPedRotationOffset
+	0.0f, // followPedRotationOffset
+	true, // autoHorRotCenter
 };
 
 static const ModMenuModule::CameraPosCheatOptions threeDimensionalCameraPosOptions = {
