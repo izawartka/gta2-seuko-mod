@@ -214,7 +214,7 @@ void ModMenuModule::CameraCheat::OnPreDrawFrame(PreDrawFrameEvent& event)
 	}
 
 	Game::Camera* mainCamera = &player->ph2;
-	m_cameraValues = Utils::Vertex::GetCameraValues(*mainCamera, playerPedZ);
+	m_cameraValues = Utils::Vertex::GetCameraValues(*mainCamera, m_cachedCameraTransform.value());
 	m_customCameraPos = Utils::Vertex::GetCustomCameraPos(
 		m_cameraValues.value(),
 		m_cachedCameraTransform.value()

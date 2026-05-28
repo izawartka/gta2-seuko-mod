@@ -1,26 +1,28 @@
 #include "vertex-utils.h"
 
+static constexpr float ARROWS_NEW_Z = 0.25f;
+
 void ModMenuModule::Utils::Vertex::ToCenteredScreenSpaceVertex(Game::GTAVertex& vertex, const CameraValues& cameraValues)
 {
 	vertex.x -= cameraValues.xCenter;
 	vertex.y -= cameraValues.yCenter;
-	vertex.z -= cameraValues.zCenter;
 }
 
 void ModMenuModule::Utils::Vertex::FromCenteredScreenSpaceVertex(Game::GTAVertex& vertex, const CameraValues& cameraValues)
 {
 	vertex.x += cameraValues.xCenter;
 	vertex.y += cameraValues.yCenter;
-	vertex.z += cameraValues.zCenter;
 }
 
-void ModMenuModule::Utils::Vertex::RotateVertexX(Game::GTAVertex& vertex, float angleSin, float angleCos)
+void ModMenuModule::Utils::Vertex::RotateVertexX(Game::GTAVertex& vertex, float angleSin, float angleCos, float centerZ)
 {
+	vertex.z -= centerZ;
+
 	float y = vertex.y * angleCos - vertex.z * angleSin;
 	float z = vertex.y * angleSin + vertex.z * angleCos;
 
 	vertex.y = y;
-	vertex.z = z;
+	vertex.z = z + centerZ;
 }
 
 void ModMenuModule::Utils::Vertex::RotateVertexZ(Game::GTAVertex& vertex, float angleSin, float angleCos)
@@ -36,30 +38,14 @@ void ModMenuModule::Utils::Vertex::ToWorldSpaceVertex(Game::GTAVertex& vertex, c
 {
 	vertex.x /= (cameraValues.field60 * vertex.z);
 	vertex.y /= (cameraValues.field60 * vertex.z);
-	vertex.z = cameraValues.perspFactor - (1.0f / vertex.z);
-	vertex.z -= cameraValues.zOffset;
+	vertex.z = cameraValues.zOffset - (1.0f / vertex.z);
 }
 
 void ModMenuModule::Utils::Vertex::ToScreenSpaceVertex(Game::GTAVertex& vertex, const CameraValues& cameraValues)
 {
-	vertex.z += cameraValues.zOffset;
-	vertex.z = 1.0f / (cameraValues.perspFactor - vertex.z);
+	vertex.z = 1.0f / (cameraValues.zOffset - vertex.z);
 	vertex.x *= cameraValues.field60 * vertex.z;
 	vertex.y *= cameraValues.field60 * vertex.z;
-}
-
-void ModMenuModule::Utils::Vertex::ToSetZPosition(Game::GTAVertex& vertex, float newZ, const CameraValues& cameraValues)
-{
-	float dFactor = cameraValues.perspFactor - cameraValues.zOffset;
-	vertex.x *= (dFactor - newZ) / (dFactor - vertex.z);
-	vertex.y *= (dFactor - newZ) / (dFactor - vertex.z);
-	vertex.z = newZ;
-}
-
-void ModMenuModule::Utils::Vertex::ScaleXY(Game::GTAVertex& vertex, float scale)
-{
-	vertex.x *= scale;
-	vertex.y *= scale;
 }
 
 float ModMenuModule::Utils::Vertex::GetCrossProduct(const Game::GTAVertex& v1, const Game::GTAVertex& v2, const Game::GTAVertex& v3)
@@ -69,6 +55,57 @@ float ModMenuModule::Utils::Vertex::GetCrossProduct(const Game::GTAVertex& v1, c
 	float bx = v3.x - v1.x;
 	float by = v3.y - v1.y;
 	return ax * by - ay * bx;
+}
+
+std::optional<Game::GTAVertex> ModMenuModule::Utils::Vertex::GetPedOffsetVertex(
+	const Game::Camera& viewCamera,
+	const CachedCameraTransform& cachedCameraTransform
+)
+{
+	if (!viewCamera.ped) {
+		return std::nullopt;
+	}
+
+	const Game::Sprite* sourceSprite = nullptr;
+	if (viewCamera.ped->gameObject && viewCamera.ped->gameObject->sprite) sourceSprite = viewCamera.ped->gameObject->sprite;
+	else if (viewCamera.ped->currentCar && viewCamera.ped->currentCar->sprite) sourceSprite = viewCamera.ped->currentCar->sprite;
+	else return std::nullopt;
+
+	float x = Game::Utils::ToFloat(sourceSprite->position.x - viewCamera.cameraPos.x);
+	float y = Game::Utils::ToFloat(sourceSprite->position.y - viewCamera.cameraPos.y);
+	float z = Game::Utils::ToFloat(sourceSprite->position.z);
+
+	float x2 = x;
+	float y2 = y;
+
+	if(cachedCameraTransform.needsVerticalRotation) {
+		x2 = x * cachedCameraTransform.verticalAngleCos - y * cachedCameraTransform.verticalAngleSin;
+		y2 = x * cachedCameraTransform.verticalAngleSin + y * cachedCameraTransform.verticalAngleCos;
+	}
+
+	return Game::GTAVertex{
+		x2,
+		y2,
+		z
+	};
+}
+
+void ModMenuModule::Utils::Vertex::TransformArrows(
+	Game::GTAVertex& vertex, 
+	const CameraValues& cameraValues,
+	const CachedCameraTransform& cachedCameraTransform
+)
+{
+	if (!cameraValues.pedOffsetVertex.has_value()) return;
+
+	float targetZ = cameraValues.pedOffsetVertex->z + ARROWS_NEW_Z;
+	float newZScale = (cameraValues.zOffset - targetZ) / (cameraValues.zOffset - vertex.z);
+	float addZScale = 1.0f - (cachedCameraTransform.additionalZOffset / (cameraValues.zOffset - targetZ));
+	float centeredScale = cachedCameraTransform.arrowsScale * addZScale;
+
+	vertex.x = (vertex.x * newZScale - cameraValues.pedOffsetVertex->x) * centeredScale + cameraValues.pedOffsetVertex->x;
+	vertex.y = (vertex.y * newZScale - cameraValues.pedOffsetVertex->y) * centeredScale + cameraValues.pedOffsetVertex->y;
+	vertex.z = targetZ;
 }
 
 void ModMenuModule::Utils::Vertex::ApplyQuadCameraTransform(
@@ -85,7 +122,7 @@ void ModMenuModule::Utils::Vertex::ApplyQuadCameraTransform(
 		if (cachedCameraTransform.needsWorldSpaceTransform) {
 			ToWorldSpaceVertex(vertex, cameraValues);
 			if (cachedCameraTransform.needsHorizontalRotation) {
-				RotateVertexX(vertex, cachedCameraTransform.horizontalAngleSin, cachedCameraTransform.horizontalAngleCos);
+				RotateVertexX(vertex, cachedCameraTransform.horizontalAngleSin, cachedCameraTransform.horizontalAngleCos, cameraValues.horRotCenter);
 			}
 			vertex.z += cachedCameraTransform.additionalZOffset;
 			ToScreenSpaceVertex(vertex, cameraValues);
@@ -96,7 +133,7 @@ void ModMenuModule::Utils::Vertex::ApplyQuadCameraTransform(
 
 void ModMenuModule::Utils::Vertex::ApplyArrowsCameraTransform(
 	Game::GTAVertex* vertices, 
-	const CameraValues& cameraValues, 
+	const CameraValues& cameraValues,
 	const CachedCameraTransform& cachedCameraTransform
 ) {
 	for (size_t i = 0; i < 4; ++i) {
@@ -107,11 +144,11 @@ void ModMenuModule::Utils::Vertex::ApplyArrowsCameraTransform(
 		}
 		if (cachedCameraTransform.needsArrowsWorldSpaceTransform) {
 			ToWorldSpaceVertex(vertex, cameraValues);
-			ToSetZPosition(vertex, -0.5f, cameraValues);
-			ScaleXY(vertex, cachedCameraTransform.arrowsScale);
+			TransformArrows(vertex, cameraValues, cachedCameraTransform);
 			if (cachedCameraTransform.needsHorizontalRotation != 0.0f) {
-				RotateVertexX(vertex, cachedCameraTransform.horizontalAngleSin, cachedCameraTransform.horizontalAngleCos);
+				RotateVertexX(vertex, cachedCameraTransform.horizontalAngleSin, cachedCameraTransform.horizontalAngleCos, cameraValues.horRotCenter);
 			}
+			vertex.z += cachedCameraTransform.additionalZOffset;
 			ToScreenSpaceVertex(vertex, cameraValues);
 		}
 		FromCenteredScreenSpaceVertex(vertex, cameraValues);
@@ -136,7 +173,7 @@ void ModMenuModule::Utils::Vertex::ApplyTriangleCameraTransform(
 			ToWorldSpaceVertex(vertex, cameraValues);
 			worldSpaceVerts[i] = vertex;
 			if (cachedCameraTransform.needsHorizontalRotation) {
-				RotateVertexX(vertex, cachedCameraTransform.horizontalAngleSin, cachedCameraTransform.horizontalAngleCos);
+				RotateVertexX(vertex, cachedCameraTransform.horizontalAngleSin, cachedCameraTransform.horizontalAngleCos, cameraValues.horRotCenter);
 			}
 			vertex.z += cachedCameraTransform.additionalZOffset;
 			ToScreenSpaceVertex(vertex, cameraValues);
@@ -198,24 +235,22 @@ bool ModMenuModule::Utils::Vertex::ApplyCustomCulling(Game::GTAVertex* vertices,
 	return true;
 }
 
-ModMenuModule::Utils::Vertex::CameraValues ModMenuModule::Utils::Vertex::GetCameraValues(const Game::Camera& camera, Game::SCR_f playerPedZ)
+ModMenuModule::Utils::Vertex::CameraValues ModMenuModule::Utils::Vertex::GetCameraValues(const Game::Camera& camera, const CachedCameraTransform& cachedCameraTransform)
 {
 	const int screenWidth = *Game::Memory::GetScreenWidth();
 	const int screenHeight = *Game::Memory::GetScreenHeight();
 
+	auto pedOffsetVertex = GetPedOffsetVertex(camera, cachedCameraTransform);
 	float xCenter = static_cast<float>(screenWidth) / 2.0f;
 	float yCenter = static_cast<float>(screenHeight) / 2.0f;
-	float zCenter = 0;
-	float horZCenter = Game::Utils::ToFloat(playerPedZ) + 0.5f;
-	float zoomFactor = static_cast<float>(camera.cameraPos.zoom) / 14540.0f;
 	float field60 = Game::Utils::ToFloat(camera.field_0x60);
 	float gameCameraX = Game::Utils::ToFloat(camera.cameraPos.x);
 	float gameCameraY = Game::Utils::ToFloat(camera.cameraPos.y);
 	float gameCameraZ = Game::Utils::ToFloat(camera.cameraPos.z);
-	float zOffset = horZCenter + 8.0f * (zoomFactor - 1.0f);
-	float perspFactor = gameCameraZ + 8.0f * zoomFactor;
+	float zOffset = gameCameraZ + 8.0f;
+	float horRotCenter = pedOffsetVertex.has_value() ? pedOffsetVertex->z : 2.0f;
 
-	return { xCenter, yCenter, zCenter, horZCenter, zoomFactor, field60, gameCameraX, gameCameraY, gameCameraZ, zOffset, perspFactor };
+	return { pedOffsetVertex, xCenter, yCenter, field60, gameCameraX, gameCameraY, gameCameraZ, horRotCenter, zOffset };
 }
 
 ModMenuModule::Utils::Vertex::CustomCameraPos ModMenuModule::Utils::Vertex::GetCustomCameraPos(
@@ -226,15 +261,15 @@ ModMenuModule::Utils::Vertex::CustomCameraPos ModMenuModule::Utils::Vertex::GetC
 	float baseY = cameraValues.gameCameraY;
 	float baseZ = cameraValues.gameCameraZ + 8.0f - cachedCameraTransform.additionalZOffset;
 
-	float horizontalY = cachedCameraTransform.horizontalAngleSin * (baseZ - cameraValues.horZCenter);
-	float horizontalZ = cachedCameraTransform.horizontalAngleCos * (baseZ - cameraValues.horZCenter);
+	float horizontalY = cachedCameraTransform.horizontalAngleSin * (baseZ - cameraValues.horRotCenter);
+	float horizontalZ = cachedCameraTransform.horizontalAngleCos * (baseZ - cameraValues.horRotCenter);
 
 	float verticalX = horizontalY * cachedCameraTransform.verticalAngleSin;
 	float verticalY = horizontalY * cachedCameraTransform.verticalAngleCos;
 
 	float customCameraX = baseX + verticalX;
 	float customCameraY = baseY + verticalY;
-	float customCameraZ = cameraValues.horZCenter + horizontalZ;
+	float customCameraZ = cameraValues.horRotCenter + horizontalZ;
 
 	return { customCameraX, customCameraY, customCameraZ };
 }
