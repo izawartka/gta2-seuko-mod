@@ -135,11 +135,8 @@ void ModMenuModule::MouseControlCheat::UpdateWorkerSet()
 
 	WorkerSetType appliableWorkerSetType = GetAppliableWorkerSetType();
 	if (appliableWorkerSetType == m_workerSetType) return;
-	if (appliableWorkerSetType == WorkerSetType::None) {
-		ClearWorkerSet();
-		return;
-	}
 
+	m_workerSetType = appliableWorkerSetType;
 	const MouseControlWorkerSetDef& workerSetDef = GetWorkerSetDef(appliableWorkerSetType);
 
 	UpdateWorker(m_attackWorker, workerSetDef.attackWorkerType);

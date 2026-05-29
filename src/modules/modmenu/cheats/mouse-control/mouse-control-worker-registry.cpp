@@ -16,9 +16,9 @@ namespace ModMenuModule::MouseControlWorkerRegistry {
 			return std::make_unique<WorkerT>();
 		}
 
-		const std::unordered_map<WorkerType, WorkerFactory>& GetWorkerFactories()
+		const std::unordered_map<WorkerType, const WorkerFactory>& GetWorkerFactories()
 		{
-			static const std::unordered_map<WorkerType, WorkerFactory> factories = {
+			static const std::unordered_map<WorkerType, const WorkerFactory> factories = {
 				{ GetWorkerType<AttackWorker>(), &CreateWorkerInstance<AttackWorker> },
 				{ GetWorkerType<LockedMouseWorker>(), &CreateWorkerInstance<LockedMouseWorker> },
 				{ GetWorkerType<PointAtMouseWorker>(), &CreateWorkerInstance<PointAtMouseWorker> },
@@ -29,10 +29,9 @@ namespace ModMenuModule::MouseControlWorkerRegistry {
 			return factories;
 		}
 
-		const std::unordered_map<WorkerSetType, MouseControlWorkerSetDef>& GetWorkerSetDefs()
+		const std::unordered_map<WorkerSetType, const MouseControlWorkerSetDef>& GetWorkerSetDefs()
 		{
-			static const std::unordered_map<WorkerSetType, MouseControlWorkerSetDef> workerSetDefs = {
-				{ WorkerSetType::None, MouseControlWorkerSetDef::Create<void, void, void>() },
+			static const std::unordered_map<WorkerSetType, const MouseControlWorkerSetDef> workerSetDefs = {
 				{ WorkerSetType::AttackOnly, MouseControlWorkerSetDef::Create<AttackWorker, void, void>() },
 				{ WorkerSetType::RotateMode, MouseControlWorkerSetDef::Create<AttackWorker, LockedMouseWorker, LeftRightWorker>() },
 				{ WorkerSetType::RotateModeInCar, MouseControlWorkerSetDef::Create<AttackWorker, LockedMouseWorker, RotateCameraWorker>() },
@@ -43,11 +42,20 @@ namespace ModMenuModule::MouseControlWorkerRegistry {
 
 			return workerSetDefs;
 		}
+
+		const MouseControlWorkerSetDef& GetWorkerSetNoneDef()
+		{
+			static const MouseControlWorkerSetDef noneSetDef = MouseControlWorkerSetDef::Create<void, void, void>();
+
+			return noneSetDef;
+		}
 	}
 
 	const MouseControlWorkerSetDef& GetWorkerSetDef(WorkerSetType type)
 	{
-		return GetWorkerSetDefs().at(type);
+		const auto& workerSetDefs = GetWorkerSetDefs();
+		const auto workerSetDefIt = workerSetDefs.find(type);
+		return workerSetDefIt != workerSetDefs.end() ? workerSetDefIt->second : GetWorkerSetNoneDef();
 	}
 
 	const std::unique_ptr<MouseControlWorker> CreateWorker(WorkerType type)

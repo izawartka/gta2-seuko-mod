@@ -2,6 +2,7 @@
 #include "../../common.h"
 #include "../../cheat-base.h"
 #include "../force-controls.h"
+#include "../camera/camera.h"
 #include "../../../../events/game-tick.h"
 #include "../../../../events/game-end.h"
 #include "../../../../events/game-pause.h"
@@ -29,7 +30,10 @@ namespace ModMenuModule {
 		static MouseControlCheat* GetInstance();
 
 		static auto GetDependencies() {
-			return std::array<std::type_index, 1>{ typeid(ForceControlsCheat) };
+			return std::array<std::type_index, 2>{
+				typeid(ForceControlsCheat),
+				typeid(CameraCheat)
+			};
 		}
 
 		static const std::vector<MouseControlCheatMode>& GetAllMouseControlCheatModes();
