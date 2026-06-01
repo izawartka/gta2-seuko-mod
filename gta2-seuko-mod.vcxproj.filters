@@ -178,6 +178,10 @@
     <ClCompile Include="src\modules\modmenu\cheats\mouse-control\left-right-worker.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\mouse-control\mouse-control-worker-registry.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\mouse-control\rotate-camera-worker.cpp" />
+    <ClCompile Include="src\events\wsfix-z-update.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\get-ped-position.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\get-ped-rotation.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\unlock-all-levels.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -473,6 +477,10 @@
     <ClInclude Include="src\modules\modmenu\cheats\mouse-control\left-right-worker.h" />
     <ClInclude Include="src\modules\modmenu\cheats\mouse-control\mouse-control-worker-registry.h" />
     <ClInclude Include="src\modules\modmenu\cheats\mouse-control\rotate-camera-worker.h" />
+    <ClInclude Include="src\events\wsfix-z-update.h" />
+    <ClInclude Include="src\modules\modmenu\utils\get-ped-position.h" />
+    <ClInclude Include="src\modules\modmenu\utils\get-ped-rotation.h" />
+    <ClInclude Include="src\modules\modmenu\utils\unlock-all-levels.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
