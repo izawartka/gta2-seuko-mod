@@ -83,6 +83,7 @@ void ModMenuModule::MouseControlCheat::OnDisable()
 	SaveToPersistence();
 
 	m_gamepadControlsToastShown = false;
+	m_isGamePaused = false;
 }
 
 void ModMenuModule::MouseControlCheat::OnPreGameTick(PreGameTickEvent& event)
@@ -95,11 +96,13 @@ void ModMenuModule::MouseControlCheat::OnPreGameTick(PreGameTickEvent& event)
 void ModMenuModule::MouseControlCheat::OnGameEnd(GameEndEvent& event)
 {
 	ClearWorkerSet();
+	m_isGamePaused = false;
 }
 
 void ModMenuModule::MouseControlCheat::OnGamePause(GamePauseEvent& event)
 {
-	ClearWorkerSet();
+	GamePauseRemoveWorkers();
+	m_isGamePaused = true;
 }
 
 void ModMenuModule::MouseControlCheat::ApplyAutoMode()
@@ -134,7 +137,7 @@ void ModMenuModule::MouseControlCheat::UpdateWorkerSet()
 	using namespace MouseControlWorkerRegistry;
 
 	WorkerSetType appliableWorkerSetType = GetAppliableWorkerSetType();
-	if (appliableWorkerSetType == m_workerSetType) return;
+	if (!m_isGamePaused && appliableWorkerSetType == m_workerSetType) return;
 
 	m_workerSetType = appliableWorkerSetType;
 	const MouseControlWorkerSetDef& workerSetDef = GetWorkerSetDef(appliableWorkerSetType);
@@ -142,6 +145,13 @@ void ModMenuModule::MouseControlCheat::UpdateWorkerSet()
 	UpdateWorker(m_attackWorker, workerSetDef.attackWorkerType);
 	UpdateWorker(m_mouseWorker, workerSetDef.mouseWorkerType);
 	UpdateWorker(m_resultWorker, workerSetDef.resultWorkerType);
+}
+
+void ModMenuModule::MouseControlCheat::GamePauseRemoveWorkers()
+{
+	GamePauseRemoveWorker(m_attackWorker);
+	GamePauseRemoveWorker(m_mouseWorker);
+	GamePauseRemoveWorker(m_resultWorker);
 }
 
 void ModMenuModule::MouseControlCheat::ClearWorkerSet()
@@ -157,9 +167,7 @@ ModMenuModule::MouseControlWorkerRegistry::WorkerSetType ModMenuModule::MouseCon
 	using namespace MouseControlWorkerRegistry;
 
 	Game::Game* game = Game::Memory::GetGame();
-	if (!game || game->gameStatus != Game::GAME_RUN) {
-		return WorkerSetType::None;
-	}
+	if (!game) return WorkerSetType::None;
 
 	Game::Player* player = game->currentPlayer;
 	Game::Ped* playerPed = player ? Game::Functions::GetCurrentPed(player) : nullptr;
@@ -222,6 +230,16 @@ void ModMenuModule::MouseControlCheat::CreateWorker(std::unique_ptr<MouseControl
 void ModMenuModule::MouseControlCheat::RemoveWorker(std::unique_ptr<MouseControlWorker>& worker)
 {
 	if (!worker) return;
+
+	worker->Stop();
+	worker.reset();
+}
+
+void ModMenuModule::MouseControlCheat::GamePauseRemoveWorker(std::unique_ptr<MouseControlWorker>& worker)
+{
+	if (!worker) return;
+
+	if (!worker->RemoveOnGamePause()) return;
 
 	worker->Stop();
 	worker.reset();

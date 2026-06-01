@@ -14,10 +14,12 @@ namespace ModMenuModule {
 		bool IsRunning() const override { return m_running; }
 		void Update() override;
 
+		bool RemoveOnGamePause() const override { return false; }
+
+	private:
 		bool EnsureFPROHandle();
 		void FreeFPROHandle();
 
-	private:
 		bool m_running = false;
 		CameraCheatFPROHandleId m_FPROHandleId = -1;
 		float m_currentOffset = 0.0f;

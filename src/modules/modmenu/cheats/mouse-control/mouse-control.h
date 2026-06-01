@@ -60,12 +60,14 @@ namespace ModMenuModule {
 		MouseControlCheatMode GetAutoModeTargetMode() const;
 
 		void UpdateWorkerSet();
+		void GamePauseRemoveWorkers();
 		void ClearWorkerSet();
 		MouseControlWorkerRegistry::WorkerSetType GetAppliableWorkerSetType() const;
 
 		void UpdateWorker(std::unique_ptr<MouseControlWorker>& worker, MouseControlWorkerRegistry::WorkerType targetType);
 		void CreateWorker(std::unique_ptr<MouseControlWorker>& worker, MouseControlWorkerRegistry::WorkerType type);
 		void RemoveWorker(std::unique_ptr<MouseControlWorker>& worker);
+		void GamePauseRemoveWorker(std::unique_ptr<MouseControlWorker>& worker);
 
 		void SendWorkersUpdate();
 
@@ -80,6 +82,7 @@ namespace ModMenuModule {
 		std::unique_ptr<MouseControlWorker> m_mouseWorker;
 		std::unique_ptr<MouseControlWorker> m_resultWorker;
 		bool m_gamepadControlsToastShown = false;
+		bool m_isGamePaused = false;
 
 		float m_deltaX = 0.0f;
 		float m_deltaY = 0.0f;

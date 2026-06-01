@@ -12,6 +12,8 @@ namespace ModMenuModule {
 		virtual bool IsRunning() const = 0;
 		virtual void Update() {}
 
+		virtual bool RemoveOnGamePause() const { return true; }
+
 	protected:
 		MouseControlWorker() = default;
 		MouseControlWorker(const MouseControlWorker&) = delete;
