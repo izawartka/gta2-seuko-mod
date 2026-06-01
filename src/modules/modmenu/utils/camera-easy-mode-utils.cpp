@@ -46,9 +46,10 @@ static const ModMenuModule::CameraPosCheatOptions threeDimensionalCameraPosOptio
 static void EnableCameraCheatKeepVerticalAngle(ModMenuModule::CameraCheat& cheat, const ModMenuModule::CameraCheatOptions& options)
 {
 	if (cheat.IsEnabled()) {
-		float prevAngle = cheat.GetOptions().cameraTransform.verticalAngleRad;
+		ModMenuModule::CameraCheatOptions currentOptions = cheat.GetOptions();
 		ModMenuModule::CameraCheatOptions updatedOptions = options;
-		updatedOptions.cameraTransform.verticalAngleRad = prevAngle;
+		updatedOptions.cameraTransform.verticalAngleRad = currentOptions.cameraTransform.verticalAngleRad;
+		if (cheat.IsFPROManaged()) updatedOptions.followPedRotationOffset = currentOptions.followPedRotationOffset;
 		cheat.SetOptions(updatedOptions);
 	}
 	else {
