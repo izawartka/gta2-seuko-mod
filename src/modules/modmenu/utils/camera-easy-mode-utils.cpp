@@ -95,7 +95,7 @@ ModMenuModule::Utils::CameraEasyMode::CameraEasyMode ModMenuModule::Utils::Camer
 
 	bool isRotate =
 		rotateOnlyEnabled &&
-		camOptions.SmartEquals(rotateCameraOptions) &&
+		camOptions.SmartEquals(rotateCameraOptions, true) &&
 		posOptions.SmartEquals(rotateCameraPosOptions);
 
 	if (isRotate) {
@@ -111,7 +111,7 @@ ModMenuModule::Utils::CameraEasyMode::CameraEasyMode ModMenuModule::Utils::Camer
 	}
 
 	bool isThreeDimensional =
-		camOptions.SmartEquals(threeDimensionalCameraOptions) &&
+		camOptions.SmartEquals(threeDimensionalCameraOptions, true) &&
 		posOptions.SmartEquals(threeDimensionalCameraPosOptions);
 
 	if (isThreeDimensional) {
