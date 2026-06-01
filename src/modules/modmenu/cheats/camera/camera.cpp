@@ -39,7 +39,14 @@ void ModMenuModule::CameraCheat::SetOptions(const CameraCheatOptions& options)
 
 	if(!m_options.followPedRotation) {
 		m_snapVerticalRotation = false;
+		if(m_isFPROManaged) InternalFreeFPROHandle(false);
 	}
+
+	if (m_isFPROManaged && !m_allowOneFPROEdit && m_options.followPedRotationOffset != oldOptions.followPedRotationOffset) {
+		spdlog::warn("CameraCheat::SetOptions: Tried to edit followPedRotationOffset, but it is managed");
+		m_options.followPedRotationOffset = oldOptions.followPedRotationOffset;
+	}
+	m_allowOneFPROEdit = false;
 
 	if (m_options.customRenderQueue != oldOptions.customRenderQueue) {
 		UpdatePreDrawMapLayerListener();
@@ -69,6 +76,70 @@ void ModMenuModule::CameraCheat::SnapVerticalRotation()
 	m_snapVerticalRotation = true;
 }
 
+ModMenuModule::CameraCheatFPROHandleId ModMenuModule::CameraCheat::CreateFPROHandle()
+{
+	if (!IsEnabled()) {
+		spdlog::warn("CameraCheat::CreateFPROHandle: Cheat is not enabled, cannot create FPRO handle");
+		return -1;
+	}
+
+	if (m_isFPROManaged) return -1;
+	if (!m_options.followPedRotation) return -1;
+
+	m_currentFPROHandleId++;
+	if (m_currentFPROHandleId == -1) m_currentFPROHandleId = 1;
+
+	m_isFPROManaged = true;
+	m_prevFPROValue = m_options.followPedRotationOffset;
+
+	return m_currentFPROHandleId;
+}
+
+bool ModMenuModule::CameraCheat::IsFPROHandleValid(CameraCheatFPROHandleId handleId) const
+{
+	if (!IsEnabled()) {
+		spdlog::warn("CameraCheat::SnapVerticalRotation: Cheat is not enabled, cannot check FPRO handle");
+		return false;
+	}
+
+	if (!m_isFPROManaged) return false;
+	if (handleId != m_currentFPROHandleId) return false;
+	if (!m_options.followPedRotation) return false;
+
+	return true;
+}
+
+bool ModMenuModule::CameraCheat::SetFPRO(CameraCheatFPROHandleId handleId, float value)
+{
+	if (!IsEnabled()) {
+		spdlog::warn("CameraCheat::SnapVerticalRotation: Cheat is not enabled, cannot set FPRO");
+		return false;
+	}
+
+	if (!m_isFPROManaged) return false;
+	if (handleId != m_currentFPROHandleId) return false;
+
+	m_allowOneFPROEdit = true;
+	CameraCheatOptions newOptions = m_options;
+	newOptions.followPedRotationOffset = value;
+	SetOptions(newOptions);
+
+	return true;
+}
+
+void ModMenuModule::CameraCheat::FreeFPROHandle(CameraCheatFPROHandleId handleId)
+{
+	if (!IsEnabled()) {
+		spdlog::warn("CameraCheat::SnapVerticalRotation: Cheat is not enabled, cannot free FPRO handle");
+		return;
+	}
+
+	if (handleId != m_currentFPROHandleId) return;
+	if (!m_isFPROManaged) return;
+
+	InternalFreeFPROHandle(true);
+}
+
 void ModMenuModule::CameraCheat::OnFirstEnable()
 {
 	LoadFromPersistence();
@@ -82,8 +153,9 @@ void ModMenuModule::CameraCheat::OnEnable()
 
 void ModMenuModule::CameraCheat::OnDisable()
 {
-	SaveToPersistence();
 	RemoveCameraListeners();
+	InternalFreeFPROHandle(false);
+	SaveToPersistence();
 	m_cameraValues = std::nullopt;
 	m_customCameraPos = std::nullopt;
 	m_cachedCameraTransform = std::nullopt;
@@ -317,10 +389,27 @@ std::optional<float> ModMenuModule::CameraCheat::GetVerticalRotation(Game::Ped* 
 	if (!m_options.followPedRotation) return std::nullopt;
 
 	const Game::ushort* pedRotation = Utils::GetPedRotation(cameraPed);
-	if (!pedRotation) return std::nullopt;
+	if (!pedRotation) return 0.0f;
 
 	float pedRotationRad = Game::Utils::FromGTAAngleToRad(*pedRotation) + static_cast<float>(M_PI);
 	return Utils::Angle::NormalizeAngle(pedRotationRad + m_options.followPedRotationOffset);
+}
+
+void ModMenuModule::CameraCheat::InternalFreeFPROHandle(bool useSetOptions)
+{
+	m_isFPROManaged = false;
+	m_allowOneFPROEdit = false;
+
+	if (useSetOptions && m_options.followPedRotationOffset != m_prevFPROValue) {
+		CameraCheatOptions newOptions = m_options;
+		newOptions.followPedRotationOffset = m_prevFPROValue;
+		SetOptions(newOptions);
+	}
+	else {
+		m_options.followPedRotationOffset = m_prevFPROValue;
+	}
+
+	m_prevFPROValue = 0.0f;
 }
 
 void ModMenuModule::CameraCheat::SaveToPersistence() const

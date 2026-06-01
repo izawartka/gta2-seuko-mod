@@ -9,6 +9,8 @@
 #include "../../utils/vertex-utils.h"
 
 namespace ModMenuModule {
+	using CameraCheatFPROHandleId = size_t;
+
 	struct CameraCheatOptions {
 		Utils::Vertex::CameraTransform cameraTransform = {};
 		bool customCulling = true;
@@ -19,7 +21,7 @@ namespace ModMenuModule {
 		float followPedRotationOffset = 0.0f; // requires followPedRotation = true
 		bool autoHorRotCenter = true;
 
-		bool SmartEquals(const CameraCheatOptions& other) const {
+		bool SmartEquals(const CameraCheatOptions& other, bool ignoreFollowPedRotationOffset = false) const {
 			if (!cameraTransform.SmartEquals(other.cameraTransform, followPedRotation, autoHorRotCenter)) return false;
 
 			return customCulling == other.customCulling &&
@@ -27,7 +29,7 @@ namespace ModMenuModule {
 				followPedRotation == other.followPedRotation &&
 				autoHorRotCenter == other.autoHorRotCenter &&
 				(!followPedRotation || (followPedRotationLerpFactor == other.followPedRotationLerpFactor &&
-					followPedRotationOffset == other.followPedRotationOffset)) &&
+					(ignoreFollowPedRotationOffset || followPedRotationOffset == other.followPedRotationOffset))) &&
 				(!customRenderQueue || renderDistance == other.renderDistance);
 		}
 
@@ -63,6 +65,12 @@ namespace ModMenuModule {
 
 		void SnapVerticalRotation();
 
+		bool IsFPROManaged() const { return m_isFPROManaged; }
+		CameraCheatFPROHandleId CreateFPROHandle();
+		bool IsFPROHandleValid(CameraCheatFPROHandleId handleId) const;
+		bool SetFPRO(CameraCheatFPROHandleId handleId, float value);
+		void FreeFPROHandle(CameraCheatFPROHandleId handleId);
+
 	private:
 		virtual void OnFirstEnable() override;
 		virtual void OnEnable() override;
@@ -82,6 +90,7 @@ namespace ModMenuModule {
 		void UpdatePreDrawMapLayerListener();
 		std::optional<float> GetAutoHorRotCenter(Game::Ped* cameraPed);
 		std::optional<float> GetVerticalRotation(Game::Ped* cameraPed);
+		void InternalFreeFPROHandle(bool useSetOptions);
 
 		void SaveToPersistence() const;
 		void LoadFromPersistence();
@@ -96,5 +105,9 @@ namespace ModMenuModule {
 		std::optional<Utils::Vertex::CustomCameraPos> m_customCameraPos = std::nullopt;
 		std::optional<Utils::Vertex::CachedCameraTransform> m_cachedCameraTransform = std::nullopt;
 		std::vector<std::array<int, 2>> m_customRenderQueue = {};
+		CameraCheatFPROHandleId m_currentFPROHandleId = 0;
+		bool m_isFPROManaged = false;
+		bool m_allowOneFPROEdit = false;
+		float m_prevFPROValue = 0.0f;
 	};
 }

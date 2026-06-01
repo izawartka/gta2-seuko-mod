@@ -195,6 +195,12 @@ void ModMenuModule::CameraAdvancedMenu::AttachCheatMenuItems()
 	);
 	followPedRotationOffsetController->SetConverter<RadiansConverter<>>();
 	followPedRotationOffsetController->SetCustomSaveCallback([cameraCheat](float newValue) {
+		if(cameraCheat->IsFPROManaged()) {
+			spdlog::warn("FPRO is managed, cannot change");
+			ToastManager::GetInstance()->Show({ L"This field is managed, cannot change it now", ToastType::Warning });
+			return;
+		}
+
 		CameraCheatOptions options = cameraCheat->GetOptions();
 		options.followPedRotationOffset = newValue;
 		cameraCheat->SetOptions(options);
