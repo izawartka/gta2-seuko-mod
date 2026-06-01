@@ -1,6 +1,6 @@
 #pragma once
 #include "mouse-control-worker.h"
-#include "../force-controls.h"
+#include "../camera/camera.h"
 
 namespace ModMenuModule {
 	class RotateCameraWorker : public MouseControlWorker {
@@ -14,11 +14,12 @@ namespace ModMenuModule {
 		bool IsRunning() const override { return m_running; }
 		void Update() override;
 
-		void SaveInitialCameraOffset();
-		void RestoreInitialCameraOffset() const;
+		bool EnsureFPROHandle();
+		void FreeFPROHandle();
 
 	private:
 		bool m_running = false;
-		float m_initialCameraOffset = 0.0f;
+		CameraCheatFPROHandleId m_FPROHandleId = -1;
+		float m_currentOffset = 0.0f;
 	};
 }

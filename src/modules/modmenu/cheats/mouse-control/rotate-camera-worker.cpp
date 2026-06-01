@@ -9,8 +9,7 @@ static constexpr float ROTATE_CAMERA_SENSITIVITY = 0.75f;
 void ModMenuModule::RotateCameraWorker::Start()
 {
 	spdlog::debug("RotateCameraWorker: Starting");
-
-	SaveInitialCameraOffset();
+	EnsureFPROHandle();
 
 	MouseControlCheat* mouseControlCheat = MouseControlCheat::GetInstance();
 	mouseControlCheat->SetDeltaX(0.0f);
@@ -21,8 +20,7 @@ void ModMenuModule::RotateCameraWorker::Stop()
 {
 	spdlog::debug("RotateCameraWorker: Stopping");
 
-	RestoreInitialCameraOffset();
-
+	FreeFPROHandle();
 	m_running = false;
 }
 
@@ -35,40 +33,46 @@ void ModMenuModule::RotateCameraWorker::Update()
 	if (deltaX == 0.0f) return;
 	mouseControlCheat->SetDeltaX(0.0f);
 
-	if (!cameraCheat->IsEnabled()) return;
+	if (!EnsureFPROHandle()) return;
 
-	CameraCheatOptions cameraOptions = cameraCheat->GetOptions();
-	if (!cameraOptions.followPedRotation) return;
+	float newOffset = Utils::Angle::NormalizeAngle(m_currentOffset - deltaX * ROTATE_CAMERA_SENSITIVITY);
 
-	float newOffset = cameraOptions.followPedRotationOffset - deltaX * ROTATE_CAMERA_SENSITIVITY;
-	cameraOptions.followPedRotationOffset = Utils::Angle::NormalizeAngle(newOffset);
-
-	cameraCheat->SetOptions(cameraOptions);
+	if (cameraCheat->SetFPRO(m_FPROHandleId, newOffset)) {
+		m_currentOffset = newOffset;
+	}
 }
 
-void ModMenuModule::RotateCameraWorker::SaveInitialCameraOffset()
+bool ModMenuModule::RotateCameraWorker::EnsureFPROHandle()
 {
-	MouseControlCheat* mouseControlCheat = MouseControlCheat::GetInstance();
 	CameraCheat* cameraCheat = CameraCheat::GetInstance();
+	if (!cameraCheat->IsEnabled()) return false;
 
-	if (!cameraCheat->IsEnabled()) return;
+	if (m_FPROHandleId != -1 && cameraCheat->IsFPROHandleValid(m_FPROHandleId)) {
+		return true;
+	}
+
+	m_FPROHandleId = cameraCheat->CreateFPROHandle();
+	if (m_FPROHandleId == -1) {
+		return false;
+	}
 
 	CameraCheatOptions cameraOptions = cameraCheat->GetOptions();
-	if (!cameraOptions.followPedRotation) return;
+	m_currentOffset = cameraOptions.followPedRotationOffset;
 
-	m_initialCameraOffset = cameraOptions.followPedRotationOffset;
+	return true;
 }
 
-void ModMenuModule::RotateCameraWorker::RestoreInitialCameraOffset() const
+void ModMenuModule::RotateCameraWorker::FreeFPROHandle()
 {
-	MouseControlCheat* mouseControlCheat = MouseControlCheat::GetInstance();
+	m_currentOffset = 0.0f;
+
+	CameraCheatFPROHandleId handleId = m_FPROHandleId;
+	m_FPROHandleId = -1;
+
 	CameraCheat* cameraCheat = CameraCheat::GetInstance();
+	if (!cameraCheat->IsEnabled()) {
+		return;
+	}
 
-	if (!cameraCheat->IsEnabled()) return;
-
-	CameraCheatOptions cameraOptions = cameraCheat->GetOptions();
-	if (!cameraOptions.followPedRotation) return;
-
-	cameraOptions.followPedRotationOffset = m_initialCameraOffset;
-	cameraCheat->SetOptions(cameraOptions);
+	cameraCheat->FreeFPROHandle(handleId);
 }
