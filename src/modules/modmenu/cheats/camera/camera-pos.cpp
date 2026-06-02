@@ -109,10 +109,12 @@ void ModMenuModule::CameraPosCheat::OnDisable()
 
 void ModMenuModule::CameraPosCheat::OnCameraPosApply(CameraPosApplyEvent& event)
 {
-	event.SetDoApply(false);
-
+	Game::Player* player = Game::Utils::GetPlayer();
+	Game::Camera* currentCamera = player ? Game::Functions::GetPlayerCurrentCamera(player) : nullptr;
 	Game::Camera* camera = event.GetCamera();
-	if (!camera) return;
+	if (!camera || camera != currentCamera) return;
+
+	event.SetDoApply(false);
 
 	if (m_lockAtCurrentRequested) {
 		m_options.x = { CameraPosCheatMode::LockTargetAt, camera->cameraPos.x };
