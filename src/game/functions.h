@@ -174,5 +174,8 @@ namespace Game {
 		typedef Camera* (__fastcall GetPlayerCurrentCameraType)(Player* player);
 		static constexpr GetPlayerCurrentCameraType* GetPlayerCurrentCamera = (GetPlayerCurrentCameraType*)0x00434900;
 
+		typedef void(__fastcall WorldPointToScreenType)(Camera* camera, DWORD edx, SCR_f x, SCR_f y, SCR_f z, SCR_f** outX, SCR_f** outY);
+		static constexpr WorldPointToScreenType* WorldPointToScreen = (WorldPointToScreenType*)0x0040cfc0;
+
 	};  
 }

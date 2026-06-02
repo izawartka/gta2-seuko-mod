@@ -182,6 +182,7 @@
     <ClCompile Include="src\modules\modmenu\utils\get-ped-position.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\get-ped-rotation.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\unlock-all-levels.cpp" />
+    <ClCompile Include="src\events\draw-player-name.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -481,6 +482,7 @@
     <ClInclude Include="src\modules\modmenu\utils\get-ped-position.h" />
     <ClInclude Include="src\modules\modmenu\utils\get-ped-rotation.h" />
     <ClInclude Include="src\modules\modmenu\utils\unlock-all-levels.h" />
+    <ClInclude Include="src\events\draw-player-name.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
