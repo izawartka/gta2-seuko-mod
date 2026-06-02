@@ -5,6 +5,7 @@
 #include "../../../../events/game-start.h"
 #include "../../../../events/draw-frame.h"
 #include "../../../../events/renderer.h"
+#include "../../../../events/draw-player-name.h"
 #include "../../../../events/draw-map-layer.h"
 #include "../../utils/vertex-utils.h"
 
@@ -81,6 +82,7 @@ namespace ModMenuModule {
 		void OnDrawTile(RendererDrawTileEvent& event);
 		void OnDrawQuad(RendererDrawQuadEvent& event);
 		void OnDrawTriangle(RendererDrawTriangleEvent& event);
+		void OnDrawPlayerName(DrawPlayerNameEvent& event);
 		void OnPreDrawFrame(PreDrawFrameEvent& event);
 		void OnPreDrawMapLayer(PreDrawMapLayerEvent& event);
 

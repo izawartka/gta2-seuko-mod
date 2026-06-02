@@ -250,6 +250,21 @@ void ModMenuModule::CameraCheat::OnDrawTriangle(RendererDrawTriangleEvent& event
 	);
 }
 
+void ModMenuModule::CameraCheat::OnDrawPlayerName(DrawPlayerNameEvent& event)
+{
+	if (!m_cameraValues.has_value()) return;
+
+	Game::SCR_Vector3 position = event.GetPosition();
+
+	Utils::Vertex::ApplyWorldPointCameraTransform(
+		position,
+		m_cameraValues.value(),
+		m_options.cameraTransform
+	);
+
+	event.SetModifiedPosition(position);
+}
+
 void ModMenuModule::CameraCheat::OnPreDrawFrame(PreDrawFrameEvent& event)
 {
 	Game::Player* player = Game::Utils::GetPlayer();
@@ -346,6 +361,7 @@ void ModMenuModule::CameraCheat::AddCameraListeners()
 	AddEventListener<RendererDrawTileEvent>(&ModMenuModule::CameraCheat::OnDrawTile);
 	AddEventListener<RendererDrawQuadEvent>(&ModMenuModule::CameraCheat::OnDrawQuad);
 	AddEventListener<RendererDrawTriangleEvent>(&ModMenuModule::CameraCheat::OnDrawTriangle);
+	AddEventListener<DrawPlayerNameEvent>(&ModMenuModule::CameraCheat::OnDrawPlayerName);
 	m_hasRendererListeners = true;
 }
 
@@ -360,6 +376,7 @@ void ModMenuModule::CameraCheat::RemoveCameraListeners()
 		RemoveEventListener<RendererDrawTileEvent>();
 		RemoveEventListener<RendererDrawQuadEvent>();
 		RemoveEventListener<RendererDrawTriangleEvent>();
+		RemoveEventListener<DrawPlayerNameEvent>();
 		m_hasRendererListeners = false;
 	}
 

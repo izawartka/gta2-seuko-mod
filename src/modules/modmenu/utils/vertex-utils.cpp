@@ -184,6 +184,33 @@ void ModMenuModule::Utils::Vertex::ApplyTriangleCameraTransform(
 	}
 }
 
+void ModMenuModule::Utils::Vertex::ApplyWorldPointCameraTransform(
+	Game::SCR_Vector3& point, 
+	const CameraValues& cameraValues, 
+	const CachedCameraTransform& cachedCameraTransform
+) {
+	// unusual transform: we're working on absolute fixed point world coords
+
+	Game::GTAVertex vertex = {
+		Game::Utils::ToFloat(point.x) - cameraValues.gameCameraX,
+		Game::Utils::ToFloat(point.y) - cameraValues.gameCameraY,
+		Game::Utils::ToFloat(point.z)
+	};
+
+	if (cachedCameraTransform.needsVerticalRotation) {
+		RotateVertexZ(vertex, cachedCameraTransform.verticalAngleSin, cachedCameraTransform.verticalAngleCos);
+	}
+
+	if (cachedCameraTransform.needsHorizontalRotation) {
+		RotateVertexX(vertex, cachedCameraTransform.horizontalAngleSin, cachedCameraTransform.horizontalAngleCos, cachedCameraTransform.horRotCenter);
+	}
+	vertex.z += cachedCameraTransform.additionalZOffset;
+
+	point.x = Game::Utils::FromFloat(vertex.x + cameraValues.gameCameraX);
+	point.y = Game::Utils::FromFloat(vertex.y + cameraValues.gameCameraY);
+	point.z = Game::Utils::FromFloat(vertex.z);
+}
+
 bool ModMenuModule::Utils::Vertex::ApplyCustomCulling(Game::GTAVertex* vertices, size_t vertexCount, const CameraValues& cameraValues, bool isReversed)
 {
 	bool culled = false;

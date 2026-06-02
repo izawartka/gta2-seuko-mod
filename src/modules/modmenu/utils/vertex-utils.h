@@ -89,6 +89,7 @@ namespace ModMenuModule::Utils::Vertex {
 	void ApplyQuadCameraTransform(Game::GTAVertex* vertices, const CameraValues& cameraValues, const CachedCameraTransform& cachedCameraTransform);
 	void ApplyArrowsCameraTransform(Game::GTAVertex* vertices, const CameraValues& cameraValues, const CachedCameraTransform& cachedCameraTransform);
 	void ApplyTriangleCameraTransform(Game::GTAVertex* vertices, const CameraValues& cameraValues, const CachedCameraTransform& cachedCameraTransform, bool* isReversedOut = nullptr);
+	void ApplyWorldPointCameraTransform(Game::SCR_Vector3& point, const CameraValues& cameraValues, const CachedCameraTransform& cachedCameraTransform);
 	bool ApplyCustomCulling(Game::GTAVertex* vertices, size_t vertexCount, const CameraValues& cameraValues, bool isReversed = false);
 
 	CameraValues GetCameraValues(const Game::Camera& camera, const CachedCameraTransform& cachedCameraTransform);
