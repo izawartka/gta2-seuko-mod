@@ -4,7 +4,7 @@
 #include "../segment-support.h"
 
 namespace ModMenuModule {
-	class PositionSegment;
+	class PositionRotationSegment;
 
 	class PlayerPosMenu : public MenuBase, public SegmentSupport {
 	public:
@@ -21,6 +21,6 @@ namespace ModMenuModule {
 
 		void Teleport();
 
-		PositionSegment* m_positionSegment = nullptr;
+		PositionRotationSegment* m_posRotSegment = nullptr;
 	};
 }

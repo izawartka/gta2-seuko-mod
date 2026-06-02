@@ -1,11 +1,11 @@
 #include "player-pos-menu.h"
 #include "../root.h"
-#include "../segments/position-segment.h"
+#include "../segments/position-rotation-segment.h"
 #include "../cheats/player-pos.h"
 
 ModMenuModule::PlayerPosMenu::PlayerPosMenu()
 {
-	m_positionSegment = CreateSegment<PositionSegment>("Segment_PlayerPosMenu_PositionSegment");
+	m_posRotSegment = CreateSegment<PositionRotationSegment>("Segment_PlayerPosMenu_PosRotSegment");
 }
 
 ModMenuModule::PlayerPosMenu::~PlayerPosMenu()
@@ -22,8 +22,8 @@ bool ModMenuModule::PlayerPosMenu::Attach()
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 
-	// position segment
-	AttachSegment(m_positionSegment, this, vertCont);
+	// position rotation segment
+	AttachSegment(m_posRotSegment, this, vertCont);
 
 	// teleport btn
 	UiModule::Text* teleportText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"Teleport", options.textSize);
@@ -42,7 +42,7 @@ bool ModMenuModule::PlayerPosMenu::Attach()
 
 void ModMenuModule::PlayerPosMenu::Detach()
 {
-	DetachSegment(m_positionSegment);
+	DetachSegment(m_posRotSegment);
 	DestroyMenu();
 }
 
@@ -69,7 +69,7 @@ void ModMenuModule::PlayerPosMenu::OnMenuAction(UiModule::Selectable* item, UiMo
 
 void ModMenuModule::PlayerPosMenu::Teleport()
 {
-	auto segmentDataOpt = m_positionSegment->GetSegmentData();
+	auto segmentDataOpt = m_posRotSegment->GetSegmentData();
 	if (!segmentDataOpt.has_value()) return;
 
 	PlayerPosCheat* playerPosCheat = PlayerPosCheat::GetInstance();
@@ -78,11 +78,16 @@ void ModMenuModule::PlayerPosMenu::Teleport()
 		return;
 	}
 
-	playerPosCheat->Teleport(segmentDataOpt->position, [this](bool success) {
-		m_positionSegment->SetDoUpdatePosition(true);
+	short targetRotation = segmentDataOpt->rotation;
+	playerPosCheat->Teleport(segmentDataOpt->position, [this, targetRotation](bool success) {
+		m_posRotSegment->SetDoUpdatePosition(true);
 
 		if(!success) {
 			ToastManager::GetInstance()->Show({ L"Teleport failed", ToastType::Error });
+			return;
 		}
+
+		short* rotationPtr = Game::Utils::GetPlayerPedRotationPtr();
+		*rotationPtr = targetRotation;
 	});
 }
