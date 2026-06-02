@@ -177,12 +177,12 @@ void ModMenuModule::CameraCheat::OnRendererLoad(RendererLoadEvent& event)
 
 void ModMenuModule::CameraCheat::OnDrawTile(RendererDrawTileEvent& event)
 {
-	if (!m_cameraValues.has_value()) return;
+	if (!m_cameraValues.has_value() || !m_cachedCameraTransform.has_value()) return;
 
 	Utils::Vertex::ApplyQuadCameraTransform(
 		event.GetVertices(),
 		m_cameraValues.value(),
-		m_options.cameraTransform
+		m_cachedCameraTransform.value()
 	);
 
 	if (!m_options.customCulling) return;
@@ -196,7 +196,7 @@ void ModMenuModule::CameraCheat::OnDrawTile(RendererDrawTileEvent& event)
 
 void ModMenuModule::CameraCheat::OnDrawQuad(RendererDrawQuadEvent& event)
 {
-	if (!m_cameraValues.has_value()) return;
+	if (!m_cameraValues.has_value() || !m_cachedCameraTransform.has_value()) return;
 	if ((event.GetFlags() & 0x20000) != 0) return; // do not affect UI
 
 	// car lights bug workaround
@@ -207,7 +207,7 @@ void ModMenuModule::CameraCheat::OnDrawQuad(RendererDrawQuadEvent& event)
 		Utils::Vertex::ApplyArrowsCameraTransform(
 			m_vertexBuffer,
 			m_cameraValues.value(),
-			m_options.cameraTransform
+			m_cachedCameraTransform.value()
 		);
 
 		return;
@@ -216,7 +216,7 @@ void ModMenuModule::CameraCheat::OnDrawQuad(RendererDrawQuadEvent& event)
 	Utils::Vertex::ApplyQuadCameraTransform(
 		m_vertexBuffer,
 		m_cameraValues.value(),
-		m_options.cameraTransform
+		m_cachedCameraTransform.value()
 	);
 
 	if (!m_options.customCulling) return;
@@ -230,13 +230,13 @@ void ModMenuModule::CameraCheat::OnDrawQuad(RendererDrawQuadEvent& event)
 
 void ModMenuModule::CameraCheat::OnDrawTriangle(RendererDrawTriangleEvent& event)
 {
-	if (!m_cameraValues.has_value()) return;
+	if (!m_cameraValues.has_value() || !m_cachedCameraTransform.has_value()) return;
 
 	bool isReversed;
 	Utils::Vertex::ApplyTriangleCameraTransform(
 		event.GetVertices(),
 		m_cameraValues.value(),
-		m_options.cameraTransform,
+		m_cachedCameraTransform.value(),
 		&isReversed
 	);
 
@@ -252,14 +252,14 @@ void ModMenuModule::CameraCheat::OnDrawTriangle(RendererDrawTriangleEvent& event
 
 void ModMenuModule::CameraCheat::OnDrawPlayerName(DrawPlayerNameEvent& event)
 {
-	if (!m_cameraValues.has_value()) return;
+	if (!m_cameraValues.has_value() || !m_cachedCameraTransform.has_value()) return;
 
 	Game::SCR_Vector3 position = event.GetPosition();
 
 	Utils::Vertex::ApplyWorldPointCameraTransform(
 		position,
 		m_cameraValues.value(),
-		m_options.cameraTransform
+		m_cachedCameraTransform.value()
 	);
 
 	event.SetModifiedPosition(position);
