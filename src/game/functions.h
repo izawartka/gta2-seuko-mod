@@ -170,5 +170,9 @@ namespace Game {
 
 		typedef void(__fastcall UnlockAllLevelsType)(S28* s28);
 		static constexpr UnlockAllLevelsType* UnlockAllLevels = (UnlockAllLevelsType*)0x004a8b00;
+
+		typedef Camera* (__fastcall GetPlayerCurrentCameraType)(Player* player);
+		static constexpr GetPlayerCurrentCameraType* GetPlayerCurrentCamera = (GetPlayerCurrentCameraType*)0x00434900;
+
 	};  
 }
