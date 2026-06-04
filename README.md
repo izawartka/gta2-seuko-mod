@@ -31,7 +31,7 @@ An ultimate mod menu (a.k.a. trainer) for Grand Theft Auto 2.
 
 - This mod is mainly intended for [GTA2 PC version 11.44](https://gtamp.com/GTA2/gta2-installer.exe)
 - The mod should also work with GTA2 PC version 9.6, but this version is not supported
-- [Widescreenfix](https://github.com/ThirteenAG/WidescreenFixesPack/releases/tag/gta2) seems to work fine with this mod, but settings persistence and camera behavior may be broken
+- [Widescreenfix](https://github.com/ThirteenAG/WidescreenFixesPack/releases/tag/gta2) is compatible with this mod, but some texts may be misaligned
 - [GTA2 radar](https://github.com/gennariarmando/gta2-radar) also seems to work fine, but expect performance issues, especially when using 3D camera mode
 
 ## Installation
@@ -94,13 +94,11 @@ Customizable quick actions can be found in `Mod menu` > `Misc` > `Quick actions`
 If you like this mod and want to support its development, you can donate via [PayPal](https://www.paypal.me/maseuko) :)
 
 ## Known issues
-- Mission arrows are misaligned when using 3D camera mode and the camera position is locked
-- The game may sometimes crash on level restart
 - Setting large camera height value / low camera zoom value crashes the game
-- The camera sometimes "jumps" one block higher when locking its position while in 3D mode
 - Spawning a lot of explosions (i.e., while using Rocket Launcher with Instant reload cheat) may cause the game to crash
-- "Unlock all levels" native cheat does not work
+- "Unlock all levels" native cheat does not work. Use "Unlock all levels" option in the misc menu instead
 - Mouse control does not work with Controller configuration
+- Game controls are still active during menu navigation and input
 - Most of the mod's features cause multiplayer games to desync
 
 Please remember that this mod is an experimental project and may cause a lot of unexpected bugs, crashes etc.

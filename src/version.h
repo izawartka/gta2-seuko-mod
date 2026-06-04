@@ -7,7 +7,7 @@
 
 // version
 #define SEUKOMOD_VERSION_MAJOR 1
-#define SEUKOMOD_VERSION_MINOR 4
+#define SEUKOMOD_VERSION_MINOR 5
 #define SEUKOMOD_VERSION_PATCH 0
 
 // stringification helpers
