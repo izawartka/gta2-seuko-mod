@@ -4,5 +4,7 @@
 #include "cheat-state.h"
 #include "last-car-state.h"
 #include "player-appearance-update.h"
+#include "player-pos-rot-update.h"
 #include "player-pos-update.h"
 #include "player-rot-update.h"
+#include "position-store-entries-update.h"

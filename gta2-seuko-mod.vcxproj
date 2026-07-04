@@ -668,6 +668,7 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
     <ClInclude Include="src\modules\modmenu\events\last-car-state.h" />
     <ClInclude Include="src\modules\modmenu\events\cheat-options-update.h" />
     <ClInclude Include="src\modules\modmenu\events\player-appearance-update.h" />
+    <ClInclude Include="src\modules\modmenu\events\player-pos-rot-update.h" />
     <ClInclude Include="src\modules\modmenu\events\player-pos-update.h" />
     <ClInclude Include="src\modules\modmenu\events\player-rot-update.h" />
     <ClInclude Include="src\modules\modmenu\menu-manager.h" />

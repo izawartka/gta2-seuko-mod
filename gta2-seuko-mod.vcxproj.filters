@@ -486,6 +486,7 @@
     <ClInclude Include="src\events\draw-player-name.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\toggle-freecam.h" />
     <ClInclude Include="src\converters\scr-vector3-rot.h" />
+    <ClInclude Include="src\modules\modmenu\events\player-pos-rot-update.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

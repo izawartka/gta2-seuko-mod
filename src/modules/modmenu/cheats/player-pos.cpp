@@ -1,6 +1,7 @@
 #include "player-pos.h"
 #include "../events/player-pos-update.h"
 #include "../events/player-rot-update.h"
+#include "../events/player-pos-rot-update.h"
 #include "../cheat-registry.h"
 
 ModMenuModule::PlayerPosCheat* ModMenuModule::PlayerPosCheat::m_instance = nullptr;
@@ -148,6 +149,11 @@ void ModMenuModule::PlayerPosCheat::OnPreGameTick(PreGameTickEvent& event)
 
 	if (lastRotation != m_rotation) {
 		PlayerRotUpdateEvent event(m_rotation);
+		Core::EventManager::GetInstance()->Dispatch(event);
+	}
+
+	if (lastPosition != m_position || lastRotation != m_rotation) {
+		PlayerPosRotUpdateEvent event(m_position, m_rotation);
 		Core::EventManager::GetInstance()->Dispatch(event);
 	}
 }
