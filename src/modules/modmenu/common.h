@@ -6,3 +6,5 @@
 #include "../keybinding/keybinding.h"
 #include "../ui/ui.h"
 #include "../mouse/mouse.h"
+
+#include <set>

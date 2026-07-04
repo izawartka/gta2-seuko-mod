@@ -17,5 +17,6 @@
 #include "camera/shadows-fix.h"
 #include "player-appearance.h"
 #include "player-pos.h"
+#include "position-store.h"
 #include "saved-cars.h"
 #include "unstuck-keys.h"
