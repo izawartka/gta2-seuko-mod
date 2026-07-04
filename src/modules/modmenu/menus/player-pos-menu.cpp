@@ -5,7 +5,7 @@
 
 ModMenuModule::PlayerPosMenu::PlayerPosMenu()
 {
-	m_posRotSegment = CreateSegment<PositionRotationSegment>("Segment_PlayerPosMenu_PosRotSegment");
+	m_posRotSegment = CreateSegment<PositionRotationSegment>("ModMenu_PlayerPosMenu_PosRotSegment");
 }
 
 ModMenuModule::PlayerPosMenu::~PlayerPosMenu()

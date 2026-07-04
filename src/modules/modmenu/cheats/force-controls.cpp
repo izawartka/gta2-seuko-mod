@@ -58,7 +58,7 @@ ModMenuModule::ForceControlsCheat::ControlHandle ModMenuModule::ForceControlsChe
 
 	Control& controlState = m_controls.at(controlIndex);
 	if (controlState.handle != -1) {
-		spdlog::error("Control {} already has a handle", controlIndex);
+		spdlog::error("ForceControlCheat: Control {} already has a handle", controlIndex);
 		return static_cast<ControlHandle>(-1);
 	}
 
@@ -73,12 +73,13 @@ ModMenuModule::ForceControlsCheat::ControlHandle ModMenuModule::ForceControlsChe
 
 void ModMenuModule::ForceControlsCheat::FreeControlHandle(ControlHandle handle)
 {
-	if (m_controlHandles.find(handle) == m_controlHandles.end()) {
-		spdlog::error("Control handle {} does not exist", handle);
+	auto it = m_controlHandles.find(handle);
+	if (it == m_controlHandles.end()) {
+		spdlog::error("ForceControlCheat: Control handle {} does not exist", handle);
 		return;
 	}
 
-	ControlIndex controlIndex = m_controlHandles.at(handle);
+	ControlIndex controlIndex = it->second;
 	Control& controlState = m_controls.at(controlIndex);
 	controlState.handle = -1;
 	controlState.nextState = ForceControlState::Unmodified;
@@ -87,12 +88,13 @@ void ModMenuModule::ForceControlsCheat::FreeControlHandle(ControlHandle handle)
 
 void ModMenuModule::ForceControlsCheat::SetControlState(ControlHandle controlHandle, ForceControlState state)
 {
-	if (m_controlHandles.find(controlHandle) == m_controlHandles.end()) {
-		spdlog::error("Control handle {} does not exist", controlHandle);
+	auto it = m_controlHandles.find(controlHandle);
+	if (it == m_controlHandles.end()) {
+		spdlog::error("ForceControlCheat: Control handle {} does not exist", controlHandle);
 		return;
 	}
 
-	ControlIndex controlIndex = m_controlHandles.at(controlHandle);
+	ControlIndex controlIndex = it->second;
 	Control& controlState = m_controls.at(controlIndex);
 	controlState.nextState = state;
 
@@ -104,12 +106,13 @@ void ModMenuModule::ForceControlsCheat::SetControlState(ControlHandle controlHan
 
 ModMenuModule::ForceControlState ModMenuModule::ForceControlsCheat::GetControlState(ControlHandle controlHandle) const
 {
-	if (m_controlHandles.find(controlHandle) == m_controlHandles.end()) {
-		spdlog::error("Control handle {} does not exist", controlHandle);
+	auto it = m_controlHandles.find(controlHandle);
+	if (it == m_controlHandles.end()) {
+		spdlog::error("ForceControlCheat: Control handle {} does not exist", controlHandle);
 		return ForceControlState::Unmodified;
 	}
 
-	ControlIndex controlIndex = m_controlHandles.at(controlHandle);
+	ControlIndex controlIndex = it->second;
 	const Control& controlState = m_controls.at(controlIndex);
 	return controlState.nextState;
 }

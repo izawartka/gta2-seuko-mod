@@ -22,7 +22,7 @@ bool ModMenuModule::SelectCameraModesMenu::Attach()
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 
 	if(m_selectedModes == nullptr) {
-		spdlog::error("SelectCameraModesMenu: selectedModes is nullptr");
+		spdlog::error("SelectCameraModesMenu: cannot attach, selectedModes is nullptr");
 		return false;
 	}
 
@@ -63,7 +63,7 @@ void ModMenuModule::SelectCameraModesMenu::ToggleModeSelection(Utils::CameraEasy
 	bool isSelected = false;
 
 	if (m_selectedModes == nullptr) {
-		spdlog::error("SelectCameraModesMenu: selectedModes is nullptr");
+		spdlog::error("SelectCameraModesMenu: cannot toggle, selectedModes is nullptr");
 		return;
 	}
 
