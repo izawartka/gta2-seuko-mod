@@ -8,6 +8,7 @@
 #include "get-powerup-menu.h"
 #include "vehicles-menu.h"
 #include "spawn-vehicle-menu.h"
+#include "position-menu.h"
 #include "last-vehicle-menu.h"
 #include "last-vehicle-physics-menu.h"
 #include "last-vehicle-save-menu.h"

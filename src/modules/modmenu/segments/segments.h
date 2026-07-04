@@ -4,6 +4,7 @@
 #include "explode-all-vehicles-segment.h"
 #include "fix-vehicle-segment.h"
 #include "get-powerup-segment.h"
+#include "position-menu-segment.h"
 #include "position-rotation-segment.h"
 #include "position-segment.h"
 #include "quick-action-key-segment.h"
