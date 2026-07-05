@@ -21,7 +21,9 @@ public:
 	}
 
 	static bool AreEqual(Game::SCR_f a, Game::SCR_f b) {
-		return a == b;
+		float floatA = Game::Utils::ToFloat(a);
+		float floatB = Game::Utils::ToFloat(b);
+		return FloatConverter<float, PRECISION>::AreEqual(floatA, floatB);
 	}
 
 protected:

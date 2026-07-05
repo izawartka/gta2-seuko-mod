@@ -12,7 +12,9 @@ public:
 	}
 
 	static bool AreEqual(Game::SCR_Vector3 a, Game::SCR_Vector3 b) {
-		return a == b;
+		return ScrfConverter::AreEqual(a.x, b.x) &&
+			ScrfConverter::AreEqual(a.y, b.y) &&
+			ScrfConverter::AreEqual(a.z, b.z);
 	}
 
 protected:

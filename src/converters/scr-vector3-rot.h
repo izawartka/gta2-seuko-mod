@@ -14,7 +14,10 @@ public:
 	}
 
 	static bool AreEqual(std::pair<Game::SCR_Vector3, short> a, std::pair<Game::SCR_Vector3, short> b) {
-		return a == b;
+		return ScrfConverter::AreEqual(a.first.x, b.first.x) &&
+			ScrfConverter::AreEqual(a.first.y, b.first.y) &&
+			ScrfConverter::AreEqual(a.first.z, b.first.z) &&
+			GtaAngleConverter<>::AreEqual(a.second, b.second);
 	}
 
 protected:
