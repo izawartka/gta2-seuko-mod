@@ -4,12 +4,14 @@
 #include "../events/player-pos-update.h"
 
 namespace ModMenuModule {
+	// Currently unused
 	struct PositionSegmentData {
 		bool updateFromPlayer = true;
 		Game::SCR_Vector3 position;
 		bool autoZ = true;
 	};
 
+	// Currently unused
 	class PositionSegment : public Segment<PositionSegmentData>, public Core::EventListenerSupport {
 	public:
 		PositionSegment() = default;
