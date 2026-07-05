@@ -2,62 +2,92 @@
 #include "../../../converters/yes-no.h"
 #include "../../../converters/scrf.h"
 #include "../../../converters/enabled-disabled.h"
-#include "../cheats/player-pos.h"
 #include "../root.h"
 
-ModMenuModule::PositionSegment::PositionSegment(std::string_view persistencePrefix)
+ModMenuModule::PositionSegment::PositionSegment()
 {
-	m_persistencePrefix = persistencePrefix;
+	m_ownsPositionId = true;
+
+	PositionStoreCheat* positionStoreCheat = PositionStoreCheat::GetInstance();
+	m_positionId = positionStoreCheat->Create();
+}
+
+ModMenuModule::PositionSegment::PositionSegment(std::string_view persistenceKey)
+{
+	m_persistenceKey = persistenceKey;
+	m_ownsPositionId = true;
+
+	const auto& loadedEntry = PositionStoreCheat::LoadFromPersistence(m_persistenceKey);
+	PositionStoreCheat* positionStoreCheat = PositionStoreCheat::GetInstance();
+	m_positionId = positionStoreCheat->Create(loadedEntry.has_value() ? *loadedEntry : PositionStoreEntry{});
+}
+
+ModMenuModule::PositionSegment::PositionSegment(PositionStoreCheat::PositionId positionId, std::string_view persistenceKey)
+{
+	m_positionId = positionId;
+	m_persistenceKey = persistenceKey;
+	m_ownsPositionId = false;
 }
 
 ModMenuModule::PositionSegment::~PositionSegment()
 {
-
+	if (m_ownsPositionId) {
+		PositionStoreCheat* positionStoreCheat = PositionStoreCheat::GetInstance();
+		positionStoreCheat->Remove(m_positionId);
+	}
 }
 
 std::optional<ModMenuModule::PositionSegmentData> ModMenuModule::PositionSegment::GetSegmentData() const
 {
-	if (!m_xController || !m_yController || !m_zController || !m_autoZController) {
-		spdlog::error("Cannot get segment data: controllers are not initialized.");
-		return std::nullopt;
-	}
+	PositionStoreCheat* positionStoreCheat = PositionStoreCheat::GetInstance();
+	const PositionStoreEntry* entry = positionStoreCheat->Get(m_positionId);
 
-	const auto& positionOpt = GetCoordControllerValues();
-	const auto& autoZOpt = m_autoZController->GetValue();
-
-	if (!positionOpt.has_value() || !autoZOpt.has_value()) {
-		spdlog::error("Cannot get segment data: controllers have invalid values.");
+	if (!entry) {
+		spdlog::error("PositionSegment: Cannot get segment data: position ID {} does not exist in PositionStoreCheat.", m_positionId);
 		return std::nullopt;
 	}
 
 	return PositionSegmentData{
-		m_doUpdatePosition,
-		positionOpt.value(),
-		autoZOpt.value()
+		entry->updateFromPlayerPed,
+		entry->value.position,
+		entry->autoZ
 	};
 }
 
 bool ModMenuModule::PositionSegment::SetSegmentData(const PositionSegmentData& data)
 {
-	if (!m_xController || !m_yController || !m_zController || !m_autoZController) {
-		spdlog::error("Cannot set segment data: controllers are not initialized.");
+	PositionStoreEntry newEntry = {
+		data.position,
+		0, // rotation is not used
+		data.updateFromPlayer,
+		data.autoZ
+	};
+
+	PositionStoreCheat::ApplyNow(newEntry);
+
+	PositionStoreCheat* positionStoreCheat = PositionStoreCheat::GetInstance();
+	bool success = positionStoreCheat->Update(m_positionId, newEntry);
+
+	if (!success) {
+		spdlog::error("PositionSegment: Failed to update position ID {} in PositionStoreCheat.", m_positionId);
 		return false;
 	}
 
-	SetDoUpdatePosition(data.updateFromPlayer);
-	if (!m_doUpdatePosition) {
-		SetCoordControllerValues(data.position);
-	}
-	m_autoZController->SetValue(data.autoZ);
+	UpdateControllers();
 	return true;
 }
 
-void ModMenuModule::PositionSegment::SetDoUpdatePosition(bool doUpdateFromPlayer)
+bool ModMenuModule::PositionSegment::SetDoUpdatePosition(bool doUpdateFromPlayer)
 {
-	OnDoUpdatePositionControllerSave(doUpdateFromPlayer);
+	return OnDoUpdatePositionControllerSave(doUpdateFromPlayer);
+}
 
-	if (!IsAttached()) return;
-	m_doUpdatePositionController->SetValue(doUpdateFromPlayer);
+bool ModMenuModule::PositionSegment::GetDoUpdatePosition() const
+{
+	PositionStoreCheat* positionStoreCheat = PositionStoreCheat::GetInstance();
+	const PositionStoreEntry* entry = positionStoreCheat->Get(m_positionId);
+
+	return entry && entry->updateFromPlayerPed;
 }
 
 bool ModMenuModule::PositionSegment::Attach(ModMenuModule::MenuBase* menu, UiModule::Component* parent)
@@ -66,19 +96,11 @@ bool ModMenuModule::PositionSegment::Attach(ModMenuModule::MenuBase* menu, UiMod
 
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
-	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
-
-	Game::SCR_f selectedX = Game::Utils::FromFloat(0.0f);
-	Game::SCR_f selectedY = Game::Utils::FromFloat(0.0f);
-	Game::SCR_f selectedZ = Game::Utils::FromFloat(0.0f);
-	bool selectedAutoZ = true;
-
-	if (m_persistencePrefix.size()) {
-		m_doUpdatePosition = persistence->Load(m_persistencePrefix + "_SelectedDoUpdatePosition", true);
-		selectedX = persistence->Load(m_persistencePrefix + "_SelectedX", Game::Utils::FromFloat(0.0f));
-		selectedY = persistence->Load(m_persistencePrefix + "_SelectedY", Game::Utils::FromFloat(0.0f));
-		selectedZ = persistence->Load(m_persistencePrefix + "_SelectedZ", Game::Utils::FromFloat(0.0f));
-		selectedAutoZ = persistence->Load(m_persistencePrefix + "_SelectedAutoZ", true);
+	PositionStoreCheat* positionStoreCheat = PositionStoreCheat::GetInstance();
+	const PositionStoreEntry* entry = positionStoreCheat->Get(m_positionId);
+	if (!entry) {
+		spdlog::error("PositionSegment: Cannot attach PositionSegment: position ID {} does not exist in PositionStoreCheat.", m_positionId);
+		return false;
 	}
 
 	// Update position
@@ -86,7 +108,7 @@ bool ModMenuModule::PositionSegment::Attach(ModMenuModule::MenuBase* menu, UiMod
 	m_doUpdatePositionController = m_menuController->CreateLatestItemController<UiModule::SelectController<bool>>(
 		doUpdatePositionText,
 		std::vector<bool>{ false, true },
-		m_doUpdatePosition,
+		entry->updateFromPlayerPed,
 		UiModule::SelectControllerOptions{ L"Update position: #", L"#" }
 	);
 	m_doUpdatePositionController->SetConverter<YesNoConverter>();
@@ -96,33 +118,33 @@ bool ModMenuModule::PositionSegment::Attach(ModMenuModule::MenuBase* menu, UiMod
 	UiModule::Text* xText = m_menuController->CreateItem<UiModule::Text>(m_vertCont, L"", options.textSize);
 	m_xController = m_menuController->CreateLatestItemController<UiModule::EditableController<Game::SCR_f>>(
 		xText,
-		selectedX,
+		entry->value.position.x,
 		UiModule::EditableControllerOptions{ L"X: #", L"#" }
 	);
 	m_xController->SetConverter<ScrfConverter>();
-	m_xController->SetSaveCallback(std::bind(&PositionSegment::OnCoordControllerSave, this, false));
+	m_xController->SetSaveCallback(std::bind(&PositionSegment::OnCoordControllerSave, this, 0, std::placeholders::_1));
 	m_xController->SetClampCallback(std::bind(&PositionSegment::ClampCoord, std::placeholders::_1, false));
 
 	// Y position
 	UiModule::Text* yText = m_menuController->CreateItem<UiModule::Text>(m_vertCont, L"", options.textSize);
 	m_yController = m_menuController->CreateLatestItemController<UiModule::EditableController<Game::SCR_f>>(
 		yText,
-		selectedY,
+		entry->value.position.y,
 		UiModule::EditableControllerOptions{ L"Y: #", L"#" }
 	);
 	m_yController->SetConverter<ScrfConverter>();
-	m_yController->SetSaveCallback(std::bind(&PositionSegment::OnCoordControllerSave, this, false));
+	m_yController->SetSaveCallback(std::bind(&PositionSegment::OnCoordControllerSave, this, 1, std::placeholders::_1));
 	m_yController->SetClampCallback(std::bind(&PositionSegment::ClampCoord, std::placeholders::_1, false));
 
 	// Z position
 	UiModule::Text* zText = m_menuController->CreateItem<UiModule::Text>(m_vertCont, L"", options.textSize);
 	m_zController = m_menuController->CreateLatestItemController<UiModule::EditableController<Game::SCR_f>>(
 		zText,
-		selectedZ,
+		entry->value.position.z,
 		UiModule::EditableControllerOptions{ L"Z: #", L"#" }
 	);
 	m_zController->SetConverter<ScrfConverter>();
-	m_zController->SetSaveCallback(std::bind(&PositionSegment::OnCoordControllerSave, this, true));
+	m_zController->SetSaveCallback(std::bind(&PositionSegment::OnCoordControllerSave, this, 2, std::placeholders::_1));
 	m_zController->SetClampCallback(std::bind(&PositionSegment::ClampCoord, std::placeholders::_1, true));
 
 	// Auto Z
@@ -130,7 +152,7 @@ bool ModMenuModule::PositionSegment::Attach(ModMenuModule::MenuBase* menu, UiMod
 	m_autoZController = m_menuController->CreateLatestItemController<UiModule::SelectController<bool>>(
 		autoZText,
 		std::vector<bool>{ false, true },
-		selectedAutoZ,
+		entry->autoZ,
 		UiModule::SelectControllerOptions{ L"Auto Z: #", L"#" }
 	);
 	m_autoZController->SetConverter<EnabledDisabledConverter>();
@@ -141,22 +163,14 @@ bool ModMenuModule::PositionSegment::Attach(ModMenuModule::MenuBase* menu, UiMod
 
 void ModMenuModule::PositionSegment::Detach()
 {
-	if (m_persistencePrefix.size()) {
-		PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
-		
-		persistence->Save(m_persistencePrefix + "_SelectedDoUpdatePosition", m_doUpdatePositionController->GetValue().value());
-
-		if (m_xController && m_xController->GetValue().has_value()) {
-			persistence->Save(m_persistencePrefix + "_SelectedX", m_xController->GetValue().value());
+	if (m_persistenceKey.size()) {
+		PositionStoreCheat* positionStoreCheat = PositionStoreCheat::GetInstance();
+		const PositionStoreEntry* entry = positionStoreCheat->Get(m_positionId);
+		if (entry) {
+			PositionStoreCheat::SaveToPersistence(m_persistenceKey, *entry);
 		}
-		if (m_yController && m_yController->GetValue().has_value()) {
-			persistence->Save(m_persistencePrefix + "_SelectedY", m_yController->GetValue().value());
-		}
-		if (m_zController && m_zController->GetValue().has_value()) {
-			persistence->Save(m_persistencePrefix + "_SelectedZ", m_zController->GetValue().value());
-		}
-		if (m_autoZController && m_autoZController->GetValue().has_value()) {
-			persistence->Save(m_persistencePrefix + "_SelectedAutoZ", m_autoZController->GetValue().value());
+		else {
+			spdlog::error("PositionSegment: Cannot save PositionSegment data to persistence: position ID {} does not exist in PositionStoreCheat.", m_positionId);
 		}
 	}
 
@@ -165,14 +179,20 @@ void ModMenuModule::PositionSegment::Detach()
 
 void ModMenuModule::PositionSegment::OnShow()
 {
-	SetEventListener<ModMenuModule::PlayerPosUpdateEvent>(&PositionSegment::OnPlayerPosUpdate, m_doUpdatePosition);
-	if (m_doUpdatePosition) ForceUpdatePosition();
-	else ApplyAutoZIfNeeded();
+	PositionStoreCheat* positionStoreCheat = PositionStoreCheat::GetInstance();
+	const PositionStoreEntry* entry = positionStoreCheat->Get(m_positionId);
+	SetEventListener<PositionStoreEntriesUpdateEvent>(&PositionSegment::OnPositionStoreEntriesUpdate, entry && entry->updateFromPlayerPed);
+	UpdateControllers();
 }
 
 void ModMenuModule::PositionSegment::OnHide()
 {
-	RemoveEventListener<ModMenuModule::PlayerPosUpdateEvent>(true);
+	RemoveEventListener<PositionStoreEntriesUpdateEvent>(true);
+}
+
+void ModMenuModule::PositionSegment::OnPositionStoreEntriesUpdate(ModMenuModule::PositionStoreEntriesUpdateEvent& event)
+{
+	UpdateControllers();
 }
 
 Game::SCR_f ModMenuModule::PositionSegment::ClampCoord(Game::SCR_f value, bool isZCoord)
@@ -182,114 +202,114 @@ Game::SCR_f ModMenuModule::PositionSegment::ClampCoord(Game::SCR_f value, bool i
 		Game::Utils::ClampCoordToSafe(value);
 }
 
-void ModMenuModule::PositionSegment::SetCoordControllerValues(const Game::SCR_Vector3& position)
+bool ModMenuModule::PositionSegment::UpdateControllers()
 {
-	if (!m_xController || !m_yController || !m_zController) return;
+	if (!m_xController || !m_yController || !m_zController || !m_autoZController) {
+		spdlog::error("PositionSegment: Cannot update controllers: controllers are not initialized.");
+		return false;
+	}
 
-	m_xController->SetValue(position.x);
-	m_yController->SetValue(position.y);
-	m_zController->SetValue(position.z);
+	PositionStoreCheat* positionStoreCheat = PositionStoreCheat::GetInstance();
+	const PositionStoreEntry* entry = positionStoreCheat->Get(m_positionId);
+
+	if (!entry) {
+		spdlog::error("PositionSegment: Cannot update controllers: position ID {} does not exist in PositionStoreCheat.", m_positionId);
+		return false;
+	}
+
+	m_doUpdatePositionController->SetValue(entry->updateFromPlayerPed);
+	m_xController->SetValue(entry->value.position.x);
+	m_yController->SetValue(entry->value.position.y);
+	m_zController->SetValue(entry->value.position.z);
+	m_autoZController->SetValue(entry->autoZ);
+
+	if (IsVisible()) {
+		SetEventListener<PositionStoreEntriesUpdateEvent>(&PositionSegment::OnPositionStoreEntriesUpdate, entry->updateFromPlayerPed);
+	}
+
+	return true;
 }
 
-std::optional<Game::SCR_Vector3> ModMenuModule::PositionSegment::GetCoordControllerValues() const
+bool ModMenuModule::PositionSegment::OnDoUpdatePositionControllerSave(bool newValue)
 {
-	if (!m_xController || !m_yController || !m_zController) return std::nullopt;
-
-	const auto& xOpt = m_xController->GetValue();
-	const auto& yOpt = m_yController->GetValue();
-	const auto& zOpt = m_zController->GetValue();
-
-	if (!xOpt.has_value() || !yOpt.has_value() || !zOpt.has_value()) {
-		return std::nullopt;
+	if (!UpdateEntry([newValue](PositionStoreEntry& entry) {
+		if (entry.updateFromPlayerPed == newValue) return false;
+		entry.updateFromPlayerPed = newValue;
+		return true;
+	})) {
+		spdlog::error("PositionSegment: Failed to set doUpdateFromPlayer for position ID {} in PositionStoreCheat.", m_positionId);
+		return false;
 	}
 
-	return Game::SCR_Vector3{
-		xOpt.value(),
-		yOpt.value(),
-		zOpt.value()
-	};
+	if (IsVisible()) {
+		SetEventListener<PositionStoreEntriesUpdateEvent>(&PositionSegment::OnPositionStoreEntriesUpdate, newValue);
+	}
+
+	if (IsAttached()) {
+		UpdateControllers();
+	}
+
+	return true;
 }
 
-void ModMenuModule::PositionSegment::OnPlayerPosUpdate(ModMenuModule::PlayerPosUpdateEvent& event)
+void ModMenuModule::PositionSegment::OnCoordControllerSave(size_t coordIndex, Game::SCR_f newValue)
 {
-	if (!m_doUpdatePosition) {
-		return;
+	if (!UpdateEntry([m_positionId = m_positionId, coordIndex, newValue](PositionStoreEntry& entry) {
+		switch (coordIndex) {
+		case 0:
+			if (ScrfConverter::AreEqual(entry.value.position.x, newValue)) return false;
+			entry.value.position.x = newValue;
+			break;
+		case 1:
+			if (ScrfConverter::AreEqual(entry.value.position.y, newValue)) return false;
+			entry.value.position.y = newValue;
+			break;
+		case 2:
+			if (ScrfConverter::AreEqual(entry.value.position.z, newValue)) return false;
+			entry.value.position.z = newValue;
+			entry.autoZ = false; // Disable auto Z if user manually sets Z
+			break;
+		default:
+			spdlog::error("PositionSegment: Invalid coordinate index {} for position ID {} in PositionStoreCheat.", coordIndex, m_positionId);
+			return false;
+		}
+
+		entry.updateFromPlayerPed = false; // Disable update from player if user manually sets a coordinate
+		return true;
+	})) {
+		spdlog::error("PositionSegment: Failed to update coordinate index {} for position ID {} in PositionStoreCheat.", coordIndex, m_positionId);
 	}
 
-	const auto& position = event.GetPosition();
-	if (!position.has_value()) {
-		return;
-	}
-
-	SetCoordControllerValues(position.value());
-}
-
-void ModMenuModule::PositionSegment::ApplyAutoZIfNeeded()
-{
-	if (!m_autoZController) return;
-	if (!m_autoZController->GetValue().value_or(false)) return;
-
-	const auto& position = GetCoordControllerValues();
-	if (!position.has_value()) {
-		spdlog::warn("Cannot apply Auto Z: position controllers have invalid values");
-		return;
-	}
-
-	Game::MapBlocks* mapBlocks = Game::Memory::GetMapBlocks();
-	if (!mapBlocks) {
-		spdlog::warn("Cannot apply Auto Z: MapBlocks is null");
-		return;
-	}
-
-	Game::SCR_f z = 0;
-	Game::Functions::FindMaxZ(mapBlocks, 0, &z, position->x, position->y);
-
-	if (z == 0) {
-		spdlog::warn("Cannot apply Auto Z: FindMaxZ returned Z=0 for position ({}, {})", Game::Utils::ToFloat(position->x), Game::Utils::ToFloat(position->y));
-		return;
-	}
-
-	m_zController->SetValue(z);
-}
-
-void ModMenuModule::PositionSegment::ForceUpdatePosition()
-{
-	PlayerPosCheat* playerPosCheat = PlayerPosCheat::GetInstance();
-	if (!playerPosCheat->IsEnabled()) return;
-	const auto& position = playerPosCheat->GetLastPosition();
-	if (!position.has_value()) return;
-	SetCoordControllerValues(position.value());
-}
-
-void ModMenuModule::PositionSegment::OnDoUpdatePositionControllerSave(bool newValue)
-{
-	if (m_doUpdatePosition == newValue) return;
-	m_doUpdatePosition = newValue;
-
-	if (!IsVisible()) return;
-
-	if (newValue) {
-		AddEventListener<ModMenuModule::PlayerPosUpdateEvent>(&PositionSegment::OnPlayerPosUpdate);
-		ForceUpdatePosition();
-	}
-	else {
-		RemoveEventListener<ModMenuModule::PlayerPosUpdateEvent>();
-	}
-}
-
-void ModMenuModule::PositionSegment::OnCoordControllerSave(bool isZCoord)
-{
-	SetDoUpdatePosition(false);
-
-	if (isZCoord) {
-		m_autoZController->SetValue(false);
-	}
-	else {
-		ApplyAutoZIfNeeded();
-	}
+	UpdateControllers();
 }
 
 void ModMenuModule::PositionSegment::OnAutoZControllerSave(bool newValue)
 {
-	if (newValue) ApplyAutoZIfNeeded();
+	if (!UpdateEntry([newValue](PositionStoreEntry& entry) {
+		if (entry.autoZ == newValue) return false;
+		entry.autoZ = newValue;
+		return true;
+	})) {
+		spdlog::error("PositionSegment: Failed to set autoZ for position ID {} in PositionStoreCheat.", m_positionId);
+	}
+
+	UpdateControllers();
+}
+
+bool ModMenuModule::PositionSegment::UpdateEntry(std::function<bool(PositionStoreEntry&)> updateFunc)
+{
+	PositionStoreCheat* positionStoreCheat = PositionStoreCheat::GetInstance();
+	const PositionStoreEntry* entry = positionStoreCheat->Get(m_positionId);
+	if (!entry) {
+		spdlog::error("PositionSegment: Cannot update entry: position ID {} does not exist in PositionStoreCheat.", m_positionId);
+		return false;
+	}
+
+	PositionStoreEntry newEntry = *entry;
+
+	if (!updateFunc(newEntry)) {
+		return true;
+	}
+
+	return positionStoreCheat->Update(m_positionId, newEntry);
 }
