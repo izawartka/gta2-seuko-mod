@@ -23,10 +23,10 @@ ModMenuModule::PositionRotationSegment::PositionRotationSegment(std::string_view
 	m_positionId = positionStoreCheat->Create(loadedEntry.has_value() ? *loadedEntry : PositionStoreEntry{});
 }
 
-ModMenuModule::PositionRotationSegment::PositionRotationSegment(PositionStoreCheat::PositionId positionId, std::string_view persistencePrefix)
+ModMenuModule::PositionRotationSegment::PositionRotationSegment(PositionStoreCheat::PositionId positionId, std::string_view persistenceKey)
 {
 	m_positionId = positionId;
-	m_persistenceKey = persistencePrefix;
+	m_persistenceKey = persistenceKey;
 	m_ownsPositionId = false;
 }
 
@@ -270,15 +270,15 @@ void ModMenuModule::PositionRotationSegment::OnCoordControllerSave(size_t coordI
 	if (!UpdateEntry([m_positionId = m_positionId, coordIndex, newValue](PositionStoreEntry& entry) {
 		switch (coordIndex) {
 		case 0: 
-			if (entry.value.position.x == newValue) return false;
+			if (ScrfConverter::AreEqual(entry.value.position.x, newValue)) return false;
 			entry.value.position.x = newValue;
 			break;
 		case 1: 
-			if (entry.value.position.y == newValue) return false;
+			if (ScrfConverter::AreEqual(entry.value.position.y, newValue)) return false;
 			entry.value.position.y = newValue;
 			break;
 		case 2: 
-			if (entry.value.position.z == newValue) return false;
+			if (ScrfConverter::AreEqual(entry.value.position.z, newValue)) return false;
 			entry.value.position.z = newValue; 
 			entry.autoZ = false; // Disable auto Z if user manually sets Z
 			break;
@@ -312,7 +312,7 @@ void ModMenuModule::PositionRotationSegment::OnAutoZControllerSave(bool newValue
 void ModMenuModule::PositionRotationSegment::OnRotationControllerSave(short newValue)
 {
 	if (!UpdateEntry([newValue](PositionStoreEntry& entry) {
-		if (entry.value.rotation == newValue) return false;
+		if (GtaAngleConverter<>::AreEqual(entry.value.rotation, newValue)) return false;
 		entry.value.rotation = newValue;
 		entry.updateFromPlayerPed = false; // Disable update from player if user manually sets rotation
 		return true;

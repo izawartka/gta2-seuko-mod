@@ -15,7 +15,7 @@ namespace ModMenuModule {
 	class PositionRotationSegment : public Segment<PositionRotationSegmentData>, public Core::EventListenerSupport {
 	public:
 		PositionRotationSegment();
-		PositionRotationSegment(std::string_view persistencePrefix);
+		PositionRotationSegment(std::string_view persistenceKey);
 		PositionRotationSegment(PositionStoreCheat::PositionId positionId, std::string_view persistenceKey);
 		virtual ~PositionRotationSegment();
 
