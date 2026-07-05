@@ -77,6 +77,7 @@ void PersistenceModule::PersistenceManager::MoveLegacyFileIfExists()
 	std::wstring legacyFilePath = GetLegacyRootDirectory() + L"\\" + PERSISTENCE_FILE;
 	std::wstring newFilePath = GetRootDirectory() + L"\\" + PERSISTENCE_FILE;
 
+	if (legacyFilePath == newFilePath) return;
 	if (!BackupFileIfExists(legacyFilePath)) return;
 
 	if (!MoveFileExW(legacyFilePath.c_str(), newFilePath.c_str(), MOVEFILE_COPY_ALLOWED | MOVEFILE_WRITE_THROUGH | MOVEFILE_REPLACE_EXISTING)) {
