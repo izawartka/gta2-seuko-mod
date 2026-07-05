@@ -86,7 +86,7 @@ namespace ModMenuModule {
 			}
 		}
 
-		std::vector<uint8_t> SerializeData() const override {
+		virtual std::vector<uint8_t> SerializeData() const override {
 			if (!m_data.has_value()) {
 				spdlog::error("QuickActionWithSegment::SerializeData: No data to serialize.");
 				return {};
@@ -98,16 +98,31 @@ namespace ModMenuModule {
 			return buffer;
 		}
 
-		bool DeserializeData(const std::vector<uint8_t>& data) override {
-			if (data.size() != sizeof(DataT)) {
-				spdlog::error("QuickActionWithSegment::DeserializeData: Invalid data size.");
-				return false;
+		virtual bool DeserializeData(const std::vector<uint8_t>& data) override {
+			const std::vector<uint8_t>* dataPtr = &data;
+			std::vector<uint8_t> dataCopy;
+			if (dataPtr->size() != sizeof(DataT)) {
+				dataCopy = *dataPtr;
+				if (!HandleInvalidDataSize(dataCopy)) {
+					spdlog::error("QuickActionWithSegment::DeserializeData: Unhandled invalid data size. Expected {}, got {}.", sizeof(DataT), dataPtr->size());
+					return false;
+				}
+				dataPtr = &dataCopy;
+
+				if (dataPtr->size() != sizeof(DataT)) {
+					spdlog::error("QuickActionWithSegment::DeserializeData: Invalid data size after handling. Expected {}, got {}.", sizeof(DataT), dataPtr->size());
+					return false;
+				}
 			}
 			DataT dataValue;
-			std::memcpy(&dataValue, data.data(), sizeof(DataT));
+			std::memcpy(&dataValue, dataPtr->data(), sizeof(DataT));
 			m_data = dataValue;
 			OnDataChange();
 			return true;
+		}
+
+		virtual bool HandleInvalidDataSize(std::vector<uint8_t>& data) {
+			return false;
 		}
 
 	protected:
