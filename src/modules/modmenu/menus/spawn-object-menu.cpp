@@ -1,5 +1,5 @@
 #include "spawn-object-menu.h"
-#include "../segments/position-rotation-segment.h"
+#include "../segments/position-menu-segment.h"
 #include "../segments/spawn-object-segment.h"
 #include "../root.h"
 #include "../utils/spawn-object.h"
@@ -7,7 +7,7 @@
 
 ModMenuModule::SpawnObjectMenu::SpawnObjectMenu()
 {
-	m_posRotSegment = CreateSegment<ModMenuModule::PositionRotationSegment>("ModMenu_SpawnObjectMenu_PosRotSegment");
+	m_positionMenuSegment = CreateSegment<ModMenuModule::PositionMenuSegment>("ModMenu_SpawnObjectMenu_PositionMenuSegment");
 	m_spawnObjectSegment = CreateSegment<ModMenuModule::SpawnObjectSegment>("ModMenu_SpawnObjectMenu_SpawnSegment");
 }
 
@@ -27,10 +27,7 @@ bool ModMenuModule::SpawnObjectMenu::Attach()
 
 	uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, options.menuSpacerHeight);
 
-	AttachSegment(m_posRotSegment, this, vertCont);
-
-	uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, options.menuSpacerHeight);
-
+	AttachSegment(m_positionMenuSegment, this, vertCont);
 	AttachSegment(m_spawnObjectSegment, this, vertCont);
 
 	// spawn button
@@ -45,7 +42,8 @@ bool ModMenuModule::SpawnObjectMenu::Attach()
 
 void ModMenuModule::SpawnObjectMenu::Detach()
 {
-	DetachSegment(m_posRotSegment);
+	SaveCurrentSelectedIndex();
+	DetachSegment(m_positionMenuSegment);
 	DetachSegment(m_spawnObjectSegment);
 	DestroyMenu();
 }
@@ -67,15 +65,16 @@ void ModMenuModule::SpawnObjectMenu::OnMenuAction(UiModule::Selectable* item, Ui
 		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
 		break;
 	default:
+		m_positionMenuSegment->OnPassedMenuAction(item, id);
 		break;
 	}
 }
 
 void ModMenuModule::SpawnObjectMenu::Spawn()
 {
-	auto positionSegmentDataOpt = m_posRotSegment->GetSegmentData();
+	auto positionSegmentDataOpt = m_positionMenuSegment->GetSegmentData();
 	if (!positionSegmentDataOpt.has_value()) {
-		spdlog::error("Cannot spawn object: failed to get position rotation segment data.");
+		spdlog::error("Cannot spawn object: failed to get PositionMenuSegment data.");
 		return;
 	}
 
@@ -83,7 +82,7 @@ void ModMenuModule::SpawnObjectMenu::Spawn()
 
 	auto spawnObjectSegmentDataOpt = m_spawnObjectSegment->GetSegmentData();
 	if (!spawnObjectSegmentDataOpt.has_value()) {
-		spdlog::error("Cannot spawn object: failed to get spawn object segment data.");
+		spdlog::error("Cannot spawn object: failed to get SpawnObjectSegment data.");
 		return;
 	}
 

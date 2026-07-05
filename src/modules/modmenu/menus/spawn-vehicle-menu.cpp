@@ -1,14 +1,14 @@
 #include "spawn-vehicle-menu.h"
+#include "../segments/position-menu-segment.h"
 #include "../segments/spawn-vehicle-segment.h"
 #include "../../../converters/car-model.h"
-#include "../../../converters/yes-no.h"
-#include "../../../converters/car-remap.h"
 #include "../root.h"
-#include "../utils/spawn-car-at-player.h"
+#include "../utils/spawn-car.h"
 
 ModMenuModule::SpawnVehicleMenu::SpawnVehicleMenu()
 {
-	m_spawnVehicleSegment = CreateSegment<ModMenuModule::SpawnVehicleSegment>("ModMenu_SpawnVehicleMenu_SpawnSegment");
+	m_positionMenuSegment = CreateSegment<PositionMenuSegment>("ModMenu_SpawnVehicleMenu_PositionMenuSegment");
+	m_spawnVehicleSegment = CreateSegment<SpawnVehicleSegment>("ModMenu_SpawnVehicleMenu_SpawnSegment");
 }
 
 ModMenuModule::SpawnVehicleMenu::~SpawnVehicleMenu()
@@ -26,6 +26,9 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 
+	uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, options.menuSpacerHeight);
+
+	AttachSegment(m_positionMenuSegment, this, vertCont);
 	AttachSegment(m_spawnVehicleSegment, this, vertCont);
 
 	// spawn button
@@ -40,8 +43,19 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 
 void ModMenuModule::SpawnVehicleMenu::Detach()
 {
+	DetachSegment(m_positionMenuSegment);
 	DetachSegment(m_spawnVehicleSegment);
 	DestroyMenu();
+}
+
+void ModMenuModule::SpawnVehicleMenu::OnShow()
+{
+	SetSegmentsVisible(true);
+}
+
+void ModMenuModule::SpawnVehicleMenu::OnHide()
+{
+	SetSegmentsVisible(false);
 }
 
 void ModMenuModule::SpawnVehicleMenu::OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
@@ -51,28 +65,38 @@ void ModMenuModule::SpawnVehicleMenu::OnMenuAction(UiModule::Selectable* item, U
 		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
 		break;
 	default:
+		m_positionMenuSegment->OnPassedMenuAction(item, id);
 		break;
 	}
 }
 
 void ModMenuModule::SpawnVehicleMenu::Spawn()
 {
-	auto segmentDataOpt = m_spawnVehicleSegment->GetSegmentData();
-	if (!segmentDataOpt.has_value()) {
-		spdlog::error("Cannot spawn vehicle: failed to get segment data.");
+	auto spawnSegmentDataOpt = m_spawnVehicleSegment->GetSegmentData();
+	if (!spawnSegmentDataOpt.has_value()) {
+		spdlog::error("Cannot spawn vehicle: failed to get SpawnVehicleSegment data.");
 		return;
 	}
 
-	auto& segmentData = segmentDataOpt.value();
+	auto positionSegmentDataOpt = m_positionMenuSegment->GetSegmentData();
+	if (!positionSegmentDataOpt.has_value()) {
+		spdlog::error("Cannot spawn vehicle: failed to get PositionMenuSegment data");
+		return;
+	}
 
-	bool success = ModMenuModule::Utils::SpawnCarAtPlayer(
-		segmentData.model,
-		segmentData.remap,
-		segmentData.palette
+	auto& spawnSegmentData = spawnSegmentDataOpt.value();
+	auto& positionSegmentData = positionSegmentDataOpt.value();
+
+	bool success = ModMenuModule::Utils::SpawnCar(
+		positionSegmentData.position,
+		positionSegmentData.rotation,
+		spawnSegmentData.model,
+		spawnSegmentData.remap,
+		spawnSegmentData.palette
 	);
 
 	if (!success) {
-		std::wstring modelStr = CarModelConverter::ConvertToString(segmentData.model);
+		std::wstring modelStr = CarModelConverter::ConvertToString(spawnSegmentData.model);
 		ToastManager::GetInstance()->Show({ L"Failed to spawn " + modelStr, ToastType::Error });
 	}
 }
