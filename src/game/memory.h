@@ -59,5 +59,6 @@ namespace Game {
 		static Controls* GetControls() { return (Controls*)0x005e8f5c; }
 		static KeyCode* GetControlsAsArray() { return (KeyCode*)0x005e8f5c; }
 		static S28* GetS28() { return (S28*)*(DWORD*)0x0066b404; }
+		static ObjectPrefabsContainer* GetObjectPrefabsContainer() { return (ObjectPrefabsContainer*)*(DWORD*)0x00665b40; }
 	};
 }

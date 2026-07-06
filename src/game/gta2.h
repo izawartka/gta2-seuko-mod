@@ -6742,10 +6742,48 @@ struct S29 {
 typedef struct S30 S30, *PS30;
 
 struct S30 {
-	int field_0x0;
-	int field_0x4;
-	byte arr[99][8];
-	int field_0x320;
+	undefined4 field0_0x0;
+	undefined4 field1_0x4;
+	undefined4 field2_0x8;
+	undefined4 field3_0xc;
+	undefined4 field4_0x10;
+	undefined4 field5_0x14;
+	undefined4 field6_0x18;
+	undefined2 field7_0x1c;
+	undefined2 field8_0x1e;
+	u1 field9_0x20;
+	undefined field10_0x21;
+	undefined field11_0x22;
+	undefined field12_0x23;
+	undefined4 field13_0x24;
+	undefined4 field14_0x28;
+	undefined4 field15_0x2c;
+	undefined4 field16_0x30;
+	undefined4 field17_0x34;
+	undefined4 field18_0x38;
+	undefined4 field19_0x3c;
+	undefined4 field20_0x40;
+	undefined4 field21_0x44;
+	undefined4 field22_0x48;
+	undefined4 field23_0x4c;
+	undefined4 field24_0x50;
+	undefined4 field25_0x54;
+	undefined4 field26_0x58;
+	undefined4 field27_0x5c;
+	u1 field28_0x60;
+	u1 field29_0x61;
+	undefined field30_0x62;
+	undefined field31_0x63;
+	u1 field32_0x64;
+	u1 field33_0x65;
+	undefined field34_0x66;
+	undefined field35_0x67;
+	undefined4 field36_0x68;
+	u1 field37_0x6c;
+	undefined field38_0x6d;
+	undefined field39_0x6e;
+	undefined field40_0x6f;
+	undefined4 field41_0x70;
 };
 
 typedef struct S4_SUBS1 S4_SUBS1, * PS4_SUBS1;
@@ -9303,7 +9341,7 @@ struct Verts {
 	struct Vert mVerts[4];
 };
 
-typedef struct DirectInput_DeviceObjectData DirectInput_DeviceObjectData, * PDirectInput_DeviceObjectData;
+typedef struct DirectInput_DeviceObjectData DirectInput_DeviceObjectData, *PDirectInput_DeviceObjectData;
 
 struct DirectInput_DeviceObjectData {
 	dword ofs;
@@ -9313,7 +9351,7 @@ struct DirectInput_DeviceObjectData {
 	void* appData;
 };
 
-typedef struct KeyboardEvent KeyboardEvent, * PKeyboardEvent;
+typedef struct KeyboardEvent KeyboardEvent, *PKeyboardEvent;
 
 struct KeyboardEvent {
 	uint tick;
@@ -9321,7 +9359,7 @@ struct KeyboardEvent {
 	uint random; // Created by retype action
 };
 
-typedef struct Keyboard Keyboard, * PKeyboard;
+typedef struct Keyboard Keyboard, *PKeyboard;
 
 typedef enum REPLAY_STATUS {
 	REPLAY_STATUS_NOT_PLAYING = 0,
@@ -9345,10 +9383,122 @@ struct Keyboard {
 	undefined1 field11_0x75345;
 };
 
-typedef struct Tick Tick, * PTick;
+typedef struct Tick Tick, *PTick;
 
 struct Tick {
 	uint tick;
 	uint random;
 };
 
+typedef enum S32_SHOW_IMAGINARY {
+	UNK_0 = 0,
+	SHOW = 1,
+	DONT_SHOW = 2,
+	UNK_3 = 3
+} S32_SHOW_IMAGINARY;
+
+typedef struct ObjectPrefab ObjectPrefab, *PObjectPrefab;
+
+struct ObjectPrefab {
+	undefined4 field0_0x0;
+	undefined4 field1_0x4;
+	undefined4 field2_0x8;
+	undefined field3_0xc;
+	undefined field4_0xd;
+	undefined field5_0xe;
+	undefined field6_0xf;
+	undefined field7_0x10;
+	undefined field8_0x11;
+	undefined field9_0x12;
+	undefined field10_0x13;
+	undefined field11_0x14;
+	undefined field12_0x15;
+	undefined field13_0x16;
+	undefined field14_0x17;
+	undefined field15_0x18;
+	undefined field16_0x19;
+	undefined field17_0x1a;
+	undefined field18_0x1b;
+	short remap;
+	short defaultSpriteId;
+	undefined field21_0x20;
+	undefined field22_0x21;
+	undefined field23_0x22;
+	undefined field24_0x23;
+	undefined field25_0x24;
+	undefined field26_0x25;
+	undefined field27_0x26;
+	undefined field28_0x27;
+	enum SPRITE_TYPE defaultSpriteType;
+	undefined4 field30_0x2c;
+	enum PALETTE_BASE paletteBase;
+	undefined field32_0x34;
+	undefined field33_0x35;
+	undefined field34_0x36;
+	undefined field35_0x37;
+	undefined field36_0x38;
+	undefined field37_0x39;
+	undefined field38_0x3a;
+	undefined field39_0x3b;
+	undefined field40_0x3c;
+	undefined field41_0x3d;
+	undefined field42_0x3e;
+	undefined field43_0x3f;
+	enum S32_SHOW_IMAGINARY showImaginary;
+	undefined field45_0x44;
+	undefined field46_0x45;
+	undefined field47_0x46;
+	undefined field48_0x47;
+	undefined field49_0x48;
+	undefined field50_0x49;
+	undefined field51_0x4a;
+	undefined field52_0x4b;
+	undefined field53_0x4c;
+	undefined field54_0x4d;
+	undefined field55_0x4e;
+	undefined field56_0x4f;
+	undefined field57_0x50;
+	undefined field58_0x51;
+	undefined field59_0x52;
+	undefined field60_0x53;
+	undefined field61_0x54;
+	undefined field62_0x55;
+	undefined field63_0x56;
+	undefined field64_0x57;
+	undefined field65_0x58;
+	undefined field66_0x59;
+	undefined field67_0x5a;
+	undefined field68_0x5b;
+	undefined field69_0x5c;
+	undefined field70_0x5d;
+	undefined field71_0x5e;
+	undefined field72_0x5f;
+	undefined field73_0x60;
+	undefined field74_0x61;
+	undefined field75_0x62;
+	undefined field76_0x63;
+	undefined field77_0x64;
+	undefined field78_0x65;
+	undefined field79_0x66;
+	undefined field80_0x67;
+	undefined field81_0x68;
+	undefined field82_0x69;
+	undefined field83_0x6a;
+	undefined field84_0x6b;
+	undefined field85_0x6c;
+	undefined field86_0x6d;
+	undefined field87_0x6e;
+	undefined field88_0x6f;
+	int field89_0x70;
+};
+
+typedef struct ObjectPrefabsContainer ObjectPrefabsContainer, *PObjectPrefabsContainer;
+
+struct ObjectPrefabsContainer {
+	short length;
+	undefined field1_0x2;
+	undefined field2_0x3;
+	struct S30 s30Arr[300];
+	struct ObjectPrefab* objectPrefabArr[300];
+	uint eq99OnInit;
+};
