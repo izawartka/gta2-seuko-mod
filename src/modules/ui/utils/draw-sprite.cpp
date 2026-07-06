@@ -29,38 +29,46 @@ void UiModule::Utils::DrawRotatedSprite(
 	float cosRot = cos(rotation);
 	float sinRot = sin(rotation);
 
+	uint32_t zBits = 0x38D1B717u;
+	float z;
+	std::memcpy(&z, &zBits, sizeof(zBits));
+
 	uint32_t vertexFlags = 0x00ffffff | (static_cast<uint32_t>(alpha) << 24);
 
 	Game::GTAVertex vertices[4]{};
 	vertices[0].x = cx - halfWidth * cosRot + halfHeight * sinRot;
 	vertices[0].y = cy - halfWidth * sinRot - halfHeight * cosRot;
-	vertices[0].z = 0.14f;
-	vertices[0].z2 = 0.14f;
+	vertices[0].z = z;
+	vertices[0].z2 = z;
 	vertices[0].flags = vertexFlags;
+	vertices[0].field_0x14 = 0;
 	vertices[0].u = 0.3f;
 	vertices[0].v = 0.3f;
 
 	vertices[1].x = cx + halfWidth * cosRot + halfHeight * sinRot;
 	vertices[1].y = cy + halfWidth * sinRot - halfHeight * cosRot;
-	vertices[1].z = 0.14f;
-	vertices[1].z2 = 0.14f;
+	vertices[1].z = z;
+	vertices[1].z2 = z;
 	vertices[1].flags = vertexFlags;
+	vertices[1].field_0x14 = 0;
 	vertices[1].u = (float)spriteWidth - 0.3f;
 	vertices[1].v = 0.3f;
 
 	vertices[2].x = cx + halfWidth * cosRot - halfHeight * sinRot;
 	vertices[2].y = cy + halfWidth * sinRot + halfHeight * cosRot;
-	vertices[2].z = 0.14f;
-	vertices[2].z2 = 0.14f;
+	vertices[2].z = z;
+	vertices[2].z2 = z;
 	vertices[2].flags = vertexFlags;
+	vertices[2].field_0x14 = 0;
 	vertices[2].u = (float)spriteWidth - 0.3f;
 	vertices[2].v = (float)spriteHeight - 0.3f;
 
 	vertices[3].x = cx - halfWidth * cosRot - halfHeight * sinRot;
 	vertices[3].y = cy - halfWidth * sinRot + halfHeight * cosRot;
-	vertices[3].z = 0.14f;
-	vertices[3].z2 = 0.14f;
+	vertices[3].z = z;
+	vertices[3].z2 = z;
 	vertices[3].flags = vertexFlags;
+	vertices[3].field_0x14 = 0;
 	vertices[3].u = 0.3f;
 	vertices[3].v = (float)spriteHeight - 0.3f;
 
@@ -131,38 +139,46 @@ void UiModule::Utils::DrawSprite(
 		remap
 	);
 
+	uint32_t zBits = 0x38D1B717u;
+	float z;
+	std::memcpy(&z, &zBits, sizeof(zBits));
+
 	uint32_t vertexFlags = 0x00ffffff | (static_cast<uint32_t>(alpha) << 24);
 
 	Game::GTAVertex vertices[4]{};
 	vertices[0].x = x1;
 	vertices[0].y = y1;
-	vertices[0].z = 0.14f;
-	vertices[0].z2 = 0.14f;
+	vertices[0].z = z;
+	vertices[0].z2 = z;
 	vertices[0].flags = vertexFlags;
+	vertices[0].field_0x14 = 0;
 	vertices[0].u = 0.3f;
 	vertices[0].v = 0.3f;
 
 	vertices[1].x = x2;
 	vertices[1].y = y1;
-	vertices[1].z = 0.14f;
-	vertices[1].z2 = 0.14f;
+	vertices[1].z = z;
+	vertices[1].z2 = z;
 	vertices[1].flags = vertexFlags;
+	vertices[1].field_0x14 = 0;
 	vertices[1].u = 0.7f;
 	vertices[1].v = 0.3f;
 
 	vertices[2].x = x2;
 	vertices[2].y = y2;
-	vertices[2].z = 0.14f;
-	vertices[2].z2 = 0.14f;
+	vertices[2].z = z;
+	vertices[2].z2 = z;
 	vertices[2].flags = vertexFlags;
+	vertices[2].field_0x14 = 0;
 	vertices[2].u = 0.7f;
 	vertices[2].v = 0.7f;
 
 	vertices[3].x = x1;
 	vertices[3].y = y2;
-	vertices[3].z = 0.14f;
-	vertices[3].z2 = 0.14f;
+	vertices[3].z = z;
+	vertices[3].z2 = z;
 	vertices[3].flags = vertexFlags;
+	vertices[3].field_0x14 = 0;
 	vertices[3].u = 0.3f;
 	vertices[3].v = 0.7f;
 
