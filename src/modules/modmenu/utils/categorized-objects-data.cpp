@@ -9,14 +9,16 @@ namespace ModMenuModule::Utils::CategorizedObjects {
 		ObjectCategory::Skidmarks,
 		ObjectCategory::Projectiles,
 		ObjectCategory::Phones,
+		ObjectCategory::Crane,
 		ObjectCategory::Other,
 		ObjectCategory::Invisible,
+		ObjectCategory::UnknownInvisible,
 	};
 
 	static const std::vector<ObjectDef> objectDefs = {
 		{ L"Bin lid", ObjectCategory::Basic, {{ ObjectVariant::Default, Game::OBJECT_TYPE_BIN_LID }, { ObjectVariant::Moving, Game::OBJECT_TYPE_MOVING_BIN_LID }} },
 		{ L"Bollard", ObjectCategory::Basic, {{ ObjectVariant::Default, Game::OBJECT_TYPE_BOLLARD }} },
-		{ L"Cone", ObjectCategory::Basic, {{ ObjectVariant::Default, Game::OBJECT_TYPE_CONE }, { ObjectVariant::Moving, Game::OBJECT_TYPE_MOVING_CONE }, { ObjectVariant::Dead, Game::OBJECT_TYPE_DEAD_CONE }} },
+		{ L"Cone", ObjectCategory::Basic, {{ ObjectVariant::Default, Game::OBJECT_TYPE_CONE }, { ObjectVariant::Moving, Game::OBJECT_TYPE_MOVING_CONE }, { ObjectVariant::Dead, Game::OBJECT_TYPE_DEAD_CONE }, { ObjectVariant::VehicleOnlyMoving, Game::OBJECT_TYPE_VEHICLE_CONE }, { ObjectVariant::Animating, Game::OBJECT_TYPE_ANIMATING_CONE }} },
 		{ L"Boxes", ObjectCategory::Basic, {{ ObjectVariant::Default, Game::OBJECT_TYPE_BOXES }, { ObjectVariant::Dead, Game::OBJECT_TYPE_DEAD_BOXES }} },
 		{ L"Blaster", ObjectCategory::Basic, {{ ObjectVariant::Default, Game::OBJECT_TYPE_BLASTER }, { ObjectVariant::Moving, Game::OBJECT_TYPE_MOVING_BLASTER }, { ObjectVariant::Dead, Game::OBJECT_TYPE_DEAD_BLASTER }} },
 		{ L"Rubbish", ObjectCategory::Basic, {{ ObjectVariant::Default, Game::OBJECT_TYPE_RUBBISH }, { ObjectVariant::Animating, Game::OBJECT_TYPE_ANIMATING_RUBBISH }, { ObjectVariant::Dead, Game::OBJECT_TYPE_DEAD_RUBBISH }} },
@@ -36,8 +38,6 @@ namespace ModMenuModule::Utils::CategorizedObjects {
 		{ L"Roadblock", ObjectCategory::Basic, {{ ObjectVariant::Default, Game::OBJECT_TYPE_ROADBLOCK }, { ObjectVariant::Moving, Game::OBJECT_TYPE_MOVING_ROADBLOCK }, { ObjectVariant::Dead, Game::OBJECT_TYPE_DEAD_ROADBLOCK }} },
 		{ L"Bench", ObjectCategory::Basic, {{ ObjectVariant::Default, Game::OBJECT_TYPE_BENCH }, { ObjectVariant::Moving, Game::OBJECT_TYPE_MOVING_BENCH }, { ObjectVariant::Dead, Game::OBJECT_TYPE_DEAD_BENCH }} },
 		{ L"Package", ObjectCategory::Basic, {{ ObjectVariant::Default, Game::OBJECT_TYPE_PACKAGE }, { ObjectVariant::Moving, Game::OBJECT_TYPE_MOVING_PACKAGE }, { ObjectVariant::Dead, Game::OBJECT_TYPE_DEAD_PACKAGE }} },
-		{ L"Unknown obj", ObjectCategory::Basic, {{ ObjectVariant::Default, Game::OBJECT_TYPE_UNKNOWN_OBJ }} },
-		{ L"Explode medium", ObjectCategory::Basic, {{ ObjectVariant::Default, Game::OBJECT_TYPE_EXPLODE_MEDIUM }} },
 		{ L"Powergen", ObjectCategory::Basic, {{ ObjectVariant::Default, Game::OBJECT_TYPE_POWERGEN }, { ObjectVariant::Dead, Game::OBJECT_TYPE_POWERGEN_DEAD }} },
 
 		{ L"Pistol", ObjectCategory::WeaponCollectibles, {{ ObjectVariant::Moving, Game::OBJECT_TYPE_MOVING_COLLECT_00_PISTOL }, { ObjectVariant::Default, Game::OBJECT_TYPE_COLLECT_00_PISTOL }} },
@@ -96,34 +96,82 @@ namespace ModMenuModule::Utils::CategorizedObjects {
 		{ L"Red skid", ObjectCategory::Skidmarks, {{ ObjectVariant::Small, Game::OBJECT_TYPE_SMALL_RED_SKID }, { ObjectVariant::Medium, Game::OBJECT_TYPE_MEDIUM_RED_SKID }, { ObjectVariant::Big, Game::OBJECT_TYPE_BIG_RED_SKID }, { ObjectVariant::Huge, Game::OBJECT_TYPE_HUGE_RED_SKID }} },
 		{ L"White skid", ObjectCategory::Skidmarks, {{ ObjectVariant::Small, Game::OBJECT_TYPE_SMALL_WHITE_SKID }, { ObjectVariant::Medium, Game::OBJECT_TYPE_MEDIUM_WHITE_SKID }, { ObjectVariant::Big, Game::OBJECT_TYPE_BIG_WHITE_SKID }, { ObjectVariant::Huge, Game::OBJECT_TYPE_HUGE_WHITE_SKID }} },
 
-		{ L"Rocket", ObjectCategory::Projectiles, {{ ObjectVariant::Default, Game::OBJECT_TYPE_ROCKET }} },
+		{ L"Rocket", ObjectCategory::Projectiles, {{ ObjectVariant::Default, Game::OBJECT_TYPE_ROCKET }, { ObjectVariant::Unknown, Game::OBJECT_TYPE_UNK_ROCKET }} },
 		{ L"Molotov", ObjectCategory::Projectiles, {{ ObjectVariant::Moving, Game::OBJECT_TYPE_MOLOTOV_MOVING }} },
-		{ L"Grenade", ObjectCategory::Projectiles, {{ ObjectVariant::Default, Game::OBJECT_TYPE_GRENADE }} },
+		{ L"Flamethrower flame", ObjectCategory::Projectiles, {{ ObjectVariant::Default, Game::OBJECT_TYPE_FLAMETHROWER_FLAME }} },
+		{ L"Grenade", ObjectCategory::Projectiles, {{ ObjectVariant::Default, Game::OBJECT_TYPE_GRENADE }, { ObjectVariant::Moving, Game::OBJECT_TYPE_MOVING_GRENADE }} },
 		{ L"Shot", ObjectCategory::Projectiles, {{ ObjectVariant::Default, Game::OBJECT_TYPE_SHOT }} },
 		{ L"Flaming bullet", ObjectCategory::Projectiles, {{ ObjectVariant::Default, Game::OBJECT_TYPE_FLAMING_BULLET }} },
 		{ L"Water bullet", ObjectCategory::Projectiles, {{ ObjectVariant::Default, Game::OBJECT_TYPE_WATER_BULLET }} },
 		{ L"Bullet", ObjectCategory::Projectiles, {{ ObjectVariant::Default, Game::OBJECT_TYPE_BULLET }} },
 		{ L"Pistol bullet", ObjectCategory::Projectiles, {{ ObjectVariant::Default, Game::OBJECT_TYPE_PISTOL_BULLET }} },
 		{ L"Tasser bullet", ObjectCategory::Projectiles, {{ ObjectVariant::Default, Game::OBJECT_TYPE_TASSER_BULLET }} },
+		{ L"Unknown shot 195", ObjectCategory::Projectiles, {{ ObjectVariant::Default, Game::OBJECT_TYPE_UNK_SHOT_195 }} },
 
-		{ L"Phone", ObjectCategory::Phones, {{ ObjectVariant::Default, Game::OBJECT_TYPE_PHONE }, { ObjectVariant::Ringing, Game::OBJECT_TYPE_PHONE_RINGING }, { ObjectVariant::Dead, Game::OBJECT_TYPE_PHONE_DEAD }} },
-		{ L"Red phone", ObjectCategory::Phones, {{ ObjectVariant::Default, Game::OBJECT_TYPE_RED_PHONE }, { ObjectVariant::Ringing, Game::OBJECT_TYPE_RED_PHONE_RINGING }} },
-		{ L"Yellow phone", ObjectCategory::Phones, {{ ObjectVariant::Default, Game::OBJECT_TYPE_YELLOW_PHONE }, { ObjectVariant::Ringing, Game::OBJECT_TYPE_YELLOW_PHONE_RINGING }} },
-		{ L"Green phone", ObjectCategory::Phones, {{ ObjectVariant::Default, Game::OBJECT_TYPE_GREEN_PHONE }, { ObjectVariant::Ringing, Game::OBJECT_TYPE_GREEN_PHONE_RINGING }} },
+		{ L"Phone", ObjectCategory::Phones, {
+			{ ObjectVariant::Default, Game::OBJECT_TYPE_PHONE },
+			{ ObjectVariant::Ringing, Game::OBJECT_TYPE_PHONE_RINGING },
+			{ ObjectVariant::Dead, Game::OBJECT_TYPE_PHONE_DEAD },
+			{ ObjectVariant::CallEnd, Game::OBJECT_TYPE_PHONE_CALL_END },
+			{ ObjectVariant::Call, Game::OBJECT_TYPE_PHONE_CALL }
+		} },
+		{ L"Red phone", ObjectCategory::Phones, {
+			{ ObjectVariant::Default, Game::OBJECT_TYPE_RED_PHONE }, 
+			{ ObjectVariant::Ringing, Game::OBJECT_TYPE_RED_PHONE_RINGING }, 
+			{ ObjectVariant::CallEnd, Game::OBJECT_TYPE_RED_PHONE_CALL_END }, 
+			{ ObjectVariant::Call, Game::OBJECT_TYPE_RED_PHONE_CALL }
+		} },
+		{ L"Yellow phone", ObjectCategory::Phones, {
+			{ ObjectVariant::Default, Game::OBJECT_TYPE_YELLOW_PHONE }, 
+			{ ObjectVariant::Ringing, Game::OBJECT_TYPE_YELLOW_PHONE_RINGING }, 
+			{ ObjectVariant::CallEnd, Game::OBJECT_TYPE_YELLOW_PHONE_CALL_END }, 
+			{ ObjectVariant::Call, Game::OBJECT_TYPE_YELLOW_PHONE_CALL }
+		} },
+		{ L"Green phone", ObjectCategory::Phones, {
+			{ ObjectVariant::Default, Game::OBJECT_TYPE_GREEN_PHONE }, 
+			{ ObjectVariant::Ringing, Game::OBJECT_TYPE_GREEN_PHONE_RINGING }, 
+			{ ObjectVariant::CallEnd, Game::OBJECT_TYPE_GREEN_PHONE_CALL_END }, 
+			{ ObjectVariant::Call, Game::OBJECT_TYPE_GREEN_PHONE_CALL }
+		} },
+
+		{ L"Crane base", ObjectCategory::Crane, {{ ObjectVariant::Default, Game::OBJECT_TYPE_CRANE_BASE }} },
+		{ L"Crane part A", ObjectCategory::Crane, {{ ObjectVariant::Default, Game::OBJECT_TYPE_CRANE_PART_A }} },
+		{ L"Crane part B", ObjectCategory::Crane, {{ ObjectVariant::Default, Game::OBJECT_TYPE_CRANE_PART_B }} },
+		{ L"Crane part C", ObjectCategory::Crane, {{ ObjectVariant::Default, Game::OBJECT_TYPE_CRANE_PART_C }} },
+		{ L"Crane part D", ObjectCategory::Crane, {{ ObjectVariant::Default, Game::OBJECT_TYPE_CRANE_PART_D }} },
+		{ L"Crane part E", ObjectCategory::Crane, {{ ObjectVariant::Default, Game::OBJECT_TYPE_CRANE_PART_E }} },
+		{ L"Crane head A", ObjectCategory::Crane, {{ ObjectVariant::Default, Game::OBJECT_TYPE_CRANE_HEAD_A }} },
+		{ L"Crane head B", ObjectCategory::Crane, {{ ObjectVariant::Default, Game::OBJECT_TYPE_CRANE_HEAD_B }} },
+		{ L"Crane wire", ObjectCategory::Crane, {{ ObjectVariant::Default, Game::OBJECT_TYPE_CRANE_WIRE }} },
+		{ L"Conveyor belt", ObjectCategory::Crane, {{ ObjectVariant::Default, Game::OBJECT_TYPE_CONVEYOR_BELT }} },
+		{ L"Conveyor belt end", ObjectCategory::Crane, {{ ObjectVariant::Default, Game::OBJECT_TYPE_CONVEYOR_BELT_END }} },
+		{ L"Car crusher", ObjectCategory::Crane, {{ ObjectVariant::Default, Game::OBJECT_TYPE_CAR_CRUSHER }} },
 
 		{ L"Small arrow", ObjectCategory::Other, {{ ObjectVariant::Default, Game::OBJECT_TYPE_SMALL_ARROW }} },
 		{ L"Blood spark", ObjectCategory::Other, {{ ObjectVariant::Default, Game::OBJECT_TYPE_BLOOD_SPARK }} },
+		{ L"White dot", ObjectCategory::Other, {{ ObjectVariant::Default, Game::OBJECT_TYPE_WHITE_DOT }} },
 		{ L"Firejet", ObjectCategory::Other, {{ ObjectVariant::Default, Game::OBJECT_TYPE_FIREJET }} },
 		{ L"Tanktop", ObjectCategory::Other, {{ ObjectVariant::Default, Game::OBJECT_TYPE_TANKTOP }} },
 		{ L"Antenna", ObjectCategory::Other, {{ ObjectVariant::Default, Game::OBJECT_TYPE_ANTENNA }} },
 		{ L"Briefcase", ObjectCategory::Other, {{ ObjectVariant::Default, Game::OBJECT_TYPE_BRIEFCASE }} },
 		{ L"Fire", ObjectCategory::Other, {{ ObjectVariant::Default, Game::OBJECT_TYPE_FIRE }} },
 		{ L"Bomb", ObjectCategory::Other, {{ ObjectVariant::Default, Game::OBJECT_TYPE_BOMB }} },
+		{ L"Gunjeep turret", ObjectCategory::Other, {{ ObjectVariant::Default, Game::OBJECT_TYPE_GUNJEEP_TURRET }} },
+		{ L"Traffic light casing", ObjectCategory::Other, {{ ObjectVariant::Default, Game::OBJECT_TYPE_TRAFFIC_LIGHT_CASING }} },
 		{ L"Traffic light", ObjectCategory::Other, {{ ObjectVariant::Default, Game::OBJECT_TYPE_TRAFFIC_LIGHT }} },
 		{ L"Red footprints", ObjectCategory::Other, {{ ObjectVariant::Default, Game::OBJECT_TYPE_RED_FOOTPRINTS }} },
 		{ L"Blood", ObjectCategory::Other, {{ ObjectVariant::Default, Game::OBJECT_TYPE_BLOOD }} },
 		{ L"Spark", ObjectCategory::Other, {{ ObjectVariant::Default, Game::OBJECT_TYPE_SPARK }} },
 		{ L"Genlite", ObjectCategory::Other, {{ ObjectVariant::Default, Game::OBJECT_TYPE_GENLITE }} },
+		{ L"Car gang decal", ObjectCategory::Other, {
+			{ ObjectVariant::Loonies, Game::OBJECT_TYPE_GANG_DECAL_LOONIES },
+			{ ObjectVariant::Yakuza, Game::OBJECT_TYPE_GANG_DECAL_YAKUZA },
+			{ ObjectVariant::Zaibatsu, Game::OBJECT_TYPE_GANG_DECAL_ZAIBATSU },
+			{ ObjectVariant::Rednecks, Game::OBJECT_TYPE_GANG_DECAL_REDNECKS },
+			{ ObjectVariant::Scientists, Game::OBJECT_TYPE_GANG_DECAL_SCIENTISTS },
+			{ ObjectVariant::Krishna, Game::OBJECT_TYPE_GANG_DECAL_KRISHNA },
+			{ ObjectVariant::Russian, Game::OBJECT_TYPE_GANG_DECAL_RUSSIAN }
+		}},
 
 		{ L"Tower", ObjectCategory::Invisible, {{ ObjectVariant::Default, Game::OBJECT_TYPE_TOWER }} },
 		{ L"Particle system", ObjectCategory::Invisible, {{ ObjectVariant::Default, Game::OBJECT_TYPE_PARTICLE_SYSTEM }} },
@@ -139,6 +187,20 @@ namespace ModMenuModule::Utils::CategorizedObjects {
 		{ L"Invisible dead", ObjectCategory::Invisible, {{ ObjectVariant::Default, Game::OBJECT_TYPE_INVISIBLE_DEAD }} },
 		{ L"Crossing", ObjectCategory::Invisible, {{ ObjectVariant::Default, Game::OBJECT_TYPE_CROSSING }} },
 		{ L"Tunnel blocker", ObjectCategory::Invisible, {{ ObjectVariant::Default, Game::OBJECT_TYPE_TUNNEL_BLOCKER }} },
+
+		{ L"Object 137", ObjectCategory::UnknownInvisible, {{ ObjectVariant::Default, Game::OBJECT_TYPE_UNK_137 }} }, // crashes the game
+		{ L"Object 143", ObjectCategory::UnknownInvisible, {{ ObjectVariant::Default, Game::OBJECT_TYPE_UNK_143 }} },
+		{ L"Object 166", ObjectCategory::UnknownInvisible, {{ ObjectVariant::Default, Game::OBJECT_TYPE_UNK_166 }} },
+		{ L"Object 167", ObjectCategory::UnknownInvisible, {{ ObjectVariant::Default, Game::OBJECT_TYPE_UNK_167 }} },
+		{ L"Object 168", ObjectCategory::UnknownInvisible, {{ ObjectVariant::Default, Game::OBJECT_TYPE_UNK_168 }} },
+		{ L"Object 169", ObjectCategory::UnknownInvisible, {{ ObjectVariant::Default, Game::OBJECT_TYPE_UNK_169 }} }, // crashes the game
+		{ L"Object 171", ObjectCategory::UnknownInvisible, {{ ObjectVariant::Default, Game::OBJECT_TYPE_UNK_171 }} },
+		{ L"Object 172", ObjectCategory::UnknownInvisible, {{ ObjectVariant::Default, Game::OBJECT_TYPE_UNK_172 }} },
+		{ L"Object 173", ObjectCategory::UnknownInvisible, {{ ObjectVariant::Default, Game::OBJECT_TYPE_UNK_173 }} },
+		{ L"Object 193", ObjectCategory::UnknownInvisible, {{ ObjectVariant::Default, Game::OBJECT_TYPE_UNK_193 }} },
+		{ L"Object 199", ObjectCategory::UnknownInvisible, {{ ObjectVariant::Default, Game::OBJECT_TYPE_UNK_199 }} },
+		{ L"Object 251", ObjectCategory::UnknownInvisible, {{ ObjectVariant::Default, Game::OBJECT_TYPE_UNK_251 }} },
+		{ L"Object 278", ObjectCategory::UnknownInvisible, {{ ObjectVariant::Default, Game::OBJECT_TYPE_UNK_278 }} },
 	};
 
 	static const std::unordered_map<Game::OBJECT_TYPE, std::pair<const ObjectDef*, ObjectVariant>> objectTypeToDefMap = []() {

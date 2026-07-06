@@ -14,8 +14,10 @@ public:
 		case ObjectCategory::Skidmarks: return L"Skidmarks";
 		case ObjectCategory::Projectiles: return L"Projectiles";
 		case ObjectCategory::Phones: return L"Phones";
+		case ObjectCategory::Crane: return L"Crane parts";
 		case ObjectCategory::Other: return L"Other";
 		case ObjectCategory::Invisible: return L"Invisible";
+		case ObjectCategory::UnknownInvisible: return L"Unknown Invisible";
 		default: return L"???";
 		}
 	}

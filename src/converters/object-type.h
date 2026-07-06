@@ -31,10 +31,8 @@ public:
 		case 21: return L"ROADBLOCK";
 		case 22: return L"BENCH";
 		case 23: return L"PACKAGE";
-		case 24: return L"UNKNOWN OBJ";
 		case 25: return L"TOWER";
 
-		case 42: return L"EXPLODE MEDIUM";
 		case 43: return L"MOVING PACKAGE";      // unofficial name
 		case 44: return L"DEAD PACKAGE";        // unofficial name
 		case 45: return L"MOVING BENCH";        // unofficial name
@@ -106,7 +104,9 @@ public:
 		case 108: return L"MOVING COLLECT 44 (Letter Q)";
 
 		case 109: return L"SMALL ARROW";
+		case 110: return L"VEHICLE CONE"; // unofficial name
 		case 111: return L"BLOOD SPARK";
+		case 112: return L"WHITE DOT"; // unofficial name
 		case 113: return L"PARTICLE SYSTEM";
 		case 114: return L"FIREJET";
 		case 116: return L"SMALL BROWN SKID";
@@ -120,12 +120,20 @@ public:
 		case 124: return L"BIG WHITE SKID";
 		case 125: return L"MEDIUM WHITE SKID";
 		case 126: return L"SMALL WHITE SKID";
+		case 127: return L"ANIMATING CONE"; // unofficial name
 		case 128: return L"ROCKET";
 		case 129: return L"BUS STOP MARKER";
 		case 130: return L"CAR SHOP";
 		case 131: return L"BUSY CAR SHOP";
 		case 132: return L"CAR BOMB";
+		case 134: return L"CRANE WIRE"; // unofficial name
+		case 135: return L"CRANE BASE"; // unofficial name
+		case 136: return L"CRANE HEAD A"; // unofficial name
 		case 138: return L"MOLOTOV MOVING";
+		case 139: return L"CONVEYOR BELT"; // unofficial name
+		case 140: return L"CRANE PART A"; // unofficial name
+		case 141: return L"CONVEYOR BELT END"; // unofficial name
+		case 142: return L"CAR CRUSHER"; // unofficial name
 		case 144: return L"HUGE RED SKID";
 		case 145: return L"HUGE WHITE SKID";
 		case 146: return L"HUGE BROWN SKID";
@@ -134,14 +142,17 @@ public:
 		case 149: return L"ANTENNA";
 		case 151: return L"ANIMATING RUBBISH";
 		case 152: return L"DEAD RUBBISH";
+		case 154: return L"FLAMETHROWER FLAME"; // unofficial name
 		case 155: return L"MOVING CONE";
 		case 156: return L"MOVING BLASTER"; // unofficial name
 		case 157: return L"MOVING BIN"; // unofficial name
 		case 158: return L"MOVING BIN LID";
+		case 159: return L"UNK ROCKET"; // unofficial name
 		case 161: return L"SAVE POINT"; // unofficial name
 		case 163: return L"PHONE";
 		case 164: return L"PHONE RINGING";
 		case 165: return L"DEAD MINE"; // unofficial name // not sure about this one
+		case 170: return L"TRAFFIC LIGHT CASING"; // unofficial name
 		case 174: return L"PHONE DEAD";
 		case 175: return L"BRIEFCASE";
 		case 176: return L"RED PHONE";
@@ -151,8 +162,18 @@ public:
 		case 180: return L"GREEN PHONE";
 		case 181: return L"GREEN PHONE RINGING";
 		case 182: return L"GRENADE";
+		case 183: return L"MOVING GRENADE"; // unofficial name
+		case 184: return L"PHONE CALL END"; // unofficial name
+		case 185: return L"PHONE CALL"; // unofficial name
+		case 186: return L"RED PHONE CALL END"; // unofficial name
+		case 187: return L"RED PHONE CALL"; // unofficial name
+		case 188: return L"YELLOW PHONE CALL END"; // unofficial name
+		case 189: return L"YELLOW PHONE CALL"; // unofficial name
+		case 190: return L"GREEN PHONE CALL END"; // unofficial name
+		case 191: return L"GREEN PHONE CALL"; // unofficial name
 		case 192: return L"SHOT";
 		case 194: return L"FLAMING BULLET";
+		case 195: return L"UNKNOWN SHOT 195";
 		case 197: return L"FIRE";
 		case 198: return L"WATER BULLET";
 
@@ -203,8 +224,10 @@ public:
 		case 244: return L"COLLECT 44 (Letter Q)";
 
 		case 247: return L"BOMB";
+		case 248: return L"GUNJEEP TURRET";
 		case 249: return L"BIG BROWN SKID";
 		case 250: return L"BIG GREY SKID";
+		case 252: return L"CRANE PART B";
 		case 253: return L"BIG RED SKID";
 		case 254: return L"BULLET";
 		case 255: return L"TRAFFIC LIGHT";
@@ -212,6 +235,10 @@ public:
 		case 257: return L"BLOOD";
 		case 258: return L"CROSSING";
 		case 259: return L"SPARK";
+		case 260: return L"CRANE PART C";
+		case 261: return L"CRANE PART D";
+		case 262: return L"CRANE PART E";
+		case 263: return L"CRANE HEAD B";
 		case 265: return L"PISTOL BULLET";
 		case 266: return L"BONUS TOKEN";
 		case 277: return L"TASSER BULLET";
@@ -223,11 +250,18 @@ public:
 		case 284: return L"GENLITE";
 		case 285: return L"INVISIBLE DEAD";
 		case 286: return L"KILL FRENZY";
+		case 287: return L"GANG DECAL LOONIES";
+		case 288: return L"GANG DECAL YAKUZA";
+		case 289: return L"GANG DECAL ZAIBATSU";
+		case 290: return L"GANG DECAL REDNECKS";
+		case 291: return L"GANG DECAL SCIENTISTS";
+		case 292: return L"GANG DECAL KRISHNA";
+		case 293: return L"GANG DECAL RUSSIAN";
 		case 294: return L"TUNNEL BLOCKER";
 		case 295: return L"REMOTE";
 
 		default:
-			return L"Unknown " + std::to_wstring(id);
+			return L"UNKNOWN " + std::to_wstring(id);
 		}
 
 	}

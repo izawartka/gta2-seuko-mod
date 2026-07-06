@@ -10,8 +10,10 @@ namespace ModMenuModule::Utils::CategorizedObjects {
 		Skidmarks,
 		Projectiles,
 		Phones,
+		Crane,
 		Other,
 		Invisible,
+		UnknownInvisible,
 	};
 
 	enum class ObjectVariant {
@@ -20,10 +22,21 @@ namespace ModMenuModule::Utils::CategorizedObjects {
 		Animating,
 		Dead,
 		Ringing,
+		Call,
+		CallEnd,
 		Small,
 		Medium,
 		Big,
-		Huge
+		Huge,
+		Loonies,
+		Yakuza,
+		Zaibatsu,
+		Rednecks,
+		Scientists,
+		Krishna,
+		Russian,
+		VehicleOnlyMoving,
+		Unknown
 	};
 
 	struct ObjectDef {
