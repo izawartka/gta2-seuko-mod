@@ -16,13 +16,13 @@ ModMenuModule::SpawnObjectSegment::~SpawnObjectSegment()
 
 std::optional<ModMenuModule::SpawnObjectSegmentData> ModMenuModule::SpawnObjectSegment::GetSegmentData() const
 {
-	if (!m_categoryController || !m_objectController || !m_variantController) {
+	if (!m_categoryController || !m_objectController) {
 		spdlog::error("Cannot get segment data: controllers are not initialized.");
 		return std::nullopt;
 	}
 
 	const Utils::CategorizedObjects::ObjectDef* objectDef = m_objectController->GetValue().value();
-	Utils::CategorizedObjects::ObjectVariant variant = m_variantController->GetValue().value();
+	Utils::CategorizedObjects::ObjectVariant variant = GetSelectedVariant();
 
 	Game::OBJECT_TYPE objectType = objectDef->variants.at(variant);
 
@@ -33,8 +33,8 @@ std::optional<ModMenuModule::SpawnObjectSegmentData> ModMenuModule::SpawnObjectS
 
 bool ModMenuModule::SpawnObjectSegment::SetSegmentData(const SpawnObjectSegmentData& data)
 {
-	if (!m_categoryController || !m_objectController || !m_variantController) {
-		spdlog::error("Cannot set segment data: controllers are not initialized.");
+	if (!m_categoryController) {
+		spdlog::error("Cannot set segment data: category controller is not initialized.");
 		return false;
 	}
 
@@ -51,6 +51,7 @@ bool ModMenuModule::SpawnObjectSegment::SetSegmentData(const SpawnObjectSegmentD
 	const auto& variantOptionList = Utils::CategorizedObjects::GetVariantsByObjectDef(*objectDef);
 	CreateVariantController(variantOptionList, variant);
 	m_variantController->SetValue(variant);
+	UpdateSpritePreview();
 
 	return true;
 }
@@ -97,9 +98,19 @@ bool ModMenuModule::SpawnObjectSegment::Attach(ModMenuModule::MenuBase* menu, Ui
 	CreateObjectController(objectOptionList, selectedObject);
 
 	// variant
-	m_variantText = m_menuController->CreateItem<UiModule::Text>(m_vertCont, L"", options.textSize);
-	m_variantMenuItemId = m_menuController->GetLatestMenuItemId();
-	CreateVariantController(variantOptionList, selectedVariant);
+	m_variantCont = uiRoot->AddComponent<UiModule::VertCont>(m_vertCont);
+	m_variantItemIndex = m_menuController->GetNextAddedItemIndex();
+	if (variantOptionList.size() > 1) {
+		CreateVariantController(variantOptionList, selectedVariant);
+	}
+
+	// sprite preview
+	m_spritePreviewMargin = uiRoot->AddComponent<UiModule::Margin>(
+		m_vertCont,
+		options.menuControllerOptions.createdSelectableOptions.markerOffsetX,
+		options.menuSpacerHeight
+	);
+	UpdateSpritePreview();
 
 	return true;
 }
@@ -118,7 +129,72 @@ void ModMenuModule::SpawnObjectSegment::Detach()
 	m_objectController = nullptr;
 	m_variantMenuItemId = -1;
 	m_variantController = nullptr;
+	m_variantCont = nullptr;
+	m_spritePreview = nullptr;
+	m_spritePreviewMargin = nullptr;
 	DestroySegment();
+}
+
+void ModMenuModule::SpawnObjectSegment::UpdateSpritePreview()
+{
+	if (!m_spritePreviewMargin) return;
+
+	if (!m_objectController) {
+		DestroySpritePreview();
+		return;
+	}
+
+	const Utils::CategorizedObjects::ObjectDef* objectDef = m_objectController->GetValue().value();
+	Utils::CategorizedObjects::ObjectVariant variant = GetSelectedVariant();
+	Game::OBJECT_TYPE objectType = objectDef->variants.at(variant);
+
+	size_t objectTypeIndex = static_cast<size_t>(objectType);
+	if (objectTypeIndex < 1 || objectTypeIndex >= 300) {
+		spdlog::warn("SpawnObjectSegment: Invalid object type {} for sprite preview", objectTypeIndex);
+		DestroySpritePreview();
+		return;
+	}
+
+	Game::ObjectPrefabsContainer* prefabsContainer = Game::Memory::GetObjectPrefabsContainer();
+	Game::ObjectPrefab* prefab = prefabsContainer->objectPrefabArr[static_cast<size_t>(objectType)];
+	if (!prefab) {
+		spdlog::warn("SpawnObjectSegment: No prefab found for object type {}", objectTypeIndex);
+		DestroySpritePreview();
+		return;
+	}
+
+	uint16_t spriteId = prefab->defaultSpriteId;
+	Game::SPRITE_TYPE spriteType = prefab->defaultSpriteType;
+
+	if (spriteType == Game::SPRITE_TYPE_INVISIBLE) {
+		DestroySpritePreview();
+		return;
+	}
+
+	UiModule::SpriteOptions options = {};
+	options.spriteType = prefab->defaultSpriteType;
+	options.spriteId = prefab->defaultSpriteId;
+	options.palette = prefab->paletteBase;
+	options.remap = prefab->remap;
+	options.scale = SPAWN_OBJECT_SPRITE_PREVIEW_SCALE;
+	options.rotation = 0.0f;
+
+	if (!m_spritePreview) {
+		UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
+		m_spritePreview = uiRoot->AddComponent<UiModule::Sprite>(m_spritePreviewMargin, options);
+	}
+	else {
+		m_spritePreview->SetOptions(options);
+	}
+}
+
+void ModMenuModule::SpawnObjectSegment::DestroySpritePreview()
+{
+	if (!m_spritePreview) return;
+
+	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
+	uiRoot->RemoveComponent(m_spritePreview, true);
+	m_spritePreview = nullptr;
 }
 
 void ModMenuModule::SpawnObjectSegment::CreateObjectController(const std::vector<const Utils::CategorizedObjects::ObjectDef*>& objectOptionList, const Utils::CategorizedObjects::ObjectDef* selectedObject)
@@ -154,29 +230,68 @@ void ModMenuModule::SpawnObjectSegment::OnCategoryControllerSave(Utils::Categori
 
 void ModMenuModule::SpawnObjectSegment::CreateVariantController(const std::vector<Utils::CategorizedObjects::ObjectVariant>& variantOptionList, Utils::CategorizedObjects::ObjectVariant selectedVariant)
 {
-	if (!m_variantText || m_variantMenuItemId == -1 || m_variantController) return;
+	if (m_variantItemIndex == -1 || m_variantController) return;
 
-	m_variantController = m_menuController->CreateItemController<UiModule::SelectController<Utils::CategorizedObjects::ObjectVariant>>(
-		m_variantMenuItemId,
-		m_variantText,
+	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
+
+	UiModule::MenuItemGroupId prevGroupId = m_menuController->GetCurrentGroupId();
+	m_menuController->SetCurrentGroupId(m_menuGroupId);
+
+	m_menuController->SetNextAddedItemIndex(m_variantItemIndex);
+	auto* variantText = m_menuController->CreateItem<UiModule::Text>(m_variantCont, L"", options.textSize);
+	m_variantMenuItemId = m_menuController->GetLatestMenuItemId();
+	m_variantController = m_menuController->CreateLatestItemController<UiModule::SelectController<Utils::CategorizedObjects::ObjectVariant>>(
+		variantText,
 		variantOptionList,
 		selectedVariant,
 		UiModule::SelectControllerOptions{ L"Variant: #", L"#" }
 	);
 	m_variantController->SetConverter<CategorizedObjectVariantConverter>();
+	m_variantController->SetSaveCallback(std::bind(&ModMenuModule::SpawnObjectSegment::OnVariantControllerSave, this));
+
+	m_menuController->SetCurrentGroupId(prevGroupId);
 }
 
 void ModMenuModule::SpawnObjectSegment::DestroyVariantController()
 {
-	if (!m_variantController || m_variantMenuItemId == -1) return;
-	m_menuController->DeleteItemController(m_variantMenuItemId);
+	if (!m_variantController) return;
+	m_menuController->DeleteItem(m_variantMenuItemId);
 	m_variantController = nullptr;
+	m_variantMenuItemId = -1;
 }
 
 void ModMenuModule::SpawnObjectSegment::OnObjectControllerSave(const Utils::CategorizedObjects::ObjectDef* objectDef)
 {
 	DestroyVariantController();
 	auto variantOptionList = Utils::CategorizedObjects::GetVariantsByObjectDef(*objectDef);
-	auto selectedVariant = variantOptionList[0];
-	CreateVariantController(variantOptionList, selectedVariant);
+	if (variantOptionList.size() > 1) {
+		auto selectedVariant = variantOptionList[0];
+		CreateVariantController(variantOptionList, selectedVariant);
+	}
+	UpdateSpritePreview();
+}
+
+void ModMenuModule::SpawnObjectSegment::OnVariantControllerSave()
+{
+	UpdateSpritePreview();
+}
+
+ModMenuModule::Utils::CategorizedObjects::ObjectVariant ModMenuModule::SpawnObjectSegment::GetSelectedVariant() const
+{
+	if (m_variantController && m_variantController->GetValue().has_value()) {
+		return m_variantController->GetValue().value();
+	}
+
+	if (!m_objectController || !m_objectController->GetValue().has_value()) {
+		return Utils::CategorizedObjects::ObjectVariant::Default;
+	}
+
+	const Utils::CategorizedObjects::ObjectDef* objectDef = m_objectController->GetValue().value();
+	auto variantOptionList = Utils::CategorizedObjects::GetVariantsByObjectDef(*objectDef);
+
+	if (variantOptionList.size() == 1) {
+		return variantOptionList[0];
+	}
+
+	return Utils::CategorizedObjects::ObjectVariant::Default;
 }

@@ -4,6 +4,8 @@
 #include "../utils/categorized-objects-utils.h"
 
 namespace ModMenuModule {
+	static constexpr Game::SCR_f SPAWN_OBJECT_SPRITE_PREVIEW_SCALE = Game::Utils::FromFloat(1.25f);
+
 	struct SpawnObjectSegmentData {
 		Game::OBJECT_TYPE objectType;
 	};
@@ -21,20 +23,29 @@ namespace ModMenuModule {
 		virtual bool Attach(ModMenuModule::MenuBase* menu, UiModule::Component* parent) override;
 		virtual void Detach() override;
 
+		void UpdateSpritePreview();
+		void DestroySpritePreview();
+
 		void CreateObjectController(const std::vector<const Utils::CategorizedObjects::ObjectDef*>& objectOptionList, const Utils::CategorizedObjects::ObjectDef* selectedObject);
 		void DestroyObjectController();
 		void OnCategoryControllerSave(Utils::CategorizedObjects::ObjectCategory category);
 		void CreateVariantController(const std::vector<Utils::CategorizedObjects::ObjectVariant>& variantOptionList, Utils::CategorizedObjects::ObjectVariant selectedVariant);
 		void DestroyVariantController();
 		void OnObjectControllerSave(const Utils::CategorizedObjects::ObjectDef* objectDef);
+		void OnVariantControllerSave();
+
+		Utils::CategorizedObjects::ObjectVariant GetSelectedVariant() const;
 
 		UiModule::SelectController<Utils::CategorizedObjects::ObjectCategory>* m_categoryController = nullptr;
 		UiModule::Text* m_objectText = nullptr;
 		UiModule::MenuItemId m_objectMenuItemId = -1;
 		UiModule::SelectController<const Utils::CategorizedObjects::ObjectDef*>* m_objectController = nullptr;
-		UiModule::Text* m_variantText = nullptr;
+		UiModule::VertCont* m_variantCont = nullptr;
+		size_t m_variantItemIndex = 0;
 		UiModule::MenuItemId m_variantMenuItemId = -1;
 		UiModule::SelectController<Utils::CategorizedObjects::ObjectVariant>* m_variantController = nullptr;
 		std::string m_persistencePrefix = "";
+		UiModule::Margin* m_spritePreviewMargin = nullptr;
+		UiModule::Sprite* m_spritePreview = nullptr;
 	};
 }
