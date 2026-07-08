@@ -17,6 +17,8 @@ namespace ModMenuModule {
 		static CheatManager* m_instance;
 
 		void InstantiateCheats();
+		void AttachCheats();
+		void DetachCheats();
 		void DestroyCheats();
 		
 		static std::vector<std::type_index> TopologicalSort();

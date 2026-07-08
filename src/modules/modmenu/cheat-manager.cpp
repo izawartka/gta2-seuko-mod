@@ -7,27 +7,31 @@ ModMenuModule::CheatManager::CheatManager()
 {
 	assert(!m_instance && "CheatManager instance already exists");
 	m_instance = this;
+
+	InstantiateCheats();
 }
 
 ModMenuModule::CheatManager::~CheatManager()
 {
+	DestroyCheats();
+
 	m_instance = nullptr;
 }
 
 void ModMenuModule::CheatManager::Attach()
 {
-	InstantiateCheats();
+	AttachCheats();
 }
 
 void ModMenuModule::CheatManager::Detach()
 {
-	DestroyCheats();
+	DetachCheats();
 }
 
 void ModMenuModule::CheatManager::InstantiateCheats()
 {
 	auto& cheats = ModMenuModule::CheatRegistry::Cheats();
-	spdlog::info("Instantiating {} cheats", cheats.size());
+	spdlog::info("CheatManager: Instantiating {} cheats", cheats.size());
 
 	for (const auto& pair : cheats) {
 		std::type_index typeIdx = pair.first;
@@ -35,19 +39,23 @@ void ModMenuModule::CheatManager::InstantiateCheats()
 
 		ModMenuModule::CheatBase* cheat = registryItem.factory();
 		if (!cheat) {
-			spdlog::error("Cheat factory returned null pointer");
+			spdlog::error("CheatManager: Cheat factory returned null pointer");
 			continue;
 		}
 
 		if (m_cheats.find(typeIdx) != m_cheats.end()) {
-			spdlog::error("Cheat {} is already registered", typeIdx.name());
+			spdlog::error("CheatManager: Cheat {} is already registered", typeIdx.name());
 			delete cheat;
 			continue;
 		}
 
 		m_cheats[typeIdx] = std::unique_ptr<ModMenuModule::CheatBase>(cheat);
 	}
+}
 
+void ModMenuModule::CheatManager::AttachCheats()
+{
+	spdlog::info("CheatManager: Sorting and attaching cheats");
 	m_attachOrder = TopologicalSort();
 
 	for (std::type_index typeIdx : m_attachOrder) {
@@ -56,13 +64,14 @@ void ModMenuModule::CheatManager::InstantiateCheats()
 
 		ModMenuModule::CheatBase* cheat = it->second.get();
 		if (!cheat->Attach()) {
-			spdlog::error("Failed to attach cheat {}", typeIdx.name());
+			spdlog::error("CheatManager: Failed to attach cheat {}", typeIdx.name());
 		}
 	}
 }
 
-void ModMenuModule::CheatManager::DestroyCheats()
+void ModMenuModule::CheatManager::DetachCheats()
 {
+	spdlog::debug("CheatManager: Detaching all cheats");
 	for (auto it = m_attachOrder.rbegin(); it != m_attachOrder.rend(); ++it) {
 		std::type_index typeIdx = *it;
 		auto cheatIt = m_cheats.find(typeIdx);
@@ -72,8 +81,13 @@ void ModMenuModule::CheatManager::DestroyCheats()
 		cheat->Detach();
 	}
 
-	m_cheats.clear();
 	m_attachOrder.clear();
+}
+
+void ModMenuModule::CheatManager::DestroyCheats()
+{
+	spdlog::debug("CheatManager: Destroying all cheats");
+	m_cheats.clear();
 }
 
 std::vector<std::type_index> ModMenuModule::CheatManager::TopologicalSort()
@@ -87,13 +101,13 @@ std::vector<std::type_index> ModMenuModule::CheatManager::TopologicalSort()
 		if (visited.find(cheatType) != visited.end()) return;
 
 		if (visiting.find(cheatType) != visiting.end()) {
-			spdlog::error("Cyclic dependency detected for cheat {}", cheatType.name());
+			spdlog::error("CheatManager: Cyclic dependency detected for cheat {}", cheatType.name());
 			return;
 		}
 
 		auto it = registry.find(cheatType);
 		if (it == registry.end()) {
-			spdlog::error("Cheat {} not found in registry", cheatType.name());
+			spdlog::error("CheatManager: Cheat {} not found in registry", cheatType.name());
 			return;
 		}
 
@@ -101,7 +115,7 @@ std::vector<std::type_index> ModMenuModule::CheatManager::TopologicalSort()
 
 		for (const auto& dependency : it->second.dependencies) {
 			if (registry.find(dependency) == registry.end()) {
-				spdlog::error("Cheat {} has missing dependency {}", cheatType.name(), dependency.name());
+				spdlog::error("CheatManager: Cheat {} has missing dependency {}", cheatType.name(), dependency.name());
 				continue;
 			}
 			visit(dependency);
