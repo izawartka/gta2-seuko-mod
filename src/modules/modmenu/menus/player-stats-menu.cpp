@@ -66,7 +66,7 @@ bool ModMenuModule::PlayerStatsMenu::Attach()
 		Core::MakeResolver(
 			Game::Memory::GetGangRespectContainer,
 			mem(&Game::GangRespectContainer::gang), idx(0),
-			mem(&Game::GangRespect::respect)
+			mem(&Game::GangRespect::respectArr), idx(0)
 		),
 		UiModule::VarTextEditableControllerOptions{ L"Respect 1: #", L"#" }
 	);
@@ -78,7 +78,7 @@ bool ModMenuModule::PlayerStatsMenu::Attach()
 		Core::MakeResolver(
 			Game::Memory::GetGangRespectContainer,
 			mem(&Game::GangRespectContainer::gang), idx(1),
-			mem(&Game::GangRespect::respect)
+			mem(&Game::GangRespect::respectArr), idx(0)
 		),
 		UiModule::VarTextEditableControllerOptions{ L"Respect 2: #", L"#" }
 	);
@@ -90,7 +90,7 @@ bool ModMenuModule::PlayerStatsMenu::Attach()
 		Core::MakeResolver(
 			Game::Memory::GetGangRespectContainer,
 			mem(&Game::GangRespectContainer::gang), idx(2),
-			mem(&Game::GangRespect::respect)
+			mem(&Game::GangRespect::respectArr), idx(0)
 		),
 		UiModule::VarTextEditableControllerOptions{ L"Respect 3: #", L"#" }
 	);

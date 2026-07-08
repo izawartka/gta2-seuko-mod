@@ -177,5 +177,13 @@ namespace Game {
 		typedef void(__fastcall WorldPointToScreenType)(Camera* camera, DWORD edx, SCR_f x, SCR_f y, SCR_f z, SCR_f** outX, SCR_f** outY);
 		static constexpr WorldPointToScreenType* WorldPointToScreen = (WorldPointToScreenType*)0x0040cfc0;
 
+		typedef GangRespect* (__fastcall GetFirstGangRespectType)(GangRespectContainer* gangRespectContainer);
+		static constexpr GetFirstGangRespectType* GetFirstGangRespect = (GetFirstGangRespectType*)0x0045dd60;
+
+		typedef GangRespect* (__fastcall GetNextGangRespectType)(GangRespectContainer* gangRespectContainer);
+		static constexpr GetNextGangRespectType* GetNextGangRespect = (GetNextGangRespectType*)0x0045ddb0;
+
+		typedef wchar_t* (__fastcall GetGangNameType)(GangRespect* gangRespect);
+		static constexpr GetGangNameType* GetGangName = (GetGangNameType*)0x0045dd20;
 	};  
 }
