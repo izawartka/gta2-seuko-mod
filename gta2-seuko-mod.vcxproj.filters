@@ -188,6 +188,8 @@
     <ClCompile Include="src\modules\modmenu\segments\position-menu-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\position-store.cpp" />
     <ClCompile Include="src\game\utils\gang-utils.cpp" />
+    <ClCompile Include="src\modules\modmenu\segments\gang-respect-segment.cpp" />
+    <ClCompile Include="src\modules\ui\components\icon-sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -497,6 +499,8 @@
     <ClInclude Include="src\modules\modmenu\events\player-pos-rot-update.h" />
     <ClInclude Include="src\game\utils\gang-utils.h" />
     <ClInclude Include="src\converters\gang-name.h" />
+    <ClInclude Include="src\modules\modmenu\segments\gang-respect-segment.h" />
+    <ClInclude Include="src\modules\ui\components\icon-sprite.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

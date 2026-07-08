@@ -3,6 +3,7 @@
 #include "camera-pos-cheat-coord-segment.h"
 #include "explode-all-vehicles-segment.h"
 #include "fix-vehicle-segment.h"
+#include "gang-respect-segment.h"
 #include "get-powerup-segment.h"
 #include "position-menu-segment.h"
 #include "position-rotation-segment.h"

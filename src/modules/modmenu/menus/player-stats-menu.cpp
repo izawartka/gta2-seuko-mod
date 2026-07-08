@@ -1,5 +1,6 @@
 #include "player-stats-menu.h"
 #include "../root.h"
+#include "../segments/gang-respect-segment.h"
 
 ModMenuModule::PlayerStatsMenu::PlayerStatsMenu()
 {
@@ -59,45 +60,30 @@ bool ModMenuModule::PlayerStatsMenu::Attach()
 		UiModule::VarTextEditableControllerOptions{ L"Lives: #", L"#" }
 	);
 
-	// respect 1
-	UiModule::Text* respect1Text = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<char>>(
-		respect1Text,
-		Core::MakeResolver(
-			Game::Memory::GetGangRespectContainer,
-			mem(&Game::GangRespectContainer::gang), idx(0),
-			mem(&Game::GangRespect::respectArr), idx(0)
-		),
-		UiModule::VarTextEditableControllerOptions{ L"Respect 1: #", L"#" }
-	);
-
-	// respect 2
-	UiModule::Text* respect2Text = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<char>>(
-		respect2Text,
-		Core::MakeResolver(
-			Game::Memory::GetGangRespectContainer,
-			mem(&Game::GangRespectContainer::gang), idx(1),
-			mem(&Game::GangRespect::respectArr), idx(0)
-		),
-		UiModule::VarTextEditableControllerOptions{ L"Respect 2: #", L"#" }
-	);
-
-	// respect 3
-	UiModule::Text* respect3Text = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	m_menuController->CreateLatestItemController<UiModule::VarTextEditableController<char>>(
-		respect3Text,
-		Core::MakeResolver(
-			Game::Memory::GetGangRespectContainer,
-			mem(&Game::GangRespectContainer::gang), idx(2),
-			mem(&Game::GangRespect::respectArr), idx(0)
-		),
-		UiModule::VarTextEditableControllerOptions{ L"Respect 3: #", L"#" }
-	);
+	std::vector<Game::GangRespect*> gangs = Game::Utils::GetVisibleGangs();
+	for (Game::GangRespect* gang : gangs) {
+		CreateAttachSegment<GangRespectSegment>(this, vertCont, gang);
+	}
 
 	SetPreviousSelectedIndex();
 
 	return true;
+}
+
+void ModMenuModule::PlayerStatsMenu::Detach()
+{
+	ClearSegments();
+	DestroyMenu();
+}
+
+void ModMenuModule::PlayerStatsMenu::OnShow()
+{
+	SetSegmentsVisible(true);
+}
+
+void ModMenuModule::PlayerStatsMenu::OnHide()
+{
+	SetSegmentsVisible(false);
 }
 
 void ModMenuModule::PlayerStatsMenu::OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
