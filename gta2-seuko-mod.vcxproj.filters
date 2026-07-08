@@ -496,6 +496,7 @@
     <ClInclude Include="src\modules\modmenu\events\position-store-entries-update.h" />
     <ClInclude Include="src\modules\modmenu\events\player-pos-rot-update.h" />
     <ClInclude Include="src\game\utils\gang-utils.h" />
+    <ClInclude Include="src\converters\gang-name.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
