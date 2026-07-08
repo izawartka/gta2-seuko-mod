@@ -87,14 +87,14 @@ void UiModule::Utils::DrawSprite(
 	uint16_t remap, 
 	float centerX, 
 	float centerY, 
-	float spriteWidth, 
-	float spriteHeight, 
+	int spriteWidth, 
+	int spriteHeight, 
 	float scale, 
 	uint8_t alpha
 )
 {
-	float halfWidth = (spriteWidth * scale) / 2.0f;
-	float halfHeight = (spriteHeight * scale) / 2.0f;
+	float halfWidth = (static_cast<float>(spriteWidth) * scale) / 2.0f;
+	float halfHeight = (static_cast<float>(spriteHeight) * scale) / 2.0f;
 	float x1 = centerX - halfWidth;
 	float y1 = centerY - halfHeight;
 	float x2 = centerX + halfWidth;
@@ -109,8 +109,8 @@ void UiModule::Utils::DrawSprite(
 		y1,
 		x2,
 		y2,
-		static_cast<int>(spriteWidth),
-		static_cast<int>(spriteHeight),
+		spriteWidth,
+		spriteHeight,
 		alpha
 	);
 }
@@ -161,7 +161,7 @@ void UiModule::Utils::DrawSprite(
 	vertices[1].z2 = z;
 	vertices[1].flags = vertexFlags;
 	vertices[1].field_0x14 = 0;
-	vertices[1].u = 0.7f;
+	vertices[1].u = (float)spriteWidth - 0.3f;
 	vertices[1].v = 0.3f;
 
 	vertices[2].x = x2;
@@ -170,8 +170,8 @@ void UiModule::Utils::DrawSprite(
 	vertices[2].z2 = z;
 	vertices[2].flags = vertexFlags;
 	vertices[2].field_0x14 = 0;
-	vertices[2].u = 0.7f;
-	vertices[2].v = 0.7f;
+	vertices[2].u = (float)spriteWidth - 0.3f;
+	vertices[2].v = (float)spriteHeight - 0.3f;
 
 	vertices[3].x = x1;
 	vertices[3].y = y2;
@@ -180,7 +180,7 @@ void UiModule::Utils::DrawSprite(
 	vertices[3].flags = vertexFlags;
 	vertices[3].field_0x14 = 0;
 	vertices[3].u = 0.3f;
-	vertices[3].v = 0.7f;
+	vertices[3].v = (float)spriteHeight - 0.3f;
 
 	Game::Functions::DrawQuad(
 		alpha == 0xFF ? 0x28080 : 0x2a180,

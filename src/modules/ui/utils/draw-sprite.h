@@ -23,8 +23,8 @@ namespace UiModule::Utils {
 		uint16_t remap,
 		float centerX,
 		float centerY,
-		float spriteWidth,
-		float spriteHeight,
+		int spriteWidth,
+		int spriteHeight,
 		float scale,
 		uint8_t alpha = 0xFF
 	);
