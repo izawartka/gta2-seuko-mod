@@ -14,10 +14,5 @@ namespace ModMenuModule {
 
 		void Execute() override;
 		const std::wstring& GetLabel() const override;
-
-	private:
-		virtual void OnDataChange() override;
-		
-		std::wstring m_label;
 	};
 }

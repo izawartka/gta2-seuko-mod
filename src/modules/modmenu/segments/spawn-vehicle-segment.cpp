@@ -1,5 +1,5 @@
 #include "spawn-vehicle-segment.h"
-#include "../../../converters/car-model.h"
+#include "../../../converters/car-model-name.h"
 #include "../../../converters/car-remap.h"
 #include "../root.h"
 
@@ -66,7 +66,7 @@ bool ModMenuModule::SpawnVehicleSegment::Attach(ModMenuModule::MenuBase* menu, U
 		selectedModel,
 		UiModule::SelectControllerOptions{ L"Model: #", L"#" }
 	);
-	m_modelController->SetConverter<CarModelConverter>();
+	m_modelController->SetConverter<CarModelNameConverter>();
 	m_modelController->SetSaveCallback([this](Game::CAR_MODEL4 newModel) {
 		UpdateSpritePreview();
 	});

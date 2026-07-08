@@ -1,6 +1,6 @@
 #include "spawn-vehicle.h"
 #include "../utils/spawn-car-at-player.h"
-#include "../../../converters/car-model.h"
+#include "../../../converters/car-model-name.h"
 #include "../toast-manager.h"
 #include "../quick-action-registry.h"
 
@@ -9,7 +9,7 @@ static const std::wstring typeLabel = L"Spawn vehicle";
 
 ModMenuModule::SpawnVehicleAction::SpawnVehicleAction()
 {
-	m_label = typeLabel;
+
 }
 
 ModMenuModule::SpawnVehicleAction::~SpawnVehicleAction()
@@ -39,7 +39,7 @@ void ModMenuModule::SpawnVehicleAction::Execute()
 	}
 
 	SpawnVehicleSegmentData data = m_data.value();
-	std::wstring modelStr = CarModelConverter::ConvertToString(data.model);
+	std::wstring modelStr = CarModelNameConverter::ConvertToString(data.model);
 
 	if (ModMenuModule::Utils::SpawnCarAtPlayer(data.model, data.remap, data.palette)) {
 		ModMenuModule::ToastManager::GetInstance()->Show({ L"Spawned " + modelStr});
@@ -51,16 +51,13 @@ void ModMenuModule::SpawnVehicleAction::Execute()
 
 const std::wstring& ModMenuModule::SpawnVehicleAction::GetLabel() const
 {
-	return m_label;
-}
-
-void ModMenuModule::SpawnVehicleAction::OnDataChange()
-{
+	// label is exceptionally not cached OnDataChange because CarModelNameConverter does not work before game init
 	if (m_data.has_value()) {
-		m_label = L"Spawn " + CarModelConverter::ConvertToString(m_data->model);
+		static std::wstring label = L"Spawn " + CarModelNameConverter::ConvertToString(m_data->model);
+		return label;
 	}
 	else {
-		m_label = typeLabel;
+		return typeLabel;
 	}
 }
 

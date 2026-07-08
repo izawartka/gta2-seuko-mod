@@ -1,7 +1,7 @@
 #include "last-vehicle-menu.h"
 #include "../root.h"
 #include "../cheats/last-car.h"
-#include "../../../converters/car-model.h"
+#include "../../../converters/car-model-name.h"
 #include "../../../converters/car-remap.h"
 #include "../../../converters/car-lock-state.h"
 #include "../../../converters/car-damage.h"
@@ -47,7 +47,7 @@ bool ModMenuModule::LastVehicleMenu::Attach()
 		),
 		UiModule::VarTextControllerOptions{ L"Model: #", L"#" }
 	);
-	m_modelController->SetConverter<CarModelConverter>();
+	m_modelController->SetConverter<CarModelNameConverter>();
 
 	// remap
 	UiModule::Text* remapText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);

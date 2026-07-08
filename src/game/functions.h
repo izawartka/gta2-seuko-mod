@@ -185,5 +185,8 @@ namespace Game {
 
 		typedef wchar_t* (__fastcall GetGangNameType)(GangRespect* gangRespect);
 		static constexpr GetGangNameType* GetGangName = (GetGangNameType*)0x0045dd20;
+
+		typedef wchar_t* (__fastcall GetCarModelNameType)(Car* car);
+		static constexpr GetCarModelNameType* GetCarModelName = (GetCarModelNameType*)0x0041f700;
 	};  
 }

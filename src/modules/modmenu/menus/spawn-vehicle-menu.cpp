@@ -1,7 +1,7 @@
 #include "spawn-vehicle-menu.h"
 #include "../segments/position-menu-segment.h"
 #include "../segments/spawn-vehicle-segment.h"
-#include "../../../converters/car-model.h"
+#include "../../../converters/car-model-name.h"
 #include "../root.h"
 #include "../utils/spawn-car.h"
 
@@ -96,7 +96,7 @@ void ModMenuModule::SpawnVehicleMenu::Spawn()
 	);
 
 	if (!success) {
-		std::wstring modelStr = CarModelConverter::ConvertToString(spawnSegmentData.model);
+		std::wstring modelStr = CarModelNameConverter::ConvertToString(spawnSegmentData.model);
 		ToastManager::GetInstance()->Show({ L"Failed to spawn " + modelStr, ToastType::Error });
 	}
 }

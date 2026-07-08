@@ -548,6 +548,7 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
     <ClInclude Include="src\converters\camera-pos-cheat-mode.h" />
     <ClInclude Include="src\converters\car-damage.h" />
     <ClInclude Include="src\converters\car-lock-state.h" />
+    <ClInclude Include="src\converters\car-model-name.h" />
     <ClInclude Include="src\converters\car-model.h" />
     <ClInclude Include="src\converters\car-remap.h" />
     <ClInclude Include="src\converters\categorized-object-category.h" />
