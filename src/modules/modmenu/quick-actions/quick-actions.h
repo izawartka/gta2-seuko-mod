@@ -12,5 +12,6 @@
 #include "switch-camera-mode.h"
 #include "teleport.h"
 #include "toggle-freecam.h"
+#include "toggle-mouse-control.h"
 #include "toggle-native-cheat.h"
 #include "toggle-steering-assist.h"
