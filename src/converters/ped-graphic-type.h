@@ -7,8 +7,8 @@ public:
 	static std::wstring ConvertToString(Game::PED_GRAPHIC_TYPE value) {
 		switch (value) {
 		case Game::PED_GRAPHIC_TYPE_DUMMY: return L"Dummy";
-		case Game::PED_GRAPHIC_TYPE_EMERG: return L"Emergency";
 		case Game::PED_GRAPHIC_TYPE_GANG: return L"Gang";
+		case Game::PED_GRAPHIC_TYPE_EMERG: return L"Emergency";
 		default:
 			return L"Unknown " + std::to_wstring(static_cast<int32_t>(value));
 		}

@@ -84,8 +84,8 @@ const std::vector<Game::PED_GRAPHIC_TYPE>& Game::Utils::GetAvailablePedGraphicTy
 {
 	static const std::vector<PED_GRAPHIC_TYPE> graphicTypes({
 		PED_GRAPHIC_TYPE_DUMMY,
-		PED_GRAPHIC_TYPE_EMERG,
-		PED_GRAPHIC_TYPE_GANG
+		PED_GRAPHIC_TYPE_GANG,
+		PED_GRAPHIC_TYPE_EMERG
 	});
 	return graphicTypes;
 }
