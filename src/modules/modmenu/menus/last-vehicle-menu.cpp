@@ -9,6 +9,7 @@
 #include "../utils/fix-car-utils.h"
 #include "last-vehicle-physics-menu.h"
 #include "last-vehicle-save-menu.h"
+#include "../utils/explode-last-car.h"
 
 ModMenuModule::LastVehicleMenu::LastVehicleMenu()
 {
@@ -215,10 +216,5 @@ void ModMenuModule::LastVehicleMenu::TurnEngineOff()
 
 void ModMenuModule::LastVehicleMenu::ExplodeCar()
 {
-	Game::Car* lastCar = GetLastCar();
-	if (!lastCar) {
-		return;
-	}
-
-	Game::Functions::ExplodeCar(lastCar, 0, Game::EXPLOSION_SIZE_MEDIUM);
+	Utils::ExplodeLastCarWithToast(Game::EXPLOSION_SIZE_MEDIUM, false);
 }

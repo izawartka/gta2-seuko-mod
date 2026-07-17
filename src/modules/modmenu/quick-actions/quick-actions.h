@@ -2,6 +2,7 @@
 
 #include "clear-wanted-level.h"
 #include "explode-all-vehicles.h"
+#include "explode-vehicle.h"
 #include "fix-vehicle.h"
 #include "get-all-weapons.h"
 #include "get-powerup.h"

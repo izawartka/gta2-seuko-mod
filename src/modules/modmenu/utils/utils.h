@@ -7,6 +7,7 @@
 #include "categorized-objects-utils.h"
 #include "custom-render-queue-utils.h"
 #include "explode-all-cars.h"
+#include "explode-last-car.h"
 #include "fix-car-utils.h"
 #include "get-all-weapons.h"
 #include "get-cars-sorted-by-distance.h"
