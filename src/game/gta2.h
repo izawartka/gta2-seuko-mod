@@ -6594,9 +6594,9 @@ struct S16 {
 	undefined field_0x8eb;
 };
 
-typedef struct S17_mission S17_mission, *PS17_mission;
+typedef struct S17_Mission S17_Mission, *PS17_mission;
 
-struct S17_mission {
+struct S17_Mission {
 	int len;
 	struct SCR_Vector3 vec3[50];
 };
