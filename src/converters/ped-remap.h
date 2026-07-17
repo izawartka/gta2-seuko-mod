@@ -8,6 +8,7 @@ public:
 		int32_t id = static_cast<int32_t>(value);
 
 		switch (id) {
+			case -1: return L"Default";
 			case 0: return L"Blue Police";
 			case 1: return L"Green Police";
 			case 2: return L"Red Police";
