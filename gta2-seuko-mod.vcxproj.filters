@@ -508,6 +508,8 @@
     <ClInclude Include="src\converters\gang-name.h" />
     <ClInclude Include="src\modules\modmenu\segments\gang-respect-segment.h" />
     <ClInclude Include="src\modules\ui\components\icon-sprite.h" />
+    <ClInclude Include="src\converters\ped-threat-search.h" />
+    <ClInclude Include="src\converters\ped-threat-reaction.h" />
     <ClInclude Include="src\game\utils\car-utils.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\explode-vehicle.h" />
     <ClInclude Include="src\modules\modmenu\segments\explode-vehicle-segment.h" />
