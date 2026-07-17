@@ -53,6 +53,23 @@ namespace UiModule {
 			}
 		}
 
+		template<typename ComponentT>
+		void RemoveChildComponents(ComponentT* component) {
+			static_assert(std::is_base_of_v<Component, ComponentT>, "ComponentT must be derived from Component");
+			auto it = std::find_if(m_components.begin(), m_components.end(), [component](const std::unique_ptr<Component>& ptr) {
+				return ptr.get() == component;
+			});
+			if (it == m_components.end()) {
+				spdlog::error("Attempted to remove child components of a component that is not managed by RootModule");
+				return;
+			}
+
+			std::vector<Component*> children = component->GetChildren();
+			for (Component* child : children) {
+				RemoveComponent(child, true);
+			}
+		}
+
 		void ClearComponents() {
 			while (!m_components.empty()) {
 				m_components.pop_back();
