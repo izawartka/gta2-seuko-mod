@@ -16,3 +16,4 @@
 #include "toggle-mouse-control.h"
 #include "toggle-native-cheat.h"
 #include "toggle-steering-assist.h"
+#include "turn-vehicle-engine-off.h"

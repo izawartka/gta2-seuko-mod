@@ -9,6 +9,7 @@
 #include "../utils/fix-car-utils.h"
 #include "last-vehicle-physics-menu.h"
 #include "last-vehicle-save-menu.h"
+#include "../utils/turn-last-car-engine-off.h"
 #include "../utils/explode-last-car.h"
 
 ModMenuModule::LastVehicleMenu::LastVehicleMenu()
@@ -200,18 +201,7 @@ void ModMenuModule::LastVehicleMenu::FixCarVisualDamage()
 
 void ModMenuModule::LastVehicleMenu::TurnEngineOff()
 {
-	Game::Car* lastCar = GetLastCar();
-	if (!lastCar) {
-		return;
-	}
-
-	if (lastCar->engineState != Game::CAR_ENGINE_STATE_ON) {
-		spdlog::warn("Engine is already off or broken.");
-		ToastManager::GetInstance()->Show({ L"Engine is already off or broken", ToastType::Warning });
-		return;
-	}
-
-	lastCar->engineState = Game::CAR_ENGINE_STATE_TURNING_OFF;
+	Utils::TurnLastCarEngineOffWithToast(false);
 }
 
 void ModMenuModule::LastVehicleMenu::ExplodeCar()
