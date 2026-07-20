@@ -190,6 +190,7 @@
     <ClCompile Include="src\game\utils\gang-utils.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\gang-respect-segment.cpp" />
     <ClCompile Include="src\modules\ui\components\icon-sprite.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-actions\toggle-mouse-control.cpp" />
     <ClCompile Include="src\game\utils\car-utils.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\explode-vehicle.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\explode-vehicle-segment.cpp" />
@@ -197,6 +198,7 @@
     <ClCompile Include="src\modules\modmenu\quick-actions\turn-vehicle-engine-off.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\turn-last-car-engine-off.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\invisibility.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-actions\toggle-invisibility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -509,6 +511,7 @@
     <ClInclude Include="src\converters\gang-name.h" />
     <ClInclude Include="src\modules\modmenu\segments\gang-respect-segment.h" />
     <ClInclude Include="src\modules\ui\components\icon-sprite.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\toggle-mouse-control.h" />
     <ClInclude Include="src\converters\ped-threat-search.h" />
     <ClInclude Include="src\converters\ped-threat-reaction.h" />
     <ClInclude Include="src\game\utils\car-utils.h" />
@@ -518,6 +521,7 @@
     <ClInclude Include="src\modules\modmenu\quick-actions\turn-vehicle-engine-off.h" />
     <ClInclude Include="src\modules\modmenu\utils\turn-last-car-engine-off.h" />
     <ClInclude Include="src\modules\modmenu\cheats\invisibility.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\toggle-invisibility.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
