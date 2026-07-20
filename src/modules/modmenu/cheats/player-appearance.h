@@ -40,15 +40,14 @@ namespace ModMenuModule {
 
 		static PlayerAppearanceCheat* m_instance;
 
-		Core::Resolver<Game::PED_REMAP*> m_pedRemapResolver = nullptr;
-		Core::Resolver<Game::PED_GRAPHIC_TYPE*> m_pedGraphicTypeResolver = nullptr;
+		Core::Resolver<Game::PED_REMAP*> m_remapResolver = nullptr;
+		Core::Resolver<Game::PED_GRAPHIC_TYPE*> m_graphicTypeResolver = nullptr;
 		std::optional<Game::PED_REMAP> m_lockedRemap = std::nullopt;
-		std::optional<Game::PED_REMAP> m_originalRemap = std::nullopt;
-
-		Core::Watched<Game::PED_REMAP>* m_watchedPedRemap = nullptr;
-		Core::Watched<Game::PED_GRAPHIC_TYPE>* m_watchedPedGraphicType = nullptr;
 		std::optional<Game::PED_GRAPHIC_TYPE> m_lockedGraphicType = std::nullopt;
+		std::optional<Game::PED_REMAP> m_originalRemap = std::nullopt;
 		std::optional<Game::PED_GRAPHIC_TYPE> m_originalGraphicType = std::nullopt;
+		Core::Watched<Game::PED_REMAP>* m_watchedRemap = nullptr;
+		Core::Watched<Game::PED_GRAPHIC_TYPE>* m_watchedGraphicType = nullptr;
 
 		bool m_isDisabling = false;
 		bool m_resetAndDisableRemapDone = false;
