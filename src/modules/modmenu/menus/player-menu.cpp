@@ -6,6 +6,7 @@
 #include "../../../converters/cop-value.h"
 #include "../../../converters/yes-no.h"
 #include "../cheats/cop-value.h"
+#include "../cheats/invisibility.h"
 #include "../cheats/invulnerability.h"
 #include "../root.h"
 
@@ -92,6 +93,20 @@ bool ModMenuModule::PlayerMenu::Attach()
 		UiModule::VarTextEditableControllerOptions{ L"Armor: #", L"#" }
 	);
 
+	// invisibility
+	UiModule::Text* invisibilityText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
+	m_invisibilityController = m_menuController->CreateLatestItemController<UiModule::SelectController<bool>>(
+		invisibilityText,
+		UiModule::SelectOptionList<bool>{ false, true },
+		std::nullopt,
+		UiModule::SelectControllerOptions{ L"Invisibility: #", L"#" }
+	);
+	m_invisibilityController->SetConverter<YesNoConverter>();
+	m_invisibilityController->SetSaveCallback([](bool newValue) {
+		if (newValue) InvisibilityCheat::GetInstance()->SetEnabled(true);
+		else InvisibilityCheat::GetInstance()->ResetAndDisable();
+	});
+
 	// invulnerability
 	UiModule::Text* invulnerabilityText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	m_invulnerabilityController = m_menuController->CreateLatestItemController<UiModule::SelectController<bool>>(
@@ -102,7 +117,8 @@ bool ModMenuModule::PlayerMenu::Attach()
 	);
 	m_invulnerabilityController->SetConverter<YesNoConverter>();
 	m_invulnerabilityController->SetSaveCallback([](bool newValue) {
-		InvulnerabilityCheat::GetInstance()->SetEnabled(newValue);
+		if (newValue) InvulnerabilityCheat::GetInstance()->SetEnabled(true);
+		else InvulnerabilityCheat::GetInstance()->ResetAndDisable();
 	});
 
 	SetPreviousSelectedIndex();
@@ -146,12 +162,15 @@ void ModMenuModule::PlayerMenu::OnMenuAction(UiModule::Selectable* item, UiModul
 
 void ModMenuModule::PlayerMenu::OnCheatStateChange(CheatStateEvent& event)
 {
-	if (event.GetCheatType() == typeid(InvulnerabilityCheat)) {
+	if (event.GetCheatType() == typeid(InvisibilityCheat)) {
+		m_invisibilityController->SetValue(event.IsEnabled());
+	} else if (event.GetCheatType() == typeid(InvulnerabilityCheat)) {
 		m_invulnerabilityController->SetValue(event.IsEnabled());
 	}
 }
 
 void ModMenuModule::PlayerMenu::UpdateCheatStates()
 {
+	m_invisibilityController->SetValue(InvisibilityCheat::GetInstance()->IsEnabled());
 	m_invulnerabilityController->SetValue(InvulnerabilityCheat::GetInstance()->IsEnabled());
 }

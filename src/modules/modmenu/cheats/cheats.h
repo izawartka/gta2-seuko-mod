@@ -2,6 +2,7 @@
 #include "cop-value.h"
 #include "disable-steering-assist.h"
 #include "force-controls.h"
+#include "invisibility.h"
 #include "invulnerability.h"
 #include "infinite-ammo.h"
 #include "instant-reload.h"

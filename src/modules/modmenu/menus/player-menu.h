@@ -19,6 +19,7 @@ namespace ModMenuModule {
 		void OnCheatStateChange(CheatStateEvent& event);
 		void UpdateCheatStates();
 
+		UiModule::SelectController<bool>* m_invisibilityController = nullptr;
 		UiModule::SelectController<bool>* m_invulnerabilityController = nullptr;
 	};
 }
