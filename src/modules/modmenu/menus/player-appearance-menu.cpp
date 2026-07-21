@@ -31,30 +31,30 @@ bool ModMenuModule::PlayerAppearanceMenu::Attach()
 		playerAppearanceCheat->SetEnabled(true);
 	}
 
-	// ped remap
-	UiModule::Text* remapText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
-	m_remapController = m_menuController->CreateLatestItemController<UiModule::SelectController<Game::PED_REMAP>>(
-		remapText,
-		Game::Utils::GetAvailablePedRemaps(),
-		std::nullopt,
-		UiModule::SelectControllerOptions{ L"Ped Remap: #", L"#" }
-	);
-	m_remapController->SetConverter<PedRemapConverter>();
-	m_remapController->SetSaveCallback([playerAppearanceCheat](Game::PED_REMAP newRemap) {
-		playerAppearanceCheat->SetRemap(newRemap);
-	});
-
-	// ped graphic type
+	// graphic type
 	UiModule::Text* graphicTypeText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
 	m_graphicTypeController = m_menuController->CreateLatestItemController<UiModule::SelectController<Game::PED_GRAPHIC_TYPE>>(
 		graphicTypeText,
 		Game::Utils::GetAvailablePedGraphicTypes(),
 		std::nullopt,
-		UiModule::SelectControllerOptions{ L"Ped Graphic Type: #", L"#" }
+		UiModule::SelectControllerOptions{ L"Graphic Type: #", L"#" }
 	);
 	m_graphicTypeController->SetConverter<PedGraphicTypeConverter>();
 	m_graphicTypeController->SetSaveCallback([playerAppearanceCheat](Game::PED_GRAPHIC_TYPE newGraphicType) {
 		playerAppearanceCheat->SetGraphicType(newGraphicType);
+	});
+
+	// remap
+	UiModule::Text* remapText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
+	m_remapController = m_menuController->CreateLatestItemController<UiModule::SelectController<Game::PED_REMAP>>(
+		remapText,
+		Game::Utils::GetAvailablePedRemaps(),
+		std::nullopt,
+		UiModule::SelectControllerOptions{ L"Remap: #", L"#" }
+	);
+	m_remapController->SetConverter<PedRemapConverter>();
+	m_remapController->SetSaveCallback([playerAppearanceCheat](Game::PED_REMAP newRemap) {
+		playerAppearanceCheat->SetRemap(newRemap);
 	});
 
 	// lock
