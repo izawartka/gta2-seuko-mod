@@ -88,6 +88,6 @@ void ModMenuModule::PlayerPosMenu::Teleport()
 		}
 
 		short* rotationPtr = Game::Utils::GetPlayerPedRotationPtr();
-		*rotationPtr = targetRotation;
+		if(rotationPtr)	*rotationPtr = targetRotation;
 	});
 }

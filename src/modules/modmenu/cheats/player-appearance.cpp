@@ -218,6 +218,7 @@ void ModMenuModule::PlayerAppearanceCheat::OnPedRemapUpdate(const std::optional<
 		}
 		m_resetAndDisableRemapDone = true;
 		ResetAndDisableCheckAndProceed();
+		return;
 	}
 
 	m_originalRemap = newValue;
@@ -240,6 +241,7 @@ void ModMenuModule::PlayerAppearanceCheat::OnPedGraphicTypeUpdate(const std::opt
 		}
 		m_resetAndDisableGraphicTypeDone = true;
 		ResetAndDisableCheckAndProceed();
+		return;
 	}
 
 	m_originalGraphicType = newValue;

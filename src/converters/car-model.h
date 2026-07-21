@@ -91,7 +91,8 @@ public:
 		case 84: return L"EDSELFBI";
 		case 85: return L"HOTDOG D4";
 		case 86: return L"KRSNABUS";
-		default: return L"???";
+		default:
+			return L"VEHICLE " + std::to_wstring(id);
 		}
 	}
 

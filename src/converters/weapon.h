@@ -8,6 +8,7 @@ public:
 		int32_t id = static_cast<int32_t>(value);
 
 		switch (id) {
+		case -1: return L"None";
 		case 0: return L"Pistol";
 		case 1: return L"S-Uzi";
 		case 2: return L"Rocket Launcher";

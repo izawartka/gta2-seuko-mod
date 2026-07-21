@@ -5,7 +5,7 @@
 class PedRemapConverter {
 public:
 	static std::wstring ConvertToString(Game::PED_REMAP value) {
-		int32_t id = static_cast<int32_t>(value);
+		int8_t id = static_cast<int8_t>(value);
 
 		switch (id) {
 			case -1: return L"Default";

@@ -50,6 +50,7 @@ std::optional<ModMenuModule::SavedCarsCheatEntry> ModMenuModule::SavedCarsCheat:
 {
 	auto it = m_entries.find(name);
 	if (it == m_entries.end()) {
+		spdlog::warn("SavedCarsCheat::GetCar: Car not found");
 		return std::nullopt;
 	}
 	return it->second;

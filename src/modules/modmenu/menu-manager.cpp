@@ -51,10 +51,10 @@ void ModMenuModule::MenuManager::RemoveLastMenu()
 
 void ModMenuModule::MenuManager::ClearMenus()
 {
-	std::vector<MenuId> menuIds = m_menuIds;
-	m_menuIds.clear();
-	for (MenuId id : menuIds) {
-		PendingChange change = { ChangeType::Remove, id, nullptr };
+	while (m_menuIds.size()) {
+		MenuId lastMenuId = m_menuIds.back();
+		m_menuIds.pop_back();
+		PendingChange change = { ChangeType::Remove, lastMenuId, nullptr };
 		AddPendingChange(change);
 	}
 }
