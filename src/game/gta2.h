@@ -847,7 +847,7 @@ struct Sprite {
 	undefined field_0x2; /* does nothing */
 	undefined field_0x3; /* does nothing */
 	struct Sprite * prev;
-	struct GameObject * gameObject;
+	struct BareGameObject * gameObject;
 	struct Sprite * next;
 	struct CollisionBox * collisionBox;
 	SCR_Vector3 position;
@@ -1400,7 +1400,7 @@ struct Cheats {
 
 struct GameObject {
 	undefined4 field_0x0;
-	int field_0x4;
+	int someBitstate;
 	enum PED_STATE state1;
 	enum PED_STATE2 state2;
 	uint relToId; //0x10
@@ -1411,7 +1411,7 @@ struct GameObject {
 	undefined field_0x21;
 	undefined field_0x22;
 	undefined field_0x23;
-	ushort maybe_id; /* maybe color */
+	ushort probablyRemap;
 	undefined field_0x26;
 	undefined field_0x27;
 	undefined field_0x28;
@@ -1469,7 +1469,7 @@ struct GameObject {
 	undefined field_0x75;
 	undefined field_0x76;
 	undefined field_0x77;
-	struct GameObject * MaybeNext;
+	struct GameObject * nextMaybe;
 	struct Ped * ped;
 	struct Sprite * sprite;
 	undefined field_0x84;
@@ -5768,11 +5768,44 @@ struct SDisplayMode {
 	undefined4 field_0x3c;
 };
 
-typedef struct GameObjectsManager GameObjectsManager, *PGameObjectsManager;
+typedef struct PedGameObjectManager PedGameObjectManager, *PPedGameObjectManager;
 
-struct GameObjectsManager {
-	struct GameObject * last;
-	struct GameObject arr[400];
+struct PedGameObjectManager {
+	struct GameObject* nextFreeMaybe;
+	struct GameObject objects[400];
+};
+
+typedef struct BareGameObject BareGameObject, *PBareGameObject;
+
+struct BareGameObject {
+	struct BareGameObject* next;
+	struct Sprite* sprite2;
+	struct SpriteData* state1;
+	undefined4* state2;
+	uint relToId;
+	int id;
+	enum OBJECT_TYPE type;
+	struct PlayerPhysics* probablyPhysics;
+	int field8_0x20;
+	ushort probablyRemap;
+	byte field10_0x26;
+	undefined field11_0x27;
+	undefined field12_0x28;
+	undefined field13_0x29;
+	undefined field14_0x2a;
+	undefined field15_0x2b;
+};
+
+
+typedef struct BareGameObjectManager BareGameObjectManager, *PBareGameObjectManager;
+
+struct BareGameObjectManager {
+	struct BareGameObject* nextFree;
+	struct BareGameObject* someObject;
+	struct BareGameObject objects[3825];
+	undefined2 field3_0x29174;
+	undefined field4_0x29176;
+	undefined field5_0x29177;
 };
 
 typedef struct GangRespect GangRespect, *PGangRespect;

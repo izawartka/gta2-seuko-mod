@@ -1,6 +1,6 @@
 #include "spawn-object.h"
 
-Game::GameObject* ModMenuModule::Utils::SpawnObject(Game::SCR_Vector3 position, short rotation, Game::OBJECT_TYPE objectType)
+Game::BareGameObject* ModMenuModule::Utils::SpawnObject(Game::SCR_Vector3 position, short rotation, Game::OBJECT_TYPE objectType)
 {
 	Game::S33* s33 = Game::Memory::GetS33();
 	if(!s33) {
@@ -8,7 +8,7 @@ Game::GameObject* ModMenuModule::Utils::SpawnObject(Game::SCR_Vector3 position, 
 		return nullptr;
 	}
 
-	Game::GameObject* spawnedObject = Game::Functions::SpawnObject(
+	Game::BareGameObject* spawnedObject = Game::Functions::SpawnObject(
 		s33,
 		0,
 		objectType,

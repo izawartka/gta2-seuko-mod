@@ -67,7 +67,7 @@ namespace Game {
 			ClearScreenFunc(sVideo, param_2, param_3, param_4, param_5, param_6, param_7, param_8);
 		}
 		
-		typedef GameObject* (__fastcall SpawnObjectType)(S33* s33, DWORD edx, OBJECT_TYPE type, SCR_f x, SCR_f y, SCR_f z, short rot);
+		typedef BareGameObject* (__fastcall SpawnObjectType)(S33* s33, DWORD edx, OBJECT_TYPE type, SCR_f x, SCR_f y, SCR_f z, short rot);
 		static constexpr SpawnObjectType* SpawnObject = (SpawnObjectType*)0x004852e0;
 
 		typedef Car* (__fastcall SpawnCarType)(TrafficManager* trafficManager, DWORD edx, SCR_f x, SCR_f y, SCR_f z, int rot, CAR_MODEL4 model, int scale);

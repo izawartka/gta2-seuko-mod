@@ -2,7 +2,7 @@
 #include "spawn-object-at-player.h"
 #include "../cheats/player-pos.h"
 
-Game::GameObject* ModMenuModule::Utils::SpawnObjectAtPlayer(Game::OBJECT_TYPE objectType)
+Game::BareGameObject* ModMenuModule::Utils::SpawnObjectAtPlayer(Game::OBJECT_TYPE objectType)
 {
 	PlayerPosCheat* playerPosCheat = PlayerPosCheat::GetInstance();
 	if (!playerPosCheat->IsEnabled()) {
