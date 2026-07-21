@@ -30,6 +30,7 @@ bool ModMenuModule::VersionMenu::Attach()
 	);
 	auto* infoContainer = uiRoot->AddComponent<UiModule::VertCont>(infoMargin);
 
+	uiRoot->AddComponent<UiModule::Text>(infoContainer, L"Seuko mod", options.textSize);
 	std::wstring versionStr = L"Version: #" SEUKOMOD_VERSION_WSTR L"#";
 	uiRoot->AddComponent<UiModule::Text>(infoContainer, versionStr, options.textSize);
 	std::wstring gitHashStr = L"Git commit: #" SEUKOMOD_GIT_WSTR L"#";
