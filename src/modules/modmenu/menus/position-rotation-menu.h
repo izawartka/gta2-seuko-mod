@@ -6,10 +6,10 @@
 #include "../cheats/position-store.h"
 
 namespace ModMenuModule {
-	class PositionMenu : public MenuBase, public SegmentSupport {
+	class PositionRotationMenu : public MenuBase, public SegmentSupport {
 	public:
-		PositionMenu(PositionStoreCheat::PositionId positionId, std::string_view persistenceKey);
-		virtual ~PositionMenu();
+		PositionRotationMenu(PositionStoreCheat::PositionId positionId, std::string_view persistenceKey);
+		virtual ~PositionRotationMenu();
 
 	private:
 		virtual bool Attach() override;

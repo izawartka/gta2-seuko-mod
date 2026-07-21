@@ -1,5 +1,5 @@
 #include "spawn-object-menu.h"
-#include "../segments/position-menu-segment.h"
+#include "../segments/position-rotation-menu-segment.h"
 #include "../segments/spawn-object-segment.h"
 #include "../root.h"
 #include "../utils/spawn-object.h"
@@ -7,7 +7,7 @@
 
 ModMenuModule::SpawnObjectMenu::SpawnObjectMenu()
 {
-	m_positionMenuSegment = CreateSegment<ModMenuModule::PositionMenuSegment>("ModMenu_SpawnObjectMenu_PositionMenuSegment");
+	m_posRotMenuSegment = CreateSegment<ModMenuModule::PositionRotationMenuSegment>("ModMenu_SpawnObjectMenu_PositionMenuSegment");
 	m_spawnObjectSegment = CreateSegment<ModMenuModule::SpawnObjectSegment>("ModMenu_SpawnObjectMenu_SpawnSegment");
 }
 
@@ -27,7 +27,7 @@ bool ModMenuModule::SpawnObjectMenu::Attach()
 
 	uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, options.menuSpacerHeight);
 
-	AttachSegment(m_positionMenuSegment, this, vertCont);
+	AttachSegment(m_posRotMenuSegment, this, vertCont);
 	AttachSegment(m_spawnObjectSegment, this, vertCont);
 
 	// spawn button
@@ -43,7 +43,7 @@ bool ModMenuModule::SpawnObjectMenu::Attach()
 void ModMenuModule::SpawnObjectMenu::Detach()
 {
 	SaveCurrentSelectedIndex();
-	DetachSegment(m_positionMenuSegment);
+	DetachSegment(m_posRotMenuSegment);
 	DetachSegment(m_spawnObjectSegment);
 	DestroyMenu();
 }
@@ -65,16 +65,16 @@ void ModMenuModule::SpawnObjectMenu::OnMenuAction(UiModule::Selectable* item, Ui
 		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
 		break;
 	default:
-		m_positionMenuSegment->OnPassedMenuAction(item, id);
+		m_posRotMenuSegment->OnPassedMenuAction(item, id);
 		break;
 	}
 }
 
 void ModMenuModule::SpawnObjectMenu::Spawn()
 {
-	auto positionSegmentDataOpt = m_positionMenuSegment->GetSegmentData();
+	auto positionSegmentDataOpt = m_posRotMenuSegment->GetSegmentData();
 	if (!positionSegmentDataOpt.has_value()) {
-		spdlog::error("Cannot spawn object: failed to get PositionMenuSegment data.");
+		spdlog::error("Cannot spawn object: failed to get PositionRotationMenuSegment data.");
 		return;
 	}
 

@@ -4,7 +4,7 @@
 #include "../segment-support.h"
 
 namespace ModMenuModule {
-	class PositionMenuSegment;
+	class PositionRotationMenuSegment;
 	class SpawnVehicleSegment;
 
 	class SpawnVehicleMenu : public MenuBase, public SegmentSupport {
@@ -21,7 +21,7 @@ namespace ModMenuModule {
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 		void Spawn();
 
-		PositionMenuSegment* m_positionMenuSegment = nullptr;
+		PositionRotationMenuSegment* m_posRotMenuSegment = nullptr;
 		SpawnVehicleSegment* m_spawnVehicleSegment = nullptr;
 	};
 }

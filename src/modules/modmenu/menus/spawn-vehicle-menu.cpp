@@ -1,5 +1,5 @@
 #include "spawn-vehicle-menu.h"
-#include "../segments/position-menu-segment.h"
+#include "../segments/position-rotation-menu-segment.h"
 #include "../segments/spawn-vehicle-segment.h"
 #include "../../../converters/car-model-name.h"
 #include "../root.h"
@@ -7,7 +7,7 @@
 
 ModMenuModule::SpawnVehicleMenu::SpawnVehicleMenu()
 {
-	m_positionMenuSegment = CreateSegment<PositionMenuSegment>("ModMenu_SpawnVehicleMenu_PositionMenuSegment");
+	m_posRotMenuSegment = CreateSegment<PositionRotationMenuSegment>("ModMenu_SpawnVehicleMenu_PositionMenuSegment");
 	m_spawnVehicleSegment = CreateSegment<SpawnVehicleSegment>("ModMenu_SpawnVehicleMenu_SpawnSegment");
 }
 
@@ -28,7 +28,7 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 
 	uiRoot->AddComponent<UiModule::Spacer>(vertCont, 0, options.menuSpacerHeight);
 
-	AttachSegment(m_positionMenuSegment, this, vertCont);
+	AttachSegment(m_posRotMenuSegment, this, vertCont);
 	AttachSegment(m_spawnVehicleSegment, this, vertCont);
 
 	// spawn button
@@ -43,7 +43,7 @@ bool ModMenuModule::SpawnVehicleMenu::Attach()
 
 void ModMenuModule::SpawnVehicleMenu::Detach()
 {
-	DetachSegment(m_positionMenuSegment);
+	DetachSegment(m_posRotMenuSegment);
 	DetachSegment(m_spawnVehicleSegment);
 	DestroyMenu();
 }
@@ -65,7 +65,7 @@ void ModMenuModule::SpawnVehicleMenu::OnMenuAction(UiModule::Selectable* item, U
 		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
 		break;
 	default:
-		m_positionMenuSegment->OnPassedMenuAction(item, id);
+		m_posRotMenuSegment->OnPassedMenuAction(item, id);
 		break;
 	}
 }
@@ -78,9 +78,9 @@ void ModMenuModule::SpawnVehicleMenu::Spawn()
 		return;
 	}
 
-	auto positionSegmentDataOpt = m_positionMenuSegment->GetSegmentData();
+	auto positionSegmentDataOpt = m_posRotMenuSegment->GetSegmentData();
 	if (!positionSegmentDataOpt.has_value()) {
-		spdlog::error("Cannot spawn vehicle: failed to get PositionMenuSegment data");
+		spdlog::error("Cannot spawn vehicle: failed to get PositionRotationMenuSegment data");
 		return;
 	}
 

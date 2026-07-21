@@ -1,17 +1,17 @@
-#include "position-menu.h"
+#include "position-rotation-menu.h"
 #include "../root.h"
 
-ModMenuModule::PositionMenu::PositionMenu(PositionStoreCheat::PositionId positionId, std::string_view persistenceKey)
+ModMenuModule::PositionRotationMenu::PositionRotationMenu(PositionStoreCheat::PositionId positionId, std::string_view persistenceKey)
 {
 	m_posRotSegment = CreateSegment<PositionRotationSegment>(positionId, persistenceKey);
 }
 
-ModMenuModule::PositionMenu::~PositionMenu()
+ModMenuModule::PositionRotationMenu::~PositionRotationMenu()
 {
 
 }
 
-bool ModMenuModule::PositionMenu::Attach()
+bool ModMenuModule::PositionRotationMenu::Attach()
 {
 	UiModule::Component* vertCont;
 	CreateMenu(L"#Position#", vertCont);
@@ -27,23 +27,23 @@ bool ModMenuModule::PositionMenu::Attach()
 	return true;
 }
 
-void ModMenuModule::PositionMenu::Detach()
+void ModMenuModule::PositionRotationMenu::Detach()
 {
 	DetachSegment(m_posRotSegment);
 	DestroyMenu();
 }
 
-void ModMenuModule::PositionMenu::OnShow()
+void ModMenuModule::PositionRotationMenu::OnShow()
 {
 	SetSegmentsVisible(true);
 }
 
-void ModMenuModule::PositionMenu::OnHide()
+void ModMenuModule::PositionRotationMenu::OnHide()
 {
 	SetSegmentsVisible(false);
 }
 
-void ModMenuModule::PositionMenu::OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
+void ModMenuModule::PositionRotationMenu::OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
 {
 	if (id == 0) {
 		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();

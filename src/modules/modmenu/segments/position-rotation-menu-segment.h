@@ -6,17 +6,17 @@
 #include "position-rotation-segment.h"
 
 namespace ModMenuModule {
-	using PositionMenuSegmentData = PositionRotationSegmentData;
+	using PositionRotationMenuSegmentData = PositionRotationSegmentData;
 
-	class PositionMenuSegment : public Segment<PositionMenuSegmentData>, public Core::EventListenerSupport {
+	class PositionRotationMenuSegment : public Segment<PositionRotationMenuSegmentData>, public Core::EventListenerSupport {
 	public:
-		PositionMenuSegment();
-		PositionMenuSegment(std::string_view persistenceKey);
-		PositionMenuSegment(PositionStoreCheat::PositionId positionId, std::string_view persistenceKey);
-		virtual ~PositionMenuSegment();
+		PositionRotationMenuSegment();
+		PositionRotationMenuSegment(std::string_view persistenceKey);
+		PositionRotationMenuSegment(PositionStoreCheat::PositionId positionId, std::string_view persistenceKey);
+		virtual ~PositionRotationMenuSegment();
 
-		virtual std::optional<PositionMenuSegmentData> GetSegmentData() const override;
-		virtual bool SetSegmentData(const PositionMenuSegmentData& data) override;
+		virtual std::optional<PositionRotationMenuSegmentData> GetSegmentData() const override;
+		virtual bool SetSegmentData(const PositionRotationMenuSegmentData& data) override;
 
 		bool OnPassedMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 

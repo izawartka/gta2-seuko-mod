@@ -1,10 +1,10 @@
-#include "position-menu-segment.h"
+#include "position-rotation-menu-segment.h"
 #include "../../../converters/scr-vector3-rot.h"
 #include "../root.h"
 #include "../cheats/position-store.h"
-#include "../menus/position-menu.h"
+#include "../menus/position-rotation-menu.h"
 
-ModMenuModule::PositionMenuSegment::PositionMenuSegment()
+ModMenuModule::PositionRotationMenuSegment::PositionRotationMenuSegment()
 {
 	m_ownsPositionId = true;
 
@@ -12,7 +12,7 @@ ModMenuModule::PositionMenuSegment::PositionMenuSegment()
 	m_positionId = positionStoreCheat->Create();
 }
 
-ModMenuModule::PositionMenuSegment::PositionMenuSegment(std::string_view persistenceKey)
+ModMenuModule::PositionRotationMenuSegment::PositionRotationMenuSegment(std::string_view persistenceKey)
 {
 	m_persistenceKey = persistenceKey;
 	m_ownsPositionId = true;
@@ -22,14 +22,14 @@ ModMenuModule::PositionMenuSegment::PositionMenuSegment(std::string_view persist
 	m_positionId = positionStoreCheat->Create(loadedEntry.has_value() ? *loadedEntry : PositionStoreEntry{});
 }
 
-ModMenuModule::PositionMenuSegment::PositionMenuSegment(PositionStoreCheat::PositionId positionId, std::string_view persistenceKey)
+ModMenuModule::PositionRotationMenuSegment::PositionRotationMenuSegment(PositionStoreCheat::PositionId positionId, std::string_view persistenceKey)
 {
 	m_positionId = positionId;
 	m_persistenceKey = persistenceKey;
 	m_ownsPositionId = false;
 }
 
-ModMenuModule::PositionMenuSegment::~PositionMenuSegment()
+ModMenuModule::PositionRotationMenuSegment::~PositionRotationMenuSegment()
 {
 	if (m_ownsPositionId) {
 		PositionStoreCheat* positionStoreCheat = PositionStoreCheat::GetInstance();
@@ -37,7 +37,7 @@ ModMenuModule::PositionMenuSegment::~PositionMenuSegment()
 	}
 }
 
-std::optional<ModMenuModule::PositionMenuSegmentData> ModMenuModule::PositionMenuSegment::GetSegmentData() const
+std::optional<ModMenuModule::PositionRotationMenuSegmentData> ModMenuModule::PositionRotationMenuSegment::GetSegmentData() const
 {
 	PositionStoreCheat* positionStoreCheat = PositionStoreCheat::GetInstance();
 	const PositionStoreEntry* entry = positionStoreCheat->Get(m_positionId);
@@ -47,7 +47,7 @@ std::optional<ModMenuModule::PositionMenuSegmentData> ModMenuModule::PositionMen
 		return std::nullopt;
 	}
 
-	return PositionMenuSegmentData{
+	return PositionRotationMenuSegmentData{
 		entry->updateFromPlayerPed,
 		entry->value.position,
 		entry->autoZ,
@@ -55,7 +55,7 @@ std::optional<ModMenuModule::PositionMenuSegmentData> ModMenuModule::PositionMen
 	};
 }
 
-bool ModMenuModule::PositionMenuSegment::SetSegmentData(const PositionMenuSegmentData& data)
+bool ModMenuModule::PositionRotationMenuSegment::SetSegmentData(const PositionRotationMenuSegmentData& data)
 {
 	PositionStoreEntry newEntry = {
 		data.position,
@@ -78,17 +78,17 @@ bool ModMenuModule::PositionMenuSegment::SetSegmentData(const PositionMenuSegmen
 	return true;
 }
 
-bool ModMenuModule::PositionMenuSegment::OnPassedMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
+bool ModMenuModule::PositionRotationMenuSegment::OnPassedMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
 {
 	if (id == m_positionContMenuItemId) {
-		MenuManager::GetInstance()->AddMenu<PositionMenu>(m_positionId, m_persistenceKey);
+		MenuManager::GetInstance()->AddMenu<PositionRotationMenu>(m_positionId, m_persistenceKey);
 		return true;
 	}
 
 	return false;
 }
 
-bool ModMenuModule::PositionMenuSegment::Attach(ModMenuModule::MenuBase* menu, UiModule::Component* parent)
+bool ModMenuModule::PositionRotationMenuSegment::Attach(ModMenuModule::MenuBase* menu, UiModule::Component* parent)
 {
 	CreateSegment(menu, parent);
 
@@ -97,7 +97,7 @@ bool ModMenuModule::PositionMenuSegment::Attach(ModMenuModule::MenuBase* menu, U
 	PositionStoreCheat* positionStoreCheat = PositionStoreCheat::GetInstance();
 	const PositionStoreEntry* entry = positionStoreCheat->Get(m_positionId);
 	if (!entry) {
-		spdlog::error("PositionRotationSegment: Cannot attach PositionMenuSegment: position ID {} does not exist in PositionStoreCheat.", m_positionId);
+		spdlog::error("PositionRotationSegment: Cannot attach PositionRotationMenuSegment: position ID {} does not exist in PositionStoreCheat.", m_positionId);
 		return false;
 	}
 
@@ -111,33 +111,33 @@ bool ModMenuModule::PositionMenuSegment::Attach(ModMenuModule::MenuBase* menu, U
 	return true;
 }
 
-void ModMenuModule::PositionMenuSegment::Detach()
+void ModMenuModule::PositionRotationMenuSegment::Detach()
 {
 	DestroySegment();
 }
 
-void ModMenuModule::PositionMenuSegment::OnShow()
+void ModMenuModule::PositionRotationMenuSegment::OnShow()
 {
 	PositionStoreCheat* positionStoreCheat = PositionStoreCheat::GetInstance();
 	const PositionStoreEntry* entry = positionStoreCheat->Get(m_positionId);
-	SetEventListener<PositionStoreEntriesUpdateEvent>(&PositionMenuSegment::OnPositionStoreEntriesUpdate, entry && entry->updateFromPlayerPed);
+	SetEventListener<PositionStoreEntriesUpdateEvent>(&PositionRotationMenuSegment::OnPositionStoreEntriesUpdate, entry && entry->updateFromPlayerPed);
 	UpdateTexts();
 }
 
-void ModMenuModule::PositionMenuSegment::OnHide()
+void ModMenuModule::PositionRotationMenuSegment::OnHide()
 {
 	RemoveEventListener<PositionStoreEntriesUpdateEvent>(true);
 }
 
-void ModMenuModule::PositionMenuSegment::OnPositionStoreEntriesUpdate(ModMenuModule::PositionStoreEntriesUpdateEvent& event)
+void ModMenuModule::PositionRotationMenuSegment::OnPositionStoreEntriesUpdate(ModMenuModule::PositionStoreEntriesUpdateEvent& event)
 {
 	UpdateTexts();
 }
 
-bool ModMenuModule::PositionMenuSegment::UpdateTexts()
+bool ModMenuModule::PositionRotationMenuSegment::UpdateTexts()
 {
 	if (!m_modeText) {
-		spdlog::error("PositionMenuSegment: Cannot update text: text is not initialized.");
+		spdlog::error("PositionRotationMenuSegment: Cannot update text: text is not initialized.");
 		return false;
 	}
 
@@ -145,7 +145,7 @@ bool ModMenuModule::PositionMenuSegment::UpdateTexts()
 	const PositionStoreEntry* entry = positionStoreCheat->Get(m_positionId);
 
 	if (!entry) {
-		spdlog::error("PositionMenuSegment: Cannot update text: position ID {} does not exist in PositionStoreCheat.", m_positionId);
+		spdlog::error("PositionRotationMenuSegment: Cannot update text: position ID {} does not exist in PositionStoreCheat.", m_positionId);
 		return false;
 	}
 
