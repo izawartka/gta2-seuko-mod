@@ -484,6 +484,9 @@
     <ClInclude Include="src\modules\modmenu\utils\fix-car-utils.h" />
     <ClInclude Include="src\modules\modmenu\utils\get-all-weapons.h" />
     <ClInclude Include="src\modules\modmenu\utils\angle-utils.h" />
+    <ClInclude Include="src\modules\modmenu\utils\get-nearest-car.h" />
+    <ClInclude Include="src\modules\modmenu\utils\get-nearest-object.h" />
+    <ClInclude Include="src\modules\modmenu\utils\get-nearest-ped.h" />
     <ClInclude Include="src\modules\modmenu\utils\get-ped-position.h" />
     <ClInclude Include="src\modules\modmenu\utils\get-ped-rotation.h" />
     <ClInclude Include="src\modules\modmenu\utils\get-selectable-car-lock-states.h" />
@@ -753,6 +756,9 @@
     <ClCompile Include="src\modules\modmenu\utils\explode-last-car.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\fix-car-utils.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\get-all-weapons.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\get-nearest-car.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\get-nearest-object.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\get-nearest-ped.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\get-ped-position.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\get-ped-rotation.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\get-selectable-car-lock-states.cpp" />

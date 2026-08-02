@@ -192,6 +192,7 @@
     <ClCompile Include="src\modules\ui\components\icon-sprite.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\toggle-mouse-control.cpp" />
     <ClCompile Include="src\game\utils\ped-utils.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\get-nearest-car.cpp" />
     <ClCompile Include="src\game\utils\car-utils.cpp" />
     <ClCompile Include="src\game\utils\object-utils.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\explode-vehicle.cpp" />
@@ -199,8 +200,10 @@
     <ClCompile Include="src\modules\modmenu\utils\explode-last-car.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\turn-vehicle-engine-off.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\turn-last-car-engine-off.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\get-nearest-ped.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\invisibility.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\toggle-invisibility.cpp" />
+    <ClCompile Include="src\modules\modmenu\utils\get-nearest-object.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -517,6 +520,7 @@
     <ClInclude Include="src\converters\ped-threat-search.h" />
     <ClInclude Include="src\converters\ped-threat-reaction.h" />
     <ClInclude Include="src\game\utils\ped-utils.h" />
+    <ClInclude Include="src\modules\modmenu\utils\get-nearest-car.h" />
     <ClInclude Include="src\game\utils\car-utils.h" />
     <ClInclude Include="src\game\utils\object-utils.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\explode-vehicle.h" />
@@ -524,9 +528,11 @@
     <ClInclude Include="src\modules\modmenu\utils\explode-last-car.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\turn-vehicle-engine-off.h" />
     <ClInclude Include="src\modules\modmenu\utils\turn-last-car-engine-off.h" />
+    <ClInclude Include="src\modules\modmenu\utils\get-nearest-ped.h" />
     <ClInclude Include="src\modules\modmenu\cheats\invisibility.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\toggle-invisibility.h" />
     <ClInclude Include="src\converters\hex.h" />
+    <ClInclude Include="src\modules\modmenu\utils\get-nearest-object.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
