@@ -8,6 +8,7 @@
 #include "gang-utils.h"
 #include "lists-utils.h"
 #include "object-utils.h"
+#include "ped-utils.h"
 #include "player-utils.h"
 #include "scrf-utils.h"
 #include "teleport-utils.h"

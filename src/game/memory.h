@@ -61,6 +61,8 @@ namespace Game {
 		static S28* GetS28() { return (S28*)*(DWORD*)0x0066b404; }
 		static ObjectPrefabsContainer* GetObjectPrefabsContainer() { return (ObjectPrefabsContainer*)*(DWORD*)0x00665b40; }
 		static S17_Mission* GetS17Mission() { return (S17_Mission*)*(DWORD*)0x006644b8; }
+		static PedManager_S25* GetPedManager() { return (PedManager_S25*)*(DWORD*)0x005e5bbc; }
+		static PedGameObjectManager* GetPedGameObjectManager() { return (PedGameObjectManager*)*(DWORD*)0x0066a3b4; }
 		static BareGameObjectManager* GetBareGameObjectManager() { return (BareGameObjectManager*)*(DWORD*)0x00665784; }
 	};
 }

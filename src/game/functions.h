@@ -188,5 +188,47 @@ namespace Game {
 
 		typedef wchar_t* (__fastcall GetCarModelNameType)(Car* car);
 		static constexpr GetCarModelNameType* GetCarModelName = (GetCarModelNameType*)0x0041f700;
+
+		typedef Ped* (__stdcall GetPedByIdType)(int);
+		static constexpr GetPedByIdType* GetPedById = (GetPedByIdType*)0x0043ae10;
+
+		typedef Ped* (__stdcall CreatePedType)(void);
+		static constexpr CreatePedType* CreatePed = (CreatePedType*)0x0043df60;
+
+		typedef void(__fastcall CreatePed2Type)(S17_Mission* mission, DWORD edx, Ped* ped);
+		static constexpr CreatePed2Type* CreatePed2 = (CreatePed2Type*)0x00476d20;
+
+		typedef void(__fastcall PutPedInCarType)(Ped* ped, DWORD edx, Car* car);
+		static constexpr PutPedInCarType* PutPedInCar = (PutPedInCarType*)0x00436070;
+
+		typedef void(__fastcall MakeCarDriveable1Type)(Car* car, DWORD edx, int eq5);
+		static constexpr MakeCarDriveable1Type* MakeCarDriveable1 = (MakeCarDriveable1Type*)0x00421560;
+
+		typedef void(__fastcall MakeCarDriveable2Type)(Car* car, DWORD edx);
+		static constexpr MakeCarDriveable2Type* MakeCarDriveable2 = (MakeCarDriveable2Type*)0x00421510;
+
+		typedef void(__fastcall MakeCarDriveable3Type)(CarManager4_S1* carManager, DWORD edx, Car* car);
+		static constexpr MakeCarDriveable3Type* MakeCarDriveable3 = (MakeCarDriveable3Type*)0x0042a9d0;
+
+		typedef void(__fastcall MakeCarDriveable4Type)(Car* car, DWORD edx);
+		static constexpr MakeCarDriveable4Type* MakeCarDriveable4 = (MakeCarDriveable4Type*)0x00425dd0;
+
+		typedef Ped* (__stdcall SpawnPedType)(SCR_f x, SCR_f y, SCR_f z, PED_REMAP remap, short param_5);
+		static constexpr SpawnPedType* SpawnPed = (SpawnPedType*)0x0043db40;
+
+		typedef void(__fastcall PedGroupCreateType)(Ped* ped, DWORD edx, byte memberCount);
+		static constexpr PedGroupCreateType* PedGroupCreate = (PedGroupCreateType*)0x00440350;
+
+		typedef void(__fastcall ChangePedGroupLeaderType)(Ped* newLeader, DWORD edx, Ped* oldLeader);
+		static constexpr ChangePedGroupLeaderType* PedGroupSetLeader = (ChangePedGroupLeaderType*)0x00435490;
+
+		typedef void(__fastcall PedGroupAddPedType)(PedGroup* group, DWORD edx, Ped* ped);
+		static constexpr PedGroupAddPedType* PedGroupAddPed = (PedGroupAddPedType*)0x00404c90;
+
+		typedef void(__fastcall PedSetObjectiveType)(Ped* ped, DWORD edx, PED_OBJECTIVE objective, ushort timer);
+		static constexpr PedSetObjectiveType* PedSetObjective = (PedSetObjectiveType*)0x0043bbc0;
+
+		typedef void(__fastcall SetPedWeaponType)(Ped* ped, DWORD edx, WEAPON_INDEX weapon);
+		static constexpr SetPedWeaponType* SetPedWeapon = (SetPedWeaponType*)0x0043d830;
 	};  
 }
