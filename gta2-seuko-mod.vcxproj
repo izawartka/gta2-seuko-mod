@@ -341,6 +341,7 @@
     <ClInclude Include="src\game\utils\gang-utils.h" />
     <ClInclude Include="src\game\utils\keyboard-utils.h" />
     <ClInclude Include="src\game\utils\cop-value-utils.h" />
+    <ClInclude Include="src\game\utils\object-utils.h" />
     <ClInclude Include="src\game\utils\player-utils.h" />
     <ClInclude Include="src\game\utils\weapon-utils.h" />
     <ClInclude Include="src\game\utils\lists-utils.h" />
@@ -627,6 +628,7 @@
     <ClCompile Include="src\game\utils\car-utils.cpp" />
     <ClCompile Include="src\game\utils\cop-value-utils.cpp" />
     <ClCompile Include="src\game\utils\gang-utils.cpp" />
+    <ClCompile Include="src\game\utils\object-utils.cpp" />
     <ClCompile Include="src\game\utils\player-utils.cpp" />
     <ClCompile Include="src\game\utils\lists-utils.cpp" />
     <ClCompile Include="src\game\utils\scrf-utils.cpp" />

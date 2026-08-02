@@ -61,5 +61,6 @@ namespace Game {
 		static S28* GetS28() { return (S28*)*(DWORD*)0x0066b404; }
 		static ObjectPrefabsContainer* GetObjectPrefabsContainer() { return (ObjectPrefabsContainer*)*(DWORD*)0x00665b40; }
 		static S17_Mission* GetS17Mission() { return (S17_Mission*)*(DWORD*)0x006644b8; }
+		static BareGameObjectManager* GetBareGameObjectManager() { return (BareGameObjectManager*)*(DWORD*)0x00665784; }
 	};
 }
