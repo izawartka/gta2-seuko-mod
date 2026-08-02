@@ -74,8 +74,19 @@ bool ModMenuModule::PositionRotationMenuSegment::SetSegmentData(const PositionRo
 		return false;
 	}
 
-	UpdateTexts();
+	if (IsAttached()) UpdateTexts();
 	return true;
+}
+
+void ModMenuModule::PositionRotationMenuSegment::SetLabel(std::wstring_view label)
+{
+	m_label = label;
+	if (IsAttached()) UpdateTexts();
+}
+
+const std::wstring& ModMenuModule::PositionRotationMenuSegment::GetLabel() const
+{
+	return m_label;
 }
 
 bool ModMenuModule::PositionRotationMenuSegment::OnPassedMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id)
@@ -113,6 +124,8 @@ bool ModMenuModule::PositionRotationMenuSegment::Attach(ModMenuModule::MenuBase*
 
 void ModMenuModule::PositionRotationMenuSegment::Detach()
 {
+	m_modeText = nullptr;
+	m_valueText = nullptr;
 	DestroySegment();
 }
 
@@ -136,8 +149,8 @@ void ModMenuModule::PositionRotationMenuSegment::OnPositionStoreEntriesUpdate(Mo
 
 bool ModMenuModule::PositionRotationMenuSegment::UpdateTexts()
 {
-	if (!m_modeText) {
-		spdlog::error("PositionRotationMenuSegment: Cannot update text: text is not initialized.");
+	if (!m_modeText || !m_valueText) {
+		spdlog::error("PositionRotationMenuSegment: Cannot update texts: texts are not initialized.");
 		return false;
 	}
 
@@ -150,7 +163,7 @@ bool ModMenuModule::PositionRotationMenuSegment::UpdateTexts()
 	}
 
 	std::wstring modeTextValue = (entry->updateFromPlayerPed) ? L"From player" : L"Custom";
-	std::wstring modeText = L"Position: #" + modeTextValue + L"#";
+	std::wstring modeText = m_label + L": " + modeTextValue;
 	m_modeText->SetText(modeText);
 
 	std::wstring valueText = L"#" + ScrVector3RotConverter::ConvertToString({ entry->value.position, entry->value.rotation }) + L"#";

@@ -18,6 +18,9 @@ namespace ModMenuModule {
 		virtual std::optional<PositionRotationMenuSegmentData> GetSegmentData() const override;
 		virtual bool SetSegmentData(const PositionRotationMenuSegmentData& data) override;
 
+		void SetLabel(std::wstring_view label);
+		const std::wstring& GetLabel() const;
+
 		bool OnPassedMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 
 	private:
@@ -29,6 +32,7 @@ namespace ModMenuModule {
 		void OnPositionStoreEntriesUpdate(ModMenuModule::PositionStoreEntriesUpdateEvent& event);
 		bool UpdateTexts();
 
+		std::wstring m_label = L"Position";
 		UiModule::VertCont* m_positionCont = nullptr;
 		UiModule::Text* m_modeText = nullptr;
 		UiModule::Text* m_valueText = nullptr;
