@@ -294,7 +294,11 @@
     <ClInclude Include="src\converters\native-cheat.h" />
     <ClInclude Include="src\converters\object-type.h" />
     <ClInclude Include="src\converters\ped-graphic-type.h" />
+    <ClInclude Include="src\converters\ped-objective.h" />
+    <ClInclude Include="src\converters\ped-occupation.h" />
     <ClInclude Include="src\converters\ped-remap.h" />
+    <ClInclude Include="src\converters\ped-state-2.h" />
+    <ClInclude Include="src\converters\ped-state.h" />
     <ClInclude Include="src\converters\ped-threat-reaction.h" />
     <ClInclude Include="src\converters\ped-threat-search.h" />
     <ClInclude Include="src\converters\powerup.h" />
