@@ -127,62 +127,10 @@
       <ModuleDefinitionFile>src\dinput8.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>@echo off
-
-echo Dinput8 proxy mode enabled
-
-if "$(GTA2_DIR)"=="" (
-  echo ERROR: GTA2_DIR is not set. Make sure to set it in GTA2.props file.
-  exit /b 1
-)
-
-if "$(GTA2_EXE)"=="" (
-  echo ERROR: GTA2_EXE is not set. Make sure to set it in GTA2.props file.
-  exit /b 1
-)
-
-if not exist "$(GTA2_DIR)\" (
-  echo ERROR: GTA2_DIR "$(GTA2_DIR)" specified in GTA2.props does not exist.
-  exit /b 1
-)
-
-if not exist "$(GTA2_DIR)\$(GTA2_EXE)" (
-  echo ERROR: "$(GTA2_EXE)" not found in "$(GTA2_DIR)". Check GTA2.props file.
-  exit /b 1
-)
-
-echo Copying "$(TargetPath)" to "$(GTA2_DIR)"
-
-copy /Y "$(TargetPath)" "$(GTA2_DIR)\"
-if errorlevel 1 exit /b 1
-
-if exist "$(TargetDir)$(TargetName).pdb" (
-  copy /Y "$(TargetDir)$(TargetName).pdb" "$(GTA2_DIR)\"
-)
-
-exit /b 0
-</Command>
+      <Command>call "$(ProjectDir)tools\post-build-dinput8.bat" "$(GTA2_DIR)" "$(GTA2_EXE)" "$(TargetPath)" "$(TargetDir)" "$(TargetName)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>set GIT_HASH=unknown
-set GIT_DIRTY=false
-
-for /f %%i in ('git rev-parse --short HEAD 2^&gt;nul') do set GIT_HASH=%%i
-
-for /f %%i in ('git status --porcelain 2^&gt;nul') do (
-    set GIT_DIRTY=true
-    goto :dirty_done
-)
-:dirty_done
-
-echo #pragma once&gt; "$(ProjectDir)src\git.h"
-echo // Auto-generated. Do not edit.&gt;&gt; "$(ProjectDir)src\git.h"
-echo.&gt;&gt; "$(ProjectDir)src\git.h"
-echo #define GIT_COMMIT_HASH "%GIT_HASH%"&gt;&gt; "$(ProjectDir)src\git.h"
-echo #define GIT_IS_DIRTY %GIT_DIRTY%&gt;&gt; "$(ProjectDir)src\git.h"
-
-echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
-</Command>
+      <Command>call "$(ProjectDir)tools\update-git-header.bat" "$(ProjectDir)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugAsi|Win32'">
@@ -209,73 +157,10 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
       </ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>@echo off
-
-echo ASI mode enabled
-
-if "$(GTA2_DIR)"=="" (
-  echo ERROR: GTA2_DIR is not set. Make sure to set it in GTA2.props file.
-  exit /b 1
-)
-
-if "$(GTA2_EXE)"=="" (
-  echo ERROR: GTA2_EXE is not set. Make sure to set it in GTA2.props file.
-  exit /b 1
-)
-
-if not exist "$(GTA2_DIR)\" (
-  echo ERROR: GTA2_DIR "$(GTA2_DIR)" specified in GTA2.props does not exist.
-  exit /b 1
-)
-
-if not exist "$(GTA2_DIR)\$(GTA2_EXE)" (
-  echo ERROR: "$(GTA2_EXE)" not found in "$(GTA2_DIR)". Check GTA2.props file.
-  exit /b 1
-)
-
-if "$(GTA2_ASI_DIR)"=="" (
-  echo ERROR: GTA2_ASI_DIR is not set. To build in ASI mode, make sure to set it in GTA2.props file.
-  exit /b 1
-)
-
-if "$(GTA2_ASI_FILENAME)"=="" (
-  echo ERROR: GTA2_ASI_FILENAME is not set. To build in ASI mode, make sure to set it in GTA2.props file.
-  exit /b 1
-)
-
-if not exist "$(GTA2_ASI_DIR)\" (
-  echo ERROR: GTA2_ASI_DIR "$(GTA2_ASI_DIR)" does not exist. Check GTA2.props file.
-  exit /b 1
-)
-
-echo Copying "$(TargetPath)" to "$(GTA2_ASI_DIR)\$(GTA2_ASI_FILENAME)"
-
-copy /Y "$(TargetPath)" "$(GTA2_ASI_DIR)\$(GTA2_ASI_FILENAME)"
-if errorlevel 1 exit /b 1
-
-exit /b 0
-</Command>
+      <Command>call "$(ProjectDir)tools\post-build-asi.bat" "$(GTA2_DIR)" "$(GTA2_EXE)" "$(GTA2_ASI_DIR)" "$(GTA2_ASI_FILENAME)" "$(GTA2_ASI_PDB_FILENAME)" "$(TargetPath)" "$(TargetDir)" "$(TargetName)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>set GIT_HASH=unknown
-set GIT_DIRTY=false
-
-for /f %%i in ('git rev-parse --short HEAD 2^&gt;nul') do set GIT_HASH=%%i
-
-for /f %%i in ('git status --porcelain 2^&gt;nul') do (
-    set GIT_DIRTY=true
-    goto :dirty_done
-)
-:dirty_done
-
-echo #pragma once&gt; "$(ProjectDir)src\git.h"
-echo // Auto-generated. Do not edit.&gt;&gt; "$(ProjectDir)src\git.h"
-echo.&gt;&gt; "$(ProjectDir)src\git.h"
-echo #define GIT_COMMIT_HASH "%GIT_HASH%"&gt;&gt; "$(ProjectDir)src\git.h"
-echo #define GIT_IS_DIRTY %GIT_DIRTY%&gt;&gt; "$(ProjectDir)src\git.h"
-
-echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
-</Command>
+      <Command>call "$(ProjectDir)tools\update-git-header.bat" "$(ProjectDir)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -303,62 +188,10 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
       <ModuleDefinitionFile>src\dinput8.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>@echo off
-
-echo Dinput8 proxy mode enabled
-
-if "$(GTA2_DIR)"=="" (
-  echo ERROR: GTA2_DIR is not set. Make sure to set it in GTA2.props file.
-  exit /b 1
-)
-
-if "$(GTA2_EXE)"=="" (
-  echo ERROR: GTA2_EXE is not set. Make sure to set it in GTA2.props file.
-  exit /b 1
-)
-
-if not exist "$(GTA2_DIR)\" (
-  echo ERROR: GTA2_DIR "$(GTA2_DIR)" specified in GTA2.props does not exist.
-  exit /b 1
-)
-
-if not exist "$(GTA2_DIR)\$(GTA2_EXE)" (
-  echo ERROR: "$(GTA2_EXE)" not found in "$(GTA2_DIR)". Check GTA2.props file.
-  exit /b 1
-)
-
-echo Copying "$(TargetPath)" to "$(GTA2_DIR)"
-
-copy /Y "$(TargetPath)" "$(GTA2_DIR)\"
-if errorlevel 1 exit /b 1
-
-if exist "$(TargetDir)$(TargetName).pdb" (
-  copy /Y "$(TargetDir)$(TargetName).pdb" "$(GTA2_DIR)\"
-)
-
-exit /b 0
-</Command>
+      <Command>call "$(ProjectDir)tools\post-build-dinput8.bat" "$(GTA2_DIR)" "$(GTA2_EXE)" "$(TargetPath)" "$(TargetDir)" "$(TargetName)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>set GIT_HASH=unknown
-set GIT_DIRTY=false
-
-for /f %%i in ('git rev-parse --short HEAD 2^&gt;nul') do set GIT_HASH=%%i
-
-for /f %%i in ('git status --porcelain 2^&gt;nul') do (
-    set GIT_DIRTY=true
-    goto :dirty_done
-)
-:dirty_done
-
-echo #pragma once&gt; "$(ProjectDir)src\git.h"
-echo // Auto-generated. Do not edit.&gt;&gt; "$(ProjectDir)src\git.h"
-echo.&gt;&gt; "$(ProjectDir)src\git.h"
-echo #define GIT_COMMIT_HASH "%GIT_HASH%"&gt;&gt; "$(ProjectDir)src\git.h"
-echo #define GIT_IS_DIRTY %GIT_DIRTY%&gt;&gt; "$(ProjectDir)src\git.h"
-
-echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
-</Command>
+      <Command>call "$(ProjectDir)tools\update-git-header.bat" "$(ProjectDir)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseAsi|Win32'">
@@ -388,73 +221,10 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
       </ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>@echo off
-
-echo ASI mode enabled
-
-if "$(GTA2_DIR)"=="" (
-  echo ERROR: GTA2_DIR is not set. Make sure to set it in GTA2.props file.
-  exit /b 1
-)
-
-if "$(GTA2_EXE)"=="" (
-  echo ERROR: GTA2_EXE is not set. Make sure to set it in GTA2.props file.
-  exit /b 1
-)
-
-if not exist "$(GTA2_DIR)\" (
-  echo ERROR: GTA2_DIR "$(GTA2_DIR)" specified in GTA2.props does not exist.
-  exit /b 1
-)
-
-if not exist "$(GTA2_DIR)\$(GTA2_EXE)" (
-  echo ERROR: "$(GTA2_EXE)" not found in "$(GTA2_DIR)". Check GTA2.props file.
-  exit /b 1
-)
-
-if "$(GTA2_ASI_DIR)"=="" (
-  echo ERROR: GTA2_ASI_DIR is not set. To build in ASI mode, make sure to set it in GTA2.props file.
-  exit /b 1
-)
-
-if "$(GTA2_ASI_FILENAME)"=="" (
-  echo ERROR: GTA2_ASI_FILENAME is not set. To build in ASI mode, make sure to set it in GTA2.props file.
-  exit /b 1
-)
-
-if not exist "$(GTA2_ASI_DIR)\" (
-  echo ERROR: GTA2_ASI_DIR "$(GTA2_ASI_DIR)" does not exist. Check GTA2.props file.
-  exit /b 1
-)
-
-echo Copying "$(TargetPath)" to "$(GTA2_ASI_DIR)\$(GTA2_ASI_FILENAME)"
-
-copy /Y "$(TargetPath)" "$(GTA2_ASI_DIR)\$(GTA2_ASI_FILENAME)"
-if errorlevel 1 exit /b 1
-
-exit /b 0
-</Command>
+      <Command>call "$(ProjectDir)tools\post-build-asi.bat" "$(GTA2_DIR)" "$(GTA2_EXE)" "$(GTA2_ASI_DIR)" "$(GTA2_ASI_FILENAME)" "$(GTA2_ASI_PDB_FILENAME)" "$(TargetPath)" "$(TargetDir)" "$(TargetName)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>set GIT_HASH=unknown
-set GIT_DIRTY=false
-
-for /f %%i in ('git rev-parse --short HEAD 2^&gt;nul') do set GIT_HASH=%%i
-
-for /f %%i in ('git status --porcelain 2^&gt;nul') do (
-    set GIT_DIRTY=true
-    goto :dirty_done
-)
-:dirty_done
-
-echo #pragma once&gt; "$(ProjectDir)src\git.h"
-echo // Auto-generated. Do not edit.&gt;&gt; "$(ProjectDir)src\git.h"
-echo.&gt;&gt; "$(ProjectDir)src\git.h"
-echo #define GIT_COMMIT_HASH "%GIT_HASH%"&gt;&gt; "$(ProjectDir)src\git.h"
-echo #define GIT_IS_DIRTY %GIT_DIRTY%&gt;&gt; "$(ProjectDir)src\git.h"
-
-echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
-</Command>
+      <Command>call "$(ProjectDir)tools\update-git-header.bat" "$(ProjectDir)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithLogging|Win32'">
@@ -483,62 +253,10 @@ echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
       <ModuleDefinitionFile>src\dinput8.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>@echo off
-
-echo Dinput8 proxy mode enabled
-
-if "$(GTA2_DIR)"=="" (
-  echo ERROR: GTA2_DIR is not set. Make sure to set it in GTA2.props file.
-  exit /b 1
-)
-
-if "$(GTA2_EXE)"=="" (
-  echo ERROR: GTA2_EXE is not set. Make sure to set it in GTA2.props file.
-  exit /b 1
-)
-
-if not exist "$(GTA2_DIR)\" (
-  echo ERROR: GTA2_DIR "$(GTA2_DIR)" specified in GTA2.props does not exist.
-  exit /b 1
-)
-
-if not exist "$(GTA2_DIR)\$(GTA2_EXE)" (
-  echo ERROR: "$(GTA2_EXE)" not found in "$(GTA2_DIR)". Check GTA2.props file.
-  exit /b 1
-)
-
-echo Copying "$(TargetPath)" to "$(GTA2_DIR)"
-
-copy /Y "$(TargetPath)" "$(GTA2_DIR)\"
-if errorlevel 1 exit /b 1
-
-if exist "$(TargetDir)$(TargetName).pdb" (
-  copy /Y "$(TargetDir)$(TargetName).pdb" "$(GTA2_DIR)\"
-)
-
-exit /b 0
-</Command>
+      <Command>call "$(ProjectDir)tools\post-build-dinput8.bat" "$(GTA2_DIR)" "$(GTA2_EXE)" "$(TargetPath)" "$(TargetDir)" "$(TargetName)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>set GIT_HASH=unknown
-set GIT_DIRTY=false
-
-for /f %%i in ('git rev-parse --short HEAD 2^&gt;nul') do set GIT_HASH=%%i
-
-for /f %%i in ('git status --porcelain 2^&gt;nul') do (
-    set GIT_DIRTY=true
-    goto :dirty_done
-)
-:dirty_done
-
-echo #pragma once&gt; "$(ProjectDir)src\git.h"
-echo // Auto-generated. Do not edit.&gt;&gt; "$(ProjectDir)src\git.h"
-echo.&gt;&gt; "$(ProjectDir)src\git.h"
-echo #define GIT_COMMIT_HASH "%GIT_HASH%"&gt;&gt; "$(ProjectDir)src\git.h"
-echo #define GIT_IS_DIRTY %GIT_DIRTY%&gt;&gt; "$(ProjectDir)src\git.h"
-
-echo Created $(ProjectDir)src\git.h with commit %GIT_HASH% (dirty=%GIT_DIRTY%)
-</Command>
+      <Command>call "$(ProjectDir)tools\update-git-header.bat" "$(ProjectDir)"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
