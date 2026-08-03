@@ -1,6 +1,9 @@
 #pragma once
 
 #include "camera-pos-cheat-coord-segment.h"
+#include "encoded-car-id-segment.h"
+#include "encoded-object-id-segment.h"
+#include "encoded-ped-id-segment.h"
 #include "explode-all-vehicles-segment.h"
 #include "explode-vehicle-segment.h"
 #include "fix-vehicle-segment.h"

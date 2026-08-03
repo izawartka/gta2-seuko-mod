@@ -461,6 +461,9 @@
     <ClInclude Include="src\modules\modmenu\segment-base.h" />
     <ClInclude Include="src\modules\modmenu\segment-support.h" />
     <ClInclude Include="src\modules\modmenu\segments\camera-pos-cheat-coord-segment.h" />
+    <ClInclude Include="src\modules\modmenu\segments\encoded-car-id-segment.h" />
+    <ClInclude Include="src\modules\modmenu\segments\encoded-object-id-segment.h" />
+    <ClInclude Include="src\modules\modmenu\segments\encoded-ped-id-segment.h" />
     <ClInclude Include="src\modules\modmenu\segments\explode-all-vehicles-segment.h" />
     <ClInclude Include="src\modules\modmenu\segments\explode-vehicle-segment.h" />
     <ClInclude Include="src\modules\modmenu\segments\fix-vehicle-segment.h" />
@@ -734,6 +737,9 @@
     <ClCompile Include="src\modules\modmenu\segment-base.cpp" />
     <ClCompile Include="src\modules\modmenu\segment-support.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\camera-pos-cheat-coord-segment.cpp" />
+    <ClCompile Include="src\modules\modmenu\segments\encoded-car-id-segment.cpp" />
+    <ClCompile Include="src\modules\modmenu\segments\encoded-object-id-segment.cpp" />
+    <ClCompile Include="src\modules\modmenu\segments\encoded-ped-id-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\explode-all-vehicles-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\explode-vehicle-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\fix-vehicle-segment.cpp" />
