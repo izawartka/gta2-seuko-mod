@@ -115,3 +115,101 @@ const std::vector<short>& Game::Utils::GetAvailableCopValues()
 	});
 	return copValues;
 }
+
+const std::vector<Game::PED_OBJECTIVE>& Game::Utils::GetAvailablePedObjectives()
+{
+	static constexpr int32_t ids[] = {
+		0,1,2,3,4,5,6,7,8,9,
+		10,11,12,13,14,15,16,17,18,19,
+		20,21,22,23,24,25,26,27,28,29,
+		30,31,32,33,34,35,36,37,38,39,
+		40,41,42,43,44,45,46,47,48,49,
+		50,51,52,53,54,55,56,57,58,59,
+		60,61
+	};
+
+	static const std::vector<PED_OBJECTIVE> objectives(
+		reinterpret_cast<const PED_OBJECTIVE*>(std::begin(ids)),
+		reinterpret_cast<const PED_OBJECTIVE*>(std::end(ids))
+	);
+
+	return objectives;
+}
+
+const std::vector<Game::PED_OCCUPATION>& Game::Utils::GetAvailablePedOccupations()
+{
+	static constexpr int32_t ids[] = {
+		0,1,2,3,4,5,6,7,8,9,
+		10,11,12,13,14,15,16,17,18,19,
+		20,21,22,23,24,25,26,27,28,29,
+		30,31,32,33,34,35,36,37,38,39,
+		40,41,42,43,44,45,46,47,48,49,
+		50,51
+	};
+
+	static const std::vector<PED_OCCUPATION> occupations(
+		reinterpret_cast<const PED_OCCUPATION*>(std::begin(ids)),
+		reinterpret_cast<const PED_OCCUPATION*>(std::end(ids))
+	);
+
+	return occupations;
+}
+
+const std::vector<Game::PED_STATE>& Game::Utils::GetAvailablePedStates()
+{
+	static constexpr int32_t ids[] = {
+		0,1,2,3,4,5,6,7,8,9,
+		10,11,12,13,14,15,16,17,18,19,
+		20,21,22
+	};
+
+	static const std::vector<PED_STATE> states(
+		reinterpret_cast<const PED_STATE*>(std::begin(ids)),
+		reinterpret_cast<const PED_STATE*>(std::end(ids))
+	);
+
+	return states;
+}
+
+const std::vector<Game::PED_STATE2>& Game::Utils::GetAvailablePedStates2()
+{
+	static constexpr int32_t ids[] = {
+		0,1,2,3,4,5,6,7,8,9,
+		10,11,12,13,14,15,16,17,18,19,
+		20,21,22,23,24,25,26
+	};
+
+	static const std::vector<PED_STATE2> states(
+		reinterpret_cast<const PED_STATE2*>(std::begin(ids)),
+		reinterpret_cast<const PED_STATE2*>(std::end(ids))
+	);
+
+	return states;
+}
+
+const std::vector<Game::PED_THREAT_REACTION>& Game::Utils::GetAvailablePedThreatReactions()
+{
+	static const std::vector<PED_THREAT_REACTION> threatReactions = {
+		PED_THREAT_REACTION_NO_REACTION,
+		PED_THREAT_REACTION_REACT_AS_EMERGENCY,
+		PED_THREAT_REACTION_REACT_AS_NORMAL,
+		PED_THREAT_REACTION_RUN_AWAY
+	};
+
+	return threatReactions;
+}
+
+const std::vector<Game::PED_THREAT_SEARCH>& Game::Utils::GetAvailablePedThreatSearches()
+{
+	static const std::vector<PED_THREAT_SEARCH> threatSearches = {
+		PED_THREAT_SEARCH_NO_THREATS,
+		PED_THREAT_SEARCH_LINE_OF_SIGHT,
+		PED_THREAT_SEARCH_AREA,
+		PED_THREAT_SEARCH_AREA_PLAYER_THREAT_ONLY,
+		PED_THREAT_SEARCH_LINE_OF_SIGHT_PLAYER_THREAT_ONLY,
+		PED_THREAT_SEARCH_AREA_PLAYER_ONLY,
+		PED_THREAT_SEARCH_LINE_OF_SIGHT_PLAYER_ONLY
+	};
+
+	return threatSearches;
+}

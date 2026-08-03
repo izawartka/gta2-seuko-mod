@@ -12,4 +12,10 @@ namespace Game::Utils {
 	const std::vector<PED_GRAPHIC_TYPE>& GetAvailablePedGraphicTypes();
 	const std::vector<POWERUP_TYPE>& GetAvailablePowerupTypes();
 	const std::vector<short>& GetAvailableCopValues();
+	const std::vector<PED_OBJECTIVE>& GetAvailablePedObjectives();
+	const std::vector<PED_OCCUPATION>& GetAvailablePedOccupations();
+	const std::vector<PED_STATE>& GetAvailablePedStates();
+	const std::vector<PED_STATE2>& GetAvailablePedStates2();
+	const std::vector<PED_THREAT_REACTION>& GetAvailablePedThreatReactions();
+	const std::vector<PED_THREAT_SEARCH>& GetAvailablePedThreatSearches();
 }

@@ -5,14 +5,12 @@
 #include "../cheats/position-store.h"
 
 namespace ModMenuModule {
-	// Currently unused
 	struct PositionSegmentData {
 		bool updateFromPlayer = true;
 		Game::SCR_Vector3 position = { 0, 0, 0 };
 		bool autoZ = true;
 	};
 
-	// Currently unused
 	class PositionSegment : public Segment<PositionSegmentData>, public Core::EventListenerSupport {
 	public:
 		PositionSegment();
