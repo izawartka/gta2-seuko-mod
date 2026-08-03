@@ -53,6 +53,20 @@ const std::vector<Game::WEAPON_INDEX>& Game::Utils::GetAvailableWeapons() {
 	return weapons;
 }
 
+const std::vector<Game::WEAPON_INDEX> Game::Utils::GetAvailableWeaponsInclNoWeapon()
+{
+	static constexpr int32_t ids[] = {
+		   -1,0,1,2,3,4,5,7,8,9,10,
+		   11,12,13,14,15,16,17,18,19,20,
+		   21,22,23,24,25,26,27
+	};
+	static const std::vector<WEAPON_INDEX> weapons(
+		reinterpret_cast<const WEAPON_INDEX*>(std::begin(ids)),
+		reinterpret_cast<const WEAPON_INDEX*>(std::end(ids))
+	);
+	return weapons;
+}
+
 const std::vector<Game::EXPLOSION_SIZE>& Game::Utils::GetAvailableExplosionSizes() {
 	static const std::vector<EXPLOSION_SIZE> explosionSizes({
 		EXPLOSION_SIZE_NONE,
