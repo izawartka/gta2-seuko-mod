@@ -1,6 +1,6 @@
 #include "get-nearest-car.h"
 
-Game::Car* ModMenuModule::Utils::GetNearestCar(Game::SCR_Vector3 basePosition, Game::Car* skipCar)
+Game::Car* ModMenuModule::Utils::GetNearestCar(Game::SCR_Vector3 basePosition, const Game::Car* skipCar)
 {
 	Game::CarsManager* carsManager = Game::Memory::GetCarsManager();
 	if (!carsManager) {

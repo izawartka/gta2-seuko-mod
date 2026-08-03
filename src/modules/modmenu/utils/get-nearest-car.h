@@ -2,5 +2,5 @@
 #include "../common.h"
 
 namespace ModMenuModule::Utils {
-	Game::Car* GetNearestCar(Game::SCR_Vector3 basePosition, Game::Car* skipCar = nullptr);
+	Game::Car* GetNearestCar(Game::SCR_Vector3 basePosition, const Game::Car* skipCar = nullptr);
 }

@@ -1,6 +1,6 @@
 #include "get-nearest-object.h"
 
-Game::BareGameObject* ModMenuModule::Utils::GetNearestObject(Game::SCR_Vector3 basePosition, Game::BareGameObject* skipObject)
+Game::BareGameObject* ModMenuModule::Utils::GetNearestObject(Game::SCR_Vector3 basePosition, const Game::BareGameObject* skipObject)
 {
 	Game::BareGameObjectManager* objectManager = Game::Memory::GetBareGameObjectManager();
 	if (!objectManager) {

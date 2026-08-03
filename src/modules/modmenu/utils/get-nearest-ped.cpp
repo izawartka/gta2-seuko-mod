@@ -1,7 +1,7 @@
 #include "get-nearest-ped.h"
 #include "get-ped-position.h"
 
-Game::Ped* ModMenuModule::Utils::GetNearestPed(Game::SCR_Vector3 basePosition, Game::Ped* skipPed)
+Game::Ped* ModMenuModule::Utils::GetNearestPed(Game::SCR_Vector3 basePosition, const Game::Ped* skipPed)
 {
 	Game::PedManager_S25* pedManager = Game::Memory::GetPedManager();
 	if (!pedManager) {

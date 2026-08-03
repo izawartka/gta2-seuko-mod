@@ -1,6 +1,6 @@
 #include "get-ped-position.h"
 
-Game::SCR_Vector3* ModMenuModule::Utils::GetPedPosition(Game::Ped* ped)
+Game::SCR_Vector3* ModMenuModule::Utils::GetPedPosition(const Game::Ped* ped)
 {
 	if (!ped) return nullptr;
 
