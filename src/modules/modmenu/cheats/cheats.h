@@ -21,3 +21,4 @@
 #include "position-store.h"
 #include "saved-cars.h"
 #include "unstuck-keys.h"
+#include "ped-templates.h"

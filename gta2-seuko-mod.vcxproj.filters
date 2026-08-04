@@ -192,7 +192,9 @@
     <ClCompile Include="src\modules\ui\components\icon-sprite.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\toggle-mouse-control.cpp" />
     <ClCompile Include="src\game\utils\ped-utils.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\ped-templates.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\spawn-ped-utils.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\ped-templates-builtin.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\get-nearest-car.cpp" />
     <ClCompile Include="src\game\utils\car-utils.cpp" />
     <ClCompile Include="src\game\utils\object-utils.cpp" />
@@ -534,6 +536,7 @@
     <ClInclude Include="src\converters\ped-state.h" />
     <ClInclude Include="src\converters\ped-state-2.h" />
     <ClInclude Include="src\game\utils\ped-utils.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\ped-templates.h" />
     <ClInclude Include="src\modules\modmenu\utils\spawn-ped-utils.h" />
     <ClInclude Include="src\modules\modmenu\utils\get-nearest-car.h" />
     <ClInclude Include="src\game\utils\car-utils.h" />

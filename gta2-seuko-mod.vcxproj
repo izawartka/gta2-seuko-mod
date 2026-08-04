@@ -391,6 +391,7 @@
     <ClInclude Include="src\modules\modmenu\cheats\mouse-control\attack-worker.h" />
     <ClInclude Include="src\modules\modmenu\cheats\mouse-control\rotate-camera-worker.h" />
     <ClInclude Include="src\modules\modmenu\cheats\native-cheats-keeper.h" />
+    <ClInclude Include="src\modules\modmenu\cheats\ped-templates.h" />
     <ClInclude Include="src\modules\modmenu\cheats\player-appearance.h" />
     <ClInclude Include="src\modules\modmenu\cheats\player-pos.h" />
     <ClInclude Include="src\modules\modmenu\cheats\position-store.h" />
@@ -678,6 +679,8 @@
     <ClCompile Include="src\modules\modmenu\cheats\mouse-control\locked-mouse-worker.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\mouse-control\rotate-camera-worker.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\native-cheats-keeper.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\ped-templates-builtin.cpp" />
+    <ClCompile Include="src\modules\modmenu\cheats\ped-templates.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\player-appearance.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\player-pos.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\position-store.cpp" />
