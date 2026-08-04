@@ -470,6 +470,7 @@
     <ClInclude Include="src\modules\modmenu\segments\fix-vehicle-segment.h" />
     <ClInclude Include="src\modules\modmenu\segments\gang-respect-segment.h" />
     <ClInclude Include="src\modules\modmenu\segments\get-powerup-segment.h" />
+    <ClInclude Include="src\modules\modmenu\segments\ped-preview-segment.h" />
     <ClInclude Include="src\modules\modmenu\segments\position-menu-segment.h" />
     <ClInclude Include="src\modules\modmenu\segments\position-rotation-menu-segment.h" />
     <ClInclude Include="src\modules\modmenu\segments\quick-action-key-segment.h" />
@@ -749,6 +750,7 @@
     <ClCompile Include="src\modules\modmenu\segments\fix-vehicle-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\gang-respect-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\get-powerup-segment.cpp" />
+    <ClCompile Include="src\modules\modmenu\segments\ped-preview-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\position-menu-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\position-rotation-menu-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\quick-action-key-segment.cpp" />
