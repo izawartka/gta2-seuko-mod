@@ -1,5 +1,6 @@
 #include "world-menu.h"
 #include "spawn-object-menu.h"
+#include "spawn-ped-menu.h"
 #include "../root.h"
 
 ModMenuModule::WorldMenu::WorldMenu()
@@ -21,6 +22,7 @@ bool ModMenuModule::WorldMenu::Attach()
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Spawn object", options.textSize);
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Spawn character", options.textSize);
 
 	SetPreviousSelectedIndex();
 
@@ -35,6 +37,9 @@ void ModMenuModule::WorldMenu::OnMenuAction(UiModule::Selectable* item, UiModule
 		break;
 	case 1: // Spawn object
 		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::SpawnObjectMenu>();
+		break;
+	case 2: // Spawn character
+		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::SpawnPedMenu>();
 		break;
 	default:
 		break;

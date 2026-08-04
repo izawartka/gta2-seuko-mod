@@ -22,6 +22,7 @@
 #include "camera-advanced-menu.h"
 #include "world-menu.h"
 #include "spawn-object-menu.h"
+#include "spawn-ped-menu.h"
 #include "ped-template/ped-template-menus.h"
 #include "position-menu.h"
 #include "native-cheats-menu.h"
