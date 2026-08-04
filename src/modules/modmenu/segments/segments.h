@@ -9,6 +9,7 @@
 #include "fix-vehicle-segment.h"
 #include "gang-respect-segment.h"
 #include "get-powerup-segment.h"
+#include "position-menu-segment.h"
 #include "position-rotation-menu-segment.h"
 #include "position-rotation-segment.h"
 #include "position-segment.h"

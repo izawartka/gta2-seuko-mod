@@ -208,6 +208,8 @@
     <ClCompile Include="src\modules\modmenu\segments\encoded-car-id-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\encoded-object-id-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\get-nearest-object.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\position-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\segments\position-menu-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\get-ped-by-encoded-id.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\get-car-by-encoded-id.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\get-object-by-encoded-id.cpp" />
@@ -548,6 +550,8 @@
     <ClInclude Include="src\modules\modmenu\segments\encoded-car-id-segment.h" />
     <ClInclude Include="src\modules\modmenu\segments\encoded-object-id-segment.h" />
     <ClInclude Include="src\modules\modmenu\utils\get-nearest-object.h" />
+    <ClInclude Include="src\modules\modmenu\menus\position-menu.h" />
+    <ClInclude Include="src\modules\modmenu\segments\position-menu-segment.h" />
     <ClInclude Include="src\modules\modmenu\utils\get-ped-by-encoded-id.h" />
     <ClInclude Include="src\modules\modmenu\utils\get-car-by-encoded-id.h" />
     <ClInclude Include="src\modules\modmenu\utils\get-object-by-encoded-id.h" />
