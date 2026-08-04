@@ -26,6 +26,7 @@
 #include "spawn-car-at-player.h"
 #include "spawn-object.h"
 #include "spawn-object-at-player.h"
+#include "spawn-ped-utils.h"
 #include "toggle-native-cheat-utils.h"
 #include "turn-last-car-engine-off.h"
 #include "unlock-all-levels.h"
