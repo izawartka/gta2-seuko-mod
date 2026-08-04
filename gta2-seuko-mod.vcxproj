@@ -415,6 +415,13 @@
     <ClInclude Include="src\modules\modmenu\menus\last-vehicle-save-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\mouse-control-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\mouse-debug-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\ped-template\basic-options-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\ped-template\logic-options-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\ped-template\misc-options-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\ped-template\ped-template-menus.h" />
+    <ClInclude Include="src\modules\modmenu\menus\ped-template\objective-options-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\ped-template\options-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\ped-template\saveas-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\player-appearance-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\get-powerup-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\position-menu.h" />
@@ -480,6 +487,7 @@
     <ClInclude Include="src\modules\modmenu\menus\saved-vehicles-menu.h" />
     <ClInclude Include="src\modules\modmenu\segments\segments.h" />
     <ClInclude Include="src\modules\modmenu\segments\spawn-object-segment.h" />
+    <ClInclude Include="src\modules\modmenu\segments\spawn-ped-segment.h" />
     <ClInclude Include="src\modules\modmenu\segments\spawn-saved-vehicle-segment.h" />
     <ClInclude Include="src\modules\modmenu\segments\spawn-vehicle-segment.h" />
     <ClInclude Include="src\modules\modmenu\segments\switch-camera-mode-segment.h" />
@@ -696,6 +704,12 @@
     <ClCompile Include="src\modules\modmenu\menus\last-vehicle-save-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\mouse-control-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\mouse-debug-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\ped-template\basic-options-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\ped-template\logic-options-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\ped-template\misc-options-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\ped-template\objective-options-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\ped-template\options-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\ped-template\saveas-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\player-appearance-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\get-powerup-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\position-menu.cpp" />
@@ -761,6 +775,7 @@
     <ClCompile Include="src\modules\modmenu\segments\position-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\saved-vehicles-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\spawn-object-segment.cpp" />
+    <ClCompile Include="src\modules\modmenu\segments\spawn-ped-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\spawn-saved-vehicle-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\spawn-vehicle-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\switch-camera-mode-segment.cpp" />
