@@ -7,9 +7,6 @@ namespace Core
 	template<typename EventT>
 	using EventListener = std::function<void(EventT&)>;
 
-	template<typename EventT, typename U>
-	using EventMethodListener = void (U::*)(EventT&);
-
 	using EventListenerId = size_t;
 
 	/* WatchManager */
