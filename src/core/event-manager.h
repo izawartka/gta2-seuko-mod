@@ -42,6 +42,10 @@ namespace Core {
 			for (auto& wrapper : m_listeners) {
 				wrapper.listener(event);
 
+				if constexpr (EventIsCancellable_v<EventT>) {
+					if (event.IsCancelled()) break;
+				}
+
 				if (wrapper.isToBeRemoved) {
 					spdlog::debug("EventManager: Skipping listener id {} marked for removal for event type: {}", wrapper.id, typeid(EventT).name());
 					continue;
