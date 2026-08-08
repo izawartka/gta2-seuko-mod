@@ -1,7 +1,5 @@
 #pragma once
 #include "common.h"
-#include "menu-base.h"
-#include "../../events/keyboard.h"
 #include "../../events/game-end.h"
 
 namespace ModMenuModule {
@@ -23,8 +21,8 @@ namespace ModMenuModule {
 
 		static ResetBindsManager* m_instance;
 
-		void OnKeyDown(KeyDownEvent& event);
-		void OnKeyUp(KeyUpEvent& event);
+		void OnKeyDown(KeyboardModule::KeyDownEvent& event);
+		void OnKeyUp(KeyboardModule::KeyUpEvent& event);
 		void OnPreUpdateUI(UiModule::PreUpdateUIEvent& event);
 		void OnPreGameEnd(PreGameEndEvent& event);
 

@@ -1,6 +1,8 @@
 #include "reset-binds-manager.h"
 #include "root.h"
 
+static constexpr unsigned int RESET_BINDS_KEYBOARD_EVENT_PRIORITY = 1500;
+
 ModMenuModule::ResetBindsManager* ModMenuModule::ResetBindsManager::m_instance = nullptr;
 
 ModMenuModule::ResetBindsManager* ModMenuModule::ResetBindsManager::GetInstance() {
@@ -24,15 +26,15 @@ void ModMenuModule::ResetBindsManager::Reset() {
 	UiModule::StandardBindsSupportOptions uiBindOptions = options.menuControllerOptions.keyBindOptions;
 	bindManager->SetBind(uiBindOptions.keyBindNextName, uiBindOptions.keyBindNextDefault);
 	bindManager->SetBind(uiBindOptions.keyBindPrevName, uiBindOptions.keyBindPrevDefault);
-	bindManager->SetBind(uiBindOptions.keyBindActionName, uiBindOptions.keyBindActionDefault);\
+	bindManager->SetBind(uiBindOptions.keyBindActionName, uiBindOptions.keyBindActionDefault);
 
 	spdlog::info("Reset Mod Menu key binds to default values");
 	ToastManager::GetInstance()->Show({ L"Reset Mod Menu key binds" });
 }
 
 void ModMenuModule::ResetBindsManager::Attach() {
-	AddEventListener<KeyDownEvent>(&ResetBindsManager::OnKeyDown);
-	AddEventListener<KeyUpEvent>(&ResetBindsManager::OnKeyUp);
+	AddEventListener<KeyboardModule::KeyDownEvent>(&ResetBindsManager::OnKeyDown, false, RESET_BINDS_KEYBOARD_EVENT_PRIORITY);
+	AddEventListener<KeyboardModule::KeyUpEvent>(&ResetBindsManager::OnKeyUp, false, RESET_BINDS_KEYBOARD_EVENT_PRIORITY);
 	AddEventListener<UiModule::PreUpdateUIEvent>(&ResetBindsManager::OnPreUpdateUI);
 	AddEventListener<PreGameEndEvent>(&ResetBindsManager::OnPreGameEnd);
 }
@@ -40,12 +42,12 @@ void ModMenuModule::ResetBindsManager::Attach() {
 void ModMenuModule::ResetBindsManager::Detach() {
 	RemoveEventListener<PreGameEndEvent>();
 	RemoveEventListener<UiModule::PreUpdateUIEvent>();
-	RemoveEventListener<KeyUpEvent>();
-	RemoveEventListener<KeyDownEvent>();
+	RemoveEventListener<KeyboardModule::KeyUpEvent>();
+	RemoveEventListener<KeyboardModule::KeyDownEvent>();
 	m_resetKeyHoldFrames = 0;
 }
 
-void ModMenuModule::ResetBindsManager::OnKeyDown(KeyDownEvent& event) {
+void ModMenuModule::ResetBindsManager::OnKeyDown(KeyboardModule::KeyDownEvent& event) {
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyboardEvent(event);
 	if (key == options.keyBindToggleMenuDefault) {
@@ -53,7 +55,7 @@ void ModMenuModule::ResetBindsManager::OnKeyDown(KeyDownEvent& event) {
 	}
 }
 
-void ModMenuModule::ResetBindsManager::OnKeyUp(KeyUpEvent& event)
+void ModMenuModule::ResetBindsManager::OnKeyUp(KeyboardModule::KeyUpEvent& event)
 {
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	Game::KeyCode keyCode = event.GetKeyCode();

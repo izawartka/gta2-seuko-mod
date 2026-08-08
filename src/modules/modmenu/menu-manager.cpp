@@ -1,6 +1,8 @@
 #include "menu-manager.h"
 #include "root.h"
 
+static constexpr unsigned int MENU_MANAGER_KEYBOARD_EVENT_PRIORITY = 2000;
+
 ModMenuModule::MenuManager* ModMenuModule::MenuManager::m_instance = nullptr;
 
 ModMenuModule::MenuManager* ModMenuModule::MenuManager::GetInstance() {
@@ -75,7 +77,7 @@ void ModMenuModule::MenuManager::SetVisible(bool visible)
 	AddPendingChange(change);
 }
 
-void ModMenuModule::MenuManager::OnKeyDown(KeyDownEvent& event)
+void ModMenuModule::MenuManager::OnKeyDown(KeyboardModule::KeyDownEvent& event)
 {
 	if (m_keyBindToggle.expired()) {
 		spdlog::error("Menu toggle key bind expired");
@@ -89,6 +91,7 @@ void ModMenuModule::MenuManager::OnKeyDown(KeyDownEvent& event)
 	}
 
 	SetVisible(!m_visible);
+	event.Cancel();
 }
 
 void ModMenuModule::MenuManager::OnGameStart(GameStartEvent& event)
@@ -118,7 +121,7 @@ void ModMenuModule::MenuManager::Attach() {
 		options.keyBindToggleMenuDefault
 	);
 
-	AddEventListener<KeyDownEvent>(&MenuManager::OnKeyDown);
+	AddEventListener<KeyboardModule::KeyDownEvent>(&MenuManager::OnKeyDown, false, MENU_MANAGER_KEYBOARD_EVENT_PRIORITY);
 	AddEventListener<GameStartEvent>(&MenuManager::OnGameStart);
 	AddEventListener<PreGameEndEvent>(&MenuManager::OnGameEnd);
 }
@@ -126,7 +129,7 @@ void ModMenuModule::MenuManager::Attach() {
 void ModMenuModule::MenuManager::Detach() {
 	RemoveEventListener<PreGameEndEvent>();
 	RemoveEventListener<GameStartEvent>();
-	RemoveEventListener<KeyDownEvent>();
+	RemoveEventListener<KeyboardModule::KeyDownEvent>();
 	if (m_pendingChanges.size()) {
 		spdlog::warn("MenuManager is being detached with {} pending changes", m_pendingChanges.size());
 	}

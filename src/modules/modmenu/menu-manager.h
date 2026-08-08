@@ -1,7 +1,6 @@
 #pragma once
 #include "common.h"
 #include "menu-base.h"
-#include "../../events/keyboard.h"
 #include "../../events/game-start.h"
 #include "../../events/game-end.h"
 
@@ -38,7 +37,7 @@ namespace ModMenuModule {
 
 		static MenuManager* m_instance;
 
-		void OnKeyDown(KeyDownEvent& event);
+		void OnKeyDown(KeyboardModule::KeyDownEvent& event);
 		void OnGameStart(GameStartEvent& event);
 		void OnGameEnd(PreGameEndEvent& event);
 		void Attach();

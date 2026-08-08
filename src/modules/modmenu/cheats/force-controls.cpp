@@ -1,6 +1,8 @@
 #include "force-controls.h"
 #include "../cheat-registry.h"
 
+static constexpr unsigned int FORCE_CONTROLS_KEYBOARD_PRIORITY = 1000 * 100;
+
 ModMenuModule::ForceControlsCheat* ModMenuModule::ForceControlsCheat::m_instance = nullptr;
 
 ModMenuModule::ForceControlsCheat::ForceControlsCheat() : ModMenuModule::CheatBase("") {
@@ -192,7 +194,7 @@ void ModMenuModule::ForceControlsCheat::Start()
 	if (m_started) return;
 	m_started = true;
 
-	AddEventListener<KeyboardGetDataEvent>(&ForceControlsCheat::OnKeyboardGetData);
+	AddEventListener<KeyboardGetDataEvent>(&ForceControlsCheat::OnKeyboardGetData, false, FORCE_CONTROLS_KEYBOARD_PRIORITY);
 }
 
 void ModMenuModule::ForceControlsCheat::End()

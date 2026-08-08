@@ -2,6 +2,7 @@
 #include "utils/add-default-actions.h"
 
 static const std::wstring emptyLabel = L"";
+static constexpr unsigned int QUICK_ACTION_KEYBOARD_EVENT_PRIORITY = 100 * 1000;
 
 ModMenuModule::QuickActionManager* ModMenuModule::QuickActionManager::m_instance = nullptr;
 
@@ -174,12 +175,12 @@ void ModMenuModule::QuickActionManager::Remove(QuickActionId actionId)
 
 void ModMenuModule::QuickActionManager::SetListen(bool doListen)
 {
-	SetEventListener<KeyDownEvent>(&QuickActionManager::OnKeyDown, doListen);
+	SetEventListener<KeyboardModule::KeyDownEvent>(&QuickActionManager::OnKeyDown, doListen, QUICK_ACTION_KEYBOARD_EVENT_PRIORITY);
 }
 
 bool ModMenuModule::QuickActionManager::IsListening() const
 {
-	return HasEventListener<KeyDownEvent>();
+	return HasEventListener<KeyboardModule::KeyDownEvent>();
 }
 
 ModMenuModule::QuickActionManager::QuickActionManager()
@@ -213,8 +214,9 @@ void ModMenuModule::QuickActionManager::Detach()
 	SaveToPersistence();
 }
 
-void ModMenuModule::QuickActionManager::OnKeyDown(KeyDownEvent& event) 
+void ModMenuModule::QuickActionManager::OnKeyDown(KeyboardModule::KeyDownEvent& event)
 {
+	bool anyExecuted = false;
 	KeyBindingModule::Key pressedKey = KeyBindingModule::Key::FromKeyboardEvent(event);
 	for (auto& pair : m_quickActions) {
 		QuickActionEntry& entry = pair.second;
@@ -225,7 +227,10 @@ void ModMenuModule::QuickActionManager::OnKeyDown(KeyDownEvent& event)
 
 		spdlog::debug("Executing quick action ID {}", pair.first);
 		entry.action->Execute();
+		anyExecuted = true;
 	}
+
+	if (anyExecuted) event.Cancel();
 }
 
 ModMenuModule::QuickActionManager::QuickActionEntry* ModMenuModule::QuickActionManager::GetQuickActionEntry(QuickActionId actionId)

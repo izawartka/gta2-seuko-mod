@@ -124,7 +124,7 @@ namespace ModMenuModule {
 			std::vector<uint8_t> serializedData = {}; // only used for persistence
 		};
 
-		void OnKeyDown(KeyDownEvent& event);
+		void OnKeyDown(KeyboardModule::KeyDownEvent& event);
 
 		QuickActionEntry* GetQuickActionEntry(QuickActionId actionId);
 		void AddQuickActionInternal(const AddQuickActionData& data);
