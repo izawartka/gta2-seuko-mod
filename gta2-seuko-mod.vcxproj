@@ -567,7 +567,6 @@
     <ClInclude Include="src\core\watch-manager.h" />
     <ClInclude Include="src\core\watched-base.h" />
     <ClInclude Include="src\events\game-tick.h" />
-    <ClInclude Include="src\events\keyboard.h" />
     <ClInclude Include="src\game\common.h" />
     <ClInclude Include="src\game\keycode.h" />
     <ClInclude Include="src\game\functions.h" />
@@ -654,7 +653,6 @@
     <ClCompile Include="src\events\scale-shadow.cpp" />
     <ClCompile Include="src\events\show-cursor.cpp" />
     <ClCompile Include="src\events\try-shoot-weapon.cpp" />
-    <ClCompile Include="src\events\keyboard.cpp" />
     <ClCompile Include="src\events\wsfix-z-update.cpp" />
     <ClCompile Include="src\events\window-focus-change.cpp" />
     <ClCompile Include="src\events\wnd-proc.cpp" />

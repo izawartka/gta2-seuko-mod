@@ -5,6 +5,8 @@
 /*
 Dispatched when the game is about to get keyboard data and can be used to emulate keyboard input. 
 One keyboard input per tick can be registered by the game, so check IsReadyToEmulate() before emulating a key.
+Using priorities for emulated input is reccomended.
+For simple OnKeyDown / OnKeyUp events use KeyboardModule.
 */
 class KeyboardGetDataEvent : public Core::EventBase {
 public:
@@ -44,7 +46,7 @@ private:
 };
 
 /*
-Dispatched after the game gets keyboard data.
+Dispatched after KeyboardGetDataEvent, with the final data that is fed to the game.
 Input that has been emulated using KeyboardGetDataEvent will also appear in this event.
 */
 class PostKeyboardGetDataEvent : public Core::EventBase {

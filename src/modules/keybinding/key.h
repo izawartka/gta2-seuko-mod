@@ -1,6 +1,5 @@
 #pragma once
 #include "common.h"
-#include "../../events/keyboard.h"
 
 namespace KeyBindingModule {
 	struct Key {
@@ -13,10 +12,6 @@ namespace KeyBindingModule {
 
 		constexpr Key(Game::KeyCode keyCode, bool shift = false, bool ctrl = false, bool alt = false)
 			: keyCode(keyCode), shift(shift), ctrl(ctrl), alt(alt) {
-		}
-
-		static Key FromKeyboardEvent(const KeyboardEvent& event) {
-			return Key(event.GetKeyCode(), event.IsShiftPressed(), event.IsCtrlPressed(), event.IsAltPressed());
 		}
 
 		static Key FromKeyboardEvent(const KeyboardModule::KeyboardEventBase& event) {

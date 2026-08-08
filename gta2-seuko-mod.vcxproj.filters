@@ -23,7 +23,6 @@
     <ClCompile Include="src\events\is-ammo-kf-call.cpp" />
     <ClCompile Include="src\events\scale-shadow.cpp" />
     <ClCompile Include="src\events\try-shoot-weapon.cpp" />
-    <ClCompile Include="src\events\keyboard.cpp" />
     <ClCompile Include="src\game\keycode.cpp" />
     <ClCompile Include="src\game\utils\car-roof-utils.cpp" />
     <ClCompile Include="src\game\utils\player-utils.cpp" />
@@ -369,7 +368,6 @@
     <ClInclude Include="src\core\watch-manager.h" />
     <ClInclude Include="src\core\watched-base.h" />
     <ClInclude Include="src\events\game-tick.h" />
-    <ClInclude Include="src\events\keyboard.h" />
     <ClInclude Include="src\game\common.h" />
     <ClInclude Include="src\game\keycode.h" />
     <ClInclude Include="src\game\functions.h" />
