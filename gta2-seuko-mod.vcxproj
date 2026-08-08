@@ -363,6 +363,14 @@
     <ClInclude Include="src\modules\keybinding\bind-manager.h" />
     <ClInclude Include="src\modules\keybinding\keybinding.h" />
     <ClInclude Include="src\modules\keybinding\root.h" />
+    <ClInclude Include="src\modules\keyboard\common.h" />
+    <ClInclude Include="src\modules\keyboard\events\events.h" />
+    <ClInclude Include="src\modules\keyboard\events\key-down.h" />
+    <ClInclude Include="src\modules\keyboard\events\key-up.h" />
+    <ClInclude Include="src\modules\keyboard\events\keyboard-base.h" />
+    <ClInclude Include="src\modules\keyboard\events\keyboard.h" />
+    <ClInclude Include="src\modules\keyboard\keyboard.h" />
+    <ClInclude Include="src\modules\keyboard\root.h" />
     <ClInclude Include="src\modules\modmenu\cheat-base.h" />
     <ClInclude Include="src\modules\modmenu\cheat-manager.h" />
     <ClInclude Include="src\modules\modmenu\cheat-registry.h" />
@@ -664,6 +672,9 @@
     <ClCompile Include="src\logging.cpp" />
     <ClCompile Include="src\modules\keybinding\bind-manager.cpp" />
     <ClCompile Include="src\modules\keybinding\root.cpp" />
+    <ClCompile Include="src\modules\keyboard\events\key-down.cpp" />
+    <ClCompile Include="src\modules\keyboard\events\key-up.cpp" />
+    <ClCompile Include="src\modules\keyboard\root.cpp" />
     <ClCompile Include="src\modules\modmenu\cheat-manager.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\camera\camera-pos.cpp" />
     <ClCompile Include="src\modules\modmenu\cheats\camera\camera.cpp" />

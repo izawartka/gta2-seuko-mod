@@ -224,6 +224,9 @@
     <ClCompile Include="src\modules\modmenu\utils\get-ped-by-encoded-id.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\get-car-by-encoded-id.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\get-object-by-encoded-id.cpp" />
+    <ClCompile Include="src\modules\keyboard\events\key-down.cpp" />
+    <ClCompile Include="src\modules\keyboard\events\key-up.cpp" />
+    <ClCompile Include="src\modules\keyboard\root.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -577,6 +580,14 @@
     <ClInclude Include="src\modules\modmenu\utils\get-ped-by-encoded-id.h" />
     <ClInclude Include="src\modules\modmenu\utils\get-car-by-encoded-id.h" />
     <ClInclude Include="src\modules\modmenu\utils\get-object-by-encoded-id.h" />
+    <ClInclude Include="src\modules\keyboard\common.h" />
+    <ClInclude Include="src\modules\keyboard\events\events.h" />
+    <ClInclude Include="src\modules\keyboard\events\key-down.h" />
+    <ClInclude Include="src\modules\keyboard\events\key-up.h" />
+    <ClInclude Include="src\modules\keyboard\events\keyboard-base.h" />
+    <ClInclude Include="src\modules\keyboard\events\keyboard.h" />
+    <ClInclude Include="src\modules\keyboard\keyboard.h" />
+    <ClInclude Include="src\modules\keyboard\root.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

@@ -6,6 +6,7 @@
 #include "version.h"
 #include "game-version-check.cpp"
 #include "core/core.h"
+#include "modules/keyboard/keyboard.h"
 #include "modules/persistence/persistence.h"
 #include "modules/keybinding/keybinding.h"
 #include "modules/ui/ui.h"
@@ -28,6 +29,7 @@ static void Init()
 
 	coreInstance = new Core::Core();
 	Core::ModuleManager* moduleManager = Core::ModuleManager::GetInstance();
+	KeyboardModule::RootModule* keyboardModule = moduleManager->AddModule<KeyboardModule::RootModule>();
 	PersistenceModule::RootModule* persistenceModule = moduleManager->AddModule<PersistenceModule::RootModule>();
 	KeyBindingModule::RootModule* keyBindingModule = moduleManager->AddModule<KeyBindingModule::RootModule>();
 	UiModule::RootModule* uiModule = moduleManager->AddModule<UiModule::RootModule>();
@@ -48,6 +50,7 @@ static void Deinit()
 		moduleManager->RemoveModule<UiModule::RootModule>();
 		moduleManager->RemoveModule<KeyBindingModule::RootModule>();
 		moduleManager->RemoveModule<PersistenceModule::RootModule>();
+		moduleManager->RemoveModule<KeyboardModule::RootModule>();
 		delete coreInstance;
 		coreInstance = nullptr;
 	}
