@@ -4,6 +4,7 @@ KeyBindingModule::RootModule* KeyBindingModule::RootModule::m_instance = nullptr
 
 KeyBindingModule::RootModule::RootModule() {
 
+	assert(KeyboardModule::RootModule::GetInstance() != nullptr && "KeyBindingModule::RootModule requires KeyboardModule::RootModule to be initialized first!");
 	assert(PersistenceModule::RootModule::GetInstance() != nullptr && "KeyBindingModule::RootModule requires PersistenceModule::RootModule to be initialized first!");
 	assert(m_instance == nullptr && "KeyBindingModule::RootModule instance already exists!");
 	m_instance = this;

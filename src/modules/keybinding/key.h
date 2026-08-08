@@ -19,6 +19,10 @@ namespace KeyBindingModule {
 			return Key(event.GetKeyCode(), event.IsShiftPressed(), event.IsCtrlPressed(), event.IsAltPressed());
 		}
 
+		static Key FromKeyboardEvent(const KeyboardModule::KeyboardEventBase& event) {
+			return Key(event.GetKeyCode(), event.IsShiftPressed(), event.IsCtrlPressed(), event.IsAltPressed());
+		}
+
 		static Key ToNoShift(Key key) {
 			return Key(key.keyCode, false, key.ctrl, key.alt);
 		}
