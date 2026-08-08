@@ -5,7 +5,6 @@
 #include "../components/selectable.h"
 #include "../root.h"
 #include "../events/key-down-repeat.h"
-#include "../../../events/keyboard.h"
 #include "menu-item.h"
 
 namespace UiModule {
@@ -112,7 +111,7 @@ namespace UiModule {
 		void OnItemEditStop();
 
 	protected:
-		void OnKeyDown(KeyDownEvent& event);
+		void OnKeyDown(KeyboardModule::KeyDownEvent& event);
 		void OnKeyDownRepeat(KeyDownRepeatEvent& event);
 
 		struct MenuItem {

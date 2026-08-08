@@ -6,7 +6,6 @@
 #include "../components/text.h"
 #include "../events/update-ui.h"
 #include "../events/key-down-repeat.h"
-#include "../../../events/keyboard.h"
 
 namespace UiModule {
 	template <typename ValueT>
@@ -75,11 +74,11 @@ namespace UiModule {
 			m_active = active;
 
 			if (active) {
-				AddEventListener<KeyDownEvent>(&VarTextSelectController<ValueT, ResRetT>::OnKeyDown);
-				AddEventListener<KeyDownRepeatEvent>(&VarTextSelectController<ValueT, ResRetT>::OnKeyDownRepeat);
+				AddEventListener<KeyboardModule::KeyDownEvent>(&VarTextSelectController<ValueT, ResRetT>::OnKeyDown, false, UI_KEYBOARD_EVENT_PRIORITY);
+				AddEventListener<KeyDownRepeatEvent>(&VarTextSelectController<ValueT, ResRetT>::OnKeyDownRepeat, false, UI_KEYBOARD_EVENT_PRIORITY);
 			}
 			else {
-				RemoveEventListener<KeyDownEvent>();
+				RemoveEventListener<KeyboardModule::KeyDownEvent>();
 				RemoveEventListener<KeyDownRepeatEvent>();
 			}
 		}
@@ -218,7 +217,7 @@ namespace UiModule {
 			UpdateText();
 		}
 
-		void OnKeyDown(KeyDownEvent& event) {
+		void OnKeyDown(KeyboardModule::KeyDownEvent& event) {
 			if (!m_active) return;
 
 			KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyboardEvent(event);
@@ -226,11 +225,13 @@ namespace UiModule {
 
 			if (!m_editing) {
 				SetEditing(true);
+				event.Cancel();
 				return;
 			}
 
 			if (!m_options.liveMode) Save();
 			SetEditing(false);
+			event.Cancel();
 		}
 
 		void OnKeyDownRepeat(KeyDownRepeatEvent& event) {

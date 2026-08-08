@@ -4,7 +4,6 @@
 #include "../standard-binds-support.h"
 #include "../components/text.h"
 #include "../../../converters/key.h"
-#include "../../../events/keyboard.h"
 
 namespace UiModule {
 	using KeyChangeSaveCallback = std::function<void(const KeyBindingModule::Key&)>;
@@ -48,10 +47,10 @@ namespace UiModule {
 			m_active = active;
 
 			if (active) {
-				AddEventListener<KeyDownEvent>(&KeyChangeController::OnKeyDown);
+				AddEventListener<KeyboardModule::KeyDownEvent>(&KeyChangeController::OnKeyDown, false, UI_KEYBOARD_EVENT_PRIORITY);
 			}
 			else {
-				RemoveEventListener<KeyDownEvent>();
+				RemoveEventListener<KeyboardModule::KeyDownEvent>();
 			}
 		}
 
@@ -121,7 +120,7 @@ namespace UiModule {
 			m_textComponent->SetText(m_options.prefix + m_textBuffer + marker + m_options.suffix);
 		}
 
-		void OnKeyDown(KeyDownEvent& event) {
+		void OnKeyDown(KeyboardModule::KeyDownEvent& event) {
 			if (!m_active) return;
 
 			KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyboardEvent(event);
@@ -129,6 +128,7 @@ namespace UiModule {
 			if (!m_editing) {
 				if (IsActionKey(key)) {
 					SetEditing(true);
+					event.Cancel();
 				}
 				return;
 			}
@@ -160,6 +160,7 @@ namespace UiModule {
 
 			Save(key);
 			SetEditing(false);
+			event.Cancel();
 		}
 
 		KeyChangeControllerOptions m_options;

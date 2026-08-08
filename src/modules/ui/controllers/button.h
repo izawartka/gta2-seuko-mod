@@ -3,7 +3,6 @@
 #include "menu-item.h"
 #include "../standard-binds-support.h"
 #include "../components/text.h"
-#include "../../../events/keyboard.h"
 
 namespace UiModule {
 	using ButtonCallback = std::function<void()>;
@@ -35,10 +34,10 @@ namespace UiModule {
 			m_active = active;
 
 			if (active) {
-				AddEventListener<KeyDownEvent>(&ButtonController::OnKeyDown);
+				AddEventListener<KeyboardModule::KeyDownEvent>(&ButtonController::OnKeyDown, false, UI_KEYBOARD_EVENT_PRIORITY);
 			}
 			else {
-				RemoveEventListener<KeyDownEvent>();
+				RemoveEventListener<KeyboardModule::KeyDownEvent>();
 			}
 		}
 
@@ -68,12 +67,13 @@ namespace UiModule {
 		}
 
 	protected:
-		void OnKeyDown(KeyDownEvent& event) {
+		void OnKeyDown(KeyboardModule::KeyDownEvent& event) {
 			if (!m_active) return;
 
 			KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyboardEvent(event);
 			if (IsActionKey(key)) {
 				Action();
+				event.Cancel();
 				return;
 			}
 		}

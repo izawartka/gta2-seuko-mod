@@ -276,13 +276,16 @@ void UiModule::MenuController::OnItemEditStop()
 	if (m_active) SetActiveMenuControl(true);
 }
 
-void UiModule::MenuController::OnKeyDown(KeyDownEvent& event)
+void UiModule::MenuController::OnKeyDown(KeyboardModule::KeyDownEvent& event)
 {
 	if (!m_activeMenuControl) return;
 
 	KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyboardEvent(event);
 
-	if (IsActionKey(key)) Action();
+	if (IsActionKey(key)) {
+		Action();
+		event.Cancel();
+	}
 }
 
 void UiModule::MenuController::OnKeyDownRepeat(KeyDownRepeatEvent& event)
@@ -293,6 +296,9 @@ void UiModule::MenuController::OnKeyDownRepeat(KeyDownRepeatEvent& event)
 
 	if (IsPrevKey(key)) Previous();
 	else if (IsNextKey(key)) Next();
+	else return;
+
+	event.Cancel();
 }
 
 UiModule::MenuController::MenuItem* UiModule::MenuController::GetItemById(MenuItemId id)
@@ -320,11 +326,11 @@ void UiModule::MenuController::SetActiveMenuControl(bool active)
 	m_activeMenuControl = active;
 
 	if (active) {
-		AddEventListener<KeyDownEvent>(&MenuController::OnKeyDown);
-		AddEventListener<KeyDownRepeatEvent>(&MenuController::OnKeyDownRepeat);
+		AddEventListener<KeyboardModule::KeyDownEvent>(&MenuController::OnKeyDown, false, UI_KEYBOARD_EVENT_PRIORITY);
+		AddEventListener<KeyDownRepeatEvent>(&MenuController::OnKeyDownRepeat, false, UI_KEYBOARD_EVENT_PRIORITY);
 	}
 	else {
-		RemoveEventListener<KeyDownEvent>();
+		RemoveEventListener<KeyboardModule::KeyDownEvent>();
 		RemoveEventListener<KeyDownRepeatEvent>();
 	}
 

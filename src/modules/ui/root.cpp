@@ -5,7 +5,8 @@ UiModule::RootModule* UiModule::RootModule::m_instance = nullptr;
 
 UiModule::RootModule::RootModule()
 {
-	assert(KeyBindingModule::RootModule::GetInstance() != nullptr && "ModMenuModule::RootModule requires KeyBindingModule::RootModule to be initialized first!");
+	assert(KeyboardModule::RootModule::GetInstance() != nullptr && "UiModule::RootModule requires KeyboardModule::RootModule to be initialized first!");
+	assert(KeyBindingModule::RootModule::GetInstance() != nullptr && "UiModule::RootModule requires KeyBindingModule::RootModule to be initialized first!");
 	assert(m_instance == nullptr && "UiModule::RootModule instance already exists!");
 	m_instance = this;
 	spdlog::info("UiModule::RootModule instance created");

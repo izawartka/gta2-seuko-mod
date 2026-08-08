@@ -5,7 +5,6 @@
 #include "../components/text.h"
 #include "../../../converters/key.h"
 #include "../events/update-ui.h"
-#include "../../../events/keyboard.h"
 
 namespace UiModule {
 	struct KeyBindChangeControllerOptions {
@@ -78,10 +77,10 @@ namespace UiModule {
 			m_active = active;
 
 			if (active) {
-				AddEventListener<KeyDownEvent>(&KeyBindChangeController::OnKeyDown);
+				AddEventListener<KeyboardModule::KeyDownEvent>(&KeyBindChangeController::OnKeyDown, false, UI_KEYBOARD_EVENT_PRIORITY);
 			}
 			else {
-				RemoveEventListener<KeyDownEvent>();
+				RemoveEventListener<KeyboardModule::KeyDownEvent>();
 			}
 		}
 
@@ -160,7 +159,7 @@ namespace UiModule {
 			UpdateText();
 		}
 
-		void OnKeyDown(KeyDownEvent& event) {
+		void OnKeyDown(KeyboardModule::KeyDownEvent& event) {
 			if (!m_active) return;
 
 			KeyBindingModule::Key key = KeyBindingModule::Key::FromKeyboardEvent(event);
@@ -168,6 +167,7 @@ namespace UiModule {
 			if (!m_editing) {
 				if (IsActionKey(key)) {
 					SetEditing(true);
+					event.Cancel();
 				}
 				return;
 			}
@@ -200,6 +200,7 @@ namespace UiModule {
 			m_value = key;
 			Save();
 			SetEditing(false);
+			event.Cancel();
 		}
 
 		KeyBindChangeControllerOptions m_options;
