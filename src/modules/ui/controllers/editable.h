@@ -202,15 +202,30 @@ namespace UiModule {
 			event.Cancel();
 		}
 
+		void DeleteLastWord() {
+			bool foundNonSpace = false;
+			while (!m_textBuffer.empty()) {
+				if (m_textBuffer.back() == L' ') {
+					if (foundNonSpace) break;
+				}
+				else foundNonSpace = true;
+				m_textBuffer.pop_back();
+			}
+		}
+
 		void OnKeyDownRepeat(KeyDownRepeatEvent& event) {
 			if (!m_active) return;
 
 			Game::KeyCode keyCode = event.GetKeyCode();
 			bool isShiftPressed = event.IsShiftPressed();
+			bool isCtrlPressed = event.IsCtrlPressed();
 			bool isCapsLockOn = event.IsCapsLockOn();
 
 			if (keyCode == Game::KeyCode::DIK_BACK) {
-				if (!m_textBuffer.empty()) {
+				if (isCtrlPressed) {
+					DeleteLastWord();
+				}
+				else if (!m_textBuffer.empty()) {
 					m_textBuffer.pop_back();
 				}
 				UpdateText();
