@@ -152,7 +152,7 @@ Game::Ped* ModMenuModule::Utils::SpawnPed::SpawnPedInCar(const Game::SCR_Vector3
 	return UpdatePedAfterSpawn(ped, data, basePosition);
 }
 
-Game::Ped* ModMenuModule::Utils::SpawnPed::SpawnPedAtPlayer(const SpawnPedData& data)
+Game::Ped* ModMenuModule::Utils::SpawnPed::SpawnPedAtPlayer(const SpawnPedData& data, bool inNearestCar)
 {
 	PlayerPosCheat* playerPosCheat = PlayerPosCheat::GetInstance();
 	if (!playerPosCheat->IsEnabled()) {
@@ -168,9 +168,17 @@ Game::Ped* ModMenuModule::Utils::SpawnPed::SpawnPedAtPlayer(const SpawnPedData& 
 		return nullptr;
 	}
 
-	return SpawnPed(
-		positionOpt.value(),
-		rotationOpt.value(),
-		data
-	);
+	if (inNearestCar) {
+		return SpawnPedInNearestCar(
+			positionOpt.value(),
+			data
+		);
+	}
+	else {
+		return SpawnPed(
+			positionOpt.value(),
+			rotationOpt.value(),
+			data
+		);
+	}
 }

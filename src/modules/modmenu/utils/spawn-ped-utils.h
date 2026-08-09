@@ -36,5 +36,5 @@ namespace ModMenuModule::Utils::SpawnPed {
 	Game::Ped* SpawnPed(const Game::SCR_Vector3& position, short rotation, const SpawnPedData& data);
 	Game::Ped* SpawnPedInNearestCar(const Game::SCR_Vector3& basePosition, const SpawnPedData& data);
 	Game::Ped* SpawnPedInCar(const Game::SCR_Vector3& basePosition, EncodedCarId carId, const SpawnPedData& data);
-	Game::Ped* SpawnPedAtPlayer(const SpawnPedData& data);
+	Game::Ped* SpawnPedAtPlayer(const SpawnPedData& data, bool inNearestCar = false);
 }
