@@ -228,6 +228,7 @@
     <ClCompile Include="src\modules\keyboard\root.cpp" />
     <ClCompile Include="src\modules\modmenu\segments\spawn-ped-action-segment.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\spawn-character.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\seukomod-options-menu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -590,6 +591,7 @@
     <ClInclude Include="src\modules\keyboard\root.h" />
     <ClInclude Include="src\modules\modmenu\segments\spawn-ped-action-segment.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\spawn-character.h" />
+    <ClInclude Include="src\modules\modmenu\menus\seukomod-options-menu.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

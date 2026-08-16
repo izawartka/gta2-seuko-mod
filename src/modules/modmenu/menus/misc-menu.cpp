@@ -1,8 +1,7 @@
 #include "misc-menu.h"
 #include "../root.h"
-#include "menu-controls-menu.h"
 #include "quick-actions-menu.h"
-#include "version-menu.h"
+#include "seukomod-options-menu.h"
 #include "../utils/save-game.h"
 #include "../utils/unlock-all-levels.h"
 #include "../toast-manager.h"
@@ -25,9 +24,8 @@ bool ModMenuModule::MiscMenu::Attach()
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
-	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Menu controls", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Quick actions", options.textSize);
-	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Version details", options.textSize);
+	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Seuko mod options", options.textSize);
 
 	// quick save button
 	auto quickSaveText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"Quick save", options.textSize);
@@ -50,14 +48,11 @@ void ModMenuModule::MiscMenu::OnMenuAction(UiModule::Selectable* item, UiModule:
 	case 0: // Go back
 		ModMenuModule::MenuManager::GetInstance()->RemoveLastMenu();
 		break;
-	case 1: // Menu controls
-		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::MenuControlsMenu>();
-		break;
-	case 2: // Quick actions
+	case 1: // Quick actions
 		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::QuickActionsMenu>();
 		break;
-	case 3: // Version info
-		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::VersionMenu>();
+	case 2: // Seuko mod options
+		ModMenuModule::MenuManager::GetInstance()->AddMenu<ModMenuModule::SeukomodOptionsMenu>();
 		break;
 	default:
 		break;

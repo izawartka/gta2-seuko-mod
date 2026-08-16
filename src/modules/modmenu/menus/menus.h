@@ -32,6 +32,7 @@
 #include "quick-actions-menu.h"
 #include "add-quick-action-menu.h"
 #include "quick-action-options-menu.h"
+#include "seukomod-options-menu.h"
 #include "menu-controls-menu.h"
 #include "version-menu.h"
 #include "mouse-debug-menu.h"
