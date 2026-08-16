@@ -12,5 +12,7 @@ namespace ModMenuModule {
 		virtual bool Attach() override;
 
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
+
+		UiModule::VarTextSelectController<bool, bool>* m_toastsVisibleController = nullptr;
 	};
 }

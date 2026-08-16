@@ -2,6 +2,7 @@
 #include "../root.h"
 #include "menu-controls-menu.h"
 #include "version-menu.h"
+#include "../../../converters/enabled-disabled.h"
 
 ModMenuModule::SeukomodOptionsMenu::SeukomodOptionsMenu()
 {
@@ -23,6 +24,22 @@ bool ModMenuModule::SeukomodOptionsMenu::Attach()
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Go back", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Menu controls", options.textSize);
 	m_menuController->CreateItem<UiModule::Text>(vertCont, L"Version details", options.textSize);
+
+	// toasts
+	ToastManager* toastManager = ToastManager::GetInstance();
+	UiModule::Text* toastsVisibleText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"", options.textSize);
+	m_toastsVisibleController = m_menuController->CreateLatestItemController<UiModule::VarTextSelectController<bool, bool>>(
+		toastsVisibleText,
+		[toastManager]() -> bool {
+			return toastManager->GetToastsVisible();
+		},
+		UiModule::VarTextSelectOptionList<bool>{ false, true },
+		UiModule::VarTextSelectControllerOptions{ L"Toasts: #", L"#" }
+	);
+	m_toastsVisibleController->SetConverter<EnabledDisabledConverter>();
+	m_toastsVisibleController->SetCustomSaveCallback([toastManager](bool newValue) {
+		toastManager->SetToastsVisible(newValue);
+	});
 
 	SetPreviousSelectedIndex();
 

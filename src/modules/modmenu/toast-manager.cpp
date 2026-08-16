@@ -1,6 +1,8 @@
 #include "toast-manager.h"
 #include "root.h"
 
+static const char TOASTS_VISIBLE_PERSISTENCE_KEY[] = "ModMenu_ToastManager_ToastsVisible";
+
 ModMenuModule::ToastManager* ModMenuModule::ToastManager::m_instance = nullptr;
 
 ModMenuModule::ToastManager* ModMenuModule::ToastManager::GetInstance() {
@@ -26,11 +28,20 @@ void ModMenuModule::ToastManager::Show(const Toast& toast) {
 	m_toasts.emplace_back(toast);
 }
 
+void ModMenuModule::ToastManager::SetToastsVisible(bool isHidden)
+{
+	m_toastsVisible = isHidden;
+	UpdateToastsVisible();
+}
+
 void ModMenuModule::ToastManager::Attach() {
 	const auto& options = ModMenuModule::RootModule::GetInstance()->GetOptions();
 	UiModule::RootModule* uiRoot = UiModule::RootModule::GetInstance();
 	m_mainContainer = uiRoot->AddComponent<UiModule::OverridePos>(nullptr, std::nullopt, options.toastPadding);
 	m_toastListContainer = uiRoot->AddComponent<UiModule::VertCont>(m_mainContainer);
+
+	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
+	m_toastsVisible = persistence->Load<bool>(TOASTS_VISIBLE_PERSISTENCE_KEY, true);
 
 	AddEventListener<UiModule::PreUpdateUIEvent>(&ToastManager::OnPreUpdateUI);
 	AddEventListener<GameEndEvent>(&ToastManager::OnGameEnd);
@@ -45,6 +56,9 @@ void ModMenuModule::ToastManager::Detach() {
 	uiRoot->RemoveComponent(m_mainContainer, true);
 	m_mainContainer = nullptr;
 	m_toastListContainer = nullptr;
+
+	PersistenceModule::PersistenceManager* persistence = PersistenceModule::PersistenceManager::GetInstance();
+	persistence->Save<bool>(TOASTS_VISIBLE_PERSISTENCE_KEY, m_toastsVisible);
 }
 
 void ModMenuModule::ToastManager::OnPreUpdateUI(UiModule::PreUpdateUIEvent& event) {
@@ -114,4 +128,10 @@ void ModMenuModule::ToastManager::Update() {
 			GetToastTypeRemap(toast.type)
 		);
 	}
+}
+
+void ModMenuModule::ToastManager::UpdateToastsVisible()
+{
+	if (!m_toastListContainer) return;
+	m_toastListContainer->SetVisible(m_toastsVisible);
 }

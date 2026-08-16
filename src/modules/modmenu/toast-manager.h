@@ -22,6 +22,9 @@ namespace ModMenuModule {
 
 		void Show(const Toast& toast);
 
+		void SetToastsVisible(bool isHidden);
+		bool GetToastsVisible() const { return m_toastsVisible; }
+
 	private:
 		friend class RootModule;
 		ToastManager();
@@ -38,6 +41,7 @@ namespace ModMenuModule {
 		void OnGameEnd(GameEndEvent& event);
 		static short GetToastTypeRemap(ToastType type);
 		void Update();
+		void UpdateToastsVisible();
 
 		struct ToastItem : public Toast {
 			UiModule::HorCentered* container = nullptr;
@@ -51,5 +55,6 @@ namespace ModMenuModule {
 		std::vector<ToastItem> m_toasts = {};
 		UiModule::OverridePos* m_mainContainer = nullptr;
 		UiModule::VertCont* m_toastListContainer = nullptr;
+		bool m_toastsVisible = false;
 	};
 }
