@@ -10,7 +10,7 @@ static const ModMenuModule::CameraCheatOptions rotateCameraOptions = {
 	false, // customCulling
 	false, // customRenderQueue
 	true, // followPedRotation
-	0.5f, // followPedRotationLerpFactor
+	0.0f, // unused1
 	20, // renderDistance
 	0.0f, // followPedRotationOffset
 	true // autoHorRotCenter
@@ -29,7 +29,7 @@ static const ModMenuModule::CameraCheatOptions threeDimensionalCameraOptions = {
 	true, // customCulling
 	true, // customRenderQueue
 	true, // followPedRotation
-	0.5f, // followPedRotationLerpFactor
+	0.0f, // unused1
 	20, // renderDistance
 	0.0f, // followPedRotationOffset
 	true, // autoHorRotCenter

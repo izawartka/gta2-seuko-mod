@@ -7,6 +7,8 @@
 #include "../../events/cheat-options-update.h"
 #include "../../cheat-registry.h"
 
+static constexpr float CAMERA_CHEAT_FPR_LERP_COEF = 0.3f;
+static constexpr float CAMERA_CHEAT_FPR_LIMIT_RAD_PER_FRAME = 0.2f;
 static constexpr size_t PERSISTENCE_VERSION = 3;
 
 ModMenuModule::CameraCheat* ModMenuModule::CameraCheat::m_instance = nullptr;
@@ -280,7 +282,12 @@ void ModMenuModule::CameraCheat::OnPreDrawFrame(PreDrawFrameEvent& event)
 	if (newVerticalAngleRad.has_value() && newVerticalAngleRad != oldVerticalAngleRad) {
 		updatedVerticalAngleRad = m_snapVerticalRotation ?
 			newVerticalAngleRad.value() :
-			Utils::Angle::LerpAngle(oldVerticalAngleRad, newVerticalAngleRad.value(), m_options.followPedRotationLerpFactor);
+			Utils::Angle::LerpAngleWithLimit(
+				oldVerticalAngleRad,
+				newVerticalAngleRad.value(),
+				CAMERA_CHEAT_FPR_LERP_COEF,
+				CAMERA_CHEAT_FPR_LIMIT_RAD_PER_FRAME
+			);
 
 		doUpdateOptions = true;
 	}

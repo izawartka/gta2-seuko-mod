@@ -17,7 +17,7 @@ namespace ModMenuModule {
 		bool customCulling = true;
 		bool customRenderQueue = true;
 		bool followPedRotation = false;
-		float followPedRotationLerpFactor = 0.5f; // requires followPedRotation = true
+		float unused1 = 0.0f;
 		size_t renderDistance = 20; // in map blocks, requires customRenderQueue = true
 		float followPedRotationOffset = 0.0f; // requires followPedRotation = true
 		bool autoHorRotCenter = true;
@@ -28,10 +28,15 @@ namespace ModMenuModule {
 			return customCulling == other.customCulling &&
 				customRenderQueue == other.customRenderQueue &&
 				followPedRotation == other.followPedRotation &&
-				autoHorRotCenter == other.autoHorRotCenter &&
-				(!followPedRotation || (followPedRotationLerpFactor == other.followPedRotationLerpFactor &&
-					(ignoreFollowPedRotationOffset || followPedRotationOffset == other.followPedRotationOffset))) &&
-				(!customRenderQueue || renderDistance == other.renderDistance);
+				autoHorRotCenter == other.autoHorRotCenter && 
+				(
+					!followPedRotation ||
+					ignoreFollowPedRotationOffset || 
+					followPedRotationOffset == other.followPedRotationOffset
+				) && (
+					!customRenderQueue || 
+					renderDistance == other.renderDistance
+				);
 		}
 
 		bool operator==(const CameraCheatOptions& other) const {
@@ -39,7 +44,6 @@ namespace ModMenuModule {
 				customCulling == other.customCulling &&
 				customRenderQueue == other.customRenderQueue &&
 				followPedRotation == other.followPedRotation &&
-				followPedRotationLerpFactor == other.followPedRotationLerpFactor &&
 				followPedRotationOffset == other.followPedRotationOffset &&
 				renderDistance == other.renderDistance &&
 				autoHorRotCenter == other.autoHorRotCenter;
