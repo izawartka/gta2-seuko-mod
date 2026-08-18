@@ -5,4 +5,5 @@ namespace ModMenuModule::Utils::Angle {
 	float NormalizeAngle(float angleRad);
 	float GetShortestAngleDifference(float fromAngleRad, float toAngleRad);
 	float LerpAngle(float fromAngleRad, float toAngleRad, float t);
+	float LerpAngleWithLimit(float fromAngleRad, float toAngleRad, float t, float maxDeltaAngleRad);
 }

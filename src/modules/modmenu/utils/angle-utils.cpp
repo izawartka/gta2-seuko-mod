@@ -34,3 +34,10 @@ float ModMenuModule::Utils::Angle::LerpAngle(float fromAngleRad, float toAngleRa
 	float difference = GetShortestAngleDifference(fromAngleRad, toAngleRad);
 	return NormalizeAngle(fromAngleRad + difference * t);
 }
+
+float ModMenuModule::Utils::Angle::LerpAngleWithLimit(float fromAngleRad, float toAngleRad, float t, float maxDeltaAngleRad) {
+	std::fesetround(FE_TONEAREST);
+	float difference = GetShortestAngleDifference(fromAngleRad, toAngleRad);
+	float delta = std::clamp(difference * t, -maxDeltaAngleRad, maxDeltaAngleRad);
+	return NormalizeAngle(fromAngleRad + delta);
+}
