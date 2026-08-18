@@ -29,6 +29,13 @@ bool ModMenuModule::SavedCarsCheat::SaveCar(const std::wstring& name, Game::Car*
 		return false;
 	}
 
+	const auto& spawnableModels = Game::Utils::GetSpawnableCarModels();
+	auto modelIt = std::find(spawnableModels.begin(), spawnableModels.end(), car->carModel);
+	if (modelIt == spawnableModels.end()) {
+		spdlog::warn("SavedCarsCheat::SaveCar: Illegal car model");
+		return false;
+	}
+
 	if (name.empty()) {
 		spdlog::warn("SavedCarsCheat::SaveCar: Name cannot be empty");
 		return false;
