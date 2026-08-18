@@ -334,6 +334,7 @@
     <ClInclude Include="src\events\scale-shadow.h" />
     <ClInclude Include="src\events\show-cursor.h" />
     <ClInclude Include="src\events\try-shoot-weapon.h" />
+    <ClInclude Include="src\events\update-car-camera.h" />
     <ClInclude Include="src\events\wsfix-z-update.h" />
     <ClInclude Include="src\events\window-focus-change.h" />
     <ClInclude Include="src\events\wnd-proc.h" />
@@ -656,6 +657,7 @@
     <ClCompile Include="src\events\scale-shadow.cpp" />
     <ClCompile Include="src\events\show-cursor.cpp" />
     <ClCompile Include="src\events\try-shoot-weapon.cpp" />
+    <ClCompile Include="src\events\update-car-camera.cpp" />
     <ClCompile Include="src\events\wsfix-z-update.cpp" />
     <ClCompile Include="src\events\window-focus-change.cpp" />
     <ClCompile Include="src\events\wnd-proc.cpp" />
