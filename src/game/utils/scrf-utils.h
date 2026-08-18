@@ -14,6 +14,24 @@ namespace Game::Utils {
 		return static_cast<SCR_f>((static_cast<int64_t>(a) * static_cast<int64_t>(b)) >> 14);
 	}
 
+	constexpr void Add(SCR_Vector3& inout, const SCR_Vector3& value) {
+		inout.x += value.x;
+		inout.y += value.y;
+		inout.z += value.z;
+	}
+
+	constexpr void Sub(SCR_Vector3& inout, const SCR_Vector3& value) {
+		inout.x -= value.x;
+		inout.y -= value.y;
+		inout.z -= value.z;
+	}
+
+	constexpr void Scale(SCR_Vector3& inout, SCR_f scalar) {
+		inout.x = Multiply(inout.x, scalar);
+		inout.y = Multiply(inout.y, scalar);
+		inout.z = Multiply(inout.z, scalar);
+	}
+
 	bool IsCoordSafe(SCR_f coord);
 	bool IsZCoordSafe(SCR_f zCoord);
 	bool IsPositionSafe(SCR_Vector3 position);
