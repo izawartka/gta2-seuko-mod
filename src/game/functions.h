@@ -230,5 +230,14 @@ namespace Game {
 
 		typedef void(__fastcall SetPedWeaponType)(Ped* ped, DWORD edx, WEAPON_INDEX weapon);
 		static constexpr SetPedWeaponType* SetPedWeapon = (SetPedWeaponType*)0x0043d830;
+
+		typedef Car* (__fastcall GetNearestCarForEnterType)(TrafficManager* trafficManager, DWORD edx, Sprite* pedSprite, DWORD param_3);
+		static constexpr GetNearestCarForEnterType* GetNearestCarForEnter = (GetNearestCarForEnterType*)0x00424e70;
+
+		typedef bool(__fastcall IsCarATrainType)(Car* car);
+		static constexpr IsCarATrainType* IsCarATrain = (IsCarATrainType*)0x00403ba0;
+
+		typedef void(__fastcall UpdatePedStatesFromObjectiveType)(Ped* ped, DWORD edx, PED_OBJECTIVE objective, uint timer);
+		static constexpr UpdatePedStatesFromObjectiveType* UpdatePedStatesFromObjective = (UpdatePedStatesFromObjectiveType*)0x00436920;
 	};  
 }
