@@ -16,6 +16,7 @@
 #include "camera/freecam.h"
 #include "camera/camera-pos.h"
 #include "camera/shadows-fix.h"
+#include "camera/smooth-camera.h"
 #include "player-appearance.h"
 #include "player-pos.h"
 #include "position-store.h"

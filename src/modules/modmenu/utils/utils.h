@@ -22,6 +22,7 @@
 #include "get-selectable-car-lock-states.h"
 #include "give-player-powerup.h"
 #include "save-game.h"
+#include "scrf-lerp-utils.h"
 #include "spawn-car.h"
 #include "spawn-car-at-player.h"
 #include "spawn-object.h"
