@@ -463,6 +463,7 @@
     <ClInclude Include="src\modules\modmenu\quick-action-manager.h" />
     <ClInclude Include="src\modules\modmenu\quick-action-registry.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\clear-wanted-level.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\enter-as-passenger.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\explode-vehicle.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\spawn-character.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\switch-camera-mode.h" />
@@ -764,6 +765,7 @@
     <ClCompile Include="src\modules\modmenu\menus\weapons-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\world-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-action-manager.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-actions\enter-as-passenger.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\explode-vehicle.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\spawn-character.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\switch-camera-mode.cpp" />

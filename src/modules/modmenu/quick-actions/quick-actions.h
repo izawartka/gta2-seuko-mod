@@ -1,6 +1,7 @@
 #pragma once
 
 #include "clear-wanted-level.h"
+#include "enter-as-passenger.h"
 #include "explode-all-vehicles.h"
 #include "explode-vehicle.h"
 #include "fix-vehicle.h"

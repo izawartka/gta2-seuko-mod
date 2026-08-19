@@ -8,7 +8,7 @@ namespace ModMenuModule {
 	using QuickActionId = size_t;
 
 	static constexpr uint16_t CURRENT_QUICK_ACTIONS_VERSION = 1;
-	static constexpr uint16_t CURRENT_QUICK_ACTION_DEFAULTS_VERSION = 1;
+	static constexpr uint16_t CURRENT_QUICK_ACTION_DEFAULTS_VERSION = 2;
 	
 	struct QuickActionInfo {
 		KeyBindingModule::Key key = {};

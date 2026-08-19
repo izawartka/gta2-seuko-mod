@@ -32,6 +32,14 @@ bool ModMenuModule::Utils::AddDefaultActions(uint16_t prevVersion)
 		QuickActionId clearWantedLevelActionId = quickActionManager->Add({ Game::KeyCode::DIK_P, false, false, true }, clearWantedLevelTypeIndex);
 	}
 	[[fallthrough]];
+	case 1: {
+		spdlog::debug("Adding default actions version 1->2");
+
+		// Enter as passenger
+		QuickActionTypeIndex enterAsPassengerTypeIndex = typeid(EnterAsPassengerAction);
+		quickActionManager->Add({ Game::KeyCode::DIK_F, false, false, true }, enterAsPassengerTypeIndex);
+	}
+	[[fallthrough]];
 	default:
 		break;
 	}
