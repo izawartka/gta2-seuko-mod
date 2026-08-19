@@ -6,6 +6,7 @@
 #include "../cheats/last-car.h"
 #include "../cheats/disable-steering-assist.h"
 #include "../../../converters/yes-no.h"
+#include "../utils/enter-car-as-passenger.h"
 
 ModMenuModule::VehiclesMenu::VehiclesMenu()
 {
@@ -44,6 +45,11 @@ bool ModMenuModule::VehiclesMenu::Attach()
 	m_disableSteeringAssistCheatController->SetSaveCallback([disableSteeringAssistCheat](bool newValue) {
 		disableSteeringAssistCheat->SetEnabled(newValue);
 	});
+
+	// enter as passenger
+	auto* enterAsPassengerText = m_menuController->CreateItem<UiModule::Text>(vertCont, L"Enter as passenger", options.textSize);
+	auto* enterAsPassengerBtn = m_menuController->CreateLatestItemController<UiModule::ButtonController>(enterAsPassengerText);
+	enterAsPassengerBtn->SetCallback(std::bind(&VehiclesMenu::EnterAsPassenger, this));
 
 	SetPreviousSelectedIndex();
 
@@ -100,6 +106,15 @@ void ModMenuModule::VehiclesMenu::OnCheatStateChange(CheatStateEvent& event)
 {
 	if (event.GetCheatType() == typeid(DisableSteeringAssistCheat)) {
 		m_disableSteeringAssistCheatController->SetValue(event.IsEnabled());
+	}
+}
+
+void ModMenuModule::VehiclesMenu::EnterAsPassenger() const
+{
+	bool success = Utils::EnterCarAsPassenger();
+
+	if (!success) {
+		ToastManager::GetInstance()->Show({ L"Failed to enter vehicle", ToastType::Warning });
 	}
 }
 

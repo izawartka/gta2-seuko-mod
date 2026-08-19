@@ -18,6 +18,7 @@ namespace ModMenuModule {
 		void OnMenuAction(UiModule::Selectable* item, UiModule::MenuItemId id) override;
 		void OnLastCarStateChange(ModMenuModule::LastCarStateEvent& event);
 		void OnCheatStateChange(CheatStateEvent& event);
+		void EnterAsPassenger() const;
 
 		void UpdateLastCarState();
 		void UpdateCheatStates();
