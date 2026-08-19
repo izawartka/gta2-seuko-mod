@@ -235,6 +235,7 @@
     <ClCompile Include="src\modules\modmenu\utils\scrf-lerp-utils.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\smooth-vehicle-camera-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\smooth-follow-camera-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-actions\toggle-smooth-camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -604,6 +605,7 @@
     <ClInclude Include="src\modules\modmenu\utils\scrf-lerp-utils.h" />
     <ClInclude Include="src\modules\modmenu\menus\smooth-vehicle-camera-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\smooth-follow-camera-menu.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\toggle-smooth-camera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />

@@ -480,6 +480,7 @@
     <ClInclude Include="src\modules\modmenu\quick-actions\toggle-invisibility.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\toggle-mouse-control.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\toggle-native-cheat.h" />
+    <ClInclude Include="src\modules\modmenu\quick-actions\toggle-smooth-camera.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\toggle-steering-assist.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\turn-vehicle-engine-off.h" />
     <ClInclude Include="src\modules\modmenu\reset-binds-manager.h" />
@@ -779,6 +780,7 @@
     <ClCompile Include="src\modules\modmenu\quick-actions\toggle-invisibility.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\toggle-mouse-control.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\toggle-native-cheat.cpp" />
+    <ClCompile Include="src\modules\modmenu\quick-actions\toggle-smooth-camera.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\toggle-steering-assist.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\turn-vehicle-engine-off.cpp" />
     <ClCompile Include="src\modules\modmenu\reset-binds-manager.cpp" />
