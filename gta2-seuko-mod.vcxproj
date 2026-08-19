@@ -449,6 +449,9 @@
     <ClInclude Include="src\modules\modmenu\menus\saved-vehicle-options-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\select-camera-modes-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\seukomod-options-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\smooth-camera-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\smooth-follow-camera-menu.h" />
+    <ClInclude Include="src\modules\modmenu\menus\smooth-vehicle-camera-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\spawn-object-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\spawn-ped-menu.h" />
     <ClInclude Include="src\modules\modmenu\menus\spawn-vehicle-menu.h" />
@@ -748,6 +751,9 @@
     <ClCompile Include="src\modules\modmenu\menus\saved-vehicle-options-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\select-camera-modes-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\seukomod-options-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\smooth-camera-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\smooth-follow-camera-menu.cpp" />
+    <ClCompile Include="src\modules\modmenu\menus\smooth-vehicle-camera-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\spawn-object-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\spawn-ped-menu.cpp" />
     <ClCompile Include="src\modules\modmenu\menus\spawn-vehicle-menu.cpp" />
