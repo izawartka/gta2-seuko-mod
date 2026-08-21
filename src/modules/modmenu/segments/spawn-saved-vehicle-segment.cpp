@@ -16,7 +16,7 @@ bool ModMenuModule::SpawnSavedVehicleSegment::ValidateSegment() const
 {
 	bool hasValue = m_savedCarNameController && m_savedCarNameController->GetValue().has_value();
 	if (!hasValue) {
-		spdlog::warn("No saved vehicles found");
+		spdlog::warn("SpawnSavedVehicleSegment: Validation failed, no saved vehicles found");
 		ToastManager::GetInstance()->Show({ L"No saved vehicles found", ToastType::Warning });
 		return false;
 	}
@@ -26,7 +26,7 @@ bool ModMenuModule::SpawnSavedVehicleSegment::ValidateSegment() const
 	const auto& savedCarNames = savedCarsCheat->GetSavedCarsList();
 
 	if (std::find(savedCarNames.begin(), savedCarNames.end(), savedCarName) == savedCarNames.end()) {
-		spdlog::warn("Selected saved vehicle not found");
+		spdlog::warn(L"SpawnSavedVehicleSegment: Validation failed: Saved vehicle \"{}\" not found", savedCarName);
 		ToastManager::GetInstance()->Show({ L"Selected saved vehicle not found", ToastType::Warning });
 		return false;
 	}

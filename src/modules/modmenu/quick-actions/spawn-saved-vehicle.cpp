@@ -43,7 +43,7 @@ void ModMenuModule::SpawnSavedVehicleAction::Execute()
 		return;
 	}
 
-	SpawnSavedVehicleSegmentData data = m_data.value();
+	const SpawnSavedVehicleSegmentData& data = m_data.value();
 
 	if (savedCarsCheat->SpawnCar(data.savedCarName)) {
 		ModMenuModule::ToastManager::GetInstance()->Show({ L"Spawned " + data.savedCarName });

@@ -162,7 +162,7 @@ bool ModMenuModule::PositionRotationMenuSegment::UpdateTexts()
 		return false;
 	}
 
-	std::wstring modeTextValue = (entry->updateFromPlayerPed) ? L"From player" : L"Custom";
+	std::wstring modeTextValue = (entry->updateFromPlayerPed) ? L"#From player#" : L"#Custom#";
 	std::wstring modeText = m_label + L": " + modeTextValue;
 	m_modeText->SetText(modeText);
 
