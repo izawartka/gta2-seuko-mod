@@ -565,7 +565,7 @@
     <ClInclude Include="src\modules\ui\components\car-sprite.h" />
     <ClInclude Include="src\modules\ui\components\horcentered.h" />
     <ClInclude Include="src\modules\ui\components\icon-sprite.h" />
-    <ClInclude Include="src\modules\ui\components\overridepos.h" />
+    <ClInclude Include="src\modules\ui\components\override-pos.h" />
     <ClInclude Include="src\modules\ui\components\sprite.h" />
     <ClInclude Include="src\modules\ui\controllers\button.h" />
     <ClInclude Include="src\modules\ui\controllers\editable.h" />
@@ -627,6 +627,7 @@
     <ClInclude Include="src\modules\ui\root.h" />
     <ClInclude Include="src\modules\ui\ui.h" />
     <ClInclude Include="src\modules\ui\controllers\menu-item.h" />
+    <ClInclude Include="src\modules\ui\utils\align.h" />
     <ClInclude Include="src\modules\ui\utils\draw-sprite.h" />
     <ClInclude Include="src\modules\ui\utils\utils.h" />
     <ClInclude Include="src\version.h" />
@@ -860,7 +861,7 @@
     <ClCompile Include="src\modules\ui\components\car-sprite.cpp" />
     <ClCompile Include="src\modules\ui\components\horcentered.cpp" />
     <ClCompile Include="src\modules\ui\components\icon-sprite.cpp" />
-    <ClCompile Include="src\modules\ui\components\overridepos.cpp" />
+    <ClCompile Include="src\modules\ui\components\override-pos.cpp" />
     <ClCompile Include="src\modules\ui\components\selectable.cpp" />
     <ClCompile Include="src\modules\ui\components\sprite.cpp" />
     <ClCompile Include="src\modules\ui\components\text.cpp" />
@@ -868,6 +869,7 @@
     <ClCompile Include="src\modules\ui\events\key-down-repeat.cpp" />
     <ClCompile Include="src\modules\ui\root.cpp" />
     <ClCompile Include="src\dinput8_proxy.cpp" />
+    <ClCompile Include="src\modules\ui\utils\align.cpp" />
     <ClCompile Include="src\modules\ui\utils\draw-sprite.cpp" />
   </ItemGroup>
   <ItemGroup>

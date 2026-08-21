@@ -9,6 +9,6 @@
 #include "./selectable.h"
 #include "./sprite.h"
 #include "./background.h"
-#include "./overridepos.h"
 #include "./horcentered.h"
+#include "./override-pos.h"
 #include "./car-sprite.h"

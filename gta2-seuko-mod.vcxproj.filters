@@ -100,7 +100,7 @@
     <ClCompile Include="src\modules\ui\component.cpp" />
     <ClCompile Include="src\modules\ui\components\background.cpp" />
     <ClCompile Include="src\modules\ui\components\horcentered.cpp" />
-    <ClCompile Include="src\modules\ui\components\overridepos.cpp" />
+    <ClCompile Include="src\modules\ui\components\override-pos.cpp" />
     <ClCompile Include="src\modules\ui\components\selectable.cpp" />
     <ClCompile Include="src\modules\ui\components\sprite.cpp" />
     <ClCompile Include="src\modules\ui\components\text.cpp" />
@@ -238,6 +238,7 @@
     <ClCompile Include="src\modules\modmenu\quick-actions\toggle-smooth-camera.cpp" />
     <ClCompile Include="src\modules\modmenu\utils\enter-car-as-passenger.cpp" />
     <ClCompile Include="src\modules\modmenu\quick-actions\enter-as-passenger.cpp" />
+    <ClCompile Include="src\modules\ui\utils\align.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\converters\ammo.h" />
@@ -366,7 +367,7 @@
     <ClInclude Include="src\modules\persistence\root.h" />
     <ClInclude Include="src\modules\ui\components\background.h" />
     <ClInclude Include="src\modules\ui\components\horcentered.h" />
-    <ClInclude Include="src\modules\ui\components\overridepos.h" />
+    <ClInclude Include="src\modules\ui\components\override-pos.h" />
     <ClInclude Include="src\modules\ui\components\sprite.h" />
     <ClInclude Include="src\modules\ui\controllers\button.h" />
     <ClInclude Include="src\modules\ui\controllers\editable.h" />
@@ -610,6 +611,7 @@
     <ClInclude Include="src\modules\modmenu\quick-actions\toggle-smooth-camera.h" />
     <ClInclude Include="src\modules\modmenu\utils\enter-car-as-passenger.h" />
     <ClInclude Include="src\modules\modmenu\quick-actions\enter-as-passenger.h" />
+    <ClInclude Include="src\modules\ui\utils\align.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GTA2.props" />
