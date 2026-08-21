@@ -8,11 +8,12 @@ Seuko mod is an ultimate mod menu (or trainer) for Grand Theft Auto 2.
 
 ## Features
 
-- Player control (money, health, armor, wanted level, wanted level lock, appearance, invulnerability, respect, multiplier, lives)
+- Player control (money, health, armor, wanted level, wanted level lock, appearance, invulnerability, invisibility, respect, multiplier, lives)
 - Teleport
 - Spawning vehicles (selectable model and remap)
 - Current/last vehicle control (physics, invulnerability, remap, fixing damage, turning the engine off, exploding)
 - Advanced game camera position control and 3D camera mode
+- Smoother camera
 - Mouse control (with multiplayer support)
 - Obtaining weapons (selectable ammo count, including vehicle weapons)
 - Obtaining all (handheld) weapons with a single key press
@@ -22,6 +23,8 @@ Seuko mod is an ultimate mod menu (or trainer) for Grand Theft Auto 2.
 - Custom quick actions on key press
 - Saving and spawning saved vehicles
 - Spawning objects (including power-ups and secret objects cut out from the game)
+- Spawning characters with plenty of custiomization options
+- Entering vehicles as passenger
 - Native cheats (each cheat can be force disabled, force enabled or unmodified to not interfere with cheat codes and registry flags)
 - Configurable menu controls
 - Shadows distance fix
@@ -31,7 +34,7 @@ Seuko mod is an ultimate mod menu (or trainer) for Grand Theft Auto 2.
 
 - This mod is mainly intended for [GTA2 PC version 11.44](https://gtamp.com/GTA2/gta2-installer.exe)
 - The mod should also work with GTA2 PC version 9.6, but this version is not supported
-- [Widescreenfix](https://github.com/ThirteenAG/WidescreenFixesPack/releases/tag/gta2) is compatible with this mod, but some texts may be misaligned
+- [Widescreenfix](https://github.com/ThirteenAG/WidescreenFixesPack/releases/tag/gta2) is compatible and recommended
 - [GTA2 radar](https://github.com/gennariarmando/gta2-radar) also seems to work fine, but expect performance issues, especially when using 3D camera mode
 
 ## Installation
@@ -61,7 +64,7 @@ This version is recommended if you want to use this mod together with other mods
 - Navigate menu: `[` (Left bracket) and `]` (Right bracket) keys
 - Select menu item / toggle option: `\` (Backslash)
 
-You can modify the controls in `Mod menu` > `Misc` > `Menu controls` section of the menu or reset them by holding `F11` for 5 seconds.
+You can modify the controls in `Mod menu` > `Misc` > `Seuko mod options` > `Menu controls` section of the menu or reset them by holding `F11` for 5 seconds.
 
 Customizable quick actions can be found in `Mod menu` > `Misc` > `Quick actions` section of the menu.
 
@@ -74,7 +77,7 @@ Customizable quick actions can be found in `Mod menu` > `Misc` > `Quick actions`
 
 ### Requirements:
 - Git
-- Microsoft Visual Studio 2022 or newer
+- Microsoft Visual Studio 2022 or later
 - GTA2 PC version 11.44
 
 ### Build steps
@@ -91,7 +94,7 @@ Customizable quick actions can be found in `Mod menu` > `Misc` > `Quick actions`
 6. Build the solution.
 7. After the build, output files will be automatically copied to your GTA2 installation folder and the game will be launched.
 
-## Support
+## Support the project
 
 If you like this mod and want to support its development, you can donate via [PayPal](https://www.paypal.me/maseuko) :)
 
@@ -100,13 +103,13 @@ If you like this mod and want to support its development, you can donate via [Pa
 - Spawning a lot of explosions (i.e., while using Rocket Launcher with Instant reload cheat) may cause the game to crash
 - "Unlock all levels" native cheat does not work. Use "Unlock all levels" option in the misc menu instead
 - Mouse control does not work with Controller configuration
-- Game controls are still active during menu navigation and input
+- Getting thrown out of vehicle by a cop while being a passenger causes the game to crash
+- Spawning a character with invalid options may crash the game (validation system is in progress)
 - Most of the mod's features cause multiplayer games to desync
 
 Please remember that this mod is an experimental project and may cause a lot of unexpected bugs, crashes etc.
 
 ## Credits
-
 - Original GTA2 game by DMA Design / Rockstar Games (none of the original game files are included in this project)
 - Mod by [izawartka](https://maseuko.pl/)
 - Research support by [h0x91b](https://github.com/h0x91b)
