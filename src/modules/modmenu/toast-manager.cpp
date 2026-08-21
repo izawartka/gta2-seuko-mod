@@ -120,7 +120,12 @@ void ModMenuModule::ToastManager::Update() {
 		toast.time--;
 		if (toast.container != nullptr) continue;
 
-		toast.container = uiRoot->AddComponent<UiModule::HorCentered>(m_toastListContainer);
+		toast.container = uiRoot->AddComponent<UiModule::OverridePos>(
+			m_toastListContainer,
+			UiModule::OverridePosCoord( UiModule::OverridePosAlign::Center ),
+			std::nullopt
+		);
+
 		toast.text = uiRoot->AddComponent<UiModule::Text>(
 			toast.container,
 			toast.message,

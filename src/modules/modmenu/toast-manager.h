@@ -44,7 +44,7 @@ namespace ModMenuModule {
 		void UpdateToastsVisible();
 
 		struct ToastItem : public Toast {
-			UiModule::HorCentered* container = nullptr;
+			UiModule::OverridePos* container = nullptr;
 			UiModule::Text* text = nullptr;
 
 			ToastItem(const Toast& toast)
