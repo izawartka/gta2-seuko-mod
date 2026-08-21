@@ -7,7 +7,7 @@ namespace Game::Utils {
 	}
 
 	constexpr SCR_f FromFloat(float value) {
-		return static_cast<SCR_f>(value * 16384.0f);
+		return static_cast<SCR_f>(value * 16384.0f + 0.5f);
 	}
 
 	constexpr SCR_f Multiply(SCR_f a, SCR_f b) {
