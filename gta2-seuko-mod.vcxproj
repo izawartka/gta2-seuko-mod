@@ -563,7 +563,6 @@
     <ClInclude Include="src\modules\persistence\root.h" />
     <ClInclude Include="src\modules\ui\components\background.h" />
     <ClInclude Include="src\modules\ui\components\car-sprite.h" />
-    <ClInclude Include="src\modules\ui\components\horcentered.h" />
     <ClInclude Include="src\modules\ui\components\icon-sprite.h" />
     <ClInclude Include="src\modules\ui\components\override-pos.h" />
     <ClInclude Include="src\modules\ui\components\sprite.h" />
@@ -859,7 +858,6 @@
     <ClCompile Include="src\modules\ui\component.cpp" />
     <ClCompile Include="src\modules\ui\components\background.cpp" />
     <ClCompile Include="src\modules\ui\components\car-sprite.cpp" />
-    <ClCompile Include="src\modules\ui\components\horcentered.cpp" />
     <ClCompile Include="src\modules\ui\components\icon-sprite.cpp" />
     <ClCompile Include="src\modules\ui\components\override-pos.cpp" />
     <ClCompile Include="src\modules\ui\components\selectable.cpp" />
