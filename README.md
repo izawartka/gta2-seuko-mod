@@ -42,7 +42,7 @@ Seuko mod is an ultimate mod menu (or trainer) for Grand Theft Auto 2.
 This version is recommended if you want to use this mod alone without any other mods.
 
 1. Make sure you have [VC++ Redistributables](https://www.techpowerup.com/download/visual-c-redistributable-runtime-package-all-in-one/) installed
-2. Open the [Releases](https://maseuko.pl/git/izawartka/gta2-seuko-mod/releases/latest) page
+2. Open the [Releases](https://github.com/izawartka/gta2-seuko-mod/releases/latest) page
 3. Download `gta2-seuko-mod-<version>.zip` archive
 4. Extract the contents of the downloaded archive to your GTA2 installation folder
 5. Launch the game
@@ -52,7 +52,7 @@ This version is recommended if you want to use this mod together with other mods
 
 1. Make sure you have [VC++ Redistributables](https://www.techpowerup.com/download/visual-c-redistributable-runtime-package-all-in-one/) installed
 2. Download and install [ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader/releases/latest) (Win32 dinput8.dll version) to your GTA2 installation folder
-3. Open the [Releases](https://maseuko.pl/git/izawartka/gta2-seuko-mod/releases/latest) page
+3. Open the [Releases](https://github.com/izawartka/gta2-seuko-mod/releases/latest) page
 4. Download `gta2-seuko-mod-<version>-asi.zip` archive
 5. Create `scripts` folder in your GTA2 installation folder if it doesn't exist
 6. Extract the contents of the downloaded archive to the `scripts` folder
@@ -83,9 +83,7 @@ Customizable quick actions can be found in `Mod menu` > `Misc` > `Quick actions`
 ### Build steps
 1. Clone the repository
 
-   ```git clone https://maseuko.pl/git/izawartka/gta2-seuko-mod.git --recurse-submodules```
-
-   (yup, Github has suspended my account)
+   ```git clone https://github.com/izawartka/gta2-seuko-mod --recurse-submodules```
 
 2. Open `GTA2.props` in any text editor and set `GTA2_DIR` and `GTA2_EXE` variables to point to your GTA2 installation folder and gta2.exe file respectively.
 3. If you plan to build the ASI version, you'll also need to set `GTA2_ASI_DIR`, `GTA2_ASI_FILENAME` and `GTA2_ASI_PDB_FILENAME` variables and install ASI Loader to your GTA2 installation folder (see the [Installation](#asi-version) section).
@@ -111,7 +109,7 @@ Please remember that this mod is an experimental project and may cause a lot of 
 
 ## Credits
 - Original GTA2 game by DMA Design / Rockstar Games (none of the original game files are included in this project)
-- Mod by [izawartka](https://maseuko.pl/)
+- Mod by [izawartka](https://github.com/izawartka)
 - Research support by [h0x91b](https://github.com/h0x91b)
 
 ## References
@@ -124,6 +122,4 @@ Please remember that this mod is an experimental project and may cause a lot of 
 
 ## License
 
-~~You can modify and distribute this mod freely as long as you credit the original authors and provide a link to [this repository](https://github.com/izawartka/gta2-seuko-mod). You are not allowed to sell this mod or any modified versions of it.~~
-
-Starting from 2026.08.07, as my Github account got suspended, the code is temporarily read-only. Please do NOT redistribute it. If you would like to contribute, please e-mail me at `masuo [at] maseuko.pl`. You are NOT allowed to sell this mod or any modified versions of it.
+You can modify and distribute this mod freely as long as you credit the original authors and provide a link to [this repository](https://github.com/izawartka/gta2-seuko-mod). You are NOT allowed to sell this mod or any modified versions of it.
